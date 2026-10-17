@@ -116,7 +116,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLE_DERIVED_BUTTON_H\n#define GTKMM_EXAMPLE_DERIVED_BUTTON_H\n\n#include <gtkmm.h>\n\nclass DerivedButton : public Gtk::Button\n{\npublic:\n  DerivedButton();\n  DerivedButton(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refBuilder);\n  virtual ~DerivedButton();\n\n  // Provide proxies for the properties. The proxy allows you to connect to\n  // the 'changed' signal, etc.\n  Glib::PropertyProxy<Glib::ustring> property_ustring() { return prop_ustring.get_proxy(); }\n  Glib::PropertyProxy<int> property_int() { return prop_int.get_proxy(); }\n\nprivate:\n  Glib::Property<Glib::ustring> prop_ustring;\n  Glib::Property<int> prop_int;\n};\n\n#endif //GTKMM_EXAMPLE_DERIVED_BUTTON_H",
    "sha": "6a9f4caf946a31ea",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/builder/derived",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/builder/derived",
    "file": "derivedbutton.h",
    "zh": ""
   },

@@ -114,7 +114,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1SpinButton.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1SpinButton.html)",
    "sha": "71bf90935fc231d2",
    "zh": "参考"
   },
@@ -141,7 +141,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_checkbutton_snap();\n  void on_checkbutton_numeric();\n  void on_spinbutton_digits_changed();\n  void on_button_close();\n\n  enum enumValueFormats\n  {\n    VALUE_FORMAT_INT,\n    VALUE_FORMAT_FLOAT\n  };\n  void on_button_getvalue(enumValueFormats display);\n\n  //Child widgets:\n  Gtk::Frame m_Frame_NotAccelerated, m_Frame_Accelerated;\n  Gtk::Box m_HBox_NotAccelerated, m_HBox_Accelerated,\n    m_HBox_Buttons;\n  Gtk::Box m_VBox_Main, m_VBox, m_VBox_Day, m_VBox_Month, m_VBox_Year,\n    m_VBox_Accelerated, m_VBox_Value, m_VBox_Digits;\n  Gtk::Label m_Label_Day, m_Label_Month, m_Label_Year,\n    m_Label_Value, m_Label_Digits,\n    m_Label_ShowValue;\n  Glib::RefPtr<Gtk::Adjustment> m_adjustment_day, m_adjustment_month, m_adjustment_year,\n    m_adjustment_value, m_adjustment_digits;\n  Gtk::SpinButton m_SpinButton_Day, m_SpinButton_Month, m_SpinButton_Year,\n    m_SpinButton_Value, m_SpinButton_Digits;\n  Gtk::CheckButton m_CheckButton_Snap, m_CheckButton_Numeric;\n  Gtk::Button m_Button_Int, m_Button_Float, m_Button_Close;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "90b7ef91e1089fe7",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/spinbutton",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/spinbutton",
    "file": "examplewindow.h",
    "zh": ""
   },

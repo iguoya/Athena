@@ -111,7 +111,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLE_HELLOWORLD_H\n#define GTKMM_EXAMPLE_HELLOWORLD_H\n\n#include <gtkmm/box.h>\n#include <gtkmm/button.h>\n#include <gtkmm/window.h>\n\nclass HelloWorld : public Gtk::Window\n{\npublic:\n  HelloWorld();\n  ~HelloWorld() override;\n\nprotected:\n\n  // Signal handlers:\n  // Our new improved on_button_clicked().\n  void on_button_clicked(const Glib::ustring& data);\n\n  // Child widgets:\n  Gtk::Box m_box1;\n  Gtk::Button m_button1, m_button2;\n};\n\n#endif // GTKMM_EXAMPLE_HELLOWORLD_H",
    "sha": "f2e4371d48ad9b0d",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/helloworld2",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/helloworld2",
    "file": "helloworld.h",
    "zh": ""
   },
@@ -192,7 +192,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Box.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Box.html)",
    "sha": "71bf90935fc231d2",
    "zh": "参考"
   },
@@ -273,7 +273,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow(int which);\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit_clicked();\n\n  //Child widgets:\n  Gtk::Button m_button;\n  Gtk::Box m_box1;\n  Gtk::Box m_boxQuit;\n  Gtk::Button m_buttonQuit;\n\n  Gtk::Label m_Label1, m_Label2;\n\n  Gtk::Separator m_separator1, m_separator2;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "d2477f3c73bf3f08",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/box",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/box",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -331,7 +331,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Grid.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Grid.html)",
    "sha": "71bf90935fc231d2-1",
    "zh": "参考"
   },
@@ -358,7 +358,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprivate:\n  // Signal handlers:\n  void on_button_quit();\n  void on_button_numbered(const Glib::ustring& data);\n\n  // Child widgets:\n  Gtk::Grid m_grid;\n  Gtk::Button m_button_1, m_button_2, m_button_quit;\n};\n\n#endif /* GTKMM_EXAMPLEWINDOW_H */",
    "sha": "9ac94029dce77e28",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/grid",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/grid",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -408,7 +408,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Notebook.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Notebook.html)",
    "sha": "71bf90935fc231d2-2",
    "zh": "参考"
   },
@@ -429,7 +429,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n  void on_notebook_switch_page(Gtk::Widget* page, guint page_num);\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::Notebook m_Notebook;\n  Gtk::Label m_Label1, m_Label2;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "3344ea32f7446fe8",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/notebook/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/notebook/",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -492,7 +492,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Assistant.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Assistant.html)",
    "sha": "71bf90935fc231d2-3",
    "zh": "参考"
   },
@@ -513,7 +513,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEASSISTANT_H\n#define GTKMM_EXAMPLEASSISTANT_H\n\n#include <gtkmm.h>\n\nclass ExampleAssistant : public Gtk::Assistant\n{\npublic:\n  ExampleAssistant();\n  virtual ~ExampleAssistant();\n\n  void get_result(bool& check_state, Glib::ustring& entry_text);\n\nprivate:\n  // Signal handlers:\n  void on_assistant_apply();\n  void on_assistant_cancel();\n  void on_assistant_close();\n  void on_assistant_prepare(Gtk::Widget* widget);\n  void on_entry_changed();\n\n  // Member functions:\n  void print_status();\n\n  // Child widgets:\n  Gtk::Box m_box;\n  Gtk::Label m_label1, m_label2;\n  Gtk::CheckButton m_check;\n  Gtk::Entry m_entry;\n};\n\n#endif /* GTKMM_EXAMPLEASSISTANT_H */",
    "sha": "b8aaebcbe890fc55",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/assistant/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/assistant/",
    "file": "exampleassistant.h",
    "zh": ""
   },
@@ -559,13 +559,13 @@
   },
   {
    "type": "para",
-   "text": "[Source Code, ActionBar](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/actionbar)",
+   "text": "[Source Code, ActionBar](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/actionbar)",
    "sha": "02b73ac5e3a5c80e",
    "zh": "动作条(ActionBar)源代码"
   },
   {
    "type": "para",
-   "text": "[Source Code, FlowBox](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/listbox_flowbox/flowbox)",
+   "text": "[Source Code, FlowBox](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/listbox_flowbox/flowbox)",
    "sha": "baad5af70012103a",
    "zh": "流式盒(FlowBox)源代码"
   }

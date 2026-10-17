@@ -51,7 +51,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEAPPLICATION_H\n#define GTKMM_EXAMPLEAPPLICATION_H\n\n#include <gtkmm.h>\n\nclass ExampleAppWindow;\n\nclass ExampleApplication: public Gtk::Application\n{\nprotected:\n  ExampleApplication();\n\npublic:\n  static Glib::RefPtr<ExampleApplication> create();\n\nprotected:\n  // Override default signal handlers:\n  void on_startup() override;\n  void on_activate() override;\n  void on_open(const Gio::Application::type_vec_files& files,\n    const Glib::ustring& hint) override;\n\nprivate:\n  ExampleAppWindow* create_appwindow();\n  void on_action_preferences();\n  void on_action_quit();\n};\n\n#endif /* GTKMM_EXAMPLEAPPLICATION_H */",
    "sha": "58b74ffd61ec7619",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buildapp/step4",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/buildapp/step4",
    "file": "exampleapplication.h",
    "zh": ""
   },

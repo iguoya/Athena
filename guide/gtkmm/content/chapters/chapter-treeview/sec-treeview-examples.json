@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Some `TreeView` examples are shown here. There are\nmore examples in the [treeview directory](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/)\nin `gtkmm-documentation`'s examples.",
+   "text": "Some `TreeView` examples are shown here. There are\nmore examples in the [treeview directory](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/treeview/)\nin `gtkmm-documentation`'s examples.",
    "sha": "25250e8d6e4889ed",
    "zh": "这里显示了一些TreeView的示例。gtkmm文档示例中的树形视图文件夹还有更多的示例。"
   },
   {
    "type": "para",
-   "text": "If neither `ListStore` nor `TreeStore`\nis suitable for your application, look at the\n[custom TreeModel](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/custom_treemodel)\nexample. It shows how you can make your own implementation of the `TreeModel`\ninterface.",
+   "text": "If neither `ListStore` nor `TreeStore`\nis suitable for your application, look at the\n[custom TreeModel](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/treeview/custom_treemodel)\nexample. It shows how you can make your own implementation of the `TreeModel`\ninterface.",
    "sha": "b01dfdab6d0dfef1",
    "zh": "如果ListStore和TreeStore都不适合你的应用程序，请查看自定义树模型示例。它向你展示了如何实现自己的TreeModel接口"
   },
@@ -39,7 +39,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n\n  //Tree model columns:\n  class ModelColumns : public Gtk::TreeModel::ColumnRecord\n  {\n  public:\n\n    ModelColumns()\n    { add(m_col_id); add(m_col_name); add(m_col_number); add(m_col_percentage);}\n\n    Gtk::TreeModelColumn<unsigned int> m_col_id;\n    Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n    Gtk::TreeModelColumn<short> m_col_number;\n    Gtk::TreeModelColumn<int> m_col_percentage;\n  };\n\n  ModelColumns m_Columns;\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TreeView m_TreeView;\n  Glib::RefPtr<Gtk::ListStore> m_refTreeModel;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "fe7551e3fc7ee123",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/list/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/treeview/list/",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -80,7 +80,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n  void on_treeview_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);\n\n  //Tree model columns:\n  class ModelColumns : public Gtk::TreeModel::ColumnRecord\n  {\n  public:\n\n    ModelColumns()\n    { add(m_col_id); add(m_col_name); }\n\n    Gtk::TreeModelColumn<int> m_col_id;\n    Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n  };\n\n  ModelColumns m_Columns;\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TreeView m_TreeView;\n  Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "7b5dfac97f6613ec",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/tree/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/treeview/tree/",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -121,7 +121,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n\n  void treeviewcolumn_validated_on_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::const_iterator& iter);\n  void cellrenderer_validated_on_editing_started(Gtk::CellEditable* cell_editable, const Glib::ustring& path);\n  void cellrenderer_validated_on_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);\n  void on_message_response(int response_id, Gtk::MessageDialog* dialog);\n\n  //Tree model columns:\n  class ModelColumns : public Gtk::TreeModel::ColumnRecord\n  {\n  public:\n\n    ModelColumns()\n    { add(m_col_id); add(m_col_name); add(m_col_foo); add(m_col_number); add(m_col_number_validated); }\n\n    Gtk::TreeModelColumn<unsigned int> m_col_id;\n    Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n    Gtk::TreeModelColumn<bool> m_col_foo;\n    Gtk::TreeModelColumn<int> m_col_number;\n    Gtk::TreeModelColumn<int> m_col_number_validated;\n  };\n\n  ModelColumns m_Columns;\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TreeView m_TreeView;\n  Glib::RefPtr<Gtk::ListStore> m_refTreeModel;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n\n  //For the validated column:\n  //You could also use a CellRendererSpin or a CellRendererProgress:\n  Gtk::CellRendererText m_cellrenderer_validated;\n  Gtk::TreeView::Column m_treeviewcolumn_validated;\n  bool m_validate_retry;\n  Glib::ustring m_invalid_text_for_retry;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "d516c80ffb1a0b3a",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/editable_cells/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/treeview/editable_cells/",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -162,7 +162,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include \"treemodel_dnd.h\"\n\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TreeView m_TreeView;\n  Glib::RefPtr<TreeModel_Dnd> m_refTreeModel;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "d2f63e158bcc8f57",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/drag_and_drop/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/treeview/drag_and_drop/",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -217,7 +217,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include \"treeview_withpopup.h\"\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n\n\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  TreeView_WithPopup m_TreeView;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "f9d4c82e3711e3df",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/popup/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/treeview/popup/",
    "file": "examplewindow.h",
    "zh": ""
   },

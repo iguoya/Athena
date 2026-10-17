@@ -12,19 +12,19 @@
   },
   {
    "type": "para",
-   "text": "[FilterListModel Reference](&url_refdocs_base_gtk_html;classGtk_1_1FilterListModel.html)",
+   "text": "[FilterListModel Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1FilterListModel.html)",
    "sha": "b68211823ca84e66",
    "zh": "FilterListModel 参考文档"
   },
   {
    "type": "para",
-   "text": "[StringFilter Reference](&url_refdocs_base_gtk_html;classGtk_1_1StringFilter.html)",
+   "text": "[StringFilter Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1StringFilter.html)",
    "sha": "9b53773de93dcf31",
    "zh": "StringFilter 参考文档"
   },
   {
    "type": "para",
-   "text": "[BoolFilter Reference](&url_refdocs_base_gtk_html;classGtk_1_1BoolFilter.html)",
+   "text": "[BoolFilter Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1BoolFilter.html)",
    "sha": "d7e1628a882d64ba",
    "zh": "BoolFilter 参考文档"
   },
@@ -45,7 +45,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handlers:\n  void on_button_showall();\n  void on_button_showj();\n  void on_button_showm();\n  void on_button_quit();\n  void on_setup_label(const Glib::RefPtr<Gtk::ListItem>& list_item, Gtk::Align halign);\n  void on_bind_id(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  void on_bind_name(const Glib::RefPtr<Gtk::ListItem>& list_item);\n\n  // A Gio::ListStore item.\n  class ModelColumns : public Glib::Object\n  {\n  public:\n    unsigned int m_col_id;\n    Glib::ustring m_col_name;\n\n    static Glib::RefPtr<ModelColumns> create(int col_id, const Glib::ustring& col_name)\n    {\n      return Glib::make_refptr_for_instance<ModelColumns>(\n        new ModelColumns(col_id, col_name));\n    }\n\n  protected:\n    ModelColumns(int col_id, const Glib::ustring& col_name)\n    : m_col_id(col_id), m_col_name(col_name)\n    {}\n  }; // ModelColumns\n\n  // Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::ColumnView m_ColumnView;\n  Gtk::Box m_ButtonBox;\n  Gtk::ToggleButton m_Button_ShowAll;\n  Gtk::ToggleButton m_Button_ShowJ;\n  Gtk::ToggleButton m_Button_ShowM;\n  Gtk::Button m_Button_Quit;\n\n  Glib::RefPtr<Gtk::SingleSelection> m_SelectionModel; \n  Glib::RefPtr<Gio::ListStore<ModelColumns>> m_ListStore;\n  Glib::RefPtr<Gtk::FilterListModel> m_FilterListModel;\n  Glib::RefPtr<Gtk::StringFilter> m_StringFilter;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "d7045a9264563678",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/listmodelviews/filter",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/listmodelviews/filter",
    "file": "examplewindow.h",
    "zh": ""
   },

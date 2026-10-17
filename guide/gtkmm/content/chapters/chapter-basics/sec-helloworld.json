@@ -14,7 +14,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLE_HELLOWORLD_H\n#define GTKMM_EXAMPLE_HELLOWORLD_H\n\n#include <gtkmm/button.h>\n#include <gtkmm/window.h>\n\nclass HelloWorld : public Gtk::Window\n{\n\npublic:\n  HelloWorld();\n  ~HelloWorld() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_clicked();\n\n  //Member widgets:\n  Gtk::Button m_button;\n};\n\n#endif // GTKMM_EXAMPLE_HELLOWORLD_H",
    "sha": "b804e45c6dd8df94",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/helloworld",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/helloworld",
    "file": "helloworld.h",
    "zh": ""
   },

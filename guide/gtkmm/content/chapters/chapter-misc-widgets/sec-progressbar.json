@@ -24,7 +24,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1ProgressBar.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ProgressBar.html)",
    "sha": "71bf90935fc231d2",
    "zh": "参考"
   },
@@ -69,7 +69,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_checkbutton_text();\n  void on_checkbutton_activity();\n  void on_checkbutton_inverted();\n\n  bool on_timeout();\n  void on_button_close();\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::Grid m_Grid;\n  Gtk::ProgressBar m_ProgressBar;\n  Gtk::Separator m_Separator;\n  Gtk::CheckButton m_CheckButton_Text, m_CheckButton_Activity, m_CheckButton_Inverted;\n  Gtk::Button m_Button_Close;\n\n  sigc::connection m_connection_timeout;\n  bool m_bActivityMode;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "54fec372c7508c33",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/progressbar",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/progressbar",
    "file": "examplewindow.h",
    "zh": ""
   },

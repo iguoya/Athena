@@ -63,7 +63,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprivate:\n  // Signal handler:\n  bool on_window_key_pressed(guint keyval, guint keycode, Gdk::ModifierType state);\n\n  Gtk::Box m_container;\n  Gtk::CheckButton m_first;\n  Gtk::CheckButton m_second;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "947e00f4ab75a9ea",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/events/keyboard_simple/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/events/keyboard_simple/",
    "file": "examplewindow.h",
    "zh": ""
   },

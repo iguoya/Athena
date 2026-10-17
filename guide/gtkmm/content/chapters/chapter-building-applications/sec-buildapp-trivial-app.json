@@ -59,7 +59,7 @@
   },
   {
    "type": "para",
-   "text": "The full, buildable sources for these examples can be found in the\n`examples/book/buildapp` directory of the\n`gtkmm-documentation` source distribution, or online in the\n[`gtkmm-documentation`\ngit repository](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buildapp). You can build each example separately by using `meson`\nand `ninja` with the `meson.build` file or by using\n`make` with the `Makefile.example` file. For more\ninformation, see the `README` included in the `buildapp`\ndirectory.",
+   "text": "The full, buildable sources for these examples can be found in the\n`examples/book/buildapp` directory of the\n`gtkmm-documentation` source distribution, or online in the\n[`gtkmm-documentation`\ngit repository](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/buildapp). You can build each example separately by using `meson`\nand `ninja` with the `meson.build` file or by using\n`make` with the `Makefile.example` file. For more\ninformation, see the `README` included in the `buildapp`\ndirectory.",
    "sha": "2227c85de2e7b188",
    "zh": "这些示例的完整可构建源代码可以从gtkmm-documentation源目录的examples/book/buildapp文件夹中找到，或者在gtkmm-documentationgit仓库可以找到。你可以通过meson.build文件使用meson和ninja，或是通过Makefile.example文件使用make以编译每一个示例。更多有关信息，请参见buildapp目录中包含的README文件。"
   },
@@ -83,13 +83,13 @@
   },
   {
    "type": "para",
-   "text": "[Gio::Application Reference](&url_refdocs_base_glib_html;classGio_1_1Application.html)",
+   "text": "[Gio::Application Reference](https://gnome.pages.gitlab.gnome.org/glibmm/classGio_1_1Application.html)",
    "sha": "fb6113831966abd3",
    "zh": "Gio::Application参考"
   },
   {
    "type": "para",
-   "text": "[Gtk::Application Reference](&url_refdocs_base_gtk_html;classGtk_1_1Application.html)",
+   "text": "[Gtk::Application Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Application.html)",
    "sha": "53ffb85c1c34017c",
    "zh": "Gtk::Application参考"
   },
@@ -128,7 +128,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEAPPLICATION_H\n#define GTKMM_EXAMPLEAPPLICATION_H\n\n#include <gtkmm.h>\n\nclass ExampleAppWindow;\n\nclass ExampleApplication: public Gtk::Application\n{\nprotected:\n  ExampleApplication();\n\npublic:\n  static Glib::RefPtr<ExampleApplication> create();\n\nprotected:\n  // Override default signal handlers:\n  void on_activate() override;\n  void on_open(const Gio::Application::type_vec_files& files,\n    const Glib::ustring& hint) override;\n\nprivate:\n  ExampleAppWindow* create_appwindow();\n};\n\n#endif /* GTKMM_EXAMPLEAPPLICATION_H */",
    "sha": "6e66f54fc03cb843",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buildapp/step1",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/buildapp/step1",
    "file": "exampleapplication.h",
    "zh": ""
   },

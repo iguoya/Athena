@@ -63,7 +63,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLE_MYAREA_H\n#define GTKMM_EXAMPLE_MYAREA_H\n\n#include <gtkmm/drawingarea.h>\n#include <gdkmm/pixbuf.h>\n\nclass MyArea : public Gtk::DrawingArea\n{\npublic:\n  MyArea();\n  virtual ~MyArea();\n\nprotected:\n  void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);\n\n  Glib::RefPtr<Gdk::Pixbuf> m_image;\n};\n\n#endif // GTKMM_EXAMPLE_MYAREA_H",
    "sha": "f2de41c1be06d256",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/drawingarea/image",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/drawingarea/image",
    "file": "myarea.h",
    "zh": ""
   },

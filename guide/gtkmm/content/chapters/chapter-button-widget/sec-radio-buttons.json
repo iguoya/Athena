@@ -48,7 +48,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1RadioButton.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1RadioButton.html)",
    "sha": "71bf90935fc231d2",
    "zh": "参考"
   },
@@ -75,7 +75,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLE_RADIOBUTTONS_H\n#define GTKMM_EXAMPLE_RADIOBUTTONS_H\n\n#include <gtkmm/box.h>\n#include <gtkmm/window.h>\n#include <gtkmm/button.h>\n#include <gtkmm/checkbutton.h>\n#include <gtkmm/separator.h>\n\nclass RadioButtons : public Gtk::Window\n{\npublic:\n  RadioButtons();\n  virtual ~RadioButtons();\n\nprotected:\n  //Signal handlers:\n  void on_button_clicked();\n\n  //Child widgets:\n  Gtk::Box m_Box_Top, m_Box1, m_Box2;\n  Gtk::CheckButton m_RadioButton1, m_RadioButton2, m_RadioButton3;\n  Gtk::Separator m_Separator;\n  Gtk::Button m_Button_Close;\n};\n\n#endif //GTKMM_EXAMPLE_RADIOBUTTONS_H",
    "sha": "61aa77876fdd3080",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buttons/radiobutton",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/buttons/radiobutton",
    "file": "radiobuttons.h",
    "zh": ""
   },

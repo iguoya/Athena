@@ -14,7 +14,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLE_CLIENT_H\n#define GTKMM_EXAMPLE_CLIENT_H\n\n#include <sigc++/sigc++.h>\n\n//Client must inherit from sigc::trackable.\n//because libsigc++ needs to keep track of the lifetime of signal handlers.\nclass Client : public sigc::trackable\n{\npublic:\n  Client();\n  virtual ~Client();\n\n  //Signal handler:\n  void on_server_something(bool a, int b);\n};\n\n#endif //GTKMM_EXAMPLE_CLIENT_H",
    "sha": "8f5d55d0f3944f24",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/signals/custom/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/signals/custom/",
    "file": "client.h",
    "zh": ""
   },

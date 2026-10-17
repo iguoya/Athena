@@ -36,7 +36,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1EventController.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1EventController.html)",
    "sha": "71bf90935fc231d2",
    "zh": "参考"
   },
@@ -63,7 +63,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprivate:\n  // Signal handlers:\n  void on_window_mouse_pressed(int n_press, double x, double y);\n  void on_first_button_mouse_pressed(int n_press, double x, double y);\n  void on_second_button_mouse_pressed(int n_press, double x, double y);\n  void on_third_button_mouse_pressed(int n_press, double x, double y);\n  void on_third_button_clicked();\n  void on_mouse_released(int n_press, double x, double y);\n  void on_mouse_motion(double x, double y);\n  bool on_mouse_scroll(double dx, double dy);\n  bool on_key_pressed(guint keyval, guint keycode, Gdk::ModifierType state);\n\n  Gtk::Box m_box;\n  Gtk::CheckButton m_first;\n  Gtk::CheckButton m_second;\n  Gtk::Button m_third;\n\n  Glib::RefPtr<Gtk::GestureClick> m_window_click;\n  Glib::RefPtr<Gtk::GestureClick> m_first_button_click;\n  Glib::RefPtr<Gtk::GestureClick> m_second_button_click;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "5b5914b805ff02f3",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/events/mouse/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/events/mouse/",
    "file": "examplewindow.h",
    "zh": ""
   },

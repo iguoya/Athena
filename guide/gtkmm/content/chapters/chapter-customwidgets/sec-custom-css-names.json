@@ -87,7 +87,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include \"mybutton.h\"\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handlers:\n  void on_button_quit();\n  static void on_parsing_error(const Glib::RefPtr<const Gtk::CssSection>& section,\n    const Glib::Error& error);\n\n  // Child widgets:\n  Gtk::Box m_VBox;\n  MyButton m_Button_Child;\n  Gtk::Label m_Label_Child1;\n  Gtk::Label m_Label_Child2;\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n\n  Glib::RefPtr<Gtk::CssProvider> m_refCssProvider;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "1eb7b239050d2472",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/custom/custom_css_name/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/custom/custom_css_name/",
    "file": "examplewindow.h",
    "zh": ""
   },

@@ -50,7 +50,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Dialog.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Dialog.html)",
    "sha": "71bf90935fc231d2",
    "zh": "参考"
   },
@@ -62,13 +62,13 @@
   },
   {
    "type": "para",
-   "text": "[AlertDialog Reference](&url_refdocs_base_gtk_html;classGtk_1_1AlertDialog.html)",
+   "text": "[AlertDialog Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html)",
    "sha": "1c302b08f375d676",
    "zh": "参考"
   },
   {
    "type": "para",
-   "text": "[MessageDialog Reference](&url_refdocs_base_gtk_html;classGtk_1_1MessageDialog.html)",
+   "text": "[MessageDialog Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1MessageDialog.html)",
    "sha": "69788f0abccb048d",
    "zh": "参考"
   },
@@ -89,7 +89,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_info_clicked();\n  void on_button_question_clicked();\n  void on_question_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result);\n\n  //Child widgets:\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Info;\n  Gtk::Button m_Button_Question;\n\n  Glib::RefPtr<Gtk::AlertDialog> m_pDialog;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "e9343563847d3cf5",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dialogs/alertdialog",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/dialogs/alertdialog",
    "file": "examplewindow.h",
    "zh": ""
   },

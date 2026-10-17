@@ -35,7 +35,8 @@ def scan_text(path: Path) -> list[str]:
     raw = path.read_text(encoding="utf-8")
     if path.parent.parent.name == "chapters":
         data = json.loads(raw)
-        return [b.get("zh") or "" for b in data.get("blocks", [])]
+        # 页标题（title）有的页是手写的中文，一并检查
+        return [data.get("title") or ""] + [b.get("zh") or "" for b in data.get("blocks", [])]
     return [raw]
 
 

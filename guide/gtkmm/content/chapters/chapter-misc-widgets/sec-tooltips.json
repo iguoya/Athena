@@ -12,13 +12,13 @@
   },
   {
    "type": "para",
-   "text": "[Widget Reference](&url_refdocs_base_gtk_html;classGtk_1_1Widget.html)",
+   "text": "[Widget Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Widget.html)",
    "sha": "633226156ed4d8b5",
    "zh": "部件参考"
   },
   {
    "type": "para",
-   "text": "[Tooltip Reference](&url_refdocs_base_gtk_html;classGtk_1_1Tooltip.html)",
+   "text": "[Tooltip Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Tooltip.html)",
    "sha": "3be3170e10d5c6ff",
    "zh": "工具提示框参考"
   },
@@ -39,7 +39,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n\n  //Methods:\n  void prepare_textview();\n  void connect_signals();\n\n  //Signal handlers:\n  void on_markup_checkbutton_toggled();\n  bool on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);\n  bool on_button_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);\n\n  //Child widgets:\n  Gtk::Box m_vbox;\n\n  Gtk::CheckButton m_checkbutton;\n  Gtk::Label m_label;\n\n  Gtk::ScrolledWindow m_scrolled_window;\n  Gtk::TextView m_text_view;\n  Glib::RefPtr<Gtk::TextBuffer> m_ref_text_buffer;\n  Glib::RefPtr<Gtk::TextTag> m_ref_bold_tag;\n\n  Gtk::Button m_button;\n  Gtk::Box m_button_tooltip_widget;\n};\n\n#endif // GTKMM_EXAMPLEWINDOW_H",
    "sha": "bcc710085aaebcd7",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/tooltips",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/tooltips",
    "file": "examplewindow.h",
    "zh": ""
   },

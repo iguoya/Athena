@@ -53,7 +53,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLE_MYAREA_H\n#define GTKMM_EXAMPLE_MYAREA_H\n\n#include <gtkmm/drawingarea.h>\n\nclass MyArea : public Gtk::DrawingArea\n{\npublic:\n  MyArea();\n  virtual ~MyArea();\n\nprotected:\n  void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);\n};\n\n#endif // GTKMM_EXAMPLE_MYAREA_H",
    "sha": "b9a46af5968c608f",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/drawingarea/simple",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/drawingarea/simple",
    "file": "myarea.h",
    "zh": ""
   },
@@ -156,7 +156,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/box.h>\n#include <gtkmm/checkbutton.h>\n#include \"myarea.h\"\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_toggled();\n\nprivate:\n  Gtk::Box m_HBox;\n  MyArea m_Area_Lines;\n  Gtk::CheckButton m_Button_FixLines;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "2589ec42f3e75ddd",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/drawingarea/thin_lines",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/drawingarea/thin_lines",
    "file": "examplewindow.h",
    "zh": ""
   },

@@ -12,7 +12,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1InfoBar.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1InfoBar.html)",
    "sha": "71bf90935fc231d2",
    "zh": "参考"
   },
@@ -39,7 +39,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_infobar_ok();\n  void on_button_quit();\n  void on_button_clear();\n  void on_textbuffer_changed();\n  void on_parsing_error(const Glib::RefPtr<const Gtk::CssSection>& section,\n    const Glib::Error& error);\n\n  void set_infobar_background();\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TextView m_TextView;\n\n  Glib::RefPtr<Gtk::TextBuffer> m_refTextBuffer;\n\n  Gtk::Box m_InfoBar;\n  Gtk::Label m_Message_Label;\n  Gtk::Button m_Button_OK;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n  Gtk::Button m_Button_Clear;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "79fd558e63648609",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/infobar",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/infobar",
    "file": "examplewindow.h",
    "zh": ""
   },

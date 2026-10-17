@@ -24,19 +24,19 @@
   },
   {
    "type": "para",
-   "text": "[SortListModel Reference](&url_refdocs_base_gtk_html;classGtk_1_1SortListModel.html)",
+   "text": "[SortListModel Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1SortListModel.html)",
    "sha": "42dae8cb4f03f5be",
    "zh": "SortListModel 参考文档"
   },
   {
    "type": "para",
-   "text": "[StringSorter Reference](&url_refdocs_base_gtk_html;classGtk_1_1StringSorter.html)",
+   "text": "[StringSorter Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1StringSorter.html)",
    "sha": "59c389c1f5bcbbe4",
    "zh": "StringSorter 参考文档"
   },
   {
    "type": "para",
-   "text": "[NumericSorter Reference](&url_refdocs_base_gtk_html;classGtk_1_1NumericSorter.html)",
+   "text": "[NumericSorter Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1NumericSorter.html)",
    "sha": "e3f9da5b2029e8e1",
    "zh": "NumericSorter 参考文档"
   },
@@ -57,7 +57,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handlers:\n  void on_button_nosort();\n  void on_button_sortheadings();\n  void on_button_sortlength();\n  void on_button_quit();\n  void on_setup_label(const Glib::RefPtr<Gtk::ListItem>& list_item, Gtk::Align halign);\n  void on_bind_id(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  void on_bind_name(const Glib::RefPtr<Gtk::ListItem>& list_item);\n\n  // A Gio::ListStore item.\n  class ModelColumns : public Glib::Object\n  {\n  public:\n    unsigned int m_col_id;\n    Glib::ustring m_col_name;\n\n    static Glib::RefPtr<ModelColumns> create(int col_id, const Glib::ustring& col_name)\n    {\n      return Glib::make_refptr_for_instance<ModelColumns>(\n        new ModelColumns(col_id, col_name));\n    }\n\n  protected:\n    ModelColumns(int col_id, const Glib::ustring& col_name)\n    : m_col_id(col_id), m_col_name(col_name)\n    {}\n  }; // ModelColumns\n\n  // Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::ColumnView m_ColumnView;\n  Gtk::Box m_ButtonBox;\n  Gtk::ToggleButton m_Button_NoSort;\n  Gtk::ToggleButton m_Button_SortHeadings;\n  Gtk::ToggleButton m_Button_SortLength;\n  Gtk::Button m_Button_Quit;\n\n  Glib::RefPtr<Gtk::SingleSelection> m_SelectionModel; \n  Glib::RefPtr<Gio::ListStore<ModelColumns>> m_ListStore;\n  Glib::RefPtr<Gtk::SortListModel> m_SortListModel;\n  Glib::RefPtr<Gtk::ColumnViewColumn> m_IdColumn;\n  Glib::RefPtr<Gtk::ColumnViewColumn> m_NameColumn;\n  Glib::RefPtr<Gtk::NumericSorter<Glib::ustring::size_type>> m_LengthSorter;\n  Glib::RefPtr<Gtk::NumericSorter<unsigned int>> m_IdSorter;\n  Glib::RefPtr<Gtk::StringSorter> m_NameSorter;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "3fbe4746ea1274bb",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/listmodelviews/sort",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/listmodelviews/sort",
    "file": "examplewindow.h",
    "zh": ""
   },

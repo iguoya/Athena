@@ -21,7 +21,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n\n  void fill_buffers();\n\n  //Signal handlers:\n  void on_button_quit();\n  void on_button_buffer1();\n  void on_button_buffer2();\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TextView m_TextView;\n\n  Glib::RefPtr<Gtk::TextBuffer> m_refTextBuffer1, m_refTextBuffer2;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit, m_Button_Buffer1, m_Button_Buffer2;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "c7067fcfa0ff23e6",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/textview/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/textview/",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -53,7 +53,7 @@
   },
   {
    "type": "para",
-   "text": "There is a more complicated example among\n[gtkmm's demo programs](https://gitlab.gnome.org/GNOME/gtkmm/tree/&url_examples_branch;/demos/gtk-demo/example_textview.cc).",
+   "text": "There is a more complicated example among\n[gtkmm's demo programs](https://gitlab.gnome.org/GNOME/gtkmm/tree/master/demos/gtk-demo/example_textview.cc).",
    "sha": "43b9490d951542b6",
    "zh": "在 gtkmm 的演示程序里还有一个更复杂的例子（example_textview.cc）。"
   }

@@ -12,13 +12,13 @@
   },
   {
    "type": "para",
-   "text": "[TreeListModel Reference](&url_refdocs_base_gtk_html;classGtk_1_1TreeListModel.html)",
+   "text": "[TreeListModel Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeListModel.html)",
    "sha": "e3fd0a33a174b682",
    "zh": "TreeListModel 参考文档"
   },
   {
    "type": "para",
-   "text": "[TreeExpander Reference](&url_refdocs_base_gtk_html;classGtk_1_1TreeExpander.html)",
+   "text": "[TreeExpander Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeExpander.html)",
    "sha": "32c09c7853d9fa83",
    "zh": "TreeExpander 参考文档"
   },
@@ -39,7 +39,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handlers:\n  void on_button_quit();\n  void on_setup_id(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  void on_setup_name(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  void on_bind_id(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  void on_bind_name(const Glib::RefPtr<Gtk::ListItem>& list_item);\n\n  Glib::RefPtr<Gio::ListModel> create_model(\n    const Glib::RefPtr<Glib::ObjectBase>& item = {});\n\n  // A Gio::ListStore item.\n  class ModelColumns : public Glib::Object\n  {\n  public:\n    int m_col_id;\n    Glib::ustring m_col_name;\n\n    static Glib::RefPtr<ModelColumns> create(int col_id, const Glib::ustring& col_name)\n    {\n      return Glib::make_refptr_for_instance<ModelColumns>(\n        new ModelColumns(col_id, col_name));\n    }\n\n  protected:\n    ModelColumns(int col_id, const Glib::ustring& col_name)\n    : m_col_id(col_id), m_col_name(col_name)\n    {}\n  }; // ModelColumns\n\n  // Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::ColumnView m_ColumnView;\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n\n  Glib::RefPtr<Gtk::TreeListModel> m_TreeListModel;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "fa061b16531fd756",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/listmodelviews/tree_columnview",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/listmodelviews/tree_columnview",
    "file": "examplewindow.h",
    "zh": ""
   },

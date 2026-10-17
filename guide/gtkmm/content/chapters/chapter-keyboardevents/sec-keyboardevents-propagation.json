@@ -78,7 +78,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EVENT_PROPAGATION_H\n#define GTKMM_EVENT_PROPAGATION_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprivate:\n  // Signal handlers:\n  bool label2_key_pressed(guint keyval, guint keycode, Gdk::ModifierType state, const Glib::ustring& phase);\n  bool box_key_pressed(guint keyval, guint keycode, Gdk::ModifierType state, const Glib::ustring& phase);\n  bool window_key_pressed(guint keyval, guint keycode, Gdk::ModifierType state, const Glib::ustring& phase);\n\n  bool m_first = true;\n  Gtk::Box m_container;\n  Gtk::Frame m_frame;\n  Gtk::Label m_label1 {\"A label\"};\n  Gtk::Label m_label2 {\"Write here\"};\n  Gtk::CheckButton m_checkbutton_can_propagate_down {\"Can propagate down in the capture phase\"};\n  Gtk::CheckButton m_checkbutton_can_propagate_up {\"Can propagate up in the bubble phase\"};\n};\n\n#endif //GTKMM_EVENT_PROPAGATION_H",
    "sha": "fc988998b8f38a8d",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/events/keyboard_propagation/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/events/keyboard_propagation/",
    "file": "examplewindow.h",
    "zh": ""
   },

@@ -56,7 +56,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLE_TIMEREXAMPLE_H\n#define GTKMM_EXAMPLE_TIMEREXAMPLE_H\n\n#include <gtkmm.h>\n#include <iostream>\n#include <map>\n\nclass TimerExample : public Gtk::Window\n{\npublic:\n  TimerExample();\n\nprotected:\n  // signal handlers\n  void on_button_add_timer();\n  void on_button_delete_timer();\n  void on_button_quit();\n\n  // This is the callback function the timeout will call\n  bool on_timeout(int timer_number);\n\n  // Member data:\n\n  Gtk::Box m_Box;\n  Gtk::Button m_ButtonAddTimer, m_ButtonDeleteTimer, m_ButtonQuit;\n\n  // Keep track of the timers being added:\n  int m_timer_number;\n\n  // These two constants are initialized in the constructor's member initializer:\n  const int count_value;\n  const int timeout_value;\n\n  // STL map for storing our connections\n  std::map<int, sigc::connection> m_timers;\n\n  // STL map for storing our timer values.\n  // Each timer counts back from COUNT_VALUE to 0 and is removed when it reaches 0\n  std::map<int, int> m_counters;\n};\n\n#endif // GTKMM_EXAMPLE_TIMEREXAMPLE_H",
    "sha": "aac379ba1f83178e",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/timeout/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/timeout/",
    "file": "timerexample.h",
    "zh": ""
   },

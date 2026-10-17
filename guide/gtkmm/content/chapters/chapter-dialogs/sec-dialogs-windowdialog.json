@@ -12,7 +12,7 @@
   },
   {
    "type": "para",
-   "text": "[Window Reference](&url_refdocs_base_gtk_html;classGtk_1_1Window.html)",
+   "text": "[Window Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Window.html)",
    "sha": "c5f9bf7ac60835fe",
    "zh": "部件参考"
   },
@@ -33,7 +33,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include \"namedialog.h\"\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_clicked();\n  void on_dialog_response(const Glib::ustring& response);\n  void on_dialog_hidden();\n\n  //Child widgets:\n  Gtk::Button m_Button;\n\n  NameDialog m_Dialog;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "926ab8f924dfaaa8",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dialogs/windowdialog",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/dialogs/windowdialog",
    "file": "examplewindow.h",
    "zh": ""
   },

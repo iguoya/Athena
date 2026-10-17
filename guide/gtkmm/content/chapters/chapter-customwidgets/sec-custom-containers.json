@@ -81,7 +81,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include \"mycontainer.h\"\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  MyContainer m_MyContainer;\n  Gtk::Button m_Button_Child;\n  Gtk::Label m_Label_Child;\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "3bdd67c53ffc4af2",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/custom/custom_container/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/custom/custom_container/",
    "file": "examplewindow.h",
    "zh": ""
   },

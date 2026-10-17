@@ -27,7 +27,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEAPPLICATION_H\n#define GTKMM_EXAMPLEAPPLICATION_H\n\n#include <gtkmm.h>\n\nclass ExampleApplication : public Gtk::Application\n{\nprotected:\n  ExampleApplication();\n\npublic:\n  static Glib::RefPtr<ExampleApplication> create();\n\nprotected:\n  //Overrides of default signal handlers:\n  void on_startup() override;\n  void on_activate() override;\n\nprivate:\n  void create_window();\n\n  void on_menu_file_new_generic();\n  void on_menu_file_quit();\n  void on_menu_help_about();\n\n  Glib::RefPtr<Gtk::Builder> m_refBuilder;\n};\n\n#endif /* GTKMM_EXAMPLEAPPLICATION_H */",
    "sha": "9a1c8c1ed5a20f08",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/menus/main_menu/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/menus/main_menu/",
    "file": "exampleapplication.h",
    "zh": ""
   },
@@ -124,7 +124,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow(const Glib::RefPtr<Gtk::Application>& app);\n  virtual ~ExampleWindow();\n\nprivate:\n  //Signal handlers:\n  //void on_action_file_new();\n  void on_action_file_quit();\n  void on_action_others();\n  void on_action_toggle();\n\n  //Child widgets:\n  Gtk::Box m_Box;\n\n  Glib::RefPtr<Gtk::Builder> m_refBuilder;\n  Glib::RefPtr<Gio::SimpleActionGroup> m_refActionGroup;\n  Glib::RefPtr<Gio::SimpleAction> m_refActionRain;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "7e746d2c8cca8d25",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/menus_and_toolbars",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/menus_and_toolbars",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -184,7 +184,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\n#include <memory>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow(const Glib::RefPtr<Gtk::Application>& app);\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_label_pressed(int n_press, double x, double y);\n\n  void on_menu_file_popup_generic();\n\n  //Child widgets:\n  Gtk::Box m_Box;\n  Gtk::Label m_Label;\n  Gtk::PopoverMenu m_MenuPopup;\n\n  Glib::RefPtr<Gtk::Builder> m_refBuilder;\n  Glib::RefPtr<Gtk::GestureClick> m_refGesture;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "ca6c84d83dd5425e",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/menus/popup/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/menus/popup/",
    "file": "examplewindow.h",
    "zh": ""
   },

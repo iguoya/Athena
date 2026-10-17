@@ -87,7 +87,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/combobox.h>\n#include <gtkmm/liststore.h>\n#include <gtkmm/version.h>\n\n#define HAS_SIGNAL_ACTIVATE GTKMM_CHECK_VERSION(4,7,1)\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_entry_changed();\n#if HAS_SIGNAL_ACTIVATE\n  void on_entry_activate();\n#endif\n  void on_entry_focus_leave();\n\n  //Signal connection:\n  sigc::connection m_ConnectionFocusLeave;\n\n  //Tree model columns:\n  class ModelColumns : public Gtk::TreeModel::ColumnRecord\n  {\n  public:\n\n    ModelColumns()\n    { add(m_col_id); add(m_col_name); }\n\n    Gtk::TreeModelColumn<Glib::ustring> m_col_id; //The data to choose - this must be text.\n    Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n  };\n\n  ModelColumns m_Columns;\n\n  //Child widgets:\n  Gtk::ComboBox m_Combo;\n  Glib::RefPtr<Gtk::ListStore> m_refTreeModel;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "b9c4893f90d5fb52",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/combobox/entry_complex",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/combobox/entry_complex",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -122,7 +122,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/comboboxtext.h>\n#include <gtkmm/version.h>\n\n#define HAS_SIGNAL_ACTIVATE GTKMM_CHECK_VERSION(4,7,1)\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_combo_changed();\n#if HAS_SIGNAL_ACTIVATE\n  void on_entry_activate();\n#endif\n  void on_entry_focus_leave();\n\n  //Signal connection:\n  sigc::connection m_ConnectionFocusLeave;\n\n  //Child widgets:\n  Gtk::ComboBoxText m_Combo;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "56a126f356b7f726",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/combobox/entry_text",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/combobox/entry_text",
    "file": "examplewindow.h",
    "zh": ""
   },

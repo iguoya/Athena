@@ -33,7 +33,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/dropdown.h>\n#include <gtkmm/stringlist.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handler:\n  void on_dropdown_changed();\n\n  // Child widget:\n  Gtk::DropDown m_DropDown;\n  \n  Glib::RefPtr<Gtk::StringList> m_StringList;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "cc5d366fd2da1cae",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dropdown/search_string",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/dropdown/search_string",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -74,7 +74,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handler:\n  void on_dropdown_changed();\n\n  Glib::ustring get_family_name(const Glib::RefPtr<Glib::ObjectBase>& item);\n\n  // Child widget:\n  Gtk::DropDown m_DropDown;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "c6e4fe6e0b07dcb1",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dropdown/search_font",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/dropdown/search_font",
    "file": "examplewindow.h",
    "zh": ""
   },

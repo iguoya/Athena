@@ -15,7 +15,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/comboboxtext.h>\n#include <gtkmm/liststore.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  void on_cell_data_extra(const Gtk::TreeModel::const_iterator& iter);\n\n  //Signal handlers:\n  void on_combo_changed();\n\n\n  //Tree model columns:\n  class ModelColumns : public Gtk::TreeModel::ColumnRecord\n  {\n  public:\n\n    ModelColumns()\n    { add(m_col_id); add(m_col_name); add(m_col_extra);}\n\n    Gtk::TreeModelColumn<int> m_col_id;\n    Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n    Gtk::TreeModelColumn<Glib::ustring> m_col_extra;\n  };\n\n  ModelColumns m_Columns;\n\n  //Child widgets:\n  Gtk::ComboBox m_Combo;\n  Gtk::CellRendererText m_cell;\n  Glib::RefPtr<Gtk::ListStore> m_refTreeModel;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "5c73861dba547844",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/combobox/complex",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/combobox/complex",
    "file": "examplewindow.h",
    "zh": ""
   },

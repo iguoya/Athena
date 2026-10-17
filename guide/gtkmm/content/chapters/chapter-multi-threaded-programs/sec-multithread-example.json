@@ -33,7 +33,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include \"exampleworker.h\"\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n\n  // Called from the worker thread.\n  void notify();\n\nprivate:\n  // Signal handlers.\n  void on_start_button_clicked();\n  void on_stop_button_clicked();\n  void on_quit_button_clicked();\n\n  void update_start_stop_buttons();\n  void update_widgets();\n\n  // Dispatcher handler.\n  void on_notification_from_worker_thread();\n\n  // Member data.\n  Gtk::Box m_VBox;\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_ButtonStart;\n  Gtk::Button m_ButtonStop;\n  Gtk::Button m_ButtonQuit;\n  Gtk::ProgressBar m_ProgressBar;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TextView m_TextView;\n\n  Glib::Dispatcher m_Dispatcher;\n  ExampleWorker m_Worker;\n  std::thread* m_WorkerThread;\n};\n\n#endif // GTKMM_EXAMPLEWINDOW_H",
    "sha": "bf9993a48e2700be",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/multithread",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/multithread",
    "file": "examplewindow.h",
    "zh": ""
   },

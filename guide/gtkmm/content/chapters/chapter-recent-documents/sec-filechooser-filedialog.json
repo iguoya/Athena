@@ -59,7 +59,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow(const Glib::RefPtr<Gtk::Application>& app);\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_menu_file_files_dialog();\n  void on_menu_file_quit();\n  void on_menu_file_new();\n  void on_dialog_finish(Glib::RefPtr<Gio::AsyncResult>& result);\n\n  //Child widgets:\n  Gtk::Box m_Box;\n\n  Glib::RefPtr<Gtk::Builder> m_refBuilder;\n  Glib::RefPtr<Gio::SimpleActionGroup> m_refActionGroup;\n\n  Glib::RefPtr<Gtk::RecentManager> m_refRecentManager;\n  Glib::RefPtr<Gtk::FileDialog> m_refFileDialog;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "cef2a4d59f72fa1b",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/recent_files",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/recent_files",
    "file": "examplewindow.h",
    "zh": ""
   },

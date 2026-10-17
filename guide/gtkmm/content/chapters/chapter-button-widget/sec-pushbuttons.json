@@ -12,21 +12,21 @@
   },
   {
    "type": "listitem",
-   "text": "[`Gtk::Button`](&url_refdocs_base_gtk_html;classGtk_1_1Button.html). Standard buttons, usually\nmarked with a label or picture. Pushing one triggers an action. See the [Button](#sec-pushbuttons) section.",
+   "text": "[`Gtk::Button`](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Button.html). Standard buttons, usually\nmarked with a label or picture. Pushing one triggers an action. See the [Button](#sec-pushbuttons) section.",
    "sha": "109c4057eecb602f",
    "marker": "Push buttons",
    "zh": "Gtk::Button。这是标准按钮，通常标有文字标签或者图片。按一下就会触发一个动作。参看 Button 小节。"
   },
   {
    "type": "listitem",
-   "text": "[`Gtk::ToggleButton`](&url_refdocs_base_gtk_html;classGtk_1_1ToggleButton.html).\nUnlike a normal Button, which springs back up, a ToggleButton stays down until you\npress it again. It might be useful as an on/off switch. See the [ToggleButton](#sec-toggle-buttons) section.",
+   "text": "[`Gtk::ToggleButton`](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ToggleButton.html).\nUnlike a normal Button, which springs back up, a ToggleButton stays down until you\npress it again. It might be useful as an on/off switch. See the [ToggleButton](#sec-toggle-buttons) section.",
    "sha": "ce8bf64973d02ea3",
    "marker": "Toggle buttons",
    "zh": "Gtk::ToggleButton。和一般按下后会自动弹起的按钮不一样，ToggleButton 需要你再按一次才会弹起。它作为一个开关可能比较有用。参看 ToggleButton 小节。"
   },
   {
    "type": "listitem",
-   "text": "[`Gtk::CheckButton`](&url_refdocs_base_gtk_html;classGtk_1_1CheckButton.html).\nThese act like ToggleButtons, but show their state in small squares,\nwith their label at the side. They should be used in most situations\nwhich require an on/off setting.\nSee the [CheckButton](#sec-checkbuttons) section.",
+   "text": "[`Gtk::CheckButton`](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1CheckButton.html).\nThese act like ToggleButtons, but show their state in small squares,\nwith their label at the side. They should be used in most situations\nwhich require an on/off setting.\nSee the [CheckButton](#sec-checkbuttons) section.",
    "sha": "39379f9101c5ff60",
    "marker": "Check buttons",
    "zh": "Gtk::CheckButton。它们用起来和 ToggleButtons 很像，只不过它们用一个小方块来显示自己的状态，而且旁边还有一个文字标签。在大多数需要布尔值设置的情况都可以使用它。参看 CheckButton 小节。"
@@ -76,7 +76,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Button.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Button.html)",
    "sha": "71bf90935fc231d2",
    "zh": "参考"
   },
@@ -103,7 +103,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLE_BUTTONS_H\n#define GTKMM_EXAMPLE_BUTTONS_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/button.h>\n\nclass Buttons : public Gtk::Window\n{\npublic:\n  Buttons();\n  virtual ~Buttons();\n\nprotected:\n  //Signal handlers:\n  void on_button_clicked();\n\n  //Child widgets:\n  Gtk::Button m_button;\n};\n\n#endif //GTKMM_EXAMPLE_BUTTONS_H",
    "sha": "56abaa3a40fc8f16",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buttons/button",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/buttons/button",
    "file": "buttons.h",
    "zh": ""
   },

@@ -26,7 +26,7 @@
    "type": "code",
    "text": "#include <gtkmm.h>\n\nclass MyWindow : public Gtk::Window\n{\npublic:\n  MyWindow();\n};\n\nMyWindow::MyWindow()\n{\n  set_title(\"Basic application\");\n  set_default_size(200, 200);\n}\n\nint main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.examples.base\");\n\n  return app->make_window_and_run<MyWindow>(argc, argv);\n}",
    "sha": "d902901ab9840e21",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/base",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/base",
    "file": "base.cc",
    "zh": ""
   },

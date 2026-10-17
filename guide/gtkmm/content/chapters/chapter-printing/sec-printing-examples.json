@@ -27,7 +27,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n// This file is part of the printing/simple and printing/advanced examples\n\n#include <gtkmm.h>\n\nclass PrintFormOperation;\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow(const Glib::RefPtr<Gtk::Application>& app);\n  virtual ~ExampleWindow();\n\nprotected:\n\n  void build_main_menu(const Glib::RefPtr<Gtk::Application>& app);\n\n  void print_or_preview(Gtk::PrintOperation::Action print_action);\n\n  //PrintOperation signal handlers.\n  //We handle these so can get necessary information to update the UI or print settings.\n  //Our derived PrintOperation class also overrides some default signal handlers.\n  void on_printoperation_status_changed();\n  void on_printoperation_done(Gtk::PrintOperation::Result result);\n\n  //Action signal handlers:\n  void on_menu_file_new();\n  void on_menu_file_page_setup();\n  void on_menu_file_print_preview();\n  void on_menu_file_print();\n  void on_menu_file_quit();\n\n  //Printing-related objects:\n  Glib::RefPtr<Gtk::PageSetup> m_refPageSetup;\n  Glib::RefPtr<Gtk::PrintSettings> m_refSettings;\n  Glib::RefPtr<PrintFormOperation> m_refPrintFormOperation;\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::Grid m_Grid;\n\n  Gtk::Label m_NameLabel;\n  Gtk::Entry m_NameEntry;\n\n  Gtk::Label m_SurnameLabel;\n  Gtk::Entry m_SurnameEntry;\n\n  Gtk::Label m_CommentsLabel;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TextView m_TextView;\n\n  Glib::RefPtr<Gtk::TextBuffer> m_refTextBuffer;\n\n  Gtk::Label m_Statusbar;\n\n  Glib::RefPtr<Gtk::Builder> m_refBuilder;\n\n  Glib::RefPtr<Gtk::AlertDialog> m_refDialog;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "bb373f88704be2bd",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/printing/simple/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/printing/simple/",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -100,7 +100,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass PrintFormDialog;\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow(const Glib::RefPtr<Gtk::Application>& app);\n  ~ExampleWindow() override;\n\nprotected:\n  void build_main_menu(const Glib::RefPtr<Gtk::Application>& app);\n\n  // Action signal handlers:\n  void on_menu_file_new();\n  void on_menu_file_print_setup();\n  void on_menu_file_print();\n  void on_menu_file_quit();\n\n  // Printing-related objects:\n  Glib::RefPtr<PrintFormDialog> m_refPrintFormDialog;\n\n  // Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::Grid m_Grid;\n\n  Gtk::Label m_NameLabel;\n  Gtk::Entry m_NameEntry;\n\n  Gtk::Label m_SurnameLabel;\n  Gtk::Entry m_SurnameEntry;\n\n  Gtk::Label m_CommentsLabel;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TextView m_TextView;\n\n  Glib::RefPtr<Gtk::TextBuffer> m_refTextBuffer;\n\n  Glib::RefPtr<Gtk::Builder> m_refBuilder;\n};\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "d114b2cb28dd4f88",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/printing/print_dialog/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/printing/print_dialog/",
    "file": "examplewindow.h",
    "zh": ""
   },

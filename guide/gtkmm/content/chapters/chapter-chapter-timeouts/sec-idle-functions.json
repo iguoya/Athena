@@ -38,7 +38,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLE_IDLEEXAMPLE_H\n#define GTKMM_EXAMPLE_IDLEEXAMPLE_H\n\n#include <gtkmm.h>\n#include <iostream>\n\nclass IdleExample : public Gtk::Window\n{\npublic:\n  IdleExample();\n\nprotected:\n  // Signal Handlers:\n  bool on_timer();\n  bool on_idle();\n  void on_button_clicked();\n\n  // Member data:\n  Gtk::Box m_Box;\n  Gtk::Button m_ButtonQuit;\n  Gtk::ProgressBar m_ProgressBar_c;\n  Gtk::ProgressBar m_ProgressBar_d;\n};\n\n#endif // GTKMM_EXAMPLE_IDLEEXAMPLE_H",
    "sha": "34e35761cc0d0a32",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/idle/",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/idle/",
    "file": "idleexample.h",
    "zh": ""
   },

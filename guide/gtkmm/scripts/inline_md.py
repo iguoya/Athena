@@ -32,8 +32,14 @@ def expand_entities(text: str, custom: dict[str, str] | None = None, keep_angle:
     keep_angle=True 时 &lt; &gt; 展开成占位符而非 < >，调用方在剥完标签后
     用 restore_angles 还原。
     """
-    for name, value in sorted((custom or {}).items(), key=lambda kv: -len(kv[0])):
-        text = text.replace(f"&{name};", value)
+    # 自定义实体的值里还可能引用别的实体（url_refdocs_base_gtk = "&url_refdocs_base_gtk_html;classGtk_1_1"），
+    # 一遍替换会漏掉新冒出来的引用，所以替换到不再变化为止
+    for _ in range(5):
+        before = text
+        for name, value in sorted((custom or {}).items(), key=lambda kv: -len(kv[0])):
+            text = text.replace(f"&{name};", value)
+        if text == before:
+            break
     for entity, char in _ENTITIES.items():
         if keep_angle and entity in ("&lt;", "&gt;"):
             char = _LT if entity == "&lt;" else _GT

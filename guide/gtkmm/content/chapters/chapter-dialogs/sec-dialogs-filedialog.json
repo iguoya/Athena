@@ -18,13 +18,13 @@
   },
   {
    "type": "para",
-   "text": "[FileDialog Reference](&url_refdocs_base_gtk_html;classGtk_1_1FileDialog.html)",
+   "text": "[FileDialog Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1FileDialog.html)",
    "sha": "bc84fc53b8948b13",
    "zh": "参考"
   },
   {
    "type": "para",
-   "text": "[FileChooserDialog Reference](&url_refdocs_base_gtk_html;classGtk_1_1FileChooserDialog.html)",
+   "text": "[FileChooserDialog Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1FileChooserDialog.html)",
    "sha": "4fa5eed6e7057102",
    "zh": "参考"
   },
@@ -45,7 +45,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_file_clicked();\n  void on_button_folder_clicked();\n  void on_file_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result,\n    const Glib::RefPtr<Gtk::FileDialog>& dialog);\n  void on_folder_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result,\n    const Glib::RefPtr<Gtk::FileDialog>& dialog);\n\n  //Child widgets:\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_File;\n  Gtk::Button m_Button_Folder;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "8b91351263b445c4",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dialogs/filedialog",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/dialogs/filedialog",
    "file": "examplewindow.h",
    "zh": ""
   },

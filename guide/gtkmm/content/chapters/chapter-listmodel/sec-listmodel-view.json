@@ -36,7 +36,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1ListView.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ListView.html)",
    "sha": "71bf90935fc231d2",
    "zh": "参考"
   },
@@ -57,7 +57,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handlers:\n  void on_button_quit();\n  void on_setup_label(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  void on_bind_name(const Glib::RefPtr<Gtk::ListItem>& list_item);\n\n  // Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::Label m_Heading;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::ListView m_ListView;\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n\n  Glib::RefPtr<Gtk::StringList> m_StringList;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "a3633ec2eac2196f",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/listmodelviews/list_listview",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/listmodelviews/list_listview",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -89,7 +89,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1GridView.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1GridView.html)",
    "sha": "71bf90935fc231d2-1",
    "zh": "参考"
   },
@@ -110,7 +110,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include <gdkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  class ModelColumns;\n  // Signal handlers:\n  void on_button_quit();\n  void on_item_activated(unsigned int position);\n  void on_selection_changed();\n  void on_setup_listitem(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  void on_bind_listitem(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  int on_model_sort(const Glib::RefPtr<const ModelColumns>& a, const Glib::RefPtr<const ModelColumns>& b);\n\n  void add_entry(const std::string& filename, const Glib::ustring& description);\n\n  // A Gio::ListStore stores filename, description and texture.\n  class ModelColumns : public Glib::Object\n  {\n  public:\n    std::string m_filename;\n    Glib::ustring  m_description;\n    Glib::RefPtr<Gdk::Texture> m_texture;\n\n    static Glib::RefPtr<ModelColumns> create(const std::string& filename,\n      const Glib::ustring& description, const Glib::RefPtr<Gdk::Texture>& texture)\n    {\n      return Glib::make_refptr_for_instance<ModelColumns>(\n        new ModelColumns(filename, description, texture));\n    }\n\n  protected:\n    ModelColumns(const std::string& filename, const Glib::ustring& description,\n      const Glib::RefPtr<Gdk::Texture>& texture)\n    : m_filename(filename), m_description(description), m_texture(texture)\n    { }\n  }; // ModelColumns\n\n  Glib::RefPtr<Gio::ListStore<ModelColumns>> m_data_model;\n  Glib::RefPtr<Gtk::SingleSelection> m_selection_model;\n  Glib::RefPtr<Gtk::SignalListItemFactory> m_factory;\n\n  // Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::GridView m_GridView;\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "4a710220586b8d7b",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/listmodelviews/gridview",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/listmodelviews/gridview",
    "file": "examplewindow.h",
    "zh": ""
   },
@@ -142,7 +142,7 @@
   },
   {
    "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1ColumnView.html)",
+   "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ColumnView.html)",
    "sha": "71bf90935fc231d2-2",
    "zh": "参考"
   },
@@ -163,7 +163,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handlers:\n  void on_button_quit();\n  void on_setup_label(const Glib::RefPtr<Gtk::ListItem>& list_item, Gtk::Align halign);\n  void on_setup_progressbar(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  void on_bind_id(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  void on_bind_name(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  void on_bind_number(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  void on_bind_percentage(const Glib::RefPtr<Gtk::ListItem>& list_item);\n\n  // A Gio::ListStore item.\n  class ModelColumns : public Glib::Object\n  {\n  public:\n    unsigned int m_col_id;\n    Glib::ustring m_col_name;\n    short m_col_number;\n    int m_col_percentage;\n\n    static Glib::RefPtr<ModelColumns> create(unsigned int col_id,\n      const Glib::ustring& col_name, short col_number, int col_percentage)\n    {\n      return Glib::make_refptr_for_instance<ModelColumns>(\n        new ModelColumns(col_id, col_name, col_number, col_percentage));\n    }\n\n  protected:\n    ModelColumns(unsigned int col_id, const Glib::ustring& col_name,\n      short col_number, int col_percentage)\n    : m_col_id(col_id), m_col_name(col_name), m_col_number(col_number),\n      m_col_percentage(col_percentage)\n    {}\n  }; // ModelColumns\n\n  // Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::ColumnView m_ColumnView;\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n\n  Glib::RefPtr<Gio::ListStore<ModelColumns>> m_ListStore;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "bd5c67e62d6d2cc6",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/listmodelviews/list_columnview",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/listmodelviews/list_columnview",
    "file": "examplewindow.h",
    "zh": ""
   },

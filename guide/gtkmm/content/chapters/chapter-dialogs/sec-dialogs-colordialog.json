@@ -12,13 +12,13 @@
   },
   {
    "type": "para",
-   "text": "[ColorDialog Reference](&url_refdocs_base_gtk_html;classGtk_1_1ColorDialog.html)",
+   "text": "[ColorDialog Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ColorDialog.html)",
    "sha": "1b13ecfe0cdb0854",
    "zh": "参考"
   },
   {
    "type": "para",
-   "text": "[ColorChooserDialog Reference](&url_refdocs_base_gtk_html;classGtk_1_1ColorChooserDialog.html)",
+   "text": "[ColorChooserDialog Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ColorChooserDialog.html)",
    "sha": "cbdb0039a6bb8b95",
    "zh": "参考"
   },
@@ -39,7 +39,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_color_button_color_set();\n  void on_button_dialog_clicked();\n  void on_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result);\n\n  //Draw function:\n  void on_drawing_area_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::ColorDialogButton m_ColorDialogButton;\n  Gtk::Button m_Button_Dialog;\n  Gtk::DrawingArea m_DrawingArea; //To show the color.\n\n  Glib::RefPtr<Gtk::ColorDialog> m_pDialog;\n  Gdk::RGBA m_Color;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "763d8a174a619e32",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dialogs/colordialog",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/dialogs/colordialog",
    "file": "examplewindow.h",
    "zh": ""
   },

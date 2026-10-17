@@ -27,7 +27,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\n  // Configuration file, showing configured locale.\n  static const std::string config_file_name;\n\nprotected:\n  void fill_text_tag_table();\n  void fill_buffer();\n\n  void on_dropdown_changed();\n\n  // Child widgets\n  Gtk::HeaderBar m_HeaderBar;\n  Gtk::DropDown m_DropDown;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TextView m_TextView;\n\n  Glib::RefPtr<Gtk::StringList> m_StringList;\n  Glib::RefPtr<Gtk::TextTagTable> m_refTextTagTable;\n  Glib::RefPtr<Gtk::TextBuffer> m_refTextBuffer;\n};\n\n#endif // GTKMM_EXAMPLEWINDOW_H",
    "sha": "4125541e8d894f3e",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/i18n",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/i18n",
    "file": "examplewindow.h",
    "zh": ""
   },

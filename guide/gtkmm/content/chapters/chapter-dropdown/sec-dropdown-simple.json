@@ -15,7 +15,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/dropdown.h>\n#include <gtkmm/stringlist.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handler:\n  void on_dropdown_changed();\n\n  // Child widget:\n  Gtk::DropDown m_DropDown;\n\n  Glib::RefPtr<Gtk::StringList> m_StringList;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "768b06ab1de7c20f",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dropdown/string",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/dropdown/string",
    "file": "examplewindow.h",
    "zh": ""
   },

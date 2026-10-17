@@ -12,13 +12,13 @@
   },
   {
    "type": "para",
-   "text": "[FontDialog Reference](&url_refdocs_base_gtk_html;classGtk_1_1FontDialog.html)",
+   "text": "[FontDialog Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1FontDialog.html)",
    "sha": "cc855f4abc185466",
    "zh": "参考"
   },
   {
    "type": "para",
-   "text": "[FontChooserDialog Reference](&url_refdocs_base_gtk_html;classGtk_1_1FontChooserDialog.html)",
+   "text": "[FontChooserDialog Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1FontChooserDialog.html)",
    "sha": "cb0219f4a252b361",
    "zh": "参考"
   },
@@ -39,7 +39,7 @@
    "type": "code",
    "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_font_button_font_set();\n  void on_button_dialog_clicked();\n  void on_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result);\n\n  //Child widgets:\n  Gtk::Box m_ButtonBox;\n  Gtk::FontDialogButton m_FontDialogButton;\n  Gtk::Button m_Button_Dialog;\n\n  Glib::RefPtr<Gtk::FontDialog> m_pDialog;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
    "sha": "d5247222b29f6c05",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dialogs/fontdialog",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/dialogs/fontdialog",
    "file": "examplewindow.h",
    "zh": ""
   },
