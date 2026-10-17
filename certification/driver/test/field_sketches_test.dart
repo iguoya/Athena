@@ -1,3 +1,4 @@
+import "package:athena_driver/subject2/field_map.dart";
 import "package:athena_driver/subject2/field_sketches.dart";
 import "package:flutter_test/flutter_test.dart";
 
@@ -27,5 +28,17 @@ void main() {
     final b = curveSketch.first.lines[1].points;
     expect(a.length, b.length);
     expect((a.first - b.first).distance, greaterThan(0));
+  });
+
+  test("倒库与三项草表均带画布文字标注（T-103）", () {
+    for (final sketch in [reverseParkSketch, sideParkingSketch, curveSketch, rightAngleTurnSketch]) {
+      expect(sketch.first.labels, isNotEmpty,
+          reason: "首步应有标注让学员分清控制线/库位/路缘");
+    }
+    expect(
+      reverseParkSketch.first.labels.map((l) => l.text),
+      contains("控制线"),
+    );
+    expect(sideParkingSketch.first.labels.map((l) => l.text), contains("路缘"));
   });
 }
