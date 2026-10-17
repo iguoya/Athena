@@ -196,7 +196,7 @@
    "shas": [
     "f4f87a08fb03eaa6"
    ],
-   "zh": "Glib定义了gettext()支持宏，这些宏更为简单易用，要使用这些宏请#include 然后将：替换为："
+   "zh": "Glib定义了gettext()支持宏，这些宏更为简单易用，要使用这些宏请#include <glibmm/i18n.h>然后将：替换为："
   },
   {
    "id": "4d508ac828047f3b",
@@ -304,6 +304,13 @@
     "da667fb603d1c579"
    ],
    "zh": "好的国际化应用程序不会假设字符中的字节数。这意味着你不应该使用指针算数遍历字符串中的字符，也意味着你不应该使用std::string以及像strlen()这样的与字符串有关的标准C函数，因为他们都对字符的字节数做了假设。"
+  },
+  {
+   "id": "ef4af65f48793748",
+   "shas": [
+    "ef4af65f48793748"
+   ],
+   "zh": "不幸的是，与标准iostreams的集成并非绝对安全的。如果你将Glib::ustring使用operator<<输出到ostream中，则gtkmm会将Glib::ustring转换为使用特定语言编码（通常不会是UTF-8编码）。而使用operator>>将istream输入到Glib::ustring会发生相反的转换。但是如果你通过std::string进行则该方案会失效，例如，从文本输入流转换成std::string再隐式转换为Glib::ustring。如果该字符串中包含非ASCII字符且当前的语言环境不使用UTF-8编码，则得到的结果是一个损坏的Glib::ustring。你可以通过手动转换编码解决此问题。例如，若要从ostringstream中接受std::string："
   }
  ],
  "sec-i18n-pitfalls": [

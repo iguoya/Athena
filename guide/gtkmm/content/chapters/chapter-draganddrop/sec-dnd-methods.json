@@ -24,7 +24,7 @@
   },
   {
    "type": "listitem",
-   "text": "`void set_content(const Glib::RefPtr& content)`:\n        Sets a content provider on the drag source.",
+   "text": "`void set_content(const Glib::RefPtr<Gdk::ContentProvider>& content)`:\n        Sets a content provider on the drag source.",
    "sha": "1dea1eee1b2a1b0f",
    "zh": null
   },
@@ -36,7 +36,7 @@
   },
   {
    "type": "listitem",
-   "text": "`void set_icon(const Glib::RefPtr& paintable, int hot_x, int hot_y)`:\n        Sets a paintable to use as icon during DND operations.",
+   "text": "`void set_icon(const Glib::RefPtr<const Gdk::Paintable>& paintable, int hot_x, int hot_y)`:\n        Sets a paintable to use as icon during DND operations.",
    "sha": "fc640c22142963f7",
    "zh": null
   },
@@ -54,7 +54,7 @@
   },
   {
    "type": "listitem",
-   "text": "`void set_gtypes(const std::vector& types)`:\n        Sets the supported types for this drop target.",
+   "text": "`void set_gtypes(const std::vector<GType>& types)`:\n        Sets the supported types for this drop target.",
    "sha": "f5c6362cda862579",
    "zh": null
   },

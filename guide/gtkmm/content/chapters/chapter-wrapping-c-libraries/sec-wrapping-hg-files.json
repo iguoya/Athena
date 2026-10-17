@@ -710,10 +710,10 @@
   },
   {
    "type": "listitem",
-   "text": "Use the last GError** parameter of the C function to\n                throw an exception.\n                The optional \"\" is a comma-separated list\n                of exceptions that can be thrown. It determines which @throws\n                Doxygen commands are added to the documentation. Default value\n                is `Glib::Error`. If you want a comma in\n                the description of an exception, precede it by a backslash. Example:\n                `errthrow \"Glib::OptionError Hello\\, world, Glib::ConvertError\"`",
+   "text": "Use the last GError** parameter of the C function to\n                throw an exception.\n                The optional \"<exceptions>\" is a comma-separated list\n                of exceptions that can be thrown. It determines which @throws\n                Doxygen commands are added to the documentation. Default value\n                is `Glib::Error`. If you want a comma in\n                the description of an exception, precede it by a backslash. Example:\n                `errthrow \"Glib::OptionError Hello\\, world, Glib::ConvertError\"`",
    "sha": "d877fc9240bd7edd",
    "marker": "errthrow [\"<exceptions>\"]",
-   "zh": "使用 C 函数的最后一个 GError** 参数来抛出异常。可选的 \"\" 是一个以逗号分隔的、可能抛出的异常列表，它决定在文档中添加哪些 @throws Doxygen 命令。默认值为 `Glib::Error`。如果异常的描述中需要包含逗号，请在其前面加反斜杠。示例：`errthrow \"Glib::OptionError Hello\\, world, Glib::ConvertError\"`"
+   "zh": "使用 C 函数的最后一个 GError** 参数来抛出异常。可选的 \"<exceptions>\" 是一个以逗号分隔的、可能抛出的异常列表，它决定在文档中添加哪些 @throws Doxygen 命令。默认值为 `Glib::Error`。如果异常的描述中需要包含逗号，请在其前面加反斜杠。示例：`errthrow \"Glib::OptionError Hello\\, world, Glib::ConvertError\"`"
   },
   {
    "type": "listitem",
@@ -773,19 +773,19 @@
   },
   {
    "type": "listitem",
-   "text": "Objects used via `RefPtr`: Pass the\n            `RefPtr` as a const reference. For instance,\n            `const Glib::RefPtr&\n                filter`.",
+   "text": "Objects used via `RefPtr`: Pass the\n            `RefPtr` as a const reference. For instance,\n            `const Glib::RefPtr<Gtk::FileFilter>&\n                filter`.",
    "sha": "ad6b4b2756f4b833",
-   "zh": "通过RefPtr使用的对象：传递RefPtr的const引用。例如：const Glib::RefPtr& filter。"
+   "zh": "通过RefPtr使用的对象：传递RefPtr的const引用。例如：const Glib::RefPtr<Gtk::FileFilter>& filter。"
   },
   {
    "type": "listitem",
-   "text": "Const Objects used via `RefPtr`: If the\n            object should not be changed by the function, then make sure that\n            the object is const, even if the `RefPtr` is\n            already const. For instance, `const Glib::RefPtr& filter`.",
+   "text": "Const Objects used via `RefPtr`: If the\n            object should not be changed by the function, then make sure that\n            the object is const, even if the `RefPtr` is\n            already const. For instance, `const Glib::RefPtr<const\n            Gtk::FileFilter>& filter`.",
    "sha": "410cb8ddb870cc12",
-   "zh": "通过RefPtr使用的const对象：如果函数不应该修改此对象，即使对象已经是const的，也应该确保对象的RefPtr是const的。例如：const Glib::RefPtr& filter。"
+   "zh": "通过RefPtr使用的const对象：如果函数不应该修改此对象，即使对象已经是const的，也应该确保对象的RefPtr是const的。例如：const Glib::RefPtr<const Gtk::FileFilter>& filter。"
   },
   {
    "type": "listitem",
-   "text": "Wrapping `GList*` and\n        `GSList*` parameters: First, you need to discover\n        what objects are contained in the list's data field for each item,\n        usually by reading the documentation for the C function. The list can\n        then be wrapped by a `std::vector` type.\n        For instance, `std::vector>`.\n        You may need to define a Traits type to specify how the C\n        and C++ types should be converted.",
+   "text": "Wrapping `GList*` and\n        `GSList*` parameters: First, you need to discover\n        what objects are contained in the list's data field for each item,\n        usually by reading the documentation for the C function. The list can\n        then be wrapped by a `std::vector` type.\n        For instance, `std::vector<Glib::RefPtr<Gdk::Pixbuf>>`.\n        You may need to define a Traits type to specify how the C\n        and C++ types should be converted.",
    "sha": "8217606c2ca71c6d",
    "zh": null
   },
@@ -839,10 +839,10 @@
   },
   {
    "type": "listitem",
-   "text": "Excludes documentation of the last GError** parameter of\n                the C function.\n                The optional \"\" is a comma-separated list\n                of exceptions that can be thrown. It determines which @throws\n                Doxygen commands are added to the documentation. Default value\n                is `Glib::Error`. If you want a comma in\n                the description of an exception, precede it by a backslash. Example:\n                `errthrow \"Glib::OptionError Hello\\, world, Glib::ConvertError\"`",
+   "text": "Excludes documentation of the last GError** parameter of\n                the C function.\n                The optional \"<exceptions>\" is a comma-separated list\n                of exceptions that can be thrown. It determines which @throws\n                Doxygen commands are added to the documentation. Default value\n                is `Glib::Error`. If you want a comma in\n                the description of an exception, precede it by a backslash. Example:\n                `errthrow \"Glib::OptionError Hello\\, world, Glib::ConvertError\"`",
    "sha": "9b25b58d24e062ef",
    "marker": "errthrow [\"<exceptions>\"]",
-   "zh": "把 C 函数最后一个 GError** 参数从文档中排除。可选的 \"\" 是一个以逗号分隔的、可能抛出的异常列表，它决定在文档中添加哪些 @throws Doxygen 命令。默认值为 `Glib::Error`。如果异常的描述中需要包含逗号，请在其前面加反斜杠。示例：`errthrow \"Glib::OptionError Hello\\, world, Glib::ConvertError\"`"
+   "zh": "把 C 函数最后一个 GError** 参数从文档中排除。可选的 \"<exceptions>\" 是一个以逗号分隔的、可能抛出的异常列表，它决定在文档中添加哪些 @throws Doxygen 命令。默认值为 `Glib::Error`。如果异常的描述中需要包含逗号，请在其前面加反斜杠。示例：`errthrow \"Glib::OptionError Hello\\, world, Glib::ConvertError\"`"
   },
   {
    "type": "listitem",
@@ -1349,7 +1349,7 @@
   },
   {
    "type": "para",
-   "text": "This macro just generates a Doxygen documentation block for the enum.\n  This is useful for enums that can't be wrapped with\n  `_WRAP_ENUM()` because they are complexly defined (maybe\n  using C macros) but including the generated enum documentation is still\n  desired. It is used with the same syntax as\n  `_WRAP_ENUM()` and also processes the same options (though\n  NO_GTYPE, gtype_func  and CONV_TO_INT are ignored because\n  they make no difference when just generating the enum's documentation).",
+   "text": "This macro just generates a Doxygen documentation block for the enum.\n  This is useful for enums that can't be wrapped with\n  `_WRAP_ENUM()` because they are complexly defined (maybe\n  using C macros) but including the generated enum documentation is still\n  desired. It is used with the same syntax as\n  `_WRAP_ENUM()` and also processes the same options (though\n  NO_GTYPE, gtype_func <function_name> and CONV_TO_INT are ignored because\n  they make no difference when just generating the enum's documentation).",
    "sha": "4e97906b87f25ecd",
    "zh": "这个宏只是为枚举生成一个Doxygen文档块。这对于因为过于复杂（这通常是因为使用了C宏）而无法使用_WRAP_ENUM()包装，且依然需要包含为枚举生成的文档的枚举类型很有用。它与_WRAP_ENUM()使用同一语法，也处理一样的参数（尽管有些额外参数因为没有作用会被忽略）"
   },

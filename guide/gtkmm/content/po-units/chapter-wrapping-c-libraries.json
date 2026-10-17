@@ -807,7 +807,7 @@
    "shas": [
     "58ede39138b86515"
    ],
-   "zh": "将生成的代码放入ifdef 块中。"
+   "zh": "将生成的代码放入ifdef <identifier>块中。"
   },
   {
    "id": "e2e8ca2fd2bfa062",
@@ -842,14 +842,14 @@
    "shas": [
     "ad6b4b2756f4b833"
    ],
-   "zh": "通过RefPtr使用的对象：传递RefPtr的const引用。例如：const Glib::RefPtr& filter。"
+   "zh": "通过RefPtr使用的对象：传递RefPtr的const引用。例如：const Glib::RefPtr<Gtk::FileFilter>& filter。"
   },
   {
    "id": "410cb8ddb870cc12",
    "shas": [
     "410cb8ddb870cc12"
    ],
-   "zh": "通过RefPtr使用的const对象：如果函数不应该修改此对象，即使对象已经是const的，也应该确保对象的RefPtr是const的。例如：const Glib::RefPtr& filter。"
+   "zh": "通过RefPtr使用的const对象：如果函数不应该修改此对象，即使对象已经是const的，也应该确保对象的RefPtr是const的。例如：const Glib::RefPtr<const Gtk::FileFilter>& filter。"
   },
   {
    "id": "e49f588ad969e113",

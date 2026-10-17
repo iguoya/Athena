@@ -18,15 +18,15 @@
   },
   {
    "type": "para",
-   "text": "Aside from the fact that connected slots always execute in the\nreceiver thread, `Glib::Dispatcher` objects are\nsimilar to `sigc::signal` objects.\nThey therefore cannot pass unbound arguments nor return a value. The\nbest way to pass unbound arguments is with a thread-safe\n(asynchronous) queue. At the time of writing\n`glibmm` does not have one, although most\npeople writing multi-threaded code will have one available to them\n(they are relatively easy to write although there are subtleties in\ncombining thread safety with strong exception safety).",
+   "text": "Aside from the fact that connected slots always execute in the\nreceiver thread, `Glib::Dispatcher` objects are\nsimilar to `sigc::signal<void()>` objects.\nThey therefore cannot pass unbound arguments nor return a value. The\nbest way to pass unbound arguments is with a thread-safe\n(asynchronous) queue. At the time of writing\n`glibmm` does not have one, although most\npeople writing multi-threaded code will have one available to them\n(they are relatively easy to write although there are subtleties in\ncombining thread safety with strong exception safety).",
    "sha": "3287e91a64880dbb",
-   "zh": "除了连接的槽在接收者线程执行以外，Glib::Dispatcher对象的行为与sigc::signal对象十分相似。因此它们不能传递未绑定的参数，也不能返回值。要传递未绑定参数最好的方法是使用线程安全的（同步）队列。尽管大多数编写多线程代码的人都会有一个可用的多线程代码，但是编写glibmm时没有（尽管线程安全与强异常安全结合有些微妙，但编写它们相对容易）。"
+   "zh": "除了连接的槽在接收者线程执行以外，Glib::Dispatcher对象的行为与sigc::signal<void()>对象十分相似。因此它们不能传递未绑定的参数，也不能返回值。要传递未绑定参数最好的方法是使用线程安全的（同步）队列。尽管大多数编写多线程代码的人都会有一个可用的多线程代码，但是编写glibmm时没有（尽管线程安全与强异常安全结合有些微妙，但编写它们相对容易）。"
   },
   {
    "type": "para",
-   "text": "A `Glib::Dispatcher` object can be emitted on by\nthe receiver thread as well as by a worker thread, although this\nshould be done within reasonable bounds. On unix-like systems\n`Glib::Dispatcher` objects share a single common\npipe, which could in theory at least fill up on a very heavily loaded\nsystem running a program with a very large number of\n`Dispatcher` objects in use. Were the pipe to\nfill up before the receiver thread's main loop has had an opportunity\nto read from it to empty it, and the receiver thread attempt to emit\nand so write to it when it is in that condition, the receiver thread\nwould block on the write, so deadlocking. Where the receiver thread is\nto emit, a normal `sigc::signal`\nobject could of course be used instead.",
+   "text": "A `Glib::Dispatcher` object can be emitted on by\nthe receiver thread as well as by a worker thread, although this\nshould be done within reasonable bounds. On unix-like systems\n`Glib::Dispatcher` objects share a single common\npipe, which could in theory at least fill up on a very heavily loaded\nsystem running a program with a very large number of\n`Dispatcher` objects in use. Were the pipe to\nfill up before the receiver thread's main loop has had an opportunity\nto read from it to empty it, and the receiver thread attempt to emit\nand so write to it when it is in that condition, the receiver thread\nwould block on the write, so deadlocking. Where the receiver thread is\nto emit, a normal `sigc::signal<void()>`\nobject could of course be used instead.",
    "sha": "ed921b169fac039c",
-   "zh": "接收者线程和工作线程都可以调用Glib::Dispatcher的emit()方法，虽然此操作需要在合理的范围内进行。在类Unix系统上Glib::Dispatcher共享同一个公共管道，从理论上讲在一个负载很大的系统上运行使用很大数量Dispatcher对象的程序至少可以填满系统。如果在接收者线程的主循环有机会读取并清空管道之前，管道已填满且接收器线程在此时尝试对Dispatcher调用emit()并因此对管道进行写入，这样会导致死锁。当然在接收者线程想要发出信号可以使用普通的sigc::signal对象。"
+   "zh": "接收者线程和工作线程都可以调用Glib::Dispatcher的emit()方法，虽然此操作需要在合理的范围内进行。在类Unix系统上Glib::Dispatcher共享同一个公共管道，从理论上讲在一个负载很大的系统上运行使用很大数量Dispatcher对象的程序至少可以填满系统。如果在接收者线程的主循环有机会读取并清空管道之前，管道已填满且接收器线程在此时尝试对Dispatcher调用emit()并因此对管道进行写入，这样会导致死锁。当然在接收者线程想要发出信号可以使用普通的sigc::signal<void()>对象。"
   }
  ]
 }
