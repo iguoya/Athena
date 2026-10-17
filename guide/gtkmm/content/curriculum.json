@@ -4693,8 +4693,227 @@
           "title_en": "FileChooser and FileDialog"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.recentdocs.quizset",
+          "title": "最近使用的文档测验集",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "rd22-rm-1",
+              "page_ref": "sec-recentmanager",
+              "stem": "下面这样登记一个最近使用的文件，最少需要提供什么信息？",
+              "code": "auto recent_manager = Gtk::RecentManager::get_default();\nrecent_manager->add_item(uri);",
+              "lang": "cpp",
+              "options": [
+                "只要一个 URI，元数据是可选的",
+                "必须再提供一个 RecentManager::Data，否则登记失败",
+                "文件路径和 MIME 类型，二者缺一不可，才能登记成功",
+                "应用程序名和启动命令行，用来在列表里显示这个文件"
+              ],
+              "answer": 0,
+              "explanation": "最简单的情况下，向最近文档列表添加文件只需要提供 URI。要登记元数据（app_name、display_name、mime_type、groups、is_private 等）时，才向 add_item() 传一个 RecentManager::Data 参数。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-recentmanager",
+                  "note": "RecentManager：最简单的 add_item(uri)；带元数据时传 RecentManager::Data"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "rd22-rm-2",
+              "page_ref": "sec-recentmanager",
+              "stem": "get_default() 得到的 RecentManager，它背后的最近使用文件列表属于谁？",
+              "code": "auto recent_manager = Gtk::RecentManager::get_default();",
+              "lang": "cpp",
+              "options": [
+                "每个应用程序各一份，互相看不到对方登记的文件",
+                "每个窗口各一份，窗口关闭时随之清空",
+                "每个用户一份，不是每个程序一份",
+                "整台机器共用一份，所有用户都能读写同一个列表"
+              ],
+              "answer": 2,
+              "explanation": "RecentManager 相当于最近使用文件的数据库：每个用户只有一份最近使用文件列表。可以新建一个 RecentManager，但多数情况下直接用 get_default() 得到的默认实例即可。因此别的程序登记的文件，在这个用户的所有程序里都能看到。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-recentmanager",
+                  "note": "RecentManager：每个用户一份最近使用文件列表，通常用 get_default() 的默认实例"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "rd22-rm-3",
+              "page_ref": "sec-recentmanager",
+              "stem": "URI 不在最近使用文件列表里时，lookup_item() 会怎样？",
+              "code": "Glib::RefPtr<Gtk::RecentInfo> info;\ntry\n{\n  info = recent_manager->lookup_item(uri);\n}\ncatch(const Gtk::RecentManagerError& ex)\n{\n  std::cerr << \"RecentManagerError: \" << ex.what() << std::endl;\n}\nif (info)\n{\n  // item was found\n}",
+              "lang": "cpp",
+              "options": [
+                "返回空的 RefPtr，不抛异常，所以不需要 try/catch",
+                "返回一个内容为空的 RecentInfo，要再检查它的各个字段",
+                "自动把这个 URI 登记进列表，然后返回新建的 RecentInfo",
+                "抛出 RecentManagerError，info 保持为空"
+              ],
+              "answer": 3,
+              "explanation": "按 URI 查找指定项用 lookup_item()，成功时返回 RecentInfo。如果指定的 URI 不在列表里，lookup_item() 会抛出 RecentManagerError 异常，所以示例用 try/catch 包住它，并在之后用 if (info) 判断是否找到。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-recentmanager",
+                  "note": "RecentManager：lookup_item() 找不到时抛出 RecentManagerError"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "rd22-rm-4",
+              "page_ref": "sec-recentmanager",
+              "stem": "一个最近使用的文件，默认最长会在列表里保留多久？",
+              "options": [
+                "7 天，且每次打开文件时重新计时",
+                "30 天，由 gtk-recent-files-max-age 设置控制",
+                "永久保留，必须调用 purge_items() 才会清掉",
+                "到程序退出为止，下次启动时列表自动清空"
+              ],
+              "answer": 1,
+              "explanation": "最近使用文件列表中各项的最大年龄可以用 Gtk::Settings::property_gtk_recent_files_max_age() 设置，默认值是 30 天。要清掉列表要用 remove_item()（一个一个删）或 purge_items()（一次清空）。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-recentmanager",
+                  "note": "RecentManager：最大年龄由 property_gtk_recent_files_max_age() 设置，默认 30 天"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "rd22-fd-1",
+              "page_ref": "sec-filechooser-filedialog",
+              "stem": "FileChooserDialog、FileChooserWidget 这一系列类，在本章里是什么状态？",
+              "options": [
+                "仍是推荐写法，FileDialog 只是它们的一个别名",
+                "只有 FileChooserWidget 弃用了，FileChooserDialog 照常使用",
+                "已在 gtkmm 4.0 里删除，用到它们的代码都无法编译",
+                "自 gtkmm 4.10 起已弃用，由 FileDialog 取代"
+              ],
+              "answer": 3,
+              "explanation": "FileChooser 是一个接口，由显示文件列表的部件实现（FileChooserWidget、FileChooserDialog、FileChooserNative）。它和实现它的类自 gtkmm 4.10 起已弃用，已被同样自 4.10 起可用的 FileDialog 取代；没有定义 GTKMM_DISABLE_DEPRECATED 时仍可使用。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-filechooser-filedialog",
+                  "note": "FileChooser 与 FileDialog：FileChooser 及其实现类自 4.10 弃用，由 FileDialog 取代"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "rd22-fd-2",
+              "page_ref": "sec-filechooser-filedialog",
+              "stem": "下面两行分别是按什么条件过滤文件？",
+              "code": "filter->add_pattern(\"*.txt\");\nfilter->add_mime_type(\"image/png\");",
+              "lang": "cpp",
+              "options": [
+                "第一行按文件名模式，第二行按 MIME 类型",
+                "第一行按 MIME 类型，第二行按文件名模式",
+                "两行都按文件扩展名，只是写法不同而已",
+                "第一行按文件大小，第二行按最近使用的时间"
+              ],
+              "answer": 0,
+              "explanation": "FileFilter 可以按文件名过滤（add_pattern()）或按 MIME 类型过滤（add_mime_type()）。设置好过滤器之后，对旧的 FileChooser 系列要用 FileChooser::add_filter() 把过滤器应用到选择器部件上。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-filechooser-filedialog",
+                  "note": "FileChooser 与 FileDialog：FileFilter 按名称 add_pattern() 或 MIME 类型 add_mime_type() 过滤"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "rd22-fd-3",
+              "page_ref": "sec-filechooser-filedialog",
+              "stem": "第一次运行使用最近文件框架的程序，在文件对话框里选中侧边栏的“Recent”，列表是空的，最可能的原因是？",
+              "options": [
+                "对话框损坏了，必须先调用 purge_items() 才能恢复",
+                "FileDialog 不支持最近使用文件，必须改用 RecentManager",
+                "还没有任何程序登记过最近使用的文件",
+                "侧边栏的 Recent 只显示本程序登记的文件，别的程序不算"
+              ],
+              "answer": 2,
+              "explanation": "如果这是你第一次使用最近文件框架，对话框可能一开始是空的；否则它应该显示其他程序登记的最近使用文件列表（列表是每个用户一份，而不是每个程序一份）。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-filechooser-filedialog",
+                  "note": "FileChooser 与 FileDialog 示例：第一次使用时列表可能为空，否则显示其他程序登记的文件"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "rd22-cp-1",
+          "stem": "执行下面三个调用，对磁盘上的实际文件有什么影响？",
+          "code": "recent_manager->move_item(old_uri, new_uri);\nrecent_manager->remove_item(uri);\nrecent_manager->purge_items();",
+          "lang": "cpp",
+          "options": [
+            "move_item() 会把磁盘上的文件移到 new_uri 去",
+            "没有影响，它们只修改最近使用文件列表",
+            "remove_item() 与 purge_items() 会同时删掉磁盘上的文件",
+            "三个调用都会改动文件，purge_items() 还会清空文件内容"
+          ],
+          "answer": 1,
+          "explanation": "move_item()、remove_item() 和 purge_items() 对 URI 指向的实际文件没有任何影响，只修改最近使用文件列表：move_item() 更新项的位置，remove_item() 一次删一项，purge_items() 一次清空整个列表。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-recentmanager",
+              "note": "综合 RecentManager：move_item、remove_item、purge_items 只改列表不改文件"
+            }
+          ]
+        },
+        {
+          "id": "rd22-cp-2",
+          "stem": "要列出所有最近使用的文件，下面这行的返回值是什么？",
+          "code": "auto info_list = recent_manager->get_items();",
+          "lang": "cpp",
+          "options": [
+            "一个 std::vector，装着所有最近使用文件的 RecentInfo",
+            "一个 Glib::ustring，是用换行连起来的所有 URI",
+            "单个 RecentInfo，里面保存着最近使用的那一个文件",
+            "一个 RecentManager::Data，描述整个列表的元数据"
+          ],
+          "answer": 0,
+          "explanation": "想获取全部最近使用的项目而不是按 URI 查某一个时，用 get_items()，它的返回值是包含所有最近使用文件的 std::vector；其中每一项是一个 RecentInfo，里面有该文件的全部元数据。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-recentmanager",
+              "note": "综合 RecentManager：get_items() 返回所有最近使用文件的 std::vector"
+            }
+          ]
+        }
+      ],
+      "quiz_standard": 2
     },
     {
       "id": "chapter-keyboardevents",
