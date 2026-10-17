@@ -8,6 +8,7 @@ import "dart:async";
 import "dart:math" as math;
 
 import "package:flutter/material.dart";
+import "package:flutter/painting.dart";
 
 /// 一条场地线。控制线画成虚线，库位线用库位色，其余是边线。
 class FieldLine {
@@ -33,6 +34,15 @@ class FieldRisk {
   final List<Offset> points;
 }
 
+/// 画布上的文字标注（T-103）：「控制线」「库位」等，标在场地点位旁。
+/// 学员一眼分清哪条是什么线，不用去读说明。
+class FieldLabel {
+  const FieldLabel(this.at, this.text);
+
+  final Offset at;
+  final String text;
+}
+
 /// 一步的车身位姿、方向盘角度和这一步要画的场地。
 class FieldMapStep {
   const FieldMapStep({
@@ -43,6 +53,7 @@ class FieldMapStep {
     required this.lines,
     required this.marks,
     this.risks = const [],
+    this.labels = const [],
     this.bounds = const Rect.fromLTRB(-16, -1, 16, 14),
   });
 
@@ -61,90 +72,109 @@ class FieldMapStep {
 
   /// 「别这样」的红色示意线。
   final List<FieldRisk> risks;
+
+  /// 场地元素的文字标注。
+  final List<FieldLabel> labels;
   final Rect bounds;
 }
 
-/// 倒车入库右倒再换到左倒的 7 步草表。量级对齐现有倒库场地
-/// （路宽 7 m、库宽 2.4 m、控制线在 ±10 m），位姿是相对关系，不是测绘。
+/// 倒车入库右倒再换到左倒的 7 步草表。
+///
+/// 尺寸锚定 GA 1029 系/GB/T 30341-2013 的场地公式（T-101，基准车车长 4.5 m、
+/// 车宽 1.7 m）：库长 = 车长 + 0.7 = 5.2 m，库宽 = 车宽 + 0.6 = 2.3 m，
+/// 控制线距库位外边线 h = 1.5 倍车长 = 6.75 m，行车道宽 = 1.5 倍车长 = 6.75 m。
+/// 库内单侧余量 = (2.3 − 1.7) / 2 = 0.3 m——比想象的小，这是教学重点。
 const reverseParkSketch = <FieldMapStep>[
   FieldMapStep(
-    x: 7.6,
+    x: 7.2,
     y: 3.2,
     heading: 0,
     steerDegrees: 0,
     lines: _reverseLines,
-    marks: [FieldMark(Offset(10, 3.2))],
+    labels: _reverseLabels,
+    marks: [FieldMark(Offset(7.9, 3.2))],
   ),
   FieldMapStep(
-    x: 5.6,
+    x: 5.4,
     y: 3.6,
     heading: -0.35,
     steerDegrees: 40,
     lines: _reverseLines,
-    marks: [FieldMark(Offset(1.2, 7))],
+    labels: _reverseLabels,
+    marks: [FieldMark(Offset(1.15, 6.75))],
     // 打晚了车尾直着怼库口，右后轮压上库口右角。
     risks: [
-      FieldRisk([Offset(4.6, 4.6), Offset(3.0, 6.4), Offset(1.6, 7.1)]),
+      FieldRisk([Offset(4.5, 4.6), Offset(2.9, 6.3), Offset(1.5, 6.85)]),
     ],
   ),
   FieldMapStep(
     x: 3.0,
-    y: 5.8,
+    y: 5.7,
     heading: -0.9,
     steerDegrees: 40,
     lines: _reverseLines,
-    marks: [FieldMark(Offset(1.2, 7)), FieldMark(Offset(-1.2, 7))],
+    labels: _reverseLabels,
+    marks: [FieldMark(Offset(1.15, 6.75)), FieldMark(Offset(-1.15, 6.75))],
   ),
   FieldMapStep(
     x: 0.6,
-    y: 8.6,
+    y: 8.4,
     heading: -1.35,
     steerDegrees: 8,
     lines: _reverseLines,
-    marks: [FieldMark(Offset(0, 9.4))],
+    labels: _reverseLabels,
+    marks: [FieldMark(Offset(0, 10.5))],
     // 看到车身过早平行还继续倒，右后轮扫库口右角。
     risks: [
-      FieldRisk([Offset(0.9, 7.6), Offset(1.05, 7.2), Offset(1.2, 7.05)]),
+      FieldRisk([Offset(0.9, 7.4), Offset(1.0, 7.0), Offset(1.15, 6.8)]),
     ],
   ),
   FieldMapStep(
     x: 0,
-    y: 10.8,
+    y: 10.6,
     heading: -math.pi / 2,
     steerDegrees: 0,
     lines: _reverseLines,
-    marks: [FieldMark(Offset(0, 12.1))],
+    labels: _reverseLabels,
+    marks: [FieldMark(Offset(0, 11.9))],
   ),
   FieldMapStep(
-    x: -8.2,
+    x: -7.2,
     y: 3.2,
     heading: math.pi,
     steerDegrees: 0,
     lines: _reverseLines,
-    marks: [FieldMark(Offset(-10, 3.2))],
+    labels: _reverseLabels,
+    marks: [FieldMark(Offset(-7.9, 3.2))],
   ),
   FieldMapStep(
     x: -3.0,
-    y: 5.8,
+    y: 5.7,
     heading: math.pi + 0.9,
     steerDegrees: -40,
     lines: _reverseLines,
-    marks: [FieldMark(Offset(-1.2, 7))],
+    labels: _reverseLabels,
+    marks: [FieldMark(Offset(-1.15, 6.75))],
   ),
 ];
 
 const _reverseLines = <FieldLine>[
-  FieldLine([Offset(-16, 0), Offset(16, 0)]),
+  FieldLine([Offset(-14, 0), Offset(14, 0)]),
   FieldLine([
-    Offset(-16, 7),
-    Offset(-1.2, 7),
-    Offset(-1.2, 12.1),
-    Offset(1.2, 12.1),
-    Offset(1.2, 7),
-    Offset(16, 7),
+    Offset(-14, 6.75),
+    Offset(-1.15, 6.75),
+    Offset(-1.15, 11.95),
+    Offset(1.15, 11.95),
+    Offset(1.15, 6.75),
+    Offset(14, 6.75),
   ], bay: true),
-  FieldLine([Offset(10, 0), Offset(10, 7)], control: true),
-  FieldLine([Offset(-10, 0), Offset(-10, 7)], control: true),
+  FieldLine([Offset(7.9, 0), Offset(7.9, 6.75)], control: true),
+  FieldLine([Offset(-7.9, 0), Offset(-7.9, 6.75)], control: true),
+];
+
+const _reverseLabels = <FieldLabel>[
+  FieldLabel(Offset(8.3, 1.2), "控制线"),
+  FieldLabel(Offset(-4.5, 9.2), "库位"),
 ];
 
 class FieldMap extends StatelessWidget {
@@ -221,6 +251,23 @@ class FieldMapPainter extends CustomPainter {
       canvas.drawCircle(at, 4, Paint()..color = const Color(0xFF00E5FF));
     }
 
+    for (final label in step.labels) {
+      final at = map(label.at);
+      final tp = TextPainter(
+        text: TextSpan(
+          text: label.text,
+          style: const TextStyle(
+            color: Color(0xFFB8C6D4),
+            fontSize: 11,
+            height: 1,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      // 右移 6px：标注锚点默认在所指标记的左上方，往右让开点位。
+      tp.paint(canvas, at + const Offset(6, -4));
+    }
+
     _car(canvas, map(Offset(step.x, step.y)), scale);
   }
 
@@ -230,14 +277,15 @@ class FieldMapPainter extends CustomPainter {
     canvas.rotate(step.heading);
     canvas.scale(scale);
     final body = Paint()..color = const Color(0xFF8FD0FF);
+    // 基准考试车：车长 4.5 m、车宽 1.7 m（不含后视镜）、轴距 2.6 m，后轴中心为原点。
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-        const Rect.fromLTWH(-0.9, -0.9, 4.4, 1.8),
+        const Rect.fromLTWH(-1.0, -0.85, 4.5, 1.7),
         const Radius.circular(0.25),
       ),
       body,
     );
-    const discCenter = Offset(2.7, 0);
+    const discCenter = Offset(2.6, 0);
     canvas.drawCircle(
       discCenter,
       0.42,
