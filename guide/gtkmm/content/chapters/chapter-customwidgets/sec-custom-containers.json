@@ -56,7 +56,7 @@
    "type": "para",
    "text": "Your container must unparent its children before the underlying C object\n       (a `gtkmm__GtkWidget`) is finalized. If your container\n       is used as a managed widget, it shall unparent its children in a\n       Gtk::Widget::signal_destroy() handler (available\n       since gtkmm 4.8). If your container is not managed, that signal handler\n       is not called. Instead the children shall be unparented in the C++ destructor.\n       If you want your container to be useful both ways, unparent the children\n       both in the destructor and in a signal handler. See the example code.",
    "sha": "2b960a49b11f762d",
-   "zh": null
+   "zh": "你的容器必须在底层 C 对象（一个 `gtkmm__GtkWidget`）被终结之前，解除其子部件的父子关系。如果你的容器作为托管部件使用，它应当在 Gtk::Widget::signal_destroy() 的处理函数里解除子部件的父子关系（自 gtkmm 4.8 起可用）；如果容器不是托管的，这个信号处理函数不会被调用，子部件应当在 C++ 析构函数里解除父子关系。如果希望容器两种用法都适用，就在析构函数和信号处理函数里都解除子部件的父子关系。参见示例代码。"
   },
   {
    "type": "heading",

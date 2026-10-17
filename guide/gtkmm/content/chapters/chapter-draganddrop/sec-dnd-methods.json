@@ -26,19 +26,19 @@
    "type": "listitem",
    "text": "`void set_content(const Glib::RefPtr<Gdk::ContentProvider>& content)`:\n        Sets a content provider on the drag source.",
    "sha": "1dea1eee1b2a1b0f",
-   "zh": null
+   "zh": "`void set_content(const Glib::RefPtr<Gdk::ContentProvider>& content)`：在拖拽源上设置内容提供者。"
   },
   {
    "type": "listitem",
    "text": "`void set_actions(Gdk::DragAction actions)`:\n        Sets the actions on the drag source. For instance `Gdk::DragAction::COPY\n        | Gdk::DragAction::MOVE`.",
    "sha": "70ebd0e73d3f0e07",
-   "zh": null
+   "zh": "`void set_actions(Gdk::DragAction actions)`：设置拖拽源支持的动作，例如 `Gdk::DragAction::COPY | Gdk::DragAction::MOVE`。"
   },
   {
    "type": "listitem",
    "text": "`void set_icon(const Glib::RefPtr<const Gdk::Paintable>& paintable, int hot_x, int hot_y)`:\n        Sets a paintable to use as icon during DND operations.",
    "sha": "fc640c22142963f7",
-   "zh": null
+   "zh": "`void set_icon(const Glib::RefPtr<const Gdk::Paintable>& paintable, int hot_x, int hot_y)`：设置在拖放操作期间用作图标的 paintable。"
   },
   {
    "type": "code",
@@ -56,13 +56,13 @@
    "type": "listitem",
    "text": "`void set_gtypes(const std::vector<GType>& types)`:\n        Sets the supported types for this drop target.",
    "sha": "f5c6362cda862579",
-   "zh": null
+   "zh": "`void set_gtypes(const std::vector<GType>& types)`：设置这个放置目标支持的类型。"
   },
   {
    "type": "listitem",
    "text": "`void set_actions(Gdk::DragAction actions)`:\n        Sets the actions that this drop target supports.",
    "sha": "a800c664025448c0",
-   "zh": null
+   "zh": "`void set_actions(Gdk::DragAction actions)`：设置这个放置目标支持的动作。"
   },
   {
    "type": "listitem",
@@ -74,7 +74,7 @@
    "type": "listitem",
    "text": "`void reject()`:\n        Rejects the ongoing drop operation. This function should be used when\n        delaying the decision on whether to accept a drag or not until after\n        reading the data.",
    "sha": "918906f12bb6c787",
-   "zh": null
+   "zh": "`void reject()`：拒绝正在进行的放置操作。如果要等读取完数据之后才决定是否接受拖拽，就应使用这个函数。"
   }
  ]
 }

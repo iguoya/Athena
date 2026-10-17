@@ -32,7 +32,7 @@
    "type": "para",
    "text": "Most applications will have only one `Window`, or\n    only one main window. These applications can use\n    Gtk::Application::make_window_and_run(int argc, char** argv, T_Args&&... args).\n    It creates and shows a window. When the window is closed, make_window_and_run()\n    deletes the window and returns to the caller.\n    This might happen when the user closes the window, or when your code decides to\n    close the window with Gtk::Window::close(). You can prevent\n    the user from closing the window (for instance, if there are unsaved changes) by\n    overriding Gtk::Window::on_close_request().",
    "sha": "c78508cdde565d5a",
-   "zh": null
+   "zh": "大多数应用程序只有一个 `Window`，或者只有一个主窗口。这样的应用程序可以使用 Gtk::Application::make_window_and_run(int argc, char** argv, T_Args&&... args)。它会创建并显示一个窗口；窗口关闭时，make_window_and_run() 会删除这个窗口并返回给调用者。窗口关闭可能发生在用户关闭窗口时，也可能是你的代码用 Gtk::Window::close() 决定关闭窗口。你可以通过重写 Gtk::Window::on_close_request() 来阻止用户关闭窗口（例如有未保存的更改时）。"
   },
   {
    "type": "para",

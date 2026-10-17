@@ -26,7 +26,7 @@
    "type": "para",
    "text": "You may have noticed that we use the _from_resource() variant\nof the method that reads the ui file. Now we need to use `GLib`'s\nresource functionality to include the ui file in the binary. This is commonly done by\nlisting all resources in a .gresource.xml file.\nThis file has to be converted into a C source file that will be compiled and linked\ninto the application together with the other source files. To do so, we use the\n`glib-compile-resources` utility:",
    "sha": "c5b9f444ee26bcb4",
-   "zh": null
+   "zh": "你可能已经注意到，我们用的是读取 ui 文件的方法的 _from_resource() 变体。现在需要用 `GLib` 的资源功能把 ui 文件包含进二进制文件，通常的做法是把所有资源列在一个 .gresource.xml 文件里。这个文件必须转换成一个 C 源文件，与其他源文件一起编译并链接进应用程序。为此我们使用 `glib-compile-resources` 工具："
   },
   {
    "type": "code",
@@ -38,7 +38,7 @@
    "type": "para",
    "text": "The [Gio::Resource and glib-compile-resources](#sec-gio-resource)\nsection contains more information about resource files. If you build with Meson,\nuse the `compile_resources()` function in Meson's\n[GNOME module](https://mesonbuild.com/Gnome-module.html).",
    "sha": "4667ff162de7ebce",
-   "zh": null
+   "zh": "[Gio::Resource 与 glib-compile-resources](#sec-gio-resource)一节有关于资源文件的更多信息。如果使用 Meson 构建，请用 Meson 的 [GNOME 模块](https://mesonbuild.com/Gnome-module.html)中的 `compile_resources()` 函数。"
   },
   {
    "type": "para",

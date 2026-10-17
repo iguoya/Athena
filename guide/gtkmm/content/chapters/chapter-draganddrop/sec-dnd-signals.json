@@ -26,7 +26,7 @@
    "type": "listitem",
    "text": "`prepare`: Shall return a `Gdk::ContentProvider`,\n  with the data to use for the drag that is about to start.",
    "sha": "51831ea940acf1c1",
-   "zh": null
+   "zh": "`prepare`：必须返回一个 `Gdk::ContentProvider`，其中是即将开始的拖拽所要使用的数据。"
   },
   {
    "type": "listitem",
@@ -38,25 +38,25 @@
    "type": "listitem",
    "text": "`drag_cancel`: Emitted on the drag source when a drag has failed.",
    "sha": "f1e18c5ad74d19c5",
-   "zh": null
+   "zh": "`drag_cancel`：在拖拽失败时，在拖拽源上发出。"
   },
   {
    "type": "listitem",
    "text": "`enter`: Provides coordinates.\n  Shall return the preferred `Gdk::DragAction`.",
    "sha": "f5c08057e03861e9",
-   "zh": null
+   "zh": "`enter`：提供坐标。必须返回首选的 `Gdk::DragAction`。"
   },
   {
    "type": "listitem",
    "text": "`motion`: Provides coordinates.\n  Shall return the preferred `Gdk::DragAction`.",
    "sha": "e5d01f85b1fdae4c",
-   "zh": null
+   "zh": "`motion`：提供坐标。必须返回首选的 `Gdk::DragAction`。"
   },
   {
    "type": "listitem",
    "text": "`leave`: Emitted on the drop site when the pointer\n  leaves the widget.",
    "sha": "c86c4cdb6dddade1",
-   "zh": null
+   "zh": "`leave`：在指针离开部件时，在放置位置上发出。"
   },
   {
    "type": "listitem",
@@ -68,7 +68,7 @@
    "type": "listitem",
    "text": "`drop`: Provides the data being dropped and coordinates.\n  Shall return a `bool` indicating whether the drop was accepted.",
    "sha": "e1621e93cae0a0ee",
-   "zh": null
+   "zh": "`drop`：提供被放下的数据和坐标。必须返回一个 `bool`，指明是否接受了这次放置。"
   },
   {
    "type": "listitem",

@@ -20,7 +20,7 @@
    "type": "para",
    "text": "An important difference in gtkmm-4.0 vs. older versions is that a C++ widgetʼs\ndestruction no longer causes the widget to be destroyed if itʼs within a parent;\nin that case the C GtkWidget stays alive. If you had relied on that behavior in\nan older version, in gtkmm-4.0 you must now remove the widget from its parent\nfirst. See [Changes in gtkmm-4.0](#changes-gtkmm4).",
    "sha": "a5f9077a00019b84",
-   "zh": null
+   "zh": "gtkmm-4.0 与旧版本的一个重要区别是：如果 C++ 部件已放在父部件里，销毁这个 C++ 部件不再导致部件本身被销毁；此时 C 的 GtkWidget 仍然存活。如果你在旧版本里依赖过这种行为，在 gtkmm-4.0 里必须先把部件从它的父部件中移除。参见 [gtkmm-4.0 中的变化](#changes-gtkmm4)。"
   },
   {
    "type": "para",
@@ -74,7 +74,7 @@
    "type": "para",
    "text": "However, this technique is rarely useful. Most widgets can't safely be created\nbefore the application has been registered or activated. They can't safely be\ndeleted after Gtk::Application::run() or\nGtk::Application::make_window_and_run() returns.",
    "sha": "629190fa649839db",
-   "zh": null
+   "zh": "不过，这种技术很少有用。大多数部件无法安全地在应用程序注册或激活之前创建，也无法在 Gtk::Application::run() 或 Gtk::Application::make_window_and_run() 返回之后安全地删除。"
   },
   {
    "type": "heading",
@@ -98,7 +98,7 @@
    "type": "para",
    "text": "Here, the programmer deletes `pButton` to prevent a memory leak.",
    "sha": "ca6c3840065bf4db",
-   "zh": null
+   "zh": "这里，程序员删除了 `pButton` 以防止内存泄漏。"
   },
   {
    "type": "heading",
@@ -152,7 +152,7 @@
    "type": "para",
    "text": "If you never added the widget to any parent container, it's your responsibility\nto delete it. If you add it to a container widget, and later\nremove it (for instance with Gtk::Box::remove()),\nit's deleted by the container.",
    "sha": "8e33bad756e4014c",
-   "zh": null
+   "zh": "如果你从未把部件添加到任何父容器中，删除它就是你的责任。如果把它添加到某个容器部件中，之后又把它移除（例如用 Gtk::Box::remove()），它会由容器删除。"
   },
   {
    "type": "para",

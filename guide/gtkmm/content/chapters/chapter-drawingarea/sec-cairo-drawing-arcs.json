@@ -8,7 +8,7 @@
    "type": "para",
    "text": "With Cairo, the same function is used to draw arcs, circles, or\n          ellipses: Cairo::Context::arc(). This function\n          takes five arguments. The first two are the coordinates of the\n          center point of the arc, the third argument is the radius of the arc,\n          and the final two arguments define the start and end angle of the\n          arc. All angles are defined in radians, so drawing a circle is the\n          same as drawing an arc from 0 to 2 * M_PI radians.\n          An angle of 0 is in the direction of the positive X axis (in user-space). An\n          angle of M_PI/2 radians (90 degrees) is in the direction of the positive Y axis\n          (in user-space). Angles increase in the direction from the positive X axis\n          toward the positive Y axis. So with the default transformation matrix, angles\n          increase in a clockwise direction. (Remember that the positive Y axis\n          points downwards.)",
    "sha": "9fd74dad61341f24",
-   "zh": null
+   "zh": "在 Cairo 中，画弧、圆或椭圆用的是同一个函数：Cairo::Context::arc()。这个函数有五个参数：前两个是弧的圆心坐标，第三个是弧的半径，最后两个定义弧的起始角和结束角。所有角度都以弧度表示，所以画一个圆就等于画一段从 0 到 2 * M_PI 弧度的弧。角度 0 指向（用户空间中）X 轴正方向；M_PI/2 弧度（90 度）指向（用户空间中）Y 轴正方向。角度沿着从 X 轴正方向转向 Y 轴正方向的方向增加，所以在默认变换矩阵下，角度是顺时针增加的。（记住，Y 轴正方向是朝下的。）"
   },
   {
    "type": "para",

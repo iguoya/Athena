@@ -44,7 +44,7 @@
    "type": "listitem",
    "text": "For each page that needs to be rendered, the following signals\n      are emitted:\n      \n        \n          \n            `request_page_setup`: Provides a\n            `PrintContext`, page number and\n            `Gtk::PageSetup`. Handle this signal if you\n            need to modify page setup on a per-page basis.\n          \n        \n\n        \n          \n            `draw_page`: You must handle this signal, which provides a\n            `PrintContext` and a page number.\n            The `PrintContext` should be used\n            to create a `Cairo::Context` into which\n            the provided page should be drawn. To render text, iterate over\n            the `Pango::Layout` you created in the\n            `begin_print` handler.",
    "sha": "c898c52664cfa224",
-   "zh": null
+   "zh": "对于每个需要渲染的页面，会依次发出下面的信号：`request_page_setup`：提供一个 `PrintContext`、页码和 `Gtk::PageSetup`。如果需要逐页修改页面设置，就处理这个信号。`draw_page`：你必须处理这个信号，它提供一个 `PrintContext` 和页码。应该用 `PrintContext` 创建一个 `Cairo::Context`，把提供的那一页画到其中。要渲染文字，请遍历你在 `begin_print` 处理函数里创建的 `Pango::Layout`。"
   },
   {
    "type": "listitem",

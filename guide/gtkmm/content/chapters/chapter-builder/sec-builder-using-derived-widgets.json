@@ -86,7 +86,7 @@
    "type": "para",
    "text": "If your derived widget uses `Glib::Property`, it becomes slightly\nmore complicated. A derived widget that contains `Glib::Property`\nmembers must be registered with its own name in the `GType` system.\nIt must be registered before any of the create_from_*() or\nadd_from_*() methods are called, meaning that you may have\nto create an instance of your derived widget just to have its class registered.\nYour derived widget must have a constructor that has the parameters required by\nget_widget_derived() and calls the `Glib::ObjectBase`\nconstructor to register the `GType`.",
    "sha": "b0a3016fff3674f7",
-   "zh": null
+   "zh": "如果你的派生部件使用了 `Glib::Property`，情况会稍微复杂一些。包含 `Glib::Property` 成员的派生部件必须以它自己的名字注册到 `GType` 系统中，并且必须在调用任何 create_from_*() 或 add_from_*() 方法之前注册，这意味着你可能不得不专门创建一个派生部件的实例，才能让它的类完成注册。你的派生部件必须有一个构造函数，带有 get_widget_derived() 所要求的参数，并调用 `Glib::ObjectBase` 的构造函数来注册 `GType`。"
   },
   {
    "type": "code",

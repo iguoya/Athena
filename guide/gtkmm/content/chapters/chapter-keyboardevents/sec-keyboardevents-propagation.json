@@ -8,28 +8,28 @@
    "type": "para",
    "text": "As described in the [appendix](#signal-handler-sequence)\n      event signals are propagated in 3 phases:",
    "sha": "0626f875674a325c",
-   "zh": null
+   "zh": "如[附录](#signal-handler-sequence)所述，事件信号分三个阶段传播："
   },
   {
    "type": "listitem",
    "text": "Capture phase - runs from the toplevel down to the event widget.",
    "sha": "89060f648f95b67e",
    "marker": "1.",
-   "zh": null
+   "zh": "捕获阶段——从顶级窗口向下运行，直到事件所在的部件。"
   },
   {
    "type": "listitem",
    "text": "Target phase - runs only on the event widget.",
    "sha": "4e59bd6e948e39af",
    "marker": "2.",
-   "zh": null
+   "zh": "目标阶段——只在事件所在的部件上运行。"
   },
   {
    "type": "listitem",
    "text": "Bubble phase - runs from the event widget up to the toplevel.",
    "sha": "57b6189454342ec5",
    "marker": "3.",
-   "zh": null
+   "zh": "冒泡阶段——从事件所在的部件向上运行，直到顶级窗口。"
   },
   {
    "type": "para",

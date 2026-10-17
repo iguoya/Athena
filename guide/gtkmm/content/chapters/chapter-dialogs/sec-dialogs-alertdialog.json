@@ -9,14 +9,14 @@
    "text": "`Gtk::Dialog` and the classes derived from it,\nare deprecated since gtkmm 4.10. They can still be used in gtkmm4 applications,\nprovided GTKMM_DISABLE_DEPRECATED and GDKMM_DISABLE_DEPRECATED are not defined.\nSome of the dialog classes are replaced by classes that are available since gtkmm 4.10.",
    "sha": "d6409d61557916c0",
    "admonition": "note",
-   "zh": null
+   "zh": "`Gtk::Dialog` 及其派生类自 gtkmm 4.10 起已弃用。只要没有定义 GTKMM_DISABLE_DEPRECATED 和 GDKMM_DISABLE_DEPRECATED，它们仍然可以用在 gtkmm4 应用程序中。其中一些对话框类已被 gtkmm 4.10 起提供的新类取代。"
   },
   {
    "type": "para",
    "text": "The examples in this chapter use classes that are available since gtkmm 4.10.\nSimilar examples with the deprecated classes are available in the\n[\ngtkmm-4-0 branch](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/gtkmm-4-0/examples/book/dialogs/) in the git repository.",
    "sha": "100f29a99df9137a",
    "admonition": "note",
-   "zh": null
+   "zh": "本章的示例使用的是 gtkmm 4.10 起可用的类。使用已弃用类的类似示例见 git 仓库中的 [gtkmm-4-0 分支](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/gtkmm-4-0/examples/book/dialogs/)。"
   },
   {
    "type": "para",
@@ -46,7 +46,7 @@
    "type": "para",
    "text": "To show the dialog, call set_visible(true). If the same dialog instance\nwill be shown several times, you must also call set_hide_on_close(),\nor else the dialog will be destroyed when it's closed.\nConnect to the `response` signal, if you want to know which button\nwas pressed. The `response` signal handler is also where you\nshould hide the dialog.",
    "sha": "fd426713f317ecd5",
-   "zh": null
+   "zh": "要显示对话框，调用 set_visible(true)。如果同一个对话框实例会被多次显示，还必须调用 set_hide_on_close()，否则对话框在关闭时会被销毁。如果想知道按下了哪个按钮，请连接 `response` 信号。你也应当在 `response` 信号处理函数里隐藏对话框。"
   },
   {
    "type": "para",
@@ -58,7 +58,7 @@
    "type": "para",
    "text": "`MessageDialog` (deprecated since gtkmm 4.10) and\n`AlertDialog` (available since gtkmm 4.10) are convenience\nclasses, used to create simple, standard message dialogs, with a message and buttons\nfor user response.",
    "sha": "a5b491e77ecf9c8b",
-   "zh": null
+   "zh": "`MessageDialog`（自 gtkmm 4.10 起已弃用）和 `AlertDialog`（自 gtkmm 4.10 起可用）是便捷类，用来创建简单的标准消息对话框，带有一条消息和供用户响应的按钮。"
   },
   {
    "type": "para",

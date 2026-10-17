@@ -14,7 +14,7 @@
    "type": "para",
    "text": "However, you probably already avoid bare char* arrays and pointer arithmetic by\nusing `std::string`, so you just need to start using\n`Glib::ustring` instead. See the [Basics](#sec-basics-ustring) chapter about\n`Glib::ustring`.",
    "sha": "efde7a086e32eafa",
-   "zh": null
+   "zh": "不过，你很可能已经用 `std::string` 避免了裸 char* 数组和指针算术，所以只需要改用 `Glib::ustring` 即可。关于 `Glib::ustring`，参见[基础](#sec-basics-ustring)一章。"
   },
   {
    "type": "heading",
@@ -26,7 +26,7 @@
    "type": "para",
    "text": "Unfortunately, the integration with the standard iostreams is not completely\nfoolproof. gtkmm converts `Glib::ustring`s to a\nlocale-specific encoding (which usually is not UTF-8) if you output them to an\n`ostream` with `operator<<`.\nLikewise, retrieving `Glib::ustring`s from\n`istream` with `operator>>`\ncauses a conversion in the opposite direction. But this scheme breaks down if\nyou go through a `std::string`, e.g. by inputting text\nfrom a stream to a `std::string` and then implicitly\nconverting it to a `Glib::ustring`. If the string\ncontained non-ASCII characters and the current locale is not UTF-8 encoded, the\nresult is a corrupted `Glib::ustring`. You can work around\nthis with a manual conversion. For instance, to retrieve the\n`std::string` from a `ostringstream`:",
    "sha": "ef4af65f48793748",
-   "zh": null
+   "zh": "遗憾的是，与标准 iostream 的集成并不是万无一失的。如果用 `operator<<` 把 `Glib::ustring` 输出到 `ostream`，gtkmm 会把它转换成与区域设置相关的编码（通常不是 UTF-8）。同样，用 `operator>>` 从 `istream` 读取 `Glib::ustring` 时，会发生相反方向的转换。但如果经过 `std::string` 中转，这套机制就失效了，例如先把文本从流中读入一个 `std::string`，再把它隐式转换成 `Glib::ustring`：如果字符串含有非 ASCII 字符，而当前区域设置不是 UTF-8 编码，得到的 `Glib::ustring` 就是损坏的。你可以用手动转换来解决这个问题，例如，从 `ostringstream` 取得 `std::string`："
   },
   {
    "type": "code",
