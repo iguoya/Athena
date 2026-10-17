@@ -16,7 +16,7 @@ CI（.github/workflows/release.yml）已经包揽构建、打包、发布和拾�
 
 两阶段，中间不需要人工：
   1. prepare：校验前提（main、干净、与远端同步、版本只增、tag 未占用）→
-     bump subjects/cpp/meson.build → CHANGELOG 缺节时先按提交生成机械底稿，
+     bump practice/cpp/meson.build → CHANGELOG 缺节时先按提交生成机械底稿，
      再交给 GLM 对照上一版的手写风格总结润色（不是提交标题堆砌）→
      提交「chore(release): x.y.z」→ 打 tag v x.y.z。
   2. push：确认 tag 指向 HEAD → `git push origin main v x.y.z` →
@@ -46,9 +46,9 @@ import urllib.request
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-MESON_BUILD = REPO_ROOT / "subjects/cpp/meson.build"
+MESON_BUILD = REPO_ROOT / "practice/cpp/meson.build"
 CHANGELOG = REPO_ROOT / "CHANGELOG.md"
-CHANGELOG_NOTES = REPO_ROOT / "subjects/cpp/scripts/changelog_notes.py"
+CHANGELOG_NOTES = REPO_ROOT / "practice/cpp/scripts/changelog_notes.py"
 VERSION_RE = re.compile(r"^\d+\.\d+\.\d+$")
 MESON_VERSION_RE = re.compile(r"(^  version: ')(\d+\.\d+\.\d+)(')", re.MULTILINE)
 CHANGELOG_SECTION_RE = re.compile(r"^## \[(\d+\.\d+\.\d+)\]", re.MULTILINE)

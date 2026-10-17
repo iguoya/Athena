@@ -74,9 +74,9 @@
 | [0148](0148-regroup-domain-circles.md) | 领域圈（`group`）归并为 6 个：计算机基础 / 程序设计 / 人工智能 / 电子信息 / 考研 / 考证；分组仍是 `app.json` 字段，不做成目录；`python` 归程序设计 | 已接受；调整 0102、0111、0120；由 0156 增补「兴趣」圈 |
 | [0149](0149-postgraduate-directory.md) | 新增顶层目录 `postgraduate/`，搬入 cs408、五门科目课、mathematics、ascent；group 统一「考研」，挂靠与 id 不变 | 已接受；局部修订 0148 |
 | [0150](0150-dissolve-course-by-group.md) | 取消 `course/`：课程类应用按领域圈分到 `programming/`、`artificial-intelligence/`、`computer-fundamentals/`、`electronics/`（加 `postgraduate/`）；启动器认根改用 AGENTS.md + launcher/ | 已接受；取代 0145，修订 0148 决策 1 |
-| [0151](0151-chinese-chess-app.md) | 新增 `programming/chinese-chess`：教程壳 Tauri + React，棋盘按五章独立 gtkmm 程序放在 `exercise/` | 已接受 |
+| [0151](0151-chinese-chess-app.md) | 新增 `programming/chinese-chess`：教程壳 Tauri + React，棋盘按五章独立 gtkmm 程序放在 `exercise/` | 已接受；发版排除由 0168 取代 |
 | [0152](0152-edge-ai-course.md) | 新增 AI 路线第 6 门 `edge-ai`（端侧 AI 推理与部署），放 `artificial-intelligence/edge-ai/`；运行时 ONNX Runtime 加 llama.cpp，主线板 RK3588；第一批做第 1–5 章，上板章后写；量化边界与 `llm-finetune` 划清 | 已接受；修订 0120 |
-| [0153](0153-snake-app.md) | 新增 `programming/snake`：教程壳 Tauri + React，贪吃蛇按五章独立 raylib 程序放在 `exercise/`，第 5 章规则抽 `logic.hh` 配测试 | 已接受 |
+| [0153](0153-snake-app.md) | 新增 `programming/snake`：教程壳 Tauri + React，贪吃蛇按五章独立 raylib 程序放在 `exercise/`，第 5 章规则抽 `logic.hh` 配测试 | 已接受；发版排除由 0168 取代 |
 | [0156](0156-jiuzhou-history-atlas.md) | 新增图谱/参考类应用 jiuzhou（「九州 / Jiuzhou」，端口 1516）：中国历史地理图鉴；政治秩序主轴（2026-10-13 起七段，蒙元并入唐宋）；MapLibre + `@athena/maps`；新开领域圈「兴趣」；earth 预期后期迁入 | 已接受；修订 0148；地理呈现见 0157 |
 | [0157](0157-athena-maps-shared-package.md) | 历史地理纯呈现抽成 `packages/maps`（`@athena/maps`）：纸本墨线底图、自研水系/岸线/走廊；CHGIS 本机可选不入库；jiuzhou 首接 | 已接受；由 0158 修订学术层优先级，CHGIS 不入库一条由 0159 取代；沿 0137 例外；衔接 0156 |
 | [0158](0158-jiuzhou-local-academic-maps-expressiveness.md) | 九州本机学术地理层优先（CHGIS/自备谭图系进 `.cache` 不进 git）；采纳史图馆色块年轴、谭图系古今对照、杨利辉提亮/路线/前后对照 | 已接受；修订 0157；衔接 0156；决策 1、2 由 0159 取代 |
@@ -161,3 +161,4 @@
 | [0165](0165-agent-comms-service.md) | 多代理协作通讯抽取为仓库公共服务 comms/（按舱协作：一个主题一个舱、config.json 声明 leader/worker；leader 拆任务与验收、worker 交 review 附证据；正式任务沟通与即时消息双通道）；九州舱暂不迁移照旧运行 | 已接受 |
 | [0166](0166-comms-console-and-projection.md) | 协作观察台 comms-console（tools/，Tauri 2 + React，端口 1521）：文件是唯一权威、PG 是投影、观察台只读；看任务泳道、任务流转与裁决时间线、统一对话流；comms.py 加固原子写与 status 乐观锁 | 已接受 |
 | [0167](0167-multi-session-task-routing.md) | 多会话并行按任务分箱：任务是路由单位（doing 即绑定声明）、inbox/ack/notify 支持 --mine 与 --task、已读游标按箱分文件、认领冲突防护、可选 --as 会话标记 | 已接受；实现派 comms-console 舱 T-102 |
+| [0168](0168-release-mature-apps-uniformly.md) | 相对成熟的应用按同一标准进入发布：取消 0151、0153 对贪吃蛇和中国象棋的发版排除；archived 空壳与仍是 planned 占位的应用不进 | 已接受 |

@@ -439,9 +439,9 @@ jobs:
         with:
           workspaces: postgraduate/ascent/src-tauri
 
+      # 锁文件在仓库根（ADR 0140）。在应用目录里装会找不到 lockfile。
       - name: Install dependencies
         if: steps.key.outputs.ready == 'true'
-        working-directory: postgraduate/ascent
         run: pnpm install --frozen-lockfile
 
       - name: Set version
@@ -497,41 +497,260 @@ jobs:
         with:
           name: athena-ascent-windows-x64
           path: |
-            postgraduate/ascent/src-tauri/target/release/bundle/nsis/*.exe
+            .cache/cargo-target/release/bundle/nsis/*.exe
             postgraduate/ascent/dist/latest.json
           if-no-files-found: error
           retention-days: 7
 
-  # 北极星、英语、数学工具三个 Tauri 应用进独立发布矩阵（ADR 0081 的同台延伸，
-  # 与 athena-cpp、athena-driver 同版同发）。tauri build 先跑 beforeBuildCommand
-  # 构建前端，再编 Rust 出 bundle；每平台取一种最省事的格式：Windows NSIS 安装
-  # 器、macOS DMG、Linux DEB（AppImage 的 linuxdeploy 在无头 CI 上还有 fuse 依赖
-  # 坑，先不发）。产物统一改名为 athena-<app>-<版本>-<平台>。北极星的 productName
-  # 是中文「北极星」（窗口标题与开始菜单用），打包二进制名由 mainBinaryName
-  # 定为 athena-polaris，避免 /usr/bin 与安装器里出现中文二进制名。
+  # 相对成熟的 Tauri 应用进同一矩阵（ADR 0168，延伸 ADR 0081）。
+  # 与 athena-cpp、athena-driver、拾阶同版同发。tauri build 先跑 beforeBuildCommand
+  # 构建前端，再编 Rust 出 bundle；每平台取一种格式：Windows NSIS、macOS DMG、
+  # Linux DEB（AppImage 的 linuxdeploy 在无头 CI 上还有 fuse 依赖，先不发）。
+  # 产物改名为 athena-<app>-<版本>-<平台>。中文 productName 的应用用 mainBinaryName
+  # 把二进制收成 athena-<id>，窗口标题仍用中文。
   tauri-apps:
     name: Build ${{ matrix.app }} (${{ matrix.platform }})
     strategy:
       fail-fast: false
       matrix:
         include:
-          # 每项都写 root（应用所在的顶层目录）；北极星在 mentor/（ADR 0144）
-          - app: polaris
+          # 每项都写 root（应用所在的顶层目录）。名单见 ADR 0168。
+          - app: algorithms
+            root: postgraduate
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: algorithms
+            root: postgraduate
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: algorithms
+            root: postgraduate
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: algorithms
+            root: postgraduate
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: c-plus-plus
+            root: programming
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: c-plus-plus
+            root: programming
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: c-plus-plus
+            root: programming
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: c-plus-plus
+            root: programming
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: chinese-chess
+            root: programming
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: chinese-chess
+            root: programming
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: chinese-chess
+            root: programming
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: chinese-chess
+            root: programming
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: comms-console
+            root: tools
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: comms-console
+            root: tools
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: comms-console
+            root: tools
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: comms-console
+            root: tools
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: competitions
             root: mentor
             os: windows-latest
             platform: windows-x64
             bundles: nsis
-          - app: polaris
+          - app: competitions
             root: mentor
             os: macos-15
             platform: macos-arm64
             bundles: app,dmg
-          - app: polaris
+          - app: competitions
             root: mentor
             os: macos-15-intel
             platform: macos-x86_64
             bundles: app,dmg
-          - app: polaris
+          - app: competitions
+            root: mentor
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: cs408
+            root: postgraduate
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: cs408
+            root: postgraduate
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: cs408
+            root: postgraduate
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: cs408
+            root: postgraduate
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: data-structures
+            root: postgraduate
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: data-structures
+            root: postgraduate
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: data-structures
+            root: postgraduate
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: data-structures
+            root: postgraduate
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: design-patterns
+            root: programming
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: design-patterns
+            root: programming
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: design-patterns
+            root: programming
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: design-patterns
+            root: programming
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: earth
+            root: practice
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: earth
+            root: practice
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: earth
+            root: practice
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: earth
+            root: practice
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: embedded
+            root: certification
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: embedded
+            root: certification
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: embedded
+            root: certification
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: embedded
+            root: certification
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: gtkmm
+            root: guide
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: gtkmm
+            root: guide
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: gtkmm
+            root: guide
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: gtkmm
+            root: guide
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: jiuzhou
+            root: mentor
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: jiuzhou
+            root: mentor
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: jiuzhou
+            root: mentor
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: jiuzhou
             root: mentor
             os: ubuntu-26.04
             platform: linux-x86_64
@@ -553,6 +772,166 @@ jobs:
             bundles: app,dmg
           - app: math-tools
             root: tools
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: mathematics
+            root: postgraduate
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: mathematics
+            root: postgraduate
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: mathematics
+            root: postgraduate
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: mathematics
+            root: postgraduate
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: octave-manual
+            root: guide
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: octave-manual
+            root: guide
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: octave-manual
+            root: guide
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: octave-manual
+            root: guide
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: polaris
+            root: mentor
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: polaris
+            root: mentor
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: polaris
+            root: mentor
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: polaris
+            root: mentor
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: selinger-linear-algebra
+            root: guide
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: selinger-linear-algebra
+            root: guide
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: selinger-linear-algebra
+            root: guide
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: selinger-linear-algebra
+            root: guide
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: siefken-linear-algebra
+            root: guide
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: siefken-linear-algebra
+            root: guide
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: siefken-linear-algebra
+            root: guide
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: siefken-linear-algebra
+            root: guide
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: snake
+            root: programming
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: snake
+            root: programming
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: snake
+            root: programming
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: snake
+            root: programming
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: software
+            root: certification
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: software
+            root: certification
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: software
+            root: certification
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: software
+            root: certification
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: sympy-tutorial
+            root: guide
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: sympy-tutorial
+            root: guide
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: sympy-tutorial
+            root: guide
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: sympy-tutorial
+            root: guide
             os: ubuntu-26.04
             platform: linux-x86_64
             bundles: deb
@@ -699,12 +1078,13 @@ jobs:
         shell: bash
         run: |
           shopt -s nullglob
-          files=(athena-cpp-*.dmg athena-cpp-*.AppImage athena-cpp_*.deb
-            athena-cpp-*-windows-x64.zip athena-cpp-*-windows-x64.msi
-            athena-driver-*.zip athena-driver-*.dmg athena-driver-*.tar.gz
-            athena-polaris-* athena-polaris_*
-            athena-math-tools-* athena-math-tools_*
-            athena-ascent*)
+          # 安装包一律 athena- 开头（deb 用下划线，* 照样匹配）。
+          # 新增应用不用再改这份清单。
+          files=(athena-*)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "::error::dist 里没有 athena-* 安装包"
+            exit 1
+          fi
           sha256sum "${files[@]}" > SHA256SUMS.txt
 
       - name: Build release notes from CHANGELOG
@@ -737,13 +1117,11 @@ jobs:
         run: |
           version="${GITHUB_REF_NAME#v}"
           shopt -s nullglob
-          assets=(dist/athena-cpp-*.dmg dist/athena-cpp-*.AppImage dist/athena-cpp_*.deb
-            dist/athena-cpp-*-windows-x64.zip dist/athena-cpp-*-windows-x64.msi
-            dist/athena-driver-*.zip dist/athena-driver-*.dmg dist/athena-driver-*.tar.gz
-            dist/athena-polaris-* dist/athena-polaris_*
-            dist/athena-math-tools-* dist/athena-math-tools_*
-            dist/athena-ascent*
-            dist/SHA256SUMS.txt)
+          assets=(dist/athena-* dist/SHA256SUMS.txt)
+          if [ ${#assets[@]} -lt 2 ]; then
+            echo "::error::没有可上传的安装包"
+            exit 1
+          fi
           if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
             # 拾阶 tauri-action 以 draft 建的 Release 落到这里:补齐资产后 --draft=false 转正;
             # tag 重跑时同名资产 --clobber 覆盖,说明与标题一并更新。
