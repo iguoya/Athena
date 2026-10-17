@@ -98,8 +98,8 @@ python comms/spawn.py zcode  --project driver --task T-104 [--note "补充说明
 
 | 代理 | 怎么开 | 前提 |
 |---|---|---|
-| zcode | `zcode.cjs -p` 无头后台（经 `~/.zcode/spawn-cli/` 垫片，自动生成） | 命令行需登录一次：`node "C:\Program Files\ZCode\resources\glm\zcode.cjs" login bigmodel` |
-| cursor | 装了独立 CLI（`cursor-agent` / `agent`）就无头；否则降级为深链预填新对话，使用者按回车 | 无头需先安装 Cursor CLI |
+| zcode | `zcode.cjs -p` 无头后台（经 `~/.zcode/spawn-cli/` 垫片，自动生成）；会话也写进 ZCode 自己的会话库 | 命令行登录过一次：`node ~/.zcode/spawn-cli/run.cjs login bigmodel`（需设 `ZCODE_REAL_CJS`，见 `spawn.py`） |
+| cursor | 独立 CLI `cursor-agent` 无头（`--force --trust`），一次约 2~4 分钟、结束才输出；没装则只打印提示词，加 `--open-cursor` 才用深链弹出预填的新对话（要按回车） | 装 CLI 并 `agent login` 一次。本机 `python` 是商店别名看不到 AppData\Local 新目录，用 **`py comms/spawn.py`** |
 | claude-code | `claude -p` 无头 | 无 |
 
 无头输出在 `comms/<舱>/runs/*.log`（已 gitignore）。无头会话没人实时回答，提示词已要求它

@@ -153,6 +153,21 @@ def zcode_cli() -> tuple[list[str], dict[str, str]]:
     return [find_node(), str(shim / "run.cjs")], env
 
 
+def cursor_agent_cli() -> list[str] | None:
+    r"""独立的 Cursor CLI（cursor-agent）；没装返回 None。
+
+    Windows 的 cursor-agent.cmd 会经 cmd.exe 转手，多行/中文提示词在那里会被截断，
+    所以直接跑版本目录里的 node.exe + index.js（装在 %LOCALAPPDATA%\cursor-agent，
+    安装脚本会改用户 PATH，但已开着的终端看不到，这里不依赖 PATH）。
+    """
+    if sys.platform == "win32":
+        base = Path(os.environ.get("LOCALAPPDATA", "")) / "cursor-agent/versions"
+        vers = sorted((d for d in base.glob("20*") if (d / "index.js").is_file()), key=lambda d: d.name)
+        return [str(vers[-1] / "node.exe"), str(vers[-1] / "index.js")] if vers else None
+    exe = shutil.which("cursor-agent") or shutil.which("agent")
+    return [exe] if exe else None
+
+
 def build_command(agent: str, prompt: str) -> tuple[list[str], dict[str, str]] | None:
     """返回 (无头命令, 额外环境变量)；None 表示该代理没有可用的无头入口（走降级）。"""
     if agent == "zcode":
@@ -164,10 +179,10 @@ def build_command(agent: str, prompt: str) -> tuple[list[str], dict[str, str]] |
             die("找不到 claude 命令")
         return [exe, "-p", prompt], {}
     if agent == "cursor":
-        exe = shutil.which("cursor-agent") or shutil.which("agent")
-        if exe:
-            # --force：无头时没人点确认；范围由提示词与 owned 路径约束
-            return [exe, "-p", "--force", prompt], {}
+        head = cursor_agent_cli()
+        if head:
+            # --force：无头时没人点确认；--trust：免掉「信任此工作区」提问。范围由提示词与 owned 路径约束
+            return [*head, "-p", "--force", "--trust", "--workspace", str(ROOT), prompt], {}
         return None
     die(f"不认识的代理 {agent!r}：spawn.py 只会开 zcode / cursor / claude-code")
 
@@ -186,15 +201,18 @@ def launch_detached(cmd: list[str], env: dict[str, str], log: Path) -> int:
     return subprocess.Popen(cmd, **kw).pid
 
 
-def cursor_fallback(prompt: str, dry: bool) -> None:
+def cursor_fallback(prompt: str, dry: bool, open_it: bool) -> None:
     """没有独立 CLI：用 Cursor 的提示词深链开新对话并预填，使用者回车发送。"""
     link = "cursor://anysphere.cursor-deeplink/prompt?text=" + urllib.parse.quote(prompt)
-    print("Cursor 没有可无头运行的 CLI（cursor-agent / agent 未安装），降级为预填新对话。")
+    print("Cursor 没有可无头运行的 CLI（cursor-agent 未安装），降级为预填新对话。")
+    if sys.platform == "win32":
+        print("（已装却看不到？Windows 商店版 python 别名看不到 AppData\\Local 下新建的目录，改用 `py comms/spawn.py ...`。）")
     if len(link) > 8000:
         print(f"提示词过长（深链 {len(link)} 字符），请手动把下面这段贴进 Cursor 新对话：\n\n{prompt}")
         return
-    if dry:
-        print("深链：", link[:200] + "…")
+    if dry or not open_it:
+        # 默认不替使用者弹开 Cursor 窗口（会打断他正在做的事）；明确要才开
+        print("未打开 Cursor。要让它弹出预填的新对话，加 --open-cursor。")
         return
     if sys.platform == "win32":
         os.startfile(link)  # type: ignore[attr-defined]
@@ -212,6 +230,7 @@ def main() -> int:
     ap.add_argument("--task", help="任务号，如 T-104；不给则只开会话让它先看收件箱")
     ap.add_argument("--note", default="", help="附加到提示词末尾的说明")
     ap.add_argument("--force", action="store_true", help="忽略任务状态/负责人检查")
+    ap.add_argument("--open-cursor", action="store_true", help="cursor 无 CLI 时，用深链弹出预填的新对话")
     ap.add_argument("--dry-run", action="store_true", help="只打印提示词和命令，不启动")
     a = ap.parse_args()
 
@@ -231,7 +250,16 @@ def main() -> int:
     prompt = build_prompt(a.agent, a.project, a.task, a.note)
     built = build_command(a.agent, prompt)
     if built is None:
-        cursor_fallback(prompt, a.dry_run)
+        # Windows 商店版 python 别名看不到 AppData\\Local 下新建的目录，cursor-agent 装在那里；
+        # 换 py 启动器重跑一次（环境变量防止来回套娃），比降级成深链更接近本意
+        if sys.platform == "win32" and not os.environ.get("SPAWN_REEXEC"):
+            try:
+                return subprocess.call(
+                    ["py", str(Path(__file__).resolve()), *sys.argv[1:]], env={**os.environ, "SPAWN_REEXEC": "1"}
+                )
+            except FileNotFoundError:
+                pass
+        cursor_fallback(prompt, a.dry_run, a.open_cursor)
         return 0
     cmd, env = built
     shown = [c if c != prompt else "<提示词>" for c in cmd]
