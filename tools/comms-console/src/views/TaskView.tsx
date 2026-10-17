@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import type { Snapshot } from "../types";
 import { PRIORITY_COLOR, STATUS_TEXT } from "../types";
 import TaskMarkdown from "../TaskMarkdown";
+import { who, type AgentColor } from "../activity";
 
 // 任务与决策：左列任务清单，右侧任务书 + 流转时间线 + 关联消息（裁决/返工/验收）。
 export default function TaskView({
@@ -9,11 +10,13 @@ export default function TaskView({
   bay,
   selectedTid,
   onSelect,
+  colorOf,
 }: {
   snap: Snapshot;
   bay: string;
   selectedTid: string;
   onSelect: (tid: string) => void;
+  colorOf: (name: string) => AgentColor;
 }) {
   const bayInfo = snap.bays.find((b) => b.name === bay);
   const tasks = useMemo(
@@ -65,7 +68,11 @@ export default function TaskView({
                 {t.status}
               </span>
             </div>
-            <div className="mt-1 line-clamp-1 text-sm">{t.title}</div>
+            <div className="mt-1 flex items-center gap-1.5">
+              <span className={"inline-block h-2 w-2 shrink-0 rounded-full " + colorOf(t.owner).dot} />
+              <span className="shrink-0 text-xs text-ink-500">{t.owner}</span>
+              <span className="line-clamp-1 text-sm">{t.title}</span>
+            </div>
           </button>
         ))}
       </div>
@@ -101,7 +108,7 @@ export default function TaskView({
                 <span className="mr-2 rounded bg-brand-100 px-1.5 py-0.5 text-xs font-medium text-brand-700">
                   决策 · 发布
                 </span>
-                <span className="font-medium">{leader || "leader"}</span>
+                <span className={"rounded px-1.5 py-0.5 text-xs font-medium " + colorOf(leader).chip}>{leader || "leader"}</span>
                 <span className="ml-2 text-xs text-ink-300">{task.created}</span>
               </div>
             </li>
@@ -129,7 +136,7 @@ export default function TaskView({
                         决策 · {kind}
                       </span>
                     )}
-                    <span className="font-medium">{ev.actor}</span>
+                    <span className={"rounded px-1.5 py-0.5 text-xs font-medium " + colorOf(who(ev.actor)).chip}>{ev.actor}</span>
                     <span className="text-ink-500">
                       {" "}
                       {ev.from_status || "—"} → <b>{ev.to_status}</b>
@@ -180,7 +187,7 @@ export default function TaskView({
                   <span
                     className={
                       "rounded px-1.5 py-0.5 text-xs font-medium " +
-                      (m.from_a === leader ? "bg-brand-100 text-brand-700" : "bg-ink-300/25 text-ink-700")
+                      colorOf(m.from_a).chip
                     }
                   >
                     {m.from_a}

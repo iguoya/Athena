@@ -5,11 +5,14 @@ import BoardView from "./views/BoardView";
 import TaskView from "./views/TaskView";
 import ChatView from "./views/ChatView";
 import StatsView from "./views/StatsView";
+import MemberView from "./views/MemberView";
+import { agentColors } from "./activity";
 
-type View = "board" | "tasks" | "chat" | "stats";
+type View = "board" | "members" | "tasks" | "chat" | "stats";
 
 const VIEW_LABEL: Record<View, string> = {
   board: "看板",
+  members: "成员",
   tasks: "任务与决策",
   chat: "对话流",
   stats: "活动统计",
@@ -30,6 +33,8 @@ export default function App() {
       })
       .catch((e) => setError(String(e)));
   }
+
+  const colorOf = useMemo(() => (snap ? agentColors(snap) : agentColors({ source: "none", note: "", bays: [], tasks: [], msgs: [], chats: [] })), [snap]);
 
   const bayInfo: BayInfo | undefined = useMemo(
     () => snap?.bays.find((b) => b.name === bay),
@@ -104,7 +109,12 @@ export default function App() {
           <h1 className="text-base font-bold">{bay || "—"}</h1>
           {bayInfo && (
             <span className="text-xs text-ink-500">
-              leader：{bayInfo.leader} · 成员：{bayInfo.agents.join("、")}
+              {bayInfo.agents.map((a) => (
+                <span key={a} className={"mr-1.5 rounded px-1.5 py-0.5 font-medium " + colorOf(a).chip}>
+                  {a}
+                  {a === bayInfo.leader ? " · leader" : ""}
+                </span>
+              ))}
             </span>
           )}
           <nav className="ml-auto flex gap-1">
@@ -129,6 +139,19 @@ export default function App() {
             <BoardView
               snap={snap}
               bay={bay}
+              bayInfo={bayInfo}
+              colorOf={colorOf}
+              onOpenTask={(tid) => {
+                setSelectedTid(tid);
+                setView("tasks");
+              }}
+            />
+          ) : view === "members" ? (
+            <MemberView
+              snap={snap}
+              bay={bay}
+              bayInfo={bayInfo}
+              colorOf={colorOf}
               onOpenTask={(tid) => {
                 setSelectedTid(tid);
                 setView("tasks");
@@ -138,11 +161,12 @@ export default function App() {
             <TaskView
               snap={snap}
               bay={bay}
+              colorOf={colorOf}
               selectedTid={selectedTid}
               onSelect={setSelectedTid}
             />
           ) : view === "chat" ? (
-            <ChatView snap={snap} bay={bay} bayInfo={bayInfo} />
+            <ChatView snap={snap} bay={bay} bayInfo={bayInfo} colorOf={colorOf} />
           ) : (
             <StatsView snap={snap} bay={bay} />
           )}

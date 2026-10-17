@@ -1,6 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 import type { Snapshot } from "../types";
 import { dayHeading, dayKey, stampOf } from "../timeline";
+import type { AgentColor } from "../activity";
 
 interface Entry {
   key: string;
@@ -24,10 +25,12 @@ export default function ChatView({
   snap,
   bay,
   bayInfo,
+  colorOf,
 }: {
   snap: Snapshot;
   bay: string;
   bayInfo?: { leader: string; agents: string[] };
+  colorOf: (name: string) => AgentColor;
 }) {
   const leader = bayInfo?.leader ?? "";
   const [openNoise, setOpenNoise] = useState<Record<string, boolean>>({});
@@ -82,8 +85,7 @@ export default function ChatView({
     });
   }, [snap, bay]);
 
-  const badge = (from: string) =>
-    from === leader ? "bg-brand-100 text-brand-700" : "bg-ink-300/25 text-ink-700";
+  const badge = (from: string) => colorOf(from).chip;
 
   const nodes: ReactNode[] = [];
   let lastDay = "";
@@ -100,7 +102,7 @@ export default function ChatView({
     const folded = noisy(root.subject) && !openNoise[root.key];
     nodes.push(
       <div key={root.key} className="mb-4">
-        <div className="rounded-xl border border-line bg-white p-4">
+        <div className={"rounded-xl border border-l-4 border-line bg-white p-4 " + colorOf(root.from).border}>
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <span className={"rounded px-1.5 py-0.5 text-xs font-medium " + badge(root.from)}>
               {root.from}
@@ -136,7 +138,7 @@ export default function ChatView({
         {!folded && replies.length > 0 && (
           <div className="ml-6 border-l-2 border-line pl-4 pt-2">
             {replies.map((r) => (
-              <div key={r.key} className="mb-2 rounded-xl bg-white p-3 ring-1 ring-line">
+              <div key={r.key} className={"mb-2 rounded-xl border-l-4 bg-white p-3 ring-1 ring-line " + colorOf(r.from).border}>
                 <div className="flex flex-wrap items-center gap-2 text-sm">
                   <span className={"rounded px-1.5 py-0.5 text-xs font-medium " + badge(r.from)}>
                     {r.from}
