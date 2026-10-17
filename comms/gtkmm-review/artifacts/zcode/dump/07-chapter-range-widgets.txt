@@ -1,0 +1,107 @@
+### 页 sec-scrollbar-widgets  (page status=translated)
+[0] para
+  EN: `Gtk::Scale` inherits from `Gtk::Range`.
+`Gtk::Scrollbar` does not inherit from `Gtk::Range`,
+but it shares much functionality with `Gtk::Scale`.
+They both contain a "trough" and a "slider" (sometimes called a
+"thumbwheel" in other GUI environments). Dragging the slider with the pointer
+moves it within the trough, while clicking in the trough advances the slider
+towards the location of the click, either completely, or by a designated
+amount, depending on which mouse button is used. This should be familiar
+scrollbar behavior.
+  ZH: `Gtk::Scale` 继承自 `Gtk::Range`；`Gtk::Scrollbar` 虽不继承自 `Gtk::Range`，但与 `Gtk::Scale` 共享大量功能——两者都把控件的「调整」委托给一个 `Adjustment`，并都会响应 `adjust_bounds`、`change_value` 与 `move_slider` 信号。
+
+[1] para
+  EN: As will be explained in the [Adjustments](#chapter-adjustment)
+section, all range widgets are associated with an
+`Adjustment` object. To change the lower, upper, and
+current values used by the widget you need to use the methods of its
+`Adjustment`, which you can get with the
+get_adjustment() method. The range
+widgets' default constructors create an `Adjustment`
+automatically, or you can specify an existing
+`Adjustment`, maybe to share it with another widget. See
+the [Adjustments](#chapter-adjustment) section for further
+details.
+  ZH: 如「Adjustments」一节将要讲到的，所有范围控件都关联一个 `Adjustment` 对象。要改变范围的下限、上限和当前值，或改变步长，对该 `Adjustment` 的字段调用相应方法即可，控件自会随之更新。
+
+[2] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1Range.html)
+  ZH: 参考
+
+[3] para
+  EN: These are standard scrollbars. They should be used only to scroll another
+widget, such as a `Gtk::Entry` or a
+`Gtk::Viewport`, though it's usually easier to use the
+`Gtk::ScrolledWindow` widget in most cases.
+  ZH: 这些是标准的滚动条。它们应该只被用于滚动其它部件，比如 Gtk::Entry 或 Gtk::Viewport，当然，通常使用 Gtk::ScrolledWindow 会更容易一些。
+
+[4] para
+  EN: The orientation of a `Gtk::Scrollbar` can be either
+horizontal or vertical.
+  ZH: Gtk::Scrollbar的方向可以是水平的也可以是垂直的。
+
+[5] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1Scrollbar.html)
+  ZH: 参考
+
+### 页 sec-scale-widgets  (page status=translated)
+[0] para
+  EN: `Gtk::Scale` widgets (or "sliders") allow the user to
+visually select and manipulate a value within a specific range. You
+might use one, for instance, to adjust the
+magnification level on a zoomed preview of a picture, or to control
+the brightness of a colour, or to specify the number of minutes of
+inactivity before a screensaver takes over the screen.
+  ZH: `Gtk::Scale` 控件（也称「滑块」）让用户以可视化的方式在给定范围内选取和调整数值。比如可以用它调节图片缩放预览的放大级别，或控制亮度。
+
+[1] para
+  EN: As with `Scrollbar`s, the orientation can be either
+horizontal or vertical. The default constructor creates an
+`Adjustment` with all of its values set to
+`0.0`. This isn't useful so you will need to set some
+`Adjustment` details to get meaningful behavior.
+  ZH: 与 `Scrollbar` 一样，方向可以是水平或垂直。默认构造函数创建的 `Adjustment` 所有值都是 0.0——这没什么用，你需要设置一些 Adjustment 细节才有意义。
+
+[2] heading  <<<ZH缺失>>>
+  EN: Useful methods
+  ZH: (无)
+
+[3] para
+  EN: `Scale` widgets can display their current value as a number
+next to the trough. By default they show the value, but you can change this
+with the set_draw_value() method.
+  ZH: Scale 可以在滑轨旁显示它们的当前值。默认情况下是显示这个数值的，但是你可以通过调用 set_draw_value() 方法来设置是否显示该值。
+
+[4] para
+  EN: The value displayed by a scale widget is rounded to one decimal point
+by default, as is the `value` field in its
+`Gtk::Adjustment`. You can change this with the
+set_digits() method.
+  ZH: 默认情况下，Scale 部件会显示 Gtk::Adjustment 的 value 的数值，并且会被四舍五入到一位小数。你可以通过 set_digits() 方法来改变显示的小数位数。
+
+[5] para
+  EN: Also, the value can be drawn in different positions relative to the trough,
+specified by the set_value_pos() method.
+  ZH: 另外，通过使用 set_value_pos()，可以使值显示在相对于滑块不同的位置。
+
+[6] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1Scale.html)
+  ZH: 参考
+
+### 页 sec-range-example  (page status=translated)
+[0] para
+  EN: This example displays a window with three range widgets all connected
+to the same adjustment, along with a couple of controls for adjusting
+some of the parameters mentioned above and in the section on
+adjustments, so you can see how they affect the way these widgets work
+for the user.
+  ZH: 这个示例显示了一个窗口，其中有三个关联到同一个调整对象，还有几个控制部件用来调整前文讨论过的一些参数，这样你可以很清楚地看到那些参数是如何影响这些部件的行为方式的。
+
+[1] figure  <<<ZH缺失>>>
+  EN: Range Widgets
+  ZH: (无)
+
+[2] CODE file=examplewindow.h 913 chars
+[3] CODE file=examplewindow.cc 5533 chars
+[4] CODE file=main.cc 270 chars

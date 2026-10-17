@@ -1,0 +1,181 @@
+### 页 sec-pushbuttons  (page status=translated)
+[0] para
+  EN: gtkmm provides four basic types of buttons:
+  ZH: gtkmm 提供以下四种基本按钮控件：
+
+[1] listitem
+  EN: [`Gtk::Button`](&url_refdocs_base_gtk_html;classGtk_1_1Button.html). Standard buttons, usually
+marked with a label or picture. Pushing one triggers an action. See the [Button](#sec-pushbuttons) section.
+  ZH: Gtk::Button。这是标准按钮，通常标有文字标签或者图片。按一下就会触发一个动作。参看 Button 小节。
+
+[2] listitem
+  EN: [`Gtk::ToggleButton`](&url_refdocs_base_gtk_html;classGtk_1_1ToggleButton.html).
+Unlike a normal Button, which springs back up, a ToggleButton stays down until you
+press it again. It might be useful as an on/off switch. See the [ToggleButton](#sec-toggle-buttons) section.
+  ZH: Gtk::ToggleButton。和一般按下后会自动弹起的按钮不一样，ToggleButton 需要你再按一次才会弹起。它作为一个开关可能比较有用。参看 ToggleButton 小节。
+
+[3] listitem
+  EN: [`Gtk::CheckButton`](&url_refdocs_base_gtk_html;classGtk_1_1CheckButton.html).
+These act like ToggleButtons, but show their state in small squares,
+with their label at the side. They should be used in most situations
+which require an on/off setting.
+See the [CheckButton](#sec-checkbuttons) section.
+  ZH: Gtk::CheckButton。它们用起来和 ToggleButtons 很像，只不过它们用一个小方块来显示自己的状态，而且旁边还有一个文字标签。在大多数需要布尔值设置的情况都可以使用它。参看 CheckButton 小节。
+
+[4] listitem
+  EN: Named after the station selectors on old car
+radios, these buttons are used in groups for options which are
+mutually exclusive. Pressing one causes all the
+others in its group to turn off. They are similar to ToggleButtons or
+CheckButtons (a small widget with a label at the side), but usually
+look different. There is no separate radio button class. Check buttons
+and toggle buttons can act as radio buttons.
+See the [Radio Button](#sec-radio-buttons) section.
+  ZH: 它是根据老式汽车内的收音机的选台器来命名的，选台器是一组选择按钮并且它们是互斥的。按下其中任何一个都会使这一组中的其它按钮都弹起。它们的布局和 CheckButton (一个旁边有标签的小部件)很相似，但是通常看起来不太一样。没有单独的单选按钮类。复选按钮和开关按钮可以充当单选按钮。参见RadioButton 小节。
+
+[5] para
+  EN: Note that, due to GTK's theming system, the appearance of these
+widgets will vary. In the case of check buttons and radio buttons, they
+may vary considerably.
+  ZH: 请注意，由于GTK的主题不同，这些控件外观可能会不同。特别是复选按钮和单选按钮可能会很不一样。
+
+[6] para
+  EN: There are two ways to create a Button. You can specify a label
+string in the `Gtk::Button` constructor,
+or set it later with set_label().
+  ZH: 可以通过两种方式来创建按钮，你可以在 Gtk::Button 构造函数中指定标签字符串，或者以后调用 set_label() 来指定标签。
+
+[7] para
+  EN: To define an accelerator key for keyboard navigation, place an underscore before one of the label's characters and specify `true` for the optional `mnemonic` parameter. For instance:
+  ZH: 如果你想为按钮定义一个快捷键，那么可以在标签字符串中的某个字符前面加上一个下划线，并且指定可选的参数助记符(mnemonic)为 true。例如：
+
+[8] CODE file= 59 chars
+[9] para
+  EN: `Gtk::Button` is also
+a container so you could put any other widget, such as a
+`Gtk::Image` into it.
+  ZH: Gtk::Button 同时也是一个容器，因此你可以在其中放任何其它的部件，比如放一个 Gtk::Image 在里面。
+
+[10] para
+  EN: The `Gtk::Button` widget has the `clicked` signal
+which is emitted when the button is pressed and released.
+  ZH: Gtk::Button部件具有clicked信号，当按下或释放按钮时将会发出该信号。
+
+[11] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1Button.html)
+  ZH: 参考
+
+[12] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[13] para
+  EN: This example creates a button with a picture and a label.
+  ZH: 这个示例创建了一个有图片和文字标签的按钮。
+
+[14] figure  <<<ZH缺失>>>
+  EN: buttons example
+  ZH: (无)
+
+[15] CODE file=buttons.h 339 chars
+[16] CODE file=buttons.cc 927 chars
+[17] CODE file=main.cc 258 chars
+### 页 sec-toggle-buttons  (page status=translated)
+[0] para
+  EN: `ToggleButton`s are like normal `Button`s, but when clicked they remain activated, or pressed,  until clicked again.
+  ZH: ToggleButton 和普通的 Button 相似，但是它们在点击后会保持激活(或称为按下的)状态，直到再次点击它为止。
+
+[1] para
+  EN: To retrieve the state of the `ToggleButton`, you can use the
+get_active() method. This returns `true` if the button
+is "down". You can also set the toggle button's state, with set_active(). Note that, if you do this, and the state actually changes, it causes the
+"clicked" signal to be emitted. This is usually what you want.
+  ZH: 读取 `ToggleButton` 的状态可以用 get_active() 方法：按钮按下时返回 `true`，弹起时返回 `false`。也可以用 set_active() 设置开关按钮的状态。注意：这样做时如果状态确实发生了变化，控件会发出 toggled 信号。
+
+[2] para
+  EN: You can use the toggled() method to toggle the button, rather than
+forcing it to be up or down: This switches the button's state, and causes the `toggled` signal to be emitted.
+  ZH: 你可以使用 toggled() 方法来改变按钮的状态，而不要强行的是设置它是开还是关：这个方法将会改变按钮的状态，并会引发 toggled 信号。
+
+[3] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1ToggleButton.html)
+  ZH: 参考
+
+### 页 sec-checkbuttons  (page status=translated)
+[0] para
+  EN: `Gtk::CheckButton` inherits directly from
+`Gtk::Widget`. It is similar to `Gtk::ToggleButton`.
+The only real difference between the two is `Gtk::CheckButton`'s
+appearance. You can check and set a check button using the same
+member methods as for `Gtk::ToggleButton`.
+  ZH: Gtk::CheckButton 继承自 Gtk::Widget。它与Gtk::ToggleButton类似，二者只有外观不同。因此你可以像Gtk::ToggleButton一样使用同样的方法来检查、设置和转换多选按钮的状态。
+
+[1] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1CheckButton.html)
+  ZH: 参考
+
+[2] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[3] figure  <<<ZH缺失>>>
+  EN: CheckButton
+  ZH: (无)
+
+[4] CODE file=examplewindow.h 367 chars
+[5] CODE file=examplewindow.cc 505 chars
+[6] CODE file=main.cc 270 chars
+### 页 sec-radio-buttons  (page status=translated)
+[0] para
+  EN: There is no separate class for radio buttons. Check buttons and toggle buttons
+act as radio buttons when they form a group. Only one button in a group can be
+selected at any one time.
+  ZH: 单选按钮没有单独的类。当复选按钮和开关按钮在一个组中的时候它们充当单选按钮。任何时候只能选择一个组中的一个按钮。
+
+[1] heading  <<<ZH缺失>>>
+  EN: Groups
+  ZH: (无)
+
+[2] para
+  EN: You create the buttons, and set up their group afterwards. In the following example,
+we put 3 radio buttons in a group:
+  ZH: 你创建了三个按钮，然后为他们设置了组。在下面的例子中，我们将三个单选按钮放入一个组中。
+
+[3] CODE file= 220 chars
+[4] para
+  EN: We told gtkmm to put all three `CheckButton`s in the
+same group by using set_group() to tell the other
+`CheckButton`s to share group with the first
+`CheckButton`.
+  ZH: 我们告诉gtkmm把三个CheckButton都放到一个组内，通过get_group()来得到这个组，然后使用set_group()告诉其它的CheckButton与第一个CheckButton共享这个组。
+
+[5] heading  <<<ZH缺失>>>
+  EN: Methods
+  ZH: (无)
+
+[6] para
+  EN: `CheckButton`s and `ToggleButton`s are "off"
+when created; this means that when you first make a group of them, they will all be off.
+Don't forget to turn one of them on using set_active().
+  ZH: `CheckButton` 和 `ToggleButton` 在创建之初都是「未选中」状态；因此刚建好一组按钮时，它们全都处于弹起状态。别忘了用 set_active() 打开其中一个。
+
+[7] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1RadioButton.html)
+  ZH: 参考
+
+[8] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[9] para
+  EN: The following example demonstrates the use of grouped
+`CheckButton`s:
+  ZH: 接下来的例子中演示了对CheckButton进行分组的用法：
+
+[10] figure  <<<ZH缺失>>>
+  EN: RadioButton
+  ZH: (无)
+
+[11] CODE file=radiobuttons.h 593 chars
+[12] CODE file=main.cc 268 chars
+[13] CODE file=radiobuttons.cc 1796 chars

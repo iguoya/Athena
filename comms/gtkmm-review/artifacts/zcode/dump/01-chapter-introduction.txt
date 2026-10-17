@@ -1,0 +1,95 @@
+### 页 sec-this-book  (page status=translated)
+[0] para
+  EN: This book explains key concepts of the gtkmm C++ API for creating user interfaces. It also introduces the main user interface elements ("widgets"). Although it mentions classes, constructors, and methods, it does not go into great detail. Therefore, for full API information you should follow the links into the reference documentation.
+  ZH: 本书讲解使用 gtkmm C++ API 创建用户界面的关键概念，并介绍主要的用户界面元素（「控件」，widget）。书中会提到类、构造函数和方法，但不做深入细节展开；完整的 API 信息请顺着链接查阅参考文档。
+
+[1] para
+  EN: This book assumes a good understanding of C++, and how to create C++ programs.
+  ZH: 本书假定读者拥有对 C++ 良好的理解，并且知道如何去创建一个 C++ 程序。
+
+[2] para
+  EN: We would very much like to hear of any problems you have learning gtkmm
+with this document, and would appreciate input regarding improvements. Please see the [Contributing](#chapter-contributing) section for further information.
+  ZH: 我们非常愿意聆听您在使用此文档学习 gtkmm 时碰到的任何问题，并且感激对此作出的改进。请访问 贡献 节以获得进一步的信息。
+
+### 页 sec-gtkmm  (page status=translated)
+[0] para
+  EN: gtkmm is a C++ wrapper for
+[GTK](http://www.gtk.org/),
+a library used to create graphical user
+interfaces. It is licensed using the LGPL license, so you can develop
+open software, free software, or even commercial non-free software
+using gtkmm without purchasing licenses.
+  ZH: gtkmm 是一个 GTK 的 C++ 封装，GTK+ 是一个用于创建图形用户界面的软件库。它使用 LGPL 协议，因此您可以使用 gtkmm 开发开放软件、自由软件，甚至商业非免费软件而不需支付任何版权费用。
+
+[1] para
+  EN: gtkmm was originally named gtk-- because GTK was originally named GTK+
+and had a + in the name. However, as -- is not easily indexed by search engines,
+the package generally went by the name gtkmm, and that's what we stuck with.
+  ZH: gtkmm 曾经被称为 gtk--，那是因为 GTK+ 的名字中已经有了一个加号。但是，由于 -- 不容易被搜索引擎索引，所以项目名字就渐渐的变成了gtkmm，后来我们就一直使用这个名字。
+
+[2] heading
+  EN: Why use gtkmm instead of GTK?
+  ZH: gtkmm 让你用普通的 C++ 技术写代码——封装、派生、多态。作为 C++ 程序员你大概 已经明白，这会让代码更清晰、组织得更好。
+
+[3] para
+  EN: gtkmm allows you to write code using normal C++ techniques such as encapsulation, derivation, and polymorphism. As a C++ programmer you probably already realize that this leads to clearer and better organized code.
+  ZH: gtkmm 让你用普通的 C++ 技术写代码——封装、派生、多态。作为 C++ 程序员你大概已经明白，这会让代码更清晰、组织得更好。
+
+[4] para
+  EN: gtkmm is more type-safe, so the compiler can detect errors that would only be detected at run time when using C. This use of specific types also makes the API clearer because you can see what types should be used just by looking at a method's declaration.
+  ZH: gtkmm 更加类型安全，因此编译器可以检测出一些 C 只能在运行时才能检测出来的错误。这种使用特定类型的方法同样使得 API 更加清晰，因为你只需要通过看一下函数声明就可以知道应该使用什么类型了。
+
+[5] para
+  EN: Inheritance can be used to derive new widgets. The derivation of new widgets in GTK C code is so complicated and error prone that almost no C coders do it. As a C++ developer you know that derivation is an essential Object Orientated technique.
+  ZH: 可以使用继承来衍生新的部件。在 GTK 中使用 C 代码来衍生新部件是非常复杂的，并且很容易出错，因此几乎没有 C 的程序员这么做。作为 C++ 开发人员，你知道继承是一个基本的面向对象技术。
+
+[6] para
+  EN: Member instances can be used, simplifying memory management. All GTK C widgets are dealt with by use of pointers. As a C++ coder you know that pointers should be avoided where possible.
+  ZH: 可以使用成员实例，简化了内存管理。所有的 GTK 的 C 部件都是使用指针进行操作的。作为 C++ 程序员，你知道指针应当尽量避免使用。
+
+[7] para
+  EN: gtkmm involves less code compared to GTK, which uses prefixed function names and lots of cast macros.
+  ZH: gtkmm 比 GTK 的代码更加简短，GTK 使用了大量带前缀的函数名以及大量的转型宏。
+
+[8] heading
+  EN: gtkmm compared to Qt
+  ZH: gtkmm 的开发者们更偏爱 gtkmm，因为它做事的方式更「C++」。Qt 诞生于 C++ 和 标准库尚未标准化、编译器支持也不完善的年代，于是重复造了大量如今标准库里已经 有的东西，比如容器和类型信息。最关键的是，Trolltech 修改了 C++ 语言本身来提供 信号机制，导致 Qt 类很难与非 Qt 类混用。gtkmm 则用标准 C++ 实现了信号，无需 改动语言。更详细的差异对比见 FAQ。
+
+[9] para
+  EN: Trolltech's Qt is the closest competition to gtkmm, so it deserves discussion.
+  ZH: Trolltech 公司的 Qt 是和 gtkmm 最相似的有竞争力的产品，所以应该对其进行一下讨论。
+
+[10] para
+  EN: gtkmm developers tend to prefer gtkmm to Qt because gtkmm does things in a more C++ way. Qt originates from a time when C++ and the standard library were not standardized or well supported by compilers. It therefore duplicates a lot of stuff that is now in the standard library, such as containers and type information. Most significantly, Trolltech modified the C++ language to provide signals, so that Qt classes cannot be used easily with non-Qt classes. gtkmm was able to use standard C++ to provide signals without changing the C++ language.
+See the [FAQ](https://gtkmm.gnome.org/en/faq.html) for more detailed differences.
+  ZH: gtkmm 的开发者们更偏爱 gtkmm，因为它做事的方式更「C++」。Qt 诞生于 C++ 和标准库尚未标准化、编译器支持也不完善的年代，于是重复造了大量如今标准库里已有的东西，比如容器和类型信息。最关键的是，Trolltech 修改了 C++ 语言本身来提供信号机制，导致 Qt 类很难与非 Qt 类混用；gtkmm 则用标准 C++（libsigc++）实现了信号，无需改动语言。更详细的差异见 FAQ。
+
+[11] heading  <<<ZH缺失>>>
+  EN: gtkmm is a wrapper
+  ZH: (无)
+
+[12] para
+  EN: gtkmm is not a native C++ toolkit, but a C++ wrapper of a C toolkit. This separation of interface and implementation has advantages. The gtkmm developers spend most of their time talking about how gtkmm can present the clearest API, without awkward compromises due to obscure technical details. We contribute a little to the underlying GTK code base, but so do the C coders, and the Perl coders and the Python coders, etc. Therefore GTK benefits from a broader user base than language-specific toolkits - there are more implementers, more developers, more testers, and more users.
+  ZH: gtkmm 并不是一个原生的 C++ 工具集，而是一个对于 C 工具集的 C++ 封装。这种分离接口和实现的方式存在诸多优势。gtkmm 开发人员用了他们大量的时间来讨论如何让 gtkmm 提供一个最清晰的 API，而不必为模糊的技术细节尴尬的进行妥协。我们想其他的 C 程序员、Perl 程序员和 Python 程序员等等一样，对底层的 GTK 代码库进行了一点点贡献。因此，GTK 可以从比某个语言特定的工具集更广泛的用户群中获得好处，有更多的实现、更多的开发人员、更多的测试人员以及更多的用户。
+
+### 页 sec-cpp-resources  (page status=translated)
+[0] para
+  EN: Useful links:
+  ZH: 有用的链接：
+
+[1] listitem
+  EN: [Wikipedia C++](https://en.wikipedia.org/wiki/C%2B%2B): An introduction to C++, and many links.
+  ZH: Wikipedia C++：C++ 入门与大量链接。
+
+[2] listitem
+  EN: [C++ reference](https://en.cppreference.com/w/): A convenient version of the C and C++ standards.
+  ZH: C++ reference：C 与 C++ 标准的便捷查阅版。
+
+[3] listitem
+  EN: [The C++ Resources Network](https://cplusplus.com/)
+  ZH: The C++ Resources Network（cplusplus.com）。
+
+[4] listitem
+  EN: [Bjarne Stroustrup's homepage](https://www.stroustrup.com/)
+  ZH: Bjarne Stroustrup 的个人主页。

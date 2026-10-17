@@ -1,0 +1,148 @@
+### 页 sec-installation-dependencies  (page status=translated)
+[0] para
+  EN: Before attempting to install gtkmm`-4.0`,
+  you might first need to install these other packages.
+  ZH: 在试图安装 gtkmm-4.0之前，你必须已经安装了这些包。
+
+[1] listitem
+  EN: `sigc++-3.0`
+  ZH: sigc++-3.0
+
+[2] listitem
+  EN: `gtk4`
+  ZH: gtkmm4
+
+[3] listitem
+  EN: `glibmm-2.68`
+  ZH: glibmm-2.68
+
+[4] listitem
+  EN: `cairomm-1.16`
+  ZH: cairomm-1.16
+
+[5] listitem
+  EN: `pangomm-2.48`
+  ZH: pangomm-2.48
+
+[6] para
+  EN: These dependencies have their own dependencies, including the following
+applications and libraries:
+  ZH: 这些依赖有它们自己所依赖的软件包，包括下列应用程序和软件库：
+
+[7] listitem
+  EN: `pkg-config`
+  ZH: pkg-config
+
+[8] listitem
+  EN: `glib-2.0`
+  ZH: glib-2.0
+
+[9] listitem
+  EN: `pango`
+  ZH: pango
+
+[10] listitem
+  EN: `cairo`
+  ZH: cairo
+
+[11] listitem
+  EN: `gdk-pixbuf-2.0`
+  ZH: gdk-pixbuf-2.0
+
+[12] listitem
+  EN: `graphene-1.0`
+  ZH: graphene-1.0
+
+### 页 sec-install-unix-and-linux  (page status=translated)
+[0] heading
+  EN: Prebuilt Packages
+  ZH: 如今几乎所有主流 Linux 发行版都打包了新版 gtkmm。如果你用 Linux，多半可以直接 从发行版的官方仓库安装 gtkmm 包来上手。仓库里带有 gtkmm 的发行版包括 Debian、 Ubuntu、Red Hat、Fedora、Mandriva、Suse 等等。
+
+[1] para
+  EN: Recent versions of gtkmm are packaged by nearly every major Linux
+    distribution these days. So, if you use Linux, you can probably get
+    started with gtkmm by installing the package from the official repository
+    for your distribution. Distributions that include gtkmm in their
+    repositories include Debian, Ubuntu, Red Hat, Fedora, Mandriva, Suse, and
+    many others.
+  ZH: gtkmm 最新的版本的软件包几乎存在于今天每一个主流的 Linux 发布版本中。所以，如果你使用 Linux，你可能只需要从官方的软件库安装相应的软件包，然后就可以开始使用 gtkmm 了。已经在它们的软件库里面包含了 gtkmm 的发布版本有：Debian、Ubuntu、Red Hat、Fedora、Mandriva、SuSE 等等。
+
+[2] para
+  EN: The names of the gtkmm packages vary from distribution to distribution
+    (e.g. `libgtkmm-4.0-dev` on Debian and Ubuntu or
+    `gtkmm4.0-devel` on Red Hat and Fedora), so check
+    with your distribution's package management program for the correct package
+    name and install it like you would any other package.
+  ZH: gtkmm 包的名字因发行版而异（比如 Debian 和 Ubuntu 上是 libgtkmm-4.0-dev，Red Hat 和 Fedora 上是 gtkmm4.0-devel），请用发行版的包管理器查一下正确的包名，然后像安装其他包一样安装即可。
+
+[3] para
+  EN: The package names will not change when new API/ABI-compatible versions of gtkmm
+are released. Otherwise they would not be API/ABI-compatible. So don't be
+surprised, for instance, to find gtkmm 4.8 supplied by Debian's
+`libgtkmm-4.0-dev` package.
+  ZH: 当新的 API/ABI 兼容的 gtkmm 版本发布后，其包的名称将不会改变。否则的话，就说明 API/ABI 不兼容。所以，如果在 Debian 的 libgtkmm-4.0-dev 包中发现提供的实际上是 gtkmm 4.8 的话不要太惊讶。
+
+[4] heading
+  EN: Installing From Source
+  ZH: 装好全部依赖后，下载 gtkmm 源码、解压、进入新解出的目录。gtkmm 可以用 Meson 构建，具体见你所下载版本里的 README 文件。
+
+[5] para
+  EN: If your distribution does not provide a pre-built gtkmm package, or if you
+want to install a different version than the one provided by your distribution,
+you can also install gtkmm from source. The source code for gtkmm can
+be downloaded from [https://download.gnome.org/sources/gtkmm/](https://download.gnome.org/sources/gtkmm/).
+  ZH: 如果你的发行版没提供预编译的 gtkmm 包，或者如果你想安装一个和发行版所提供的不同的版本，那么你也可以从源代码安装 gtkmm。可以从 中下载 gtkmm 的源代码。
+
+[6] para
+  EN: After you've installed all of the dependencies, download the gtkmm source
+  code, unpack it, and change to the newly created directory. gtkmm can be
+  built with Meson. See the `README` file in the gtkmm version
+  you've downloaded.
+  ZH: 在安装了所有依赖的库后，下载 gtkmm 源代码、解压缩，并且切换到新创建的目录。gtkmm可以使用Meson构建。 参见你所下载的gtkmm源代码中的README。
+
+[7] para
+  EN: Remember that on a Unix or Linux operating system, you will probably need to
+  be `root` to install software. The `su` or `sudo`
+  command will allow you to enter the `root` password and have
+  `root` status temporarily.
+  ZH: 记住，在 Unix 或 Linux 操作系统上，你也许需要 root 权限以安装软件。su或者sudo 命令允许你输入 root 密码，并且临时拥有 root 权限。
+
+[8] para
+  EN: The `configure` script or `meson` will check
+    to make sure all of the required dependencies are already installed. If you are
+    missing any dependencies, it will exit and display an error.
+  ZH: configure脚本或者meson将会检查以确认所有必须的依赖软件包都已经正确的安装了。如果你遗漏了某个依赖软件包的话，它会退出并提示错误信息。
+
+[9] para
+  EN: By default, gtkmm if built with Meson or Autotools, will be installed under the
+    `/usr/local` directory. On some systems you may need to
+    install to a different location. For instance, on Red Hat Linux systems
+    you might use the `--prefix` option with configure, like
+    one of:
+  ZH: 默认情况下，如果使用Autotools构建gtkmm 则其将会被安装在 /usr/local 目录。在有些系统中，你也许需要安装到不同的位置。比如，在 Red Hat Linux 系统中，你也许需要使用 --prefix 选项进行配置，例如：
+
+[10] CODE file= 107 chars
+[11] para
+  EN: You should be very careful when installing to standard system prefixes
+        such as `/usr`. Linux distributions install software
+        packages to `/usr`, so installing a source package
+        to this prefix could corrupt or conflict with software installed using
+        your distribution's package-management system. Ideally, you should use
+        a separate prefix for all software you install from source.
+  ZH: 在安装到标准系统前缀时，如 /usr，你必须非常小心。Linux 发行版会安装软件到 /usr，所以安装源代码包到这个位置可能会破坏或与使用软件包管理器安装的软件冲突。理想情况下，你应当将从源代码安装的软件都安装到一个独立位置。
+
+[12] para
+  EN: If you want to help develop gtkmm or experiment with new features, you can
+  also install gtkmm from git. Most users will never need to do this, but if
+  you're interested in helping with gtkmm development, see the [Working with gtkmm's Source Code](#chapter-working-with-source) appendix.
+  ZH: 如果你想帮助开发 gtkmm，或实验一些新的功能，你也可以直接从 Git 安装 gtkmm。大多数用户绝对不需要这么做，但是如果你对帮助 gtkmm 开发感兴趣，请看附录：使用 gtkmm 源代码。
+
+### 页 sec-packages-windows  (page status=translated)
+[0] para
+  EN: GTK and gtkmm were designed to work well with Microsoft Windows, and the
+developers encourage its use on the win32 platform. However, Windows has no standard
+installation system for development libraries. Please see the
+[Windows Installation](https://wiki.gnome.org/Projects/gtkmm/MSWindows)
+page (somewhat outdated) or the [gtkmm and Win32](#sec-windows-installation)
+appendix for Windows-specific installation instructions and notes.
+  ZH: GTK 和 gtkmm 的设计就考虑了与 Microsoft Windows 良好协作，开发者们也鼓励在 win32 平台上使用。不过 Windows 没有标准的开发库安装体系。Windows 专属的安装说明与注意事项，请看 Windows Installation 页面（已有些过时）或附录「gtkmm and Win32」。

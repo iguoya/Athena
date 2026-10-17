@@ -1,0 +1,280 @@
+### 页 sec-listmodel-datamodel  (page status=translated)
+[0] para
+  EN: Lists are intended to be used whenever developers want to display many objects
+in roughly the same way. They are perfectly fine to be used for very short lists
+of only 2 or 3 items, but generally scale fine to thousands of items.
+  ZH: 凡是想以大致相同的方式展示大量对象时，都适合用列表——极短的列表也完全没问题。
+
+[1] para
+  EN: Lists are meant to be used with changing data, both with the items themselves
+changing as well as the list adding and removing items. Of course, they work just
+as well with static data.
+  ZH: 列表为「会变化的数据」而生：无论是条目自身内容变化，还是列表增删条目，都能胜任；静态数据同样工作正常。
+
+[2] para
+  EN: The [List Widget Overview](https://docs.gtk.org/gtk4/section-list-widget.html)
+chapter in the GTK documentation contains more information about list widgets.
+  ZH: GTK 文档的「List Widget Overview」一章包含关于列表控件的更多信息。
+
+[3] para
+  EN: Some examples are shown in this chapter. There are more examples in the
+[listmodelviews directory](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/listmodelviews/)
+in `gtkmm-documentation`'s examples.
+  ZH: 本章展示了若干示例；gtkmm-documentation 仓库的 listmodelviews 目录里还有更多。
+
+[4] para
+  EN: The data model is a class that implements the `Gio::ListModel`
+interface. Examples of such classes are `Gio::ListStore`
+(not to be confused with the deprecated `Gtk::ListStore`),
+`Gtk:StringList`, `Gtk:DirectoryList`
+and `Pango::FontMap`.
+  ZH: 数据模型是实现 `Gio::ListModel` 接口的类。这类类的例子有 `Gio::ListStore`（不要与已弃用的 `Gtk::ListStore` 混淆）、`Gtk::StringList`、`Gtk::DirectoryList` 与 `Pango::FontMap`。
+
+[5] para
+  EN: The elements in a model are called *items*.
+All items are instances of a subclass of `Glib::Object`.
+For instance, you might have a `ColumnView` with one integer
+and one text column, like so:
+  ZH: 模型中的元素称为 *条目*（item）。所有条目都是 `Glib::Object` 某个子类的实例。比如你可以有一个 `ColumnView`，其中包含一列整数和一列文本，如下所示：
+
+[6] CODE file= 472 chars
+[7] para
+  EN: Every item in a model has a position which is the unsigned integer that describes
+where in the model the item is located. The first item in a model is at position 0.
+The position of an item can of course change as other items are added to or removed
+from the model.
+  ZH: 模型中的每个条目都有一个位置（position）：一个无符号整数，描述条目位于模型何处。模型的第一个条目位于位置 0。当然，随着其他条目被加入或移除，条目的位置也会变化。
+
+[8] para
+  EN: [Gio::ListStore Reference](&url_refdocs_base_glib_html;classGio_1_1ListStore.html)
+  ZH: Gio::ListStore 参考文档
+
+[9] para
+  EN: [StringList Reference](&url_refdocs_base_gtk_html;classGtk_1_1StringList.html)
+  ZH: StringList 参考文档
+
+[10] para
+  EN: [DirectoryList Reference](&url_refdocs_base_gtk_html;classGtk_1_1DirectoryList.html)
+  ZH: DirectoryList 参考文档
+
+### 页 sec-listmodel-selectionmodel  (page status=translated)
+[0] para
+  EN: The selection model is a class that implements the `Gtk::SelectionModel`
+interface. You can choose between `NoSelection`,
+`SingleSelection` and `MultiSelection`.
+  ZH: 选择模型是实现 `Gtk::SelectionModel` 接口的类。可以在 `NoSelection`、`SingleSelection` 与 `MultiSelection` 之间选择。
+
+[1] para
+  EN: [NoSelection Reference](&url_refdocs_base_gtk_html;classGtk_1_1NoSelection.html)
+  ZH: NoSelection 参考文档
+
+[2] para
+  EN: [SingleSelection Reference](&url_refdocs_base_gtk_html;classGtk_1_1SingleSelection.html)
+  ZH: SingleSelection 参考文档
+
+[3] para
+  EN: [MultiSelection Reference](&url_refdocs_base_gtk_html;classGtk_1_1MultiSelection.html)
+  ZH: MultiSelection 参考文档
+
+### 页 sec-listmodel-factory  (page status=translated)
+[0] para
+  EN: Data from the data model is added to the view by a factory, which is a subclass of
+`ListItemFactory`. There is only one such subclass in gtkmm,
+`SignalListItemFactory`. Data from the model is added to the
+view with signal handlers connected to a `SignalListItemFactory`.
+  ZH: 数据模型中的数据由工厂（factory）添加到视图。工厂是 `ListItemFactory` 的子类；gtkmm 中只有一个这样的子类——`SignalListItemFactory`。模型数据通过连接到 `SignalListItemFactory` 的信号处理函数添加进视图。
+
+[1] para
+  EN: [SignalListItemFactory Reference](&url_refdocs_base_gtk_html;classGtk_1_1SignalListItemFactory.html)
+  ZH: SignalListItemFactory 参考文档
+
+### 页 sec-listmodel-view  (page status=translated)
+[0] para
+  EN: The View is the widget that displays the model data and allows the user to interact
+with it. The View can show all of the model's columns, or just some, and it can show
+them in various ways.
+  ZH: 视图（View）是显示模型数据并允许用户与之交互的控件。视图可以显示模型的全部列，也可以只显示部分列，并能以多种方式呈现。
+
+[1] para
+  EN: An important requirement for views (especially views of long lists) is that they need
+to know which items are not visible so they can be recycled. Views achieve that by
+implementing the `Scrollable` interface and expecting
+to be placed directly into a `ScrolledWindow`.
+  ZH: 视图（尤其是长列表视图）的一个重要需求是：必须知道哪些条目当前不可见，以便回收复用。视图通过实现 `Scrollable` 接口做到这一点，并期望被直接放进 `ScrolledWindow` 中。
+
+[2] para
+  EN: There are different view widgets to choose from.
+  ZH: 有多种视图控件可供选择。
+
+[3] heading  <<<ZH缺失>>>
+  EN: ListView
+  ZH: (无)
+
+[4] para
+  EN: The `ListView` shows a 1-dimensional list with one column.
+  ZH: `ListView` 显示带单列的一维列表。
+
+[5] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1ListView.html)
+  ZH: 参考
+
+[6] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[7] figure  <<<ZH缺失>>>
+  EN: ListView
+  ZH: (无)
+
+[8] CODE file=examplewindow.h 641 chars
+[9] CODE file=examplewindow.cc 2318 chars
+[10] CODE file=main.cc 271 chars
+[11] heading  <<<ZH缺失>>>
+  EN: GridView
+  ZH: (无)
+
+[12] para
+  EN: The `GridView` shows a 2-dimensional grid.
+  ZH: `GridView` 显示二维网格。
+
+[13] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1GridView.html)
+  ZH: 参考
+
+[14] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[15] figure  <<<ZH缺失>>>
+  EN: GridView
+  ZH: (无)
+
+[16] CODE file=examplewindow.h 1818 chars
+[17] CODE file=examplewindow.cc 5246 chars
+[18] CODE file=main.cc 270 chars
+[19] heading  <<<ZH缺失>>>
+  EN: ColumnView
+  ZH: (无)
+
+[20] para
+  EN: The `ColumnView` shows a 1-dimensional list with one or more columns.
+  ZH: `ColumnView` 显示带一列或多列的一维列表。
+
+[21] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1ColumnView.html)
+  ZH: 参考
+
+[22] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[23] figure  <<<ZH缺失>>>
+  EN: ColumnView
+  ZH: (无)
+
+[24] CODE file=examplewindow.h 1679 chars
+[25] CODE file=examplewindow.cc 5066 chars
+[26] CODE file=main.cc 271 chars
+### 页 sec-listmodel-sorting  (page status=translated)
+[0] para
+  EN: The list can be sorted by wrapping it in a `SortListModel`.
+There are two ways to do this.
+  ZH: 把列表包进 `SortListModel` 即可排序。有两种做法。
+
+[1] listitem
+  EN: In a `ColumnView`, get the
+  `ColumnViewSorter` from the `ColumnView`
+  and set it to the `SortListModel`. Set a `Sorter`
+  to each `ColumnViewColumn`. Then the user of your app can
+  sort the items by clicking on a column heading.
+  ZH: 在 `ColumnView` 中，从 ColumnView 取得 `ColumnViewSorter` 设给 `SortListModel`，再给每个 `ColumnViewColumn` 设置一个 `Sorter`。这样，应用的用户点击列标题即可排序条目。
+
+[2] listitem
+  EN: In any view, set a `Sorter` such as a
+  `StringSorter` or a `NumericSorter`
+  to the `SortListModel`.
+  ZH: 在任意视图中，给 `SortListModel` 设置一个 `Sorter`（如 `StringSorter` 或 `NumericSorter`）。
+
+[3] para
+  EN: [SortListModel Reference](&url_refdocs_base_gtk_html;classGtk_1_1SortListModel.html)
+  ZH: SortListModel 参考文档
+
+[4] para
+  EN: [StringSorter Reference](&url_refdocs_base_gtk_html;classGtk_1_1StringSorter.html)
+  ZH: StringSorter 参考文档
+
+[5] para
+  EN: [NumericSorter Reference](&url_refdocs_base_gtk_html;classGtk_1_1NumericSorter.html)
+  ZH: NumericSorter 参考文档
+
+[6] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[7] figure  <<<ZH缺失>>>
+  EN: SortListModel
+  ZH: (无)
+
+[8] CODE file=examplewindow.h 1820 chars
+[9] CODE file=examplewindow.cc 6396 chars
+[10] CODE file=main.cc 271 chars
+### 页 sec-listmodel-filtering  (page status=translated)
+[0] para
+  EN: The list can be filtered by wrapping it in a `FilterListModel`.
+Set a `Filter` such as a `StringFilter`
+or a `BoolFilter` to the `FilterListModel`.
+  ZH: 把列表包进 `FilterListModel` 即可过滤。给 `FilterListModel` 设置一个 `Filter`（如 `StringFilter` 或 `BoolFilter`）。
+
+[1] para
+  EN: [FilterListModel Reference](&url_refdocs_base_gtk_html;classGtk_1_1FilterListModel.html)
+  ZH: FilterListModel 参考文档
+
+[2] para
+  EN: [StringFilter Reference](&url_refdocs_base_gtk_html;classGtk_1_1StringFilter.html)
+  ZH: StringFilter 参考文档
+
+[3] para
+  EN: [BoolFilter Reference](&url_refdocs_base_gtk_html;classGtk_1_1BoolFilter.html)
+  ZH: BoolFilter 参考文档
+
+[4] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[5] figure  <<<ZH缺失>>>
+  EN: FilterListModel
+  ZH: (无)
+
+[6] CODE file=examplewindow.h 1564 chars
+[7] CODE file=examplewindow.cc 5375 chars
+[8] CODE file=main.cc 271 chars
+### 页 sec-listmodel-trees  (page status=translated)
+[0] para
+  EN: While the deprecated `TreeView` provided built-in support for trees,
+the list widgets, and in particular `Gio::ListModel`, do not.
+However, gtkmm provides functionality to make trees look and behave like lists for
+the people who still want to display lists. This is achieved by using the
+`TreeListModel` to flatten a tree into a list.
+The `TreeExpander` widget can then be used inside a listitem
+to allow users to expand and collapse rows.
+  ZH: 已弃用的 `TreeView` 内建了树形支持，而新的列表控件（尤其 `Gio::ListModel`）没有。不过，仍想展示树形结构的人可以用 gtkmm 提供的功能让树「看起来像列表」：用 `TreeListModel` 把树拍平成列表，再在 listitem 内使用 `TreeExpander` 控件展开/收起。
+
+[1] para
+  EN: [TreeListModel Reference](&url_refdocs_base_gtk_html;classGtk_1_1TreeListModel.html)
+  ZH: TreeListModel 参考文档
+
+[2] para
+  EN: [TreeExpander Reference](&url_refdocs_base_gtk_html;classGtk_1_1TreeExpander.html)
+  ZH: TreeExpander 参考文档
+
+[3] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[4] figure  <<<ZH缺失>>>
+  EN: TreeListModel
+  ZH: (无)
+
+[5] CODE file=examplewindow.h 1343 chars
+[6] CODE file=examplewindow.cc 5171 chars
+[7] CODE file=main.cc 271 chars

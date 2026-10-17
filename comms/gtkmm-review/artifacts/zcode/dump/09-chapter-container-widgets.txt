@@ -1,0 +1,577 @@
+### 页 sec-single-item-containers  (page status=translated)
+[0] para
+  EN: Container widgets, like other widgets, derive from `Gtk::Widget`.
+Some container widgets, such as `Gtk::Grid` can hold many
+child widgets, so these typically have more complex interfaces. Others, such as
+`Gtk::Frame` contain only one child widget.
+  ZH: 容器部件与其他部件一样都是从Gtk::Widget派生而来。一些容器部件可以容纳多个子部件，例如Gtk::Grid，因此通常他们具有更为复杂的接口。还有些容器部件只能容纳一个子部件，例如Gtk::Frame
+
+[1] para
+  EN: Most single-item container widgets have set_child()
+and unset_child() methods for the child widget.
+`Gtk::Button` and `Gtk::Window` are
+technically single-item containers, but we have discussed them already elsewhere.
+  ZH: 大多数单项容器部件具有其子部件的set_child()和unset_child()方法。Gtk::Button和Gtk::Window从技术上来说是单项容器，但是我们已经在其他地方讨论过它们。
+
+[2] para
+  EN: We also discuss the `Gtk::Paned` widget, which allows you
+to divide a window into two separate "panes". This widget actually contains
+two child widgets, but the number is fixed so it seems appropriate.
+  ZH: 我们还会讲到 `Gtk::Paned` 控件，它把窗口分成两个独立的「窗格」。这个控件其实包含两个子控件，只是数目固定，所以归入单子控件容器。
+
+[3] heading  <<<ZH缺失>>>
+  EN: Frame
+  ZH: (无)
+
+[4] para
+  EN: Frames can enclose one or a group of widgets within a box, optionally with a
+title. For instance, you might place a group of
+`ToggleButton`s or `CheckButton`s in a
+`Frame`.
+  ZH: 框架可以将一个或一组部件封装在一个框内，还可以为他们选择标题。例如你可以将一组ToggleButton或者CheckButton放入一个Frame中。
+
+[5] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1Frame.html)
+  ZH: 参考
+
+[6] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[7] figure  <<<ZH缺失>>>
+  EN: Frame
+  ZH: (无)
+
+[8] CODE file=examplewindow.h 267 chars
+[9] CODE file=examplewindow.cc 452 chars
+[10] CODE file=main.cc 270 chars
+[11] heading  <<<ZH缺失>>>
+  EN: Paned
+  ZH: (无)
+
+[12] para
+  EN: Panes divide a widget into two halves, separated by a moveable divider.
+The two halves (panes) can be oriented either horizontally (side by side) or
+vertically (one above the other).
+  ZH: 窗格用一个可移动的分隔符将一个部件一分为二。其可以水平（使两个窗格并排）也可以竖直（使两个窗格一个在另一个之上）的分隔部件。
+
+[13] para
+  EN: Unlike the other widgets in this section, pane widgets contain not one but two
+child widgets, one in each pane. Therefore, you should use
+set_start_child() and set_end_child()
+instead of a set_child() method.
+  ZH: 与本小节的其他小部件不一样的是，窗格部件包含两个子部件而不是一个部件（每个窗格中一个）。因此你应该用set_start_child()和set_end_child()替代set_child()方法。
+
+[14] para
+  EN: You can adjust the position of the divider using the
+set_position() method, and you will probably need to do
+so.
+  ZH: 如果你需要，你可以使用set_position()调整分割线的位置。
+
+[15] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1Paned.html)
+  ZH: 参考
+
+[16] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[17] figure  <<<ZH缺失>>>
+  EN: Paned
+  ZH: (无)
+
+[18] CODE file=examplewindow.h 379 chars
+[19] CODE file=messageslist.h 528 chars
+[20] CODE file=messagetext.h 296 chars
+[21] CODE file=examplewindow.cc 448 chars
+[22] CODE file=main.cc 270 chars
+[23] CODE file=messageslist.cc 1452 chars
+[24] CODE file=messagetext.cc 646 chars
+[25] heading  <<<ZH缺失>>>
+  EN: ScrolledWindow
+  ZH: (无)
+
+[26] para
+  EN: `ScrolledWindow` widgets create a scrollable
+area. You can insert any type of widget into a
+`ScrolledWindow`, and it will be accessible
+regardless of its size by using the scrollbars. Note that
+`ScrolledWindow` is not a
+`Gtk::Window` despite the slightly misleading name.
+  ZH: ScrolledWindow部件会创建一个可以滚动的区域。你可以将任何类型的部件插入到ScrolledWindow中，无论该部件有多大你都可以通过滚动条来访问它。请注意虽然ScrolledWindow的名称像是Gtk::Window的衍生部件，但其实不是。
+
+[27] para
+  EN: Scrolled windows have *scrollbar policies* which determine
+whether the `Scrollbar`s will be displayed. The policies
+can be set with the set_policy() method. The policy may be
+for instance `Gtk::PolicyType::AUTOMATIC` or
+`Gtk::PolicyType::ALWAYS`.
+`Gtk::PolicyType::AUTOMATIC` will cause the scrolled window
+to display the scrollbar only if the contained widget is larger than the
+visible area. `Gtk::PolicyType::ALWAYS` will cause the
+scrollbar to be displayed always.
+  ZH: 滚动窗口具有用于确定是否要显示Scrollbar(滚动条)的scrollbar policies(滚动条策略)。你可以使用set_policy()方法来设置策略。例如设置策略为Gtk::PolicyType::AUTOMATIC或是Gtk::PolicyType::ALWAYS。当策略为Gtk::PolicyType::AUTOMATIC的时候，只有在被包含的部件大于可见区域的时候滚动条才会被显示出来。而Gtk::PolicyType::ALWAYS将使滚动条始终显示。
+
+[28] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1ScrolledWindow.html)
+  ZH: 参考
+
+[29] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[30] para
+  EN: Here is a simple example that packs 100 toggle buttons into a ScrolledWindow. Try resizing the window to see the scrollbars react.
+  ZH: 这是一个简单的示例，其将100个开关按钮放入滚动窗口中。你可以尝试调整窗口的大小，以查看滚动条的反应。
+
+[31] figure  <<<ZH缺失>>>
+  EN: ScrolledWindow
+  ZH: (无)
+
+[32] CODE file=examplewindow.h 401 chars
+[33] CODE file=examplewindow.cc 1719 chars
+[34] CODE file=main.cc 270 chars
+[35] heading  <<<ZH缺失>>>
+  EN: AspectFrame
+  ZH: (无)
+
+[36] para
+  EN: The `AspectFrame` widget looks like a
+`Frame` widget, but it also enforces the *aspect
+    ratio* (the ratio of the width to the height) of the child
+widget, adding extra space if necessary. For instance, this would allow you to
+display a photograph without allowing the user to distort it horizontally or
+vertically while resizing.
+  ZH: AspectFrame部件和Frame部件类似，但它强制子部件的aspect ratio(长宽比)（长与宽的比例）保持不变。并在有必要的时候添加额外的空间。例如，这将允许你显示照片并且无需在用户调整窗口大小的时候对照片进行水平/垂直变形。
+
+[37] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1AspectFrame.html)
+  ZH: 参考
+
+[38] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[39] para
+  EN: The following program uses a `Gtk::AspectFrame` to present a
+drawing area whose aspect ratio will always be 2:1, no matter how the user
+resizes the top-level window.
+  ZH: 下面的程序使用Gtk::AspectFrame显示一个绘图区域，无论用户如何调整顶层窗口大小宽高比依旧保持2:1。
+
+[40] figure  <<<ZH缺失>>>
+  EN: AspectFrame
+  ZH: (无)
+
+[41] CODE file=examplewindow.h 335 chars
+[42] CODE file=examplewindow.cc 764 chars
+[43] CODE file=main.cc 270 chars
+[44] heading  <<<ZH缺失>>>
+  EN: Other Single-item Containers
+  ZH: (无)
+
+[45] para
+  EN: There are other single-item containers. See the reference documentation for a
+complete list. Here are links to some example programs that show containers,
+which are not mentioned elsewhere in this tutorial.
+  ZH: 还有其他的单项容器。请参阅参考文档获取完整列表。这里是一些本教程其他地方未曾提及的显示容器的示例程序的链接。
+
+[46] para
+  EN: [Source Code, Expander](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/expander)
+  ZH: 扩展器(Expander)源代码
+
+[47] para
+  EN: [Source Code, Popover](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/popover)
+  ZH: 气泡(Popover)源代码
+
+### 页 sec-multi-item-containers  (page status=translated)
+[0] para
+  EN: Multiple-item container widgets have other methods than set_child()
+and unset_child(). Different containers can have different
+methods for adding and removing child widgets. For instance, `Gtk::Box`
+has append() and remove() as
+well as other methods. The remove() method for multiple-item
+containers takes an argument, specifying which widget to remove.
+  ZH: 多项容器部件除set_child()和unset_child()方法以外还有其他的方法。不同容器有不同的添加/删除子部件的方法。例如Gtk::Box具有append()和remove()以及其他方法。多项容器的remove()方法需要传入一个用于指示需要删除的部件的参数。
+
+[1] heading  <<<ZH缺失>>>
+  EN: Packing
+  ZH: (无)
+
+[2] para
+  EN: You've probably noticed that gtkmm windows seem "elastic" - they can usually be stretched in many  different ways. This is due to the *widget packing*
+system.
+  ZH: 你可能已经注意到，gtkmm 的窗口看起来是「有弹性」的——通常可以沿多种方式拉伸。这要归功于 *控件打包*（widget packing）系统。
+
+[3] para
+  EN: Many GUI toolkits require you to precisely place widgets in a window, using absolute positioning, often using a visual editor. This leads to several problems:
+  ZH: 许多GUI工具包使用可视化编辑器的时候都要求你使用部件相对于窗口的绝对位置。这将导致以下几个问题：
+
+[4] listitem
+  EN: The widgets don't rearrange themselves when the window is resized. Some widgets are hidden when the window is made smaller, and lots of useless space appears when the window is made larger.
+  ZH: 在调整窗口大小的时候部件不会重新排布自己。窗口变小的时候一些部件会被隐藏窗口变大的时候会出现很多无用的空间。
+
+[5] listitem
+  EN: It's impossible to predict the amount of space necessary for text after it has been translated to other languages, or displayed in a different font. On Unix it is also impossible to anticipate the effects of every theme and window manager.
+  ZH: 将文本翻译成其他语言或者用其他字体显示的时候，无法预测显示文本所需要的空间。而在Unix上不可能预料在每个主题和窗口管理器下的显示效果。
+
+[6] listitem
+  EN: Changing the layout of a window "on the fly", to make some extra widgets appear, for instance, is complex. It  requires tedious recalculation of every widget's position.
+  ZH: 「动态」改变窗口布局（比如让一些额外的控件临时出现）很复杂，需要对每个控件的位置做繁琐的重新计算。
+
+[7] para
+  EN: gtkmm uses the packing system to solve these problems. Rather than specifying the position and size of each widget in the window,
+you can arrange your widgets in rows, columns,
+and/or grids. gtkmm can size your window automatically, based on the
+sizes of the widgets it contains. And the sizes of the widgets are, in turn, determined by the amount of text they contain, or the minimum and maximum sizes that you specify, and/or how you have requested that the available space should be shared between sets of widgets.
+You can perfect your layout by
+specifying margins and centering values for each of your widgets. gtkmm then uses
+all this information to resize and reposition everything sensibly and smoothly when the user manipulates the window.
+  ZH: gtkmm使用装填系统解决这些问题。无需为窗口中的每个部件指定大小和位置，而是将部件放入行、列、和或网格中。gtkmm可以基于包含的部件的大小自动调整你的窗口大小。部件的大小由它包含的文本量、最大/小尺寸（由你指定的）、部件之间如何共享可用空间（你要求的方式）共同决定。你可以通过为每个部件指定边距与居中值来完善布局。然后gtkmm会使用以上的信息在用户操作窗口的时候合理、顺畅的调整部件们的大小和位置。
+
+[8] para
+  EN: gtkmm arranges widgets hierarchically, using *containers*.
+A container widget contains other widgets. Most gtkmm widgets are
+containers. Windows, Notebook tabs, and Buttons are all container widgets.
+There are two flavors of containers: single-child containers and multiple-child
+containers. Most container widgets in gtkmm are single-child containers,
+including `Gtk::Window`.
+  ZH: gtkmm 用 *容器*（container）按层次组织控件：容器控件包含其他控件，而大多数 gtkmm 控件都是容器——窗口、笔记本标签页、按钮都是容器控件。容器分两类：单子控件容器与多子控件容器。gtkmm 的大多数容器是单子控件容器，包括 `Gtk::Window`。
+
+[9] para
+  EN: Yes, that's correct: a Window can contain at most one widget. How, then, can
+we use a window for anything useful?  By placing a multiple-child container in
+the window. The most useful container widgets are
+`Gtk::Grid` and `Gtk::Box`.
+  ZH: 对，没错，一个窗口最多只能包含一个部件。那么我们要如何将多个部件放于窗口中呢？答案是通过向窗口放入一个多项容器实现。最合理的部件是Gtk::Grid和Gtk::Box。
+
+[10] listitem
+  EN: `Gtk::Grid` arranges its child widgets in rows and
+columns. Use attach() and
+attach_next_to() to insert child widgets.
+  ZH: Gtk::Grid将其子部件按行和列排列。使用attach()和attach_next_to()方法向网格(Grid)部件中插入子部件。
+
+[11] listitem
+  EN: `Gtk::Box` arranges its child widgets vertically or horizontally.
+Use append() to insert child widgets.
+  ZH: Gtk::Box将其子部件水平或垂直排列。使用append()方法向盒(Box)部件插入子部件。
+
+[12] para
+  EN: There are several other containers, which we will also discuss.
+  ZH: 还有几个容器我们将在之后讨论。
+
+[13] para
+  EN: If you've never used a packing toolkit before, it can take some
+getting used to. You'll probably find, however, that you don't
+need to rely on visual form editors quite as much as you might with
+other toolkits.
+  ZH: 如果你之前从未使用组装工具包，那可能需要一段时间来适应它。然后你会发现你不需要和使用其他工具包一样依赖可视化编辑工具。
+
+[14] heading  <<<ZH缺失>>>
+  EN: An improved Hello World
+  ZH: (无)
+
+[15] para
+  EN: Let's take a look at a slightly improved `helloworld`, showing what we've learnt.
+  ZH: 让我们看看改进后的helloworld，以展示我们所学到的内容。
+
+[16] figure  <<<ZH缺失>>>
+  EN: Hello World 2
+  ZH: (无)
+
+[17] CODE file=helloworld.h 484 chars
+[18] CODE file=helloworld.cc 1576 chars
+[19] CODE file=main.cc 264 chars
+[20] para
+  EN: After building and running this program, try resizing the window to see the
+behavior. Also, try playing with set_expand(),
+set_hexpand(), set_vexpand(),
+set_halign() and set_valign()
+while reading the [Boxes](#sec-boxes) section.
+  ZH: 构建并运行该程序后，试着调整窗口大小观察行为；再结合 Boxes 一节，试验 set_expand()、set_hexpand()、set_vexpand()、set_halign() 和 set_valign() 的效果。
+
+[21] heading  <<<ZH缺失>>>
+  EN: Boxes
+  ZH: (无)
+
+[22] para
+  EN: Most packing uses boxes as in the above example. These
+are invisible containers into which we can pack our widgets. When
+packing widgets into a horizontal box, the objects are inserted
+horizontally from left to right. In a vertical box, widgets are packed from
+top to bottom. You may use any combination of boxes inside or beside other
+boxes to create the desired effect.
+  ZH: 如上例所示，这些都是不可见容器我们可以将容器装入其中。将部件装填到水平盒中的时候部件从左到右水平插入。将部件装填到垂直盒中的时候部件从上到下垂直插入。你可以在盒中或盒侧组合使用盒以达到你所需的效果。
+
+[23] heading  <<<ZH缺失>>>
+  EN: Adding widgets
+  ZH: (无)
+
+[24] heading  <<<ZH缺失>>>
+  EN: Per-child packing options
+  ZH: (无)
+
+[25] para
+  EN: The append() method places widgets inside these
+containers. It will start at the top and work its way down in a
+`Box` with vertical orientation, or pack left to right in
+a `Box` with horizontal orientation. If it's inconvenient
+to add widgets in this order, use insert_child_after()
+or insert_child_at_start(). We will use
+append() in our examples.
+  ZH: append()方法将部件放置于这些容器中。它们将从顶部开始。按Box的垂直方向向下移动，或者按Box的水平方向从左向右移动。如果你不愿意按此顺序添加子部件，请使用insert_child_after()或insert_child_at_start()方法。我们将在示例中使用append()。
+
+[26] para
+  EN: There are several options governing how widgets are to be packed, and this can
+be confusing at first. You can modify the packing by using set_expand(),
+set_hexpand(), set_vexpand(),
+set_halign(), set_valign()
+and/or set_margin() on the child widgets. If you have
+difficulties, then it is sometimes a good idea to play with the
+`Cambalache` GUI designer to see what is possible.
+You can then use the `Gtk::Builder` API to load your GUI at runtime.
+  ZH: 控制打包的选项不少，初学时容易混淆。可以在子控件上用 set_expand()、set_hexpand()、set_vexpand()、set_halign()、set_valign() 与 set_margin() 调整打包行为。遇到困难时，不妨用 `Cambalache` 界面设计器把玩一下，看看有哪些可能。
+
+[27] para
+  EN: There are basically five
+different styles, as shown in this picture:
+  ZH: 如图所示，有五种不同的基本样式。
+
+[28] figure  <<<ZH缺失>>>
+  EN: Box Packing 1
+  ZH: (无)
+
+[29] para
+  EN: Each line contains one horizontal `Box` with
+several buttons. Each of the buttons on a line is packed into the
+`Box` with the same arguments to the
+set_hexpand(), set_halign(),
+set_margin_start() and set_margin_end()
+methods.
+  ZH: 每一行包含一个有多个按钮的水平Box。行中的每一个按钮都使用相同参数的set_hexpand()、set_halign()、set_margin_start()和set_margin_end()方法装入Box。
+
+[30] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1Box.html)
+  ZH: 参考
+
+[31] heading  <<<ZH缺失>>>
+  EN: Per-container packing options
+  ZH: (无)
+
+[32] para
+  EN: Here's the constructor for the `Box` widget,
+and methods that set per-container packing options:
+  ZH: 下面是 `Box` 控件的构造函数，以及设置各容器打包选项的方法：
+
+[33] CODE file= 217 chars
+[34] para
+  EN: Passing `true` to set_homogeneous() will
+cause all of the contained widgets to be the same size.
+`spacing` is a (minimum) number of pixels to leave between
+each widget.
+  ZH: 给 set_homogeneous() 传 `true` 会让所有子控件尺寸相同；`spacing` 是每个控件之间保留的（最小）像素数。
+
+[35] para
+  EN: What's the difference between spacing (set when the box is created)
+and margins (set separately for each child widget)? Spacing is added between
+objects, and margins are added on one or more sides of a widget. The following
+figure should make it clearer. The shown margins are the left and right margins
+of each button in the row.
+  ZH: 间距（创建盒的时候设置）与边距（为每个子部件分别设置）的区别是：在对象之间添加间距，在部件的一侧或多侧添加边距。下图能使你更清楚的理解这一点。所显示的边距是该行中每个按钮的左右边距。
+
+[36] figure  <<<ZH缺失>>>
+  EN: Box Packing 2
+  ZH: (无)
+
+[37] heading  <<<ZH缺失>>>
+  EN: Gtk::Application and command-line options
+  ZH: (无)
+
+[38] para
+  EN: The following example program requires a command-line option.
+The source code shows two ways of handling command-line options in combination
+with `Gtk::Application`.
+  ZH: 下面的示例程序需要一个命令行选项。源代码展示了两种Gtk::Application处理命令行选项的方式。
+
+[39] listitem
+  EN: Handle the options in `main()` and hide them from
+`Gtk::Application` by setting `argc = 1`
+in the call to Gtk::Application::run().
+  ZH: 在main()中处理选项并且通过设置argc = 1将他们从Gtk::Application中隐藏，然后调用Gtk::Application::run()。
+
+[40] listitem
+  EN: Give all command-line options to Gtk::Application::run()
+and add the flag `Gio::Application::Flags::HANDLES_COMMAND_LINE`
+to Gtk::Application::create().
+Connect a signal handler to the `command_line` signal, and
+handle the command-line options in the signal handler.
+  ZH: 将所有的命令行选项传递给Gtk::Application::run()并为Gtk::Application::create()方法设置标志Gio::Application::Flags::HANDLES_COMMAND_LINE。
+
+[41] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[42] para
+  EN: Here is the source code for the example that produced the screenshots above. When you run this example, provide a number between 1 and 3 as a command-line option, to see different packing options in use.
+  ZH: 这是上述截图所运行示例的源代码。在运行此示例时请提供1到3之间的数字作为命令行选项以查看正在使用不同装填选项的行为。
+
+[43] CODE file=examplewindow.h 481 chars
+[44] CODE file=packbox.h 335 chars
+[45] CODE file=examplewindow.cc 5027 chars
+[46] CODE file=main.cc 2256 chars
+[47] CODE file=packbox.cc 971 chars
+[48] heading  <<<ZH缺失>>>
+  EN: Grid
+  ZH: (无)
+
+[49] para
+  EN: A `Grid` dynamically lays out child widgets in rows and
+columns. The dimensions of the grid do not need to be specified in the constructor.
+  ZH: Grid在行与列中动态的摆放他的子部件。不需要在其构造函数当中指定维数。
+
+[50] para
+  EN: Child widgets can span multiple rows or columns, using
+attach(), or added next to an existing widget inside
+the grid with attach_next_to(). Individual rows and columns of the grid can be set to have uniform height or width with
+set_row_homogeneous() and
+set_column_homogeneous().
+  ZH: 使用attach()方法可以跨越多行/列插入子部件，也可以使用attach_next_to()将子部件插入已经存在于网格中的部件的旁边。可以通过调用set_row_homogeneous()和set_column_homogeneous()令网格中所有子部件具有一致的高度或宽度。
+
+[51] para
+  EN: You can set the *margin* and *expand* properties of the
+child `Widget`s to control their spacing and their behavior when the Grid is resized.
+  ZH: 可以设置子 `Widget` 的 *margin* 与 *expand* 属性来控制间距，以及 Grid 被调整大小时它们的行为。
+
+[52] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1Grid.html)
+  ZH: 参考
+
+[53] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[54] para
+  EN: This example creates a window with three buttons in a grid.
+The first two buttons are in the upper row, from left to right. A
+third button is attached underneath the first button, in a new lower row,
+spanning two columns.
+  ZH: 本示例创建一个窗口其中具有一个包含三个按钮的网格。前两个按钮位于最上行并从左向右排列。第三个按钮位于第一个按钮的下方，位于最下行并横跨两列。
+
+[55] figure  <<<ZH缺失>>>
+  EN: Grid
+  ZH: (无)
+
+[56] CODE file=examplewindow.h 422 chars
+[57] CODE file=examplewindow.cc 959 chars
+[58] CODE file=main.cc 271 chars
+[59] heading  <<<ZH缺失>>>
+  EN: Notebook
+  ZH: (无)
+
+[60] para
+  EN: A `Notebook` has a set of stacked
+`pages`, each of which contains widgets. Labelled
+`tabs` allow the user to select the pages.
+`Notebook`s allow several sets of widgets to be placed in a
+small space, by only showing one page at a time. For instance, they are often
+used in preferences dialogs.
+  ZH: Notebook有一组堆叠好的pages，每个页面(page)包含一个部件。带标签的tabs允许用户选择页面。Notebook一次只显示一页，这样可以将好几组部件放于很小的空间当中。例如他们经常在首选项对话框中使用。
+
+[61] para
+  EN: Use the append_page(), prepend_page()
+and insert_page() methods to add tabbed pages to the
+`Notebook`, supplying the child widget and the name for the
+tab.
+  ZH: 使用append_page()、prepend_page()和insert_page()方法可以添加带标签的页面到Notebook中，你需要为这些方法提供子部件和标签名。
+
+[62] para
+  EN: To discover the currently visible page, use the
+get_current_page() method. This returns the page number,
+and then calling get_nth_page() with that number will give
+you a pointer to the actual child widget.
+  ZH: 如果你想知道当前可见的页面是那一个，可以使用get_current_page()方法。该方法返回一个页码，你可以将页码传递给get_nth_page()获取指向该页当前子部件的指针。
+
+[63] para
+  EN: To programmatically change the selected page, use the
+set_current_page() method.
+  ZH: 要以编程方式改变所选的页面，请使用set_current_page()方法。
+
+[64] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1Notebook.html)
+  ZH: 参考
+
+[65] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[66] figure  <<<ZH缺失>>>
+  EN: Notebook
+  ZH: (无)
+
+[67] CODE file=examplewindow.h 492 chars
+[68] CODE file=examplewindow.cc 1287 chars
+[69] CODE file=main.cc 270 chars
+[70] heading  <<<ZH缺失>>>
+  EN: Assistant
+  ZH: (无)
+
+[71] para
+  EN: `Gtk::Assistant` is deprecated since gtkmm 4.10.
+There is no replacement in gtkmm. libadwaita (a C library) has replacement parts
+(like AdwCarousel). In some cases, a `Gtk::Notebook` might
+be an acceptable replacement.
+  ZH: `Gtk::Assistant` 自 gtkmm 4.10 起已弃用，gtkmm 中没有替代品。libadwaita（一个 C 库）提供了部分替代（如 AdwCarousel）；某些场景下 `Gtk::Notebook` 也可以作为可接受的替代。
+
+[72] para
+  EN: An `Assistant` splits a complex operation into steps. Each step is a page, containing a header, a child widget and an action area. The Assistant's action area has navigation buttons which update automatically depending on the type of the page, set with set_page_type().
+  ZH: Assistant将一个复杂的操作切分为数个步骤。每个步骤都是一个页面，包含一个标题、一个子部件和一个可操作区域。助手的操作区域有一个导航按钮，这些按钮会根据页面的类型自动更新（使用set_page_type()设置页面类型）。
+
+[73] para
+  EN: Use the append_page(), prepend_page and insert_page() methods to add pages to the `Assistant`, supplying the child widget for each page.
+  ZH: 使用append_page()、prepend_page和insert_page()方法可以向Assistant添加页面，你需要每个页面提供子部件。
+
+[74] para
+  EN: To determine the currently-visible page, use the get_current_page() method, and pass the result to get_nth_page(), which returns a pointer to the actual widget. To programmatically change the current page, use the set_current_page() method.
+  ZH: 要确定当前可见的页面，请使用get_current_page()方法，然后将返回值传递给get_nth_page()，其会返回一个指向实际部件的指针。要想用编程的方式改变当前页，请使用set_current_page()方法。
+
+[75] para
+  EN: To set the title of a page, use the set_page_title() method.
+  ZH: 要为页面设置标题，请使用set_page_title()方法。
+
+[76] para
+  EN: To add widgets to the action area, use the add_action_widget() method. They will be packed alongside the default buttons. Use the remove_action_widget() method to remove widgets.
+  ZH: 要将部件添加到操作区域，请使用add_action_widget()方法。他们将与默认按钮一并被装填。使用remove_action_widget()方法可以删除部件。
+
+[77] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1Assistant.html)
+  ZH: 参考
+
+[78] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[79] figure  <<<ZH缺失>>>
+  EN: Assistant
+  ZH: (无)
+
+[80] CODE file=exampleassistant.h 670 chars
+[81] CODE file=examplewindow.h 516 chars
+[82] CODE file=exampleassistant.cc 2529 chars
+[83] CODE file=examplewindow.cc 1382 chars
+[84] CODE file=main.cc 271 chars
+[85] heading  <<<ZH缺失>>>
+  EN: Other Multi-item Containers
+  ZH: (无)
+
+[86] para
+  EN: There are other multi-item containers. See the reference documentation for a
+complete list. Here are links to some example programs that show containers,
+which are not mentioned elsewhere in this tutorial.
+  ZH: 还有其他多项容器。请参阅文档以获取完整列表。这里是一些本教程未提及的显示容器的示例程序连接。
+
+[87] para
+  EN: [Source Code, ActionBar](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/actionbar)
+  ZH: 动作条(ActionBar)源代码
+
+[88] para
+  EN: [Source Code, FlowBox](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/listbox_flowbox/flowbox)
+  ZH: 流式盒(FlowBox)源代码
