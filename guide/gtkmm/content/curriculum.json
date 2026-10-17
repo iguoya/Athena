@@ -427,337 +427,355 @@
           "blocks": [
             {
               "type": "quiz",
-              "id": "basic-se-1",
+              "id": "basic3-se-1",
               "page_ref": "sec-basics-simple-example",
-              "stem": "Gtk::Application::create() 的作用是？",
+              "stem": "用户点击窗口的关闭按钮之后，下面的 main() 会怎样？",
+              "code": "int main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.examples.base\");\n\n  return app->make_window_and_run<MyWindow>(argc, argv);\n}",
+              "lang": "cpp",
               "options": [
-                "创建窗口对象",
-                "初始化 gtkmm",
-                "编译资源文件",
-                "启动事件循环并阻塞"
+                "窗口只是隐藏，make_window_and_run() 仍在阻塞，程序继续运行",
+                "make_window_and_run() 返回，main() 随之返回，程序就此结束",
+                "窗口关闭后还得再调用 app->quit()，main() 才会返回，否则程序一直阻塞",
+                "app 立刻被销毁，窗口类持有的资源因此泄漏，程序也无法正常退出"
               ],
               "answer": 1,
+              "explanation": "make_window_and_run() 创建并显示窗口、进入 gtkmm 事件循环，窗口关闭时事件循环结束、函数返回，main() 跟着返回，不需要另外调用 quit()。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-basics-simple-example",
-                  "note": "出处：Simple Example 逐段讲解"
+                  "note": "Simple Example：最后一行创建并显示窗口，进入主循环，窗口关闭时结束"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-se-2",
+              "id": "basic3-se-2",
               "page_ref": "sec-basics-simple-example",
-              "stem": "make_window_and_run<MyWindow>() 做了什么？",
+              "stem": "main() 的第一行 Gtk::Application::create(\"org.gtkmm.examples.base\") 在程序里承担什么角色？",
               "options": [
-                "只创建窗口不显示",
-                "创建窗口、显示它并进入 gtkmm 主循环，窗口关闭时返回",
-                "只进入主循环",
-                "解析命令行参数"
+                "创建 MyWindow 对象，并把它显示到屏幕上，然后等待用户操作",
+                "进入事件循环，直到窗口被关闭才会返回，再把退出码交给 main()",
+                "解析 argc/argv，并据此配置窗口的标题、大小和启动位置",
+                "初始化 gtkmm，并得到 RefPtr 管理的 Application 对象"
               ],
-              "answer": 1,
+              "answer": 3,
+              "explanation": "create() 初始化 gtkmm，返回存放在 Glib::RefPtr 里的 Application，所有 gtkmm 程序都需要它；创建窗口、进入事件循环是下一行 make_window_and_run() 的事。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-basics-simple-example",
-                  "note": "出处：Simple Example 末段讲解"
+                  "note": "Simple Example：create() 初始化 gtkmm；窗口与主循环由 make_window_and_run() 负责"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-se-3",
+              "id": "basic3-se-3",
               "page_ref": "sec-basics-simple-example",
-              "stem": "简单示例的编译命令中 pkg-config 外面的反引号作用是？",
+              "stem": "下面这条编译命令在链接时会找不到 gtkmm 的符号，问题出在哪里？",
+              "code": "g++ `pkg-config --cflags --libs gtkmm-4.0` base.cc -o base -std=c++17",
+              "lang": "bash",
               "options": [
-                "注释",
-                "让 shell 先执行其中命令并把输出拼进命令行",
-                "转义特殊字符",
-                "没有任何作用"
+                "库参数要放在源文件之后，base.cc 应排在 pkg-config 前面",
+                "-std=c++17 是必需选项，缺少它任何编译器都会拒绝编译",
+                "反引号会把 pkg-config 当成普通文字，必须改成单引号",
+                "gtkmm-4.0 不能交给 pkg-config 查询，只能手写库路径"
               ],
-              "answer": 1,
+              "answer": 0,
+              "explanation": "文档特别提醒：base.cc 必须写在 pkg-config 调用之前，链接器是按命令行顺序解析符号的。反引号是对的（让 shell 先执行命令再拼接输出）；-std=c++17 只有在编译器默认不支持 C++17 时才需要。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-basics-simple-example",
-                  "note": "出处：编译命令说明段"
+                  "note": "Simple Example：编译命令及反引号、参数顺序说明"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-hl-1",
+              "id": "basic3-hl-1",
               "page_ref": "sec-headers-and-linking",
-              "stem": "本书后续示例的构建系统推荐用？",
+              "stem": "执行下面这行 meson.build 代码时，实际发生了什么？",
+              "code": "gtkmm_dep = dependency('gtkmm-4.0', version: '>= 4.6.0')",
+              "lang": "python",
               "options": [
-                "手写 g++ 命令",
-                "Meson（示例自带构建文件）",
-                "Visual Studio 工程",
-                "Ant"
+                "自动下载 gtkmm 4.6.0 的源码，并编译到项目目录下",
+                "把 gtkmm-4.0 的头文件复制进项目目录，供源码直接 include 使用",
+                "检查系统里有没有够新的 gtkmm-4.0，并定义变量 gtkmm_dep",
+                "生成 pkg-config 的 .pc 文件，并安装到系统目录"
               ],
-              "answer": 1,
+              "answer": 2,
+              "explanation": "dependency() 只检查 gtkmm 是否存在、版本是否够，并定义 gtkmm_dep；之后 executable() 的 dependencies 参数引用它，编译选项和链接库由它带上，不需要自己写 pkg-config。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-headers-and-linking",
-                  "note": "出处：Headers and Linking 第 1 段"
+                  "note": "Headers and Linking：dependency() 检查 gtkmm 并定义 gtkmm_dep"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-hl-2",
+              "id": "basic3-hl-2",
               "page_ref": "sec-headers-and-linking",
-              "stem": "meson.build 里 dependency('gtkmm-4.0') 的作用是？",
+              "stem": "gtkmm-2.4、gtkmm-3.0 与 gtkmm-4.0 能同时安装在同一台机器上，原因是？",
               "options": [
-                "下载 gtkmm 源码",
-                "检查 gtkmm 可用并定义依赖变量供 target 使用",
-                "安装头文件",
-                "生成文档"
+                "三个版本共用同一份库文件，只是各自带的头文件不一样",
+                "安装程序会把旧版本放进容器隔离，运行时才解包出来使用",
+                "pkg-config 在运行时自动挑最新版，并把其他版本屏蔽掉",
+                "API 名字不同，库名和头文件目录都分开，所以能并行安装"
               ],
-              "answer": 1,
+              "answer": 3,
+              "explanation": "API 名字（gtkmm-2.4 / 3.0 / 4.0）只在出现不兼容的 API 与 ABI 变化时才改，所以同一个 API 名下的多个小版本是互相替换的，而不同 API 名可以并行安装。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-headers-and-linking",
-                  "note": "出处：dependency() 函数讲解段"
+                  "note": "Headers and Linking：gtkmm-4.0 是当前稳定 API 的名字，旧 API 并行安装"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-hl-3",
-              "page_ref": "sec-headers-and-linking",
-              "stem": "为什么 gtkmm-2.4 和 gtkmm-4.0 能同时安装在同一系统里？",
-              "options": [
-                "它们装在不同磁盘",
-                "API 名字不同即并行安装，互不影响",
-                "它们其实是同一个库",
-                "有容器隔离"
-              ],
-              "answer": 1,
-              "source_refs": [
-                {
-                  "relation": "adapted",
-                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
-                  "locator": "官方节页 sec-headers-and-linking",
-                  "note": "出处：API 并行安装说明段"
-                }
-              ]
-            },
-            {
-              "type": "quiz",
-              "id": "basic-w-1",
+              "id": "basic3-w-1",
               "page_ref": "sec-widgets-overview",
-              "stem": "关于部件与容器，正确的说法是？",
+              "stem": "下面三行执行完之后，部件层级是怎样的？",
+              "code": "m_box.append(m_Button1);\nm_box.append(m_Button2);\nm_frame.set_child(m_box);",
+              "lang": "cpp",
               "options": [
-                "所有容器都可见",
-                "Gtk::Grid 等容器不可见，只为排列其他部件而存在",
-                "部件不能嵌套",
-                "窗口不是容器"
+                "Frame、Box 和两个按钮并列，都直接放在窗口里",
+                "Frame 里装着 Box，Box 里依次是两个按钮",
+                "Box 里只剩 Button2，因为后一次 append() 会替换前一次",
+                "Frame 里直接是两个按钮，不可见的 Box 在显示时被忽略掉"
               ],
               "answer": 1,
+              "explanation": "部件一层套一层：append() 往 Box 末尾追加子部件，set_child() 把整个 Box 作为 Frame 的唯一子部件。Box 虽然不可见，只负责排列，但它仍然是层级里的一环。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-widgets-overview",
-                  "note": "出处：Widgets 一节第 2 段"
+                  "note": "Widgets：部件放在容器里形成层级，Box 的 append() 与 Frame 的 set_child()"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-w-2",
+              "id": "basic3-w-2",
               "page_ref": "sec-widgets-overview",
-              "stem": "把部件加进 Gtk::Box 容器用哪个方法？",
+              "stem": "下面的代码里，按钮对象由谁负责释放？",
+              "code": "auto& button = *Gtk::make_managed<Gtk::Button>(\"OK\");\nm_box.append(button);",
+              "lang": "cpp",
               "options": [
-                "set_child()",
-                "append()",
-                "add()",
-                "pack_start()"
+                "程序员必须在 m_box 销毁之前，自己手动 delete 这个按钮",
+                "append() 一返回，按钮就被引用计数释放，界面上看不到它",
+                "放进 m_box 后归 Box 所有，Box 销毁时自动删除，无需 delete",
+                "由 Gtk::Application 对象在 main() 结束时统一回收销毁"
               ],
-              "answer": 1,
+              "answer": 2,
+              "explanation": "Gtk::make_managed() 创建的部件一旦放进容器，就归容器所有，容器销毁时自动删除它，所以不用再操心释放，这是文档提到的省事用法。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-widgets-overview",
-                  "note": "出处：m_box.append(m_Button1) 示例段"
+                  "note": "Widgets：Gtk::make_managed() 让部件归其所放入的容器所有"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-w-3",
-              "page_ref": "sec-widgets-overview",
-              "stem": "Gtk::make_managed() 的便利在于？",
-              "options": [
-                "部件创建更快",
-                "部件归容器所有，容器销毁时自动删除，无需手动 delete",
-                "自动布局",
-                "自动连接信号"
-              ],
-              "answer": 1,
-              "source_refs": [
-                {
-                  "relation": "adapted",
-                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
-                  "locator": "官方节页 sec-widgets-overview",
-                  "note": "出处：内存管理说明段"
-                }
-              ]
-            },
-            {
-              "type": "quiz",
-              "id": "basic-sig-1",
+              "id": "basic3-sig-1",
               "page_ref": "sec-signals-overview",
-              "stem": "gtkmm 的信号机制由哪个库实现？",
+              "stem": "下面这行 connect() 执行的那一刻，on_button_clicked() 会被调用吗？",
+              "code": "m_button1.signal_clicked().connect( sigc::mem_fun(*this,\n  &HelloWorld::on_button_clicked) );",
+              "lang": "cpp",
               "options": [
-                "Boost.Signals2",
-                "libsigc++",
-                "GEvent",
-                "Qt Signals"
+                "不会。connect() 只登记，按钮每发出一次 clicked 才调用一次",
+                "会。connect() 先调用一次，用来检查处理函数的签名是否匹配",
+                "会。连接成功时立刻先调用一次，之后每次点击再各调用一次",
+                "不会。处理函数只在窗口关闭前被调用一次，不随点击重复"
               ],
-              "answer": 1,
+              "answer": 0,
+              "explanation": "connect() 把处理函数登记到信号上，本身不调用它；之后每当按钮发出 clicked 信号，登记过的处理函数就被调用一次。信号是事件驱动的：先登记，事件发生时才执行。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-signals-overview",
-                  "note": "出处：Signals 一节第 2 段"
+                  "note": "Signals：把 clicked 信号连接到 on_button_clicked 的示例"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-u-1",
-              "page_ref": "sec-basics-ustring",
-              "stem": "gtkmm 接口里为什么用 Glib::ustring 而不是 std::string？",
+              "id": "basic3-sig-2",
+              "page_ref": "sec-signals-overview",
+              "stem": "用户按下一个按钮时，clicked 信号是由谁发出的？",
               "options": [
-                "性能更好",
-                "UTF-8 编码支持多语言文本，接口与 std::string 几乎一致且可自动互转",
-                "语法更简洁",
-                "历史原因无实际差别"
+                "Gtk::Application 对象，再统一转发给各个窗口",
+                "被按下的那个部件（Gtk::Button）自己",
+                "按钮所在的窗口类，如 HelloWorld",
+                "操作系统直接调用你登记的处理函数"
               ],
               "answer": 1,
+              "explanation": "gtkmm 是事件驱动的：事件发生时，对应的部件发出自己的信号，每种部件能发出的信号集合不同。要让点击产生动作，就给那个部件的信号连接处理函数。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-signals-overview",
+                  "note": "Signals：事件发生时由被按下的部件发出相应信号"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic3-u-1",
+              "page_ref": "sec-basics-ustring",
+              "stem": "假设源文件按 UTF-8 保存，下面的 head 是什么？",
+              "code": "Glib::ustring s = \"你好，gtkmm\";\nauto head = s.substr(0, 2);",
+              "lang": "cpp",
+              "options": [
+                "“你”，因为每个汉字占 2 字节，2 个字节只够一个字",
+                "“你好，”，因为第二个参数表示结束位置而不是长度",
+                "一个残缺的字符，UTF-8 汉字占 3 字节，被从中间截断了",
+                "“你好”，substr() 按字符计数，而不是按字节"
+              ],
+              "answer": 3,
+              "explanation": "Glib::ustring 帮你处理 UTF-8 的细节，substr() 之类的方法以字符为单位，所以取前 2 个字符就是“你好”。若用 std::string，同样的调用按字节算，会把汉字截断。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-basics-ustring",
-                  "note": "出处：Glib::ustring 一节第 1-2 段"
+                  "note": "Glib::ustring：substr() 以字符而不是字节思考"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-u-2",
+              "id": "basic3-u-2",
               "page_ref": "sec-basics-ustring",
-              "stem": "UTF-8 文本上使用 strlen() 这类函数的问题在于？",
+              "stem": "下面的 n 是多少？为什么本章建议避免 strlen() 这类函数？",
+              "code": "Glib::ustring text = \"你好\";\nauto n = strlen(text.c_str());",
+              "lang": "cpp",
               "options": [
-                "编译不过",
-                "UTF-8 一个字符占 1-6 字节，按字节计数会数错字符",
-                "strlen 只支持 ASCII，标准里没有",
-                "会修改原字符串"
+                "2。strlen() 能识别 UTF-8，按字符边界计数",
+                "2。Glib::ustring 重载了 strlen()，让它按字符来计数",
+                "6。strlen() 数字节而不是字符，UTF-8 字符长度并不固定",
+                "编译失败。Glib::ustring 没有提供 c_str() 这个方法"
               ],
-              "answer": 1,
+              "answer": 2,
+              "explanation": "UTF-8 里每个字符可能占 1~6 个字节（常见汉字 3 个字节），所以 strlen() 得到 6 而不是 2。指针算术和 strlen() 会数错字符，应当使用 Glib::ustring 的方法，如 length() 与 substr()。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-basics-ustring",
-                  "note": "出处：指针运算与 strlen 警告段"
+                  "note": "Glib::ustring：避免 C 风格指针算术和 strlen()，UTF-8 字符占 1~6 字节"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-mix-1",
+              "id": "basic3-mix-1",
               "page_ref": "sec-basics-gobj-and-wrap",
-              "stem": "把 gtkmm 对象传给需要 C GObject 的函数，用？",
+              "stem": "执行 Glib::wrap(cbutton) 之后，关于 C 对象的生命周期，哪项说法正确？",
+              "code": "GtkButton* cbutton = get_a_button();\nGtk::Button* button = Glib::wrap(cbutton);\nbutton->set_label(\"Now I speak C++ too!\");",
+              "lang": "cpp",
               "options": [
-                "gobj()",
-                "wrap()",
-                "c_obj()",
-                "cast()"
+                "引用计数不增加；包装与 C 实例绑定，别在要用 C 实例时删包装",
+                "引用计数加 1；删除包装对象之后，C 实例仍然保持存活不变",
+                "wrap() 会深拷贝出一个独立的 C 对象，原对象完全不受影响",
+                "包装对象永远由 RefPtr 自动管理，从来不需要手动 delete"
               ],
               "answer": 0,
+              "explanation": "Glib::wrap() 把 C 实例和 C++ 包装绑在一起，默认不增加引用计数（take_copy 为 true 才增加）。部件类等某些情形下包装必须显式 delete，所以不要在还要 C 实例活着的时候删除包装对象。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-basics-gobj-and-wrap",
-                  "note": "出处：Mixing C and C++ APIs 第 2 段"
+                  "note": "Mixing C and C++ APIs：Glib::wrap() 绑定两个实例，默认不增加引用计数"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-mix-2",
+              "id": "basic3-mix-2",
               "page_ref": "sec-basics-gobj-and-wrap",
-              "stem": "Glib::wrap() 从 C 实例得到 C++ 包装对象，生命周期说法正确的是？",
+              "stem": "要把 gtkmm 对象交给只认 C GObject 的函数，空白处该写什么？",
+              "code": "Gtk::Button button(\"example\");\ngtk_button_do_something_that_gtkmm_cannot(____);",
+              "lang": "cpp",
               "options": [
-                "wrap 后两者互不相干",
-                "C++ 包装与 C 实例绑定；不想 C 实例死就别删包装对象",
-                "包装删除后 C 实例一定还在",
-                "C 实例删除后包装可继续使用"
+                "Glib::wrap(button)，把它包装成 C 对象",
+                "button.gobj()，取得底层 C 实例的指针",
+                "button.c_obj()，返回 C 版本的按钮",
+                "(GtkButton*)button，直接强制类型转换"
               ],
               "answer": 1,
+              "explanation": "gobj() 返回 gtkmm 对象背后的 C 实例指针；方向相反（从 C 实例得到 C++ 对象）才用 Glib::wrap()。C++ 包装类不能靠强制转换变成 C 指针。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-basics-gobj-and-wrap",
-                  "note": "出处：wrap 绑定关系说明段"
+                  "note": "Mixing C and C++ APIs：用 gobj() 取得底层 C 实例"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-hw-1",
+              "id": "basic3-hw-1",
               "page_ref": "sec-helloworld",
-              "stem": "HelloWorld 构造函数里把按钮加进窗口用的是？",
+              "stem": "如果删掉构造函数里的 set_child(m_button)，运行 Hello World 会看到什么？",
+              "code": "HelloWorld::HelloWorld()\n: m_button(\"Hello World\")\n{\n  m_button.set_margin(10);\n  m_button.signal_clicked().connect(sigc::mem_fun(*this,\n    &HelloWorld::on_button_clicked));\n  set_child(m_button);   // ← 删掉这一行\n}",
+              "lang": "cpp",
               "options": [
-                "append(m_button)",
-                "set_child(m_button)",
-                "add(m_button)",
-                "pack(m_button)"
+                "编译失败，Gtk::Window 必须设置了子部件才能构造",
+                "按钮照样出现在窗口里，成员变量会自动成为子部件",
+                "窗口能打开但里面是空的，按钮没有放进窗口，也就点不到",
+                "窗口一打开就崩溃，因为 m_button 没有父部件"
               ],
-              "answer": 1,
+              "answer": 2,
+              "explanation": "成员变量只是创建了按钮对象，要让它出现在窗口里，必须用 set_child() 把它放进去。没有这一步，窗口是空的，按钮即使连了信号也不会被点到。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-helloworld",
-                  "note": "出处：Hello World 构造函数讲解"
+                  "note": "Hello World：set_child() 把按钮放进窗口"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "basic-hw-2",
+              "id": "basic3-hw-2",
               "page_ref": "sec-helloworld",
-              "stem": "sigc::mem_fun(*this, &HelloWorld::on_button_clicked) 的作用是？",
+              "stem": "main.cc 里没有出现 HelloWorld 类型的变量，窗口对象是谁、什么时候创建的？",
+              "code": "auto app = Gtk::Application::create(\"org.gtkmm.example\");\nreturn app->make_window_and_run<HelloWorld>(argc, argv);",
+              "lang": "cpp",
               "options": [
-                "把成员函数绑定为该实例的信号处理函数",
-                "动态注册新信号",
-                "断开信号",
-                "发出信号"
+                "Gtk::Application::create() 在初始化时顺便创建了它",
+                "它是全局对象，在 main() 开始之前就已经创建好了",
+                "窗口关闭之后才创建，用来保存用户所做的修改内容",
+                "make_window_and_run<HelloWorld>() 运行时创建并显示它"
               ],
-              "answer": 0,
+              "answer": 3,
+              "explanation": "make_window_and_run<HelloWorld>() 创建 HelloWorld 对象、显示窗口并启动事件循环；窗口关闭后函数返回，main() 随之结束。窗口类的构造函数里完成布置部件与连接信号的初始化。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-helloworld",
-                  "note": "出处：信号连接讲解段"
+                  "note": "Hello World：make_window_and_run() 创建窗口对象、显示并启动事件循环"
                 }
               ]
             }
@@ -766,44 +784,69 @@
       ],
       "checkpoint": [
         {
-          "id": "basics-cp-1",
-          "stem": "（综合) 一个最小 gtkmm 程序的必要骨架是？",
+          "id": "basic3-cp-1",
+          "stem": "下面的程序编译通过，运行后会怎样？",
+          "code": "int main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.demo\");\n  MyWindow win;\n  return 0;\n}",
+          "lang": "cpp",
           "options": [
-            "创建 Gtk::Application → make_window_and_run<窗口类>() → 窗口类构造中布置部件与信号",
-            "先写 main 循环轮询键盘",
-            "必须用 Gtk::Builder 加载 XML",
-            "继承 Gtk::Main 并重写 run()"
+            "立刻退出，窗口没机会显示，因为没有进入事件循环",
+            "窗口显示出来，直到用户关闭才退出",
+            "窗口一闪而过，随后 return 0 把它关掉",
+            "窗口显示出来，但点击按钮没有任何响应"
           ],
           "answer": 0,
+          "explanation": "窗口要显示并响应事件，必须进入 gtkmm 事件循环，这正是 make_window_and_run() 做的事（创建窗口、显示、启动事件循环）。这段代码只构造了对象就返回，程序立即结束。",
           "source_refs": [
             {
               "relation": "adapted",
               "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
               "locator": "官方节页 sec-basics-simple-example 与 sec-helloworld",
-              "note": "综合 Simple Example 与 Hello World"
+              "note": "综合 Simple Example 与 Hello World：创建 Application → make_window_and_run()"
             }
           ]
         },
         {
-          "id": "basics-cp-2",
-          "stem": "（综合) 程序要显示用户输入的中文文本并按字符截取，应该？",
+          "id": "basic3-cp-2",
+          "stem": "程序要按字符截取用户输入的中文，该怎么做？",
           "options": [
-            "std::string + substr 按字节截",
-            "Glib::ustring 存储与操作，按字符语义处理",
-            "转成 GBK 再处理",
-            "避免使用任何字符串"
+            "用 std::string 存储，再用 substr() 按字节截取",
+            "先转成 GBK 编码，再按每两个字节算一个字符来处理",
+            "用 Glib::ustring 存储，并用 substr() 等方法按字符处理",
+            "用 strlen() 求长度，再用指针算术逐字节往后移动指针"
           ],
-          "answer": 1,
+          "answer": 2,
+          "explanation": "gtkmm 的接口使用 Glib::ustring，它按 UTF-8 字符而不是字节处理文本；std::string、strlen() 与指针算术按字节计数，遇到中文会数错、截断字符。",
           "source_refs": [
             {
               "relation": "adapted",
               "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
               "locator": "官方节页 sec-basics-ustring",
-              "note": "综合 ustring 的多语言场景"
+              "note": "综合 Glib::ustring：多语言文本按字符处理，避免 strlen() 与指针算术"
+            }
+          ]
+        },
+        {
+          "id": "basic3-cp-3",
+          "stem": "需要动态创建一个按钮放进 m_box，哪种做法最符合本章的建议？",
+          "options": [
+            "用 new 创建后立刻 delete 掉它，这样部件才能显示出来",
+            "用 Gtk::make_managed 创建并 append，按钮随容器一起销毁",
+            "声明成成员变量，再用 gobj() 把所有权交给 C 代码管理",
+            "用 Glib::wrap() 去包装一个新建的 C 对象，再手动 unref"
+          ],
+          "answer": 1,
+          "explanation": "Gtk::make_managed() 创建的部件放进容器后归容器所有，容器销毁时自动删除，不用手写 delete。立刻 delete 会让部件消失，gobj() 与 wrap() 解决的是 C 与 C++ 互操作，不是常规的生命周期管理。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-widgets-overview",
+              "note": "综合 Widgets：Gtk::make_managed() 与容器所有权"
             }
           ]
         }
-      ]
+      ],
+      "quiz_standard": 2
     },
     {
       "id": "changes-gtkmm3",
@@ -916,23 +959,27 @@
             },
             {
               "type": "quiz",
-              "id": "q1",
-              "stem": "Gtk::Button 的 clicked 信号在什么时刻发出？",
+              "id": "btn6-pb-1",
+              "page_ref": "sec-pushbuttons",
+              "stem": "按钮显示出来之后，用户按下键盘上的 Alt+H，会发生什么？",
+              "code": "auto button = Gtk::make_managed<Gtk::Button>(\"_Help\", true);",
+              "lang": "cpp",
               "options": [
-                "按下鼠标键时",
-                "按下并释放之后",
-                "释放鼠标且光标已移出按钮时",
-                "调用 set_sensitive(true) 时"
+                "没有反应，助记符只能配合 Ctrl 键触发，Alt 无效",
+                "按钮被触发，效果和鼠标点击一样，会发出 clicked 信号",
+                "只是把键盘焦点移到按钮上，还要再按一次回车才触发",
+                "按钮上直接显示“_Help”，下划线只是个普通字符"
               ],
               "answer": 1,
+              "explanation": "构造函数的第二个参数 true 表示标签里的下划线标出助记符：“_Help” 显示为带下划线的 Help，Alt+H 相当于点击这个按钮。去掉 true，下划线才只是普通字符。",
               "source_refs": [
                 {
                   "relation": "adapted",
-                  "url": "https://docs.gtk.org/gtk4/signal.Button.clicked.html",
-                  "note": "语义基准（应用 ADR 0002）"
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-pushbuttons",
+                  "note": "Button：在字符前加下划线并把 mnemonic 参数设为 true，定义键盘助记符"
                 }
-              ],
-              "page_ref": "sec-pushbuttons"
+              ]
             },
             {
               "type": "experiment",
@@ -940,41 +987,47 @@
             },
             {
               "type": "quiz",
-              "id": "q-icon",
+              "id": "btn6-pb-2",
               "page_ref": "sec-pushbuttons",
-              "stem": "让按钮只显示一个图标（不显示文字），应使用哪个方法？",
+              "stem": "下面的代码运行后，这个按钮在窗口里看起来是什么样？",
+              "code": "auto pmap = Gtk::make_managed<Gtk::Image>(\"info.xpm\");\nauto label = Gtk::make_managed<Gtk::Label>(\"cool button\");\nauto hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 5);\nhbox->append(*pmap);\nhbox->append(*label);\nm_button.set_child(*hbox);",
+              "lang": "cpp",
               "options": [
-                "set_image()",
-                "set_icon_name()",
-                "set_label_icon()",
-                "add_icon()"
+                "两个互不相干的部件：左边是按钮，右边是图片和文字",
+                "只显示图片，set_child() 只收一个部件，标签被直接丢弃了",
+                "一个按钮，里面横向并排放着图片和文字“cool button”",
+                "编译失败，Gtk::Button 不是容器，没有 set_child() 方法"
               ],
-              "answer": 1,
+              "answer": 2,
+              "explanation": "Gtk::Button 本身也是容器，可以把别的部件放进去。这里把装着 Image 和 Label 的 Box 作为按钮的唯一子部件，所以点击按钮的任意位置都会触发 clicked。",
               "source_refs": [
                 {
                   "relation": "adapted",
-                  "url": "https://docs.gtk.org/gtk4/method.Button.set_icon_name.html",
-                  "note": "语义基准（应用 ADR 0002）"
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-pushbuttons",
+                  "note": "Button：Gtk::Button 也是容器，示例把 Image 与 Label 装进 Box 再放进按钮"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "q-sensitive",
+              "id": "btn6-pb-3",
               "page_ref": "sec-pushbuttons",
-              "stem": "按钮处于不可点击状态（点击无响应）最可能是因为？",
+              "stem": "用户在按钮上按下鼠标左键，但还没有松开。此时 clicked 信号的情况是？",
               "options": [
-                "没有设置图标",
-                "调用了 set_sensitive(false)",
-                "没有设置标题",
-                "未调用 set_use_underline(true)"
+                "还没发出，要等按下并松开之后才发出",
+                "已经发出，松开鼠标时会再发出一次",
+                "已经发出一次，松开鼠标时不会再发出",
+                "不会发出，clicked 只在用键盘激活按钮时才发出"
               ],
-              "answer": 1,
+              "answer": 0,
+              "explanation": "文档写明 clicked 在按钮被按下并释放之后发出，不是按下的那一刻。想在按下时就做事，要用别的机制，不能指望 clicked。",
               "source_refs": [
                 {
                   "relation": "adapted",
-                  "url": "https://docs.gtk.org/gtk4/method.Widget.set_sensitive.html",
-                  "note": "语义基准（应用 ADR 0002）"
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-pushbuttons",
+                  "note": "Button：clicked 信号在按钮被按下并释放时发出"
                 }
               ]
             }
@@ -1009,42 +1062,48 @@
             },
             {
               "type": "observation_quiz",
-              "id": "oq1",
+              "id": "btn6-tb-oq1",
+              "page_ref": "sec-toggle-buttons",
               "demo_ref": "demo.buttons",
               "stem": "打开真机演示，点击「切换我」两次：最后一次发出的 toggled 信号 detail 是什么、此时 get_active() 返回多少？",
               "options": [
-                "active / true",
-                "inactive / false",
-                "第二次不再发信号",
-                "两次都是 active"
+                "detail 为 active，get_active() 返回 true",
+                "第二次点击不再发信号，状态仍然为 true",
+                "两次 detail 都是 active，get_active() 为 true",
+                "detail 为 inactive，get_active() 返回 false"
               ],
-              "answer": 1,
-              "source_refs": [
-                {
-                  "relation": "authored",
-                  "locator": "content/demos.json :: demo.buttons",
-                  "note": "观察真机演示作答（应用 ADR 0002 决策 5）"
-                }
-              ],
-              "page_ref": "sec-toggle-buttons"
-            },
-            {
-              "type": "quiz",
-              "id": "q-toggled-name",
-              "page_ref": "sec-toggle-buttons",
-              "stem": "Gtk::ToggleButton 的状态每变化一次，发出什么信号？",
-              "options": [
-                "clicked",
-                "toggled",
-                "pressed",
-                "changed"
-              ],
-              "answer": 1,
+              "answer": 3,
+              "explanation": "ToggleButton 创建时是弹起（false）。第一次点击变为按下，发出 toggled（active）；第二次点击弹起，再发出 toggled（inactive），此时 get_active() 为 false。每次状态变化都会发信号。",
               "source_refs": [
                 {
                   "relation": "adapted",
-                  "url": "https://docs.gtk.org/gtk4/signal.ToggleButton.toggled.html",
-                  "note": "语义基准（应用 ADR 0002）"
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-toggle-buttons",
+                  "note": "演示 demo.buttons：toggle 行的 toggled 信号及 get_active() 状态"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "btn6-tb-2",
+              "page_ref": "sec-toggle-buttons",
+              "stem": "用户对刚创建的 ToggleButton 依次点击 3 次，终端会输出什么？",
+              "code": "toggle.signal_toggled().connect([&toggle] {\n  std::cout << toggle.get_active() << ' ';\n});",
+              "lang": "cpp",
+              "options": [
+                "1 0 1",
+                "true false true",
+                "1 1 1",
+                "0 1 0"
+              ],
+              "answer": 0,
+              "explanation": "ToggleButton 创建时是弹起（false），每次点击翻转一次并发出 toggled：按下（1）、弹起（0）、按下（1）。std::cout 输出 bool 默认打印 1/0 而不是 true/false，除非设置了 boolalpha。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-toggle-buttons",
+                  "note": "ToggleButton：get_active() 在按钮按下时为 true；CheckButton 与 ToggleButton 创建时都是关闭状态"
                 }
               ]
             }
@@ -1062,7 +1121,7 @@
           "blocks": [
             {
               "type": "text",
-              "text": "Gtk::CheckButton 是勾选框，视觉是圆圈或对勾，语义上继承自 Gtk::ToggleButton：同样用 toggled 信号与 get_active()。"
+              "text": "Gtk::CheckButton 是勾选框，视觉是圆圈或对勾。它直接继承自 Gtk::Widget（并不是 Gtk::ToggleButton 的子类），但与 ToggleButton 用法相同：同样用 toggled 信号与 get_active()。"
             },
             {
               "type": "callout",
@@ -1071,61 +1130,117 @@
             },
             {
               "type": "quiz",
-              "id": "q2",
-              "stem": "GTK4 中要实现一组互斥的单选项，正确做法是？",
-              "options": [
-                "使用 Gtk::RadioButton",
-                "使用多个 Gtk::CheckButton 并 set_group() 成组",
-                "使用 Gtk::ToggleButton 并连接 pressed 信号",
-                "使用 Gtk::Switch 并 set_group()"
-              ],
-              "answer": 1,
-              "source_refs": [
-                {
-                  "relation": "adapted",
-                  "url": "https://docs.gtk.org/gtk4/class.CheckButton.html",
-                  "note": "语义基准（应用 ADR 0002）"
-                }
-              ],
-              "page_ref": "sec-checkbuttons"
-            },
-            {
-              "type": "quiz",
-              "id": "q-check-hierarchy",
+              "id": "btn6-cb-1",
               "page_ref": "sec-checkbuttons",
-              "stem": "GTK4 中 Gtk::CheckButton 在类层次上的直接基类是？",
+              "stem": "有人说“Gtk::CheckButton 是 Gtk::ToggleButton 的子类”。本章怎么说？",
               "options": [
-                "Gtk::Button",
-                "Gtk::ToggleButton",
-                "Gtk::Widget",
-                "Gtk::Switch"
+                "说得对，CheckButton 继承自 ToggleButton，可以当 ToggleButton 用",
+                "说得对，它们是同一个类，只是 Glade 里叫法不同而已",
+                "CheckButton 直接继承自 Gtk::Widget，并非子类；二者成员方法相同，只是外观不同",
+                "不对，CheckButton 继承自 Gtk::Button，所以有 clicked 信号"
               ],
-              "answer": 1,
+              "answer": 2,
+              "explanation": "本章明确写道 Gtk::CheckButton 直接继承自 Gtk::Widget，与 ToggleButton 相似，唯一实质区别是外观；读写状态用同样的成员方法（get_active()/set_active()）。",
               "source_refs": [
                 {
                   "relation": "adapted",
-                  "url": "https://docs.gtk.org/gtk4/class.CheckButton.html",
-                  "note": "语义基准（应用 ADR 0002）"
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-checkbuttons",
+                  "note": "CheckButton：CheckButton 直接继承自 Gtk::Widget，与 ToggleButton 只有外观不同"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "q-radio-gone",
-              "page_ref": "sec-radio-buttons",
-              "stem": "从 GTK3 迁移到 GTK4 后，原来用 Gtk::RadioButton 实现的互斥单选应该改用？",
+              "id": "btn6-cb-2",
+              "page_ref": "sec-checkbuttons",
+              "stem": "用户勾选这个初始未选中的 CheckButton，终端会输出什么？",
+              "code": "m_button.signal_toggled().connect(sigc::mem_fun(*this,\n            &ExampleWindow::on_button_toggled));\n\nvoid ExampleWindow::on_button_toggled()\n{\n  std::cout << \"The Button was toggled: state=\"\n      << (m_button.get_active() ? \"true\" : \"false\")\n      << std::endl;\n}",
+              "lang": "cpp",
               "options": [
-                "Gtk::RadioButton 仍然可用",
-                "Gtk::CheckButton 加 set_group()",
-                "Gtk::Switch 成组",
-                "Gtk::ComboBoxText"
+                "The Button was toggled: state=false",
+                "没有输出，因为只连接了 toggled，没有连接 clicked",
+                "输出两行，按下和松开各触发一次 on_button_toggled",
+                "The Button was toggled: state=true"
               ],
-              "answer": 1,
+              "answer": 3,
+              "explanation": "toggled 是在状态改变之后发出的，处理函数里 get_active() 读到的已经是新状态 true。toggled 每次状态变化只发一次，不是按下、松开各一次。",
               "source_refs": [
                 {
                   "relation": "adapted",
-                  "url": "https://docs.gtk.org/gtk4/class.CheckButton.html",
-                  "note": "语义基准（应用 ADR 0002）"
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-checkbuttons",
+                  "note": "CheckButton 官方示例：on_button_toggled() 用 get_active() 打印当前状态"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "btn6-rb-1",
+              "page_ref": "sec-radio-buttons",
+              "stem": "下面的代码执行完，窗口刚显示时，这三个按钮各是什么状态？",
+              "code": "auto rb1 = Gtk::make_managed<Gtk::CheckButton>(\"button1\");\nauto rb2 = Gtk::make_managed<Gtk::CheckButton>(\"button2\");\nauto rb3 = Gtk::make_managed<Gtk::CheckButton>(\"button3\");\nrb2->set_group(*rb1);\nrb3->set_group(*rb1);",
+              "lang": "cpp",
+              "options": [
+                "rb1 自动选中，因为它是组里的第一个成员",
+                "三个都没有选中，需要自己用 set_active() 打开其中一个",
+                "三个都选中，因为它们现在共享同一个状态",
+                "三个按钮中随机选中一个，显示时由 GTK 决定"
+              ],
+              "answer": 1,
+              "explanation": "CheckButton 与 ToggleButton 创建时都是关闭的，成组之后三个仍然全部是关闭。文档特别提醒：别忘了用 set_active() 打开其中一个，否则用户看到的是一组全空的单选项。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-radio-buttons",
+                  "note": "RadioButton：成组后默认全部关闭，别忘了用 set_active() 打开一个"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "btn6-rb-2",
+              "page_ref": "sec-radio-buttons",
+              "stem": "接上题，执行下面几行之后，rb1->get_active() 与 rb2->get_active() 分别是？",
+              "code": "rb1->set_active(true);\nrb2->set_active(true);   // 用户随后选了 button2",
+              "lang": "cpp",
+              "options": [
+                "false 和 true，同组里只能有一个被选中",
+                "true 和 true，因为两次调用互相独立，互不影响",
+                "true 和 false，因为先选中的按钮优先，后来的被忽略",
+                "false 和 false，因为成组后需要全部取消再重新选择"
+              ],
+              "answer": 0,
+              "explanation": "成组的按钮互斥：在同一组里选中一个，其余的自动变为关闭。后选中的 rb2 为 true，原来选中的 rb1 变为 false。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-radio-buttons",
+                  "note": "RadioButton：同组里同一时间只有一个按钮可以被选中"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "btn6-rb-3",
+              "page_ref": "sec-radio-buttons",
+              "stem": "只要把三个 CheckButton 放进同一个 Gtk::Box，它们就会互斥吗？",
+              "options": [
+                "会。同一个容器里的 CheckButton 自动成为一组",
+                "会。只要给它们设置相同的标签前缀，就自动成组",
+                "不会。互斥来自 set_group() 建立的分组，与摆放位置无关",
+                "不会。互斥只能靠连接 toggled 信号，在处理函数里手动取消"
+              ],
+              "answer": 2,
+              "explanation": "GTK4 里没有独立的单选按钮类，CheckButton 和 ToggleButton 在被加入同一个组后才表现为单选。分组是显式的 set_group() 调用，不由容器或标签推断。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-radio-buttons",
+                  "note": "RadioButton：没有独立的单选按钮类，成组的 CheckButton 才表现为单选"
                 }
               ]
             }
@@ -1134,97 +1249,93 @@
       ],
       "checkpoint": [
         {
-          "id": "cp1",
-          "stem": "标签为「帮助（_H）」且 set_use_underline(true) 的按钮，键盘触发方式是？",
+          "id": "btn6-cp-1",
+          "stem": "把下面 GTK3 时代的代码迁到 GTK4，互斥单选应该怎么改？",
+          "code": "Gtk::RadioButton::Group group;\nGtk::RadioButton rb1(group, \"button1\");\nGtk::RadioButton rb2(group, \"button2\");",
+          "lang": "cpp",
           "options": [
-            "Alt+H",
-            "Ctrl+H",
-            "单独按 H 键",
-            "没有键盘触发方式"
+            "保留 Gtk::RadioButton，只需要换成 GTK4 的头文件",
+            "改用 Gtk::ToggleButton，并把它们放进同一个 Gtk::Box",
+            "改用 Gtk::Switch，并给每个 Switch 都调用 set_group()",
+            "改用 Gtk::CheckButton，让 rb2 用 set_group() 加入 rb1 所在的组"
+          ],
+          "answer": 3,
+          "explanation": "GTK4 没有独立的 RadioButton 类：CheckButton 与 ToggleButton 通过 set_group() 加入同一组即可互斥。用 Box 摆放或换成 Switch 都不会产生互斥。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-radio-buttons 与 sec-checkbuttons",
+              "note": "综合 CheckButton 与 RadioButton：GTK4 用成组的 CheckButton 实现单选"
+            }
+          ]
+        },
+        {
+          "id": "btn6-cp-2",
+          "stem": "用户依次点击 A 一次、B 两次，on_a 与 on_b 各被调用几次？",
+          "code": "Gtk::Button a(\"A\");\na.signal_clicked().connect(on_a);\nGtk::ToggleButton b(\"B\");\nb.signal_toggled().connect(on_b);",
+          "lang": "cpp",
+          "options": [
+            "on_a 1 次、on_b 1 次，ToggleButton 只在第一次按下发信号",
+            "on_a 1 次、on_b 2 次，每次状态变化都发出 toggled",
+            "on_a 1 次、on_b 4 次，每次点击按下与松开各发一次",
+            "on_a 2 次、on_b 2 次，每次点击同时发出 clicked 和 toggled"
+          ],
+          "answer": 1,
+          "explanation": "Button 每点击一次（按下并松开）发出一次 clicked；ToggleButton 每次状态变化发出一次 toggled，点击两次就是两次状态变化。两种信号分别属于两种按钮，不会同时出现。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-pushbuttons 与 sec-toggle-buttons",
+              "note": "综合 Button 与 ToggleButton：clicked 与 toggled 的发出时机"
+            }
+          ]
+        },
+        {
+          "id": "btn6-cp-3",
+          "stem": "（演示观察）在真机演示中勾选「勾选我」，status 显示与事件面板收到的信号分别是？",
+          "options": [
+            "get_active() = false；signal clicked",
+            "没有信号发出，状态栏保持原样",
+            "get_active() = true；signal toggled（detail: active）",
+            "signal pressed（detail: true）；get_active() 未更新"
+          ],
+          "answer": 2,
+          "explanation": "CheckButton 与 ToggleButton 一样，状态变化后发出 toggled：勾选后 get_active() 为 true，演示事件面板收到 detail 为 active 的 toggled。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "演示 demo.buttons",
+              "note": "演示 demo.buttons：check 行的 toggled 信号及 get_active() 状态"
+            }
+          ]
+        },
+        {
+          "id": "btn6-cp-4",
+          "stem": "执行完下面的代码，rb2->get_active() 与 rb3->get_active() 的值是？",
+          "code": "rb2->set_group(*rb1);\nrb3->set_group(*rb1);\nrb1->set_active(true);",
+          "lang": "cpp",
+          "options": [
+            "都是 false，三个成员里只有 rb1 被选中",
+            "都是 true，成组后三个按钮同步变化",
+            "rb2 为 true、rb3 为 false，按加入顺序依次选中",
+            "rb2 为 false、rb3 为 true，后加入组的成员会自动被选中"
           ],
           "answer": 0,
+          "explanation": "三个按钮已加入同一组，组内只能有一个被选中；现在选中的是 rb1，所以 rb2 与 rb3 都是 false。成组并不意味着同步变化，而是互斥。",
           "source_refs": [
             {
               "relation": "adapted",
-              "url": "https://docs.gtk.org/gtk4/class.Button.html",
-              "note": "语义基准（应用 ADR 0002）"
-            }
-          ]
-        },
-        {
-          "id": "cp2",
-          "stem": "读取 Gtk::ToggleButton 当前状态应使用？",
-          "options": [
-            "get_state()",
-            "get_active()",
-            "is_pressed()",
-            "toggled()"
-          ],
-          "answer": 1,
-          "source_refs": [
-            {
-              "relation": "adapted",
-              "url": "https://docs.gtk.org/gtk4/class.ToggleButton.html",
-              "note": "语义基准（应用 ADR 0002）"
-            }
-          ]
-        },
-        {
-          "id": "cp3",
-          "stem": "(clicked 与 toggled 的对比) 用户单击 Gtk::Button 一次，Gtk::ToggleButton 切换一次状态，各自发出什么信号？",
-          "options": [
-            "都发出 clicked",
-            "Button 发 clicked，ToggleButton 发 toggled",
-            "都发出 toggled",
-            "Button 发 pressed，ToggleButton 发 released"
-          ],
-          "answer": 1,
-          "source_refs": [
-            {
-              "relation": "adapted",
-              "url": "https://docs.gtk.org/gtk4/signal.Button.clicked.html",
-              "note": "语义基准（应用 ADR 0002）"
-            }
-          ]
-        },
-        {
-          "id": "cp4",
-          "stem": "（综合) 要让「红/黄/绿」三个勾选框同一时刻最多勾选一个，GTK4 的正确做法是？",
-          "options": [
-            "各自调用 set_sensitive(false)",
-            "三个 CheckButton 调用 set_group() 加入同一组",
-            "只用一个 CheckButton",
-            "把三个放进同一个 Gtk::Box 即可"
-          ],
-          "answer": 1,
-          "source_refs": [
-            {
-              "relation": "adapted",
-              "url": "https://docs.gtk.org/gtk4/method.CheckButton.set_group.html",
-              "note": "语义基准（应用 ADR 0002）"
-            }
-          ]
-        },
-        {
-          "id": "cp5",
-          "type": "observation",
-          "stem": "（演示观察) 在真机演示中勾选「勾选我」，status 显示与事件面板收到的信号分别是？",
-          "options": [
-            "CheckButton：get_active() = true；signal toggled (detail: active)",
-            "CheckButton：get_active() = false；signal clicked",
-            "没有信号发出",
-            "signal pressed (detail: true)"
-          ],
-          "answer": 0,
-          "source_refs": [
-            {
-              "relation": "authored",
-              "locator": "content/demos.json :: demo.buttons",
-              "note": "观察真机演示作答（应用 ADR 0002 决策 5）"
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-radio-buttons",
+              "note": "综合 RadioButton：分组后同一时间只有一个按钮被选中"
             }
           ]
         }
-      ]
+      ],
+      "quiz_standard": 2
     },
     {
       "id": "chapter-range-widgets",
