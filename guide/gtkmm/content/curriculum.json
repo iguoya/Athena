@@ -48,106 +48,91 @@
           "blocks": [
             {
               "type": "quiz",
-              "id": "intro-book-1",
+              "id": "intro-tb-1",
               "page_ref": "sec-this-book",
-              "stem": "本书对 gtkmm API 的讲解深度是怎样的？",
+              "stem": "关于这本书讲解 gtkmm 的方式，哪项说法与本章前言一致？",
               "options": [
-                "覆盖每个类的完整 API 参考",
-                "讲关键概念，完整 API 信息需顺着链接查阅参考文档",
-                "只讲理论不讲用法",
-                "只面向初学者"
+                "逐类讲解每个类的完整 API，读完不必再查参考文档",
+                "讲关键概念与主要部件，完整 API 查参考文档",
+                "从 C++ 语言基础讲起，适合还没写过 C++ 程序的读者",
+                "只讲界面设计理念，不涉及类、构造函数这些具体细节"
               ],
               "answer": 1,
+              "explanation": "本书解释 gtkmm C++ API 的关键概念、介绍主要部件，会提到类、构造函数与方法但不深入细节，完整 API 信息要顺着链接进参考文档；同时本书假定读者已有良好的 C++ 基础，不从语言教起。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-this-book",
-                  "note": "出处：sec-this-book 第 1 段（本书说明关键概念，API 细节看参考文档）"
+                  "note": "sec-this-book 第 1 段：关键概念 + 参考文档链接；第 2 段：假定已懂 C++"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "intro-gtkmm-1",
+              "id": "intro-gtk-1",
               "page_ref": "sec-gtkmm",
-              "stem": "gtkmm 采用什么许可证？由此可以开发商业非自由软件吗？",
+              "stem": "公司打算用 gtkmm 开发一款闭源的商业软件，LGPL 许可下可以吗？",
               "options": [
-                "GPL；不可以",
-                "LGPL；可以，无需购买授权",
-                "MIT；可以",
-                "专有许可；不可以"
+                "不可以：用 gtkmm 写的软件必须开源，否则构成侵权",
+                "可以，但要先向 GTK 项目购买一份商业开发许可",
+                "可以：LGPL 下商业非自由软件也能开发，无需购买授权",
+                "不可以：gtkmm 只许可用于自由软件，商业用途未获授权"
               ],
-              "answer": 1,
+              "answer": 2,
+              "explanation": "原文：gtkmm 以 LGPL 许可发布，因此可以开发开放软件、自由软件乃至商业非自由软件（commercial non-free software），不用购买许可。「LGPL 等于必须开源」是把 GPL 的强传染要求错套到 LGPL 上。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-gtkmm",
-                  "note": "出处：sec-gtkmm 第 1 段（LGPL，开放/自由/商业非自由软件皆可）"
+                  "note": "sec-gtkmm 第 1 段：LGPL；open / free / commercial non-free 均可"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "intro-gtkmm-2",
+              "id": "intro-gtk-2",
               "page_ref": "sec-gtkmm",
-              "stem": "官网给出的「gtkmm 优于直接用 GTK C API」的理由中，不正确的是？",
+              "stem": "对照下面两种创建按钮的写法，本章说 gtkmm 这一侧的好处是？",
+              "code": "// GTK（C API）\nGtkWidget* button = gtk_button_new_with_label(\"OK\");\n// gtkmm\nGtk::Button m_button(\"OK\");",
+              "lang": "cpp",
               "options": [
-                "能用上封装、派生、多态等 C++ 常规技术",
-                "类型安全更强，更多错误在编译期暴露",
-                "gtkmm 不需要指针，GTK C 全靠指针",
-                "gtkmm 自带内存池，性能必然更高"
+                "部件可用成员实例，内存管理更简单",
+                "完全不用关心生命周期，gtkmm 部件永不销毁",
+                "成员实例比指针执行更快，C API 因此性能差",
+                "C API 其实也能用成员实例，差别只在命名风格"
+              ],
+              "answer": 0,
+              "explanation": "原文：GTK C 的部件全部靠指针处理；gtkmm 允许把部件用作成员实例，从而简化内存管理，而 C++ 程序员本就应尽量少用指针。说的是管理更简单，不是「零生命周期」，也没有性能高低的说法。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-gtkmm",
+                  "note": "sec-gtkmm why use gtkmm 列表：member instances / pointers 一条"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "intro-gtk-3",
+              "page_ref": "sec-gtkmm",
+              "stem": "本章比较 gtkmm 与 Qt 时，说两者实现「信号」的方式差在哪？",
+              "options": [
+                "gtkmm 靠预处理宏生成信号，Qt 用的是编译器扩展",
+                "两家都修改了 C++ 语言，只是引入的关键字不一样",
+                "两家都没改语言，信号机制只是普通虚函数调用",
+                "gtkmm 用标准 C++ 提供信号，没有改语言"
               ],
               "answer": 3,
+              "explanation": "原文：Trolltech 为了提供信号修改了 C++ 语言本身，导致 Qt 类难以与非 Qt 类配合使用；gtkmm 不改语言，用标准 C++ 就实现了信号。误解方向是把信号当成语言魔法或普通虚函数，而 gtkmm 的做法恰恰是「不特殊」。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-gtkmm",
-                  "note": "出处：why-use-gtkmm 一节（无「性能必然更高」的说法）"
-                }
-              ]
-            },
-            {
-              "type": "quiz",
-              "id": "intro-gtkmm-3",
-              "page_ref": "sec-gtkmm",
-              "stem": "gtkmm 与 Qt 的关键区别之一是：Qt 修改了 C++ 语言本身来提供信号，gtkmm 则如何实现信号？",
-              "options": [
-                "同样修改了语言",
-                "用标准 C++（libsigc++）实现，不改语言",
-                "用 C 预处理函数宏生成",
-                "靠编译器扩展"
-              ],
-              "answer": 1,
-              "source_refs": [
-                {
-                  "relation": "adapted",
-                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
-                  "locator": "官方节页 sec-gtkmm",
-                  "note": "出处：gtkmm-vs-qt 一节"
-                }
-              ]
-            },
-            {
-              "type": "quiz",
-              "id": "intro-cpp-1",
-              "page_ref": "sec-cpp-resources",
-              "stem": "「C++ reference」站点提供的是什么？",
-              "options": [
-                "C++ 招聘信息",
-                "C 与 C++ 标准的便捷查阅版",
-                "编译器下载",
-                "GTK 教程"
-              ],
-              "answer": 1,
-              "source_refs": [
-                {
-                  "relation": "adapted",
-                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
-                  "locator": "官方节页 sec-cpp-resources",
-                  "note": "出处：sec-cpp-resources 列表第 2 项"
+                  "note": "sec-gtkmm gtkmm compared to Qt 末段：modified the C++ language / standard C++"
                 }
               ]
             }
@@ -156,25 +141,49 @@
       ],
       "checkpoint": [
         {
-          "id": "intro-cp",
-          "stem": "（综合) 下列关于 gtkmm 定位的说法，最准确的是？",
+          "id": "intro-cp-1",
+          "stem": "想在程序里定制按钮的行为。关于「派生自己的部件」，本章怎么说 gtkmm 与 GTK C 的差别？",
+          "code": "class MyButton : public Gtk::Button {\npublic:\n  void do_something();  // 定制行为\n};",
+          "lang": "cpp",
           "options": [
-            "原生 C++ 工具集，接口实现一体",
-            "C 工具集的 C++ 包装，接口与实现分离使 API 更清晰、生态更广",
-            "Qt 的一个分支",
-            "只支持 Linux 的绑定库"
+            "两边都很常见，GTK C 里派生新部件同样是日常操作",
+            "gtkmm 里是常规继承；GTK C 里复杂易错，几乎没人做",
+            "gtkmm 不允许继承内置部件，只能通过组合来定制",
+            "派生出的部件无法放进容器，界面上显示不出来"
           ],
           "answer": 1,
+          "explanation": "原文：继承可用来派生新部件；而在 GTK C 代码里派生新部件如此复杂易错，几乎没有 C 程序员这么做，但派生正是 C++ 程序员的基本面向对象手法。gtkmm 没有禁止继承内置部件。",
           "source_refs": [
             {
               "relation": "adapted",
               "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
               "locator": "官方节页 sec-gtkmm",
-              "note": "综合 gtkmm-is-a-wrapper 一节"
+              "note": "综合 sec-gtkmm why use gtkmm 列表：inheritance / derive new widgets 一条"
+            }
+          ]
+        },
+        {
+          "id": "intro-cp-2",
+          "stem": "「gtkmm 不是原生 C++ 工具集，而是 C 工具集的 C++ 包装」。按本章，接口与实现的分离带来什么好处？",
+          "options": [
+            "省去了重复劳动，gtkmm 不必跟随 GTK 的发布节奏",
+            "降低了学习门槛，C 程序员能直接读懂 gtkmm 代码",
+            "gtkmm 呈现清晰 API；GTK 多语言共享生态",
+            "属于历史包袱，gtkmm 终将重写为原生 C++ 工具集"
+          ],
+          "answer": 2,
+          "explanation": "原文说这种分离有好处：gtkmm 开发者把大部分时间花在如何呈现最清晰的 API 上，不为晦涩的技术细节妥协；GTK 则享有比语言专属工具集更广的用户基础——实现者、开发者、测试者、用户都更多。分离不是为了让 gtkmm 脱离 GTK 独立演进。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-gtkmm",
+              "note": "综合 sec-gtkmm gtkmm is a wrapper 一节"
             }
           ]
         }
-      ]
+      ],
+      "quiz_standard": 2
     },
     {
       "id": "chapter-installation",
