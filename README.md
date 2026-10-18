@@ -13,6 +13,7 @@
 | [`programming/c-plus-plus`](programming/c-plus-plus) | C++ 教程 | Tauri 2 + React |
 | [`programming/chinese-chess`](programming/chinese-chess) | 中国象棋（教程壳 + gtkmm 棋盘，ADR 0151） | Tauri 2 + React |
 | [`programming/snake`](programming/snake) | 贪吃蛇（教程壳 + raylib 蛇，ADR 0153） | Tauri 2 + React |
+| [`programming/pocket-cube-solver`](programming/pocket-cube-solver) | 二阶魔方（教程壳 + gtkmm 魔方，层先法到最短解，ADR 0169） | Tauri 2 + React |
 | [`programming/machine`](programming/machine) | C 与机器（C 与汇编） | Qt Quick / QML、CMake |
 | [`postgraduate/data-structures`](postgraduate/data-structures) | 数据结构（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |
 | [`postgraduate/algorithms`](postgraduate/algorithms) | 算法设计（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |
@@ -47,7 +48,7 @@
 | [`mentor/competitions`](mentor/competitions) | 赛历（竞赛清单与参赛资格，图谱/参考类，ADR 0114、0144） | Tauri 2 + Vite |
 | [`mentor/jiuzhou`](mentor/jiuzhou) | 九州（中国历史地理图鉴，「兴趣」圈，ADR 0156） | Tauri 2 + React + MapLibre |
 | [`programming/design-patterns`](programming/design-patterns) | 设计模式与程序组织（「程序设计」圈，ADR 0121） | Tauri 2 + Vite |
-| [`practice/pocket_cube`](practice/pocket_cube) | 2 阶魔方 | GTK4 / gtkmm |
+| [`practice/pocket_cube`](practice/pocket_cube) | 2 阶魔方（旧版，供参考；新版见 pocket-cube-solver） | GTK4 / gtkmm |
 | [`practice/nas_admin`](practice/nas_admin) | 驾考中心服务后台 | Flask-AppBuilder |
 | [`practice/c-gui-lab`](practice/c-gui-lab) | C 语言 GUI 框架对比实验室 | Electron + GTK/ImGui/LVGL |
 | [`practice/earth`](practice/earth) | 地球（真实比例的地球分层 3D 可视化，ADR 0128） | Tauri 2 + React + Three.js |

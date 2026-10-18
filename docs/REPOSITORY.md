@@ -19,6 +19,7 @@ programming/<id>/ 程序设计圈：语言、系统与程序组织的课程（AD
                      专题（原素材坑转正 ADR 0103，去挂靠 ADR 0121）
   chinese-chess/ 中国象棋（Tauri 2 + React 教程壳，棋盘是 gtkmm；ADR 0151）
   snake/ 贪吃蛇（Tauri 2 + React 教程壳，蛇是 raylib；ADR 0153）
+  pocket-cube-solver/ 二阶魔方（Tauri 2 + React 教程壳，魔方是 gtkmm；从层先法写出能解任意状态的程序；ADR 0169）
 artificial-intelligence/<id>/ 人工智能圈：人工智能课程路线的四门（ADR 0120、0122、0150）
   machine-learning/ 机器学习基础（Tauri 2 + React）——「人工智能」圈；经典 ML 直觉与 sklearn 实战（ADR 0120、0122）
   deep-learning/ 深度学习与 PyTorch（Tauri 2 + React）——「人工智能」圈；从张量到 Transformer（ADR 0120、0122）
@@ -48,7 +49,7 @@ postgraduate/<id>/ 考研应用：408 与考研公共课，目录与「考研」
   mathematics/ 数学学习（Tauri）
   ascent/      拾阶（英语师范生四六级、专四专八，Tauri）
 practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体系（ADR 0060）
-  pocket_cube/ 2 阶魔方（GTK4 / gtkmm）
+  pocket_cube/ 2 阶魔方（GTK4 / gtkmm）；旧版，供参考，学习应用版见 programming/pocket-cube-solver（ADR 0169）
   nas_admin/   驾考中心服务后台（Flask-AppBuilder，部署在软路由）
   c-gui-lab/   C 语言 GUI 框架对比实验室（Electron 母体收编各框架官方 demo）
   earth/       地球（Tauri 2 + React + Three.js）——真实比例的地球分层 3D 可视化；
@@ -103,6 +104,7 @@ archive/       历史归档，不参与构建
 | `c-plus-plus` | C++ 教程（原 `cpp`） | `athena-c-plus-plus` | `cpp.` |
 | `chinese-chess` | 中国象棋（gtkmm 棋盘，教程壳 Tauri；ADR 0151） | `athena-chinese-chess` | `chess.` |
 | `snake` | 贪吃蛇（raylib 蛇，教程壳 Tauri；ADR 0153） | `athena-snake` | `snake.` |
+| `pocket-cube-solver` | 二阶魔方（gtkmm 魔方，教程壳 Tauri；ADR 0169） | `athena-pocket-cube-solver` | `cube.` |
 | `machine` | C 与机器（原 `c`，ADR 0005） | `athena-machine` | `machine.` |
 | `data-structures` | 数据结构（原 `dsa` 拆出，ADR 0108） | `athena-data-structures` | `ds.` |
 | `algorithms` | 算法设计（原 `dsa` 拆出，ADR 0108） | `athena-algorithms` | `algo.` |
@@ -152,7 +154,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   `cs408`（ADR 0116）/ `organization`（ADR 0115）/ `gtkmm` / `linux`（ADR 0109）/
   `python`（ADR 0120）及其人工智能课程路线的四门（`machine-learning` / `deep-learning` /
   `llm-app` / `llm-finetune`，ADR 0120、0122）/ `edge-ai`（ADR 0152）/
-  `design-patterns`（ADR 0121）/ `chinese-chess`（ADR 0151）/ `snake`（ADR 0153）/ 软考实践子课程（ADR 0103：`database` / `os` / `network` /
+  `design-patterns`（ADR 0121）/ `chinese-chess`（ADR 0151）/ `snake`（ADR 0153）/ `pocket-cube-solver`（ADR 0169）/ 软考实践子课程（ADR 0103：`database` / `os` / `network` /
   `firmware` / `microcontroller` / `rtos`，ADR 0106）。驾考 `driver`、软件设计师
   `software`、嵌入式系统设计师 `embedded` 同样是学习应用，目录在仓库根
   `certification/`（ADR 0142、0147）。
