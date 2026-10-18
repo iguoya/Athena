@@ -115,7 +115,11 @@ fn state_loop(app: AppHandle) {
             drop(cv.wait(guard).unwrap_or_else(|p| p.into_inner()));
             continue;
         }
-        let apps = CATALOG.lock().unwrap_or_else(|p| p.into_inner()).apps.clone();
+        let apps = CATALOG
+            .lock()
+            .unwrap_or_else(|p| p.into_inner())
+            .apps
+            .clone();
         if !apps.is_empty() {
             let states = cache::states(&apps);
             let rows: Vec<StateRow> = apps
@@ -126,7 +130,10 @@ fn state_loop(app: AppHandle) {
                     state: state.key().to_string(),
                 })
                 .collect();
-            let sig: Vec<(String, String)> = rows.iter().map(|row| (row.id.clone(), row.state.clone())).collect();
+            let sig: Vec<(String, String)> = rows
+                .iter()
+                .map(|row| (row.id.clone(), row.state.clone()))
+                .collect();
             if last.as_ref() != Some(&sig) {
                 last = Some(sig);
                 let _ = app.emit("launcher://states", &rows);

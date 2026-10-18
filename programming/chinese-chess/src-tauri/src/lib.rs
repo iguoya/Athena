@@ -101,9 +101,9 @@ fn run_tool(dir: &Path, program: &str, args: &[&str]) -> Result<String, String> 
     let mut cmd = Command::new(program);
     cmd.args(args).current_dir(dir);
     with_toolchain(&mut cmd);
-    let output = cmd
-        .output()
-        .map_err(|e| format!("无法启动 {program}：{e}。Windows 上需要 MSYS2 mingw64 的 meson 与 gtkmm"))?;
+    let output = cmd.output().map_err(|e| {
+        format!("无法启动 {program}：{e}。Windows 上需要 MSYS2 mingw64 的 meson 与 gtkmm")
+    })?;
     let mut text = String::new();
     text.push_str(&String::from_utf8_lossy(&output.stdout));
     text.push_str(&String::from_utf8_lossy(&output.stderr));
@@ -210,10 +210,17 @@ fn visual_studio_2022() -> Result<PathBuf, String> {
     if !cfg!(windows) {
         return Err("在 VS 2022 中打开只提供给 Windows。".into());
     }
-    let vswhere = PathBuf::from(r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe");
+    let vswhere =
+        PathBuf::from(r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe");
     if vswhere.is_file() {
         let output = Command::new(&vswhere)
-            .args(["-latest", "-version", "[17.0,18.0)", "-property", "productPath"])
+            .args([
+                "-latest",
+                "-version",
+                "[17.0,18.0)",
+                "-property",
+                "productPath",
+            ])
             .output()
             .map_err(|e| format!("无法运行 vswhere：{e}"))?;
         if output.status.success() {
@@ -291,9 +298,8 @@ fn open_in_visual_studio(chapter: String) -> Result<String, String> {
 fn restore_workspace(chapter: String) -> Result<String, String> {
     let dir = workspace_chapter(&chapter)?;
     if dir.exists() {
-        fs::remove_dir_all(&dir).map_err(|e| {
-            format!("还原失败，工作副本可能正被 VS 2022 占用：{e}")
-        })?;
+        fs::remove_dir_all(&dir)
+            .map_err(|e| format!("还原失败，工作副本可能正被 VS 2022 占用：{e}"))?;
     }
     let mut assets_reset = false;
     if uses_assets(&chapter) {
@@ -304,7 +310,10 @@ fn restore_workspace(chapter: String) -> Result<String, String> {
         }
     }
     if assets_reset {
-        Ok("这一章的工作副本和棋盘图副本都已删掉。下次在 VS 2022 中打开会重新从课程原件复制。".into())
+        Ok(
+            "这一章的工作副本和棋盘图副本都已删掉。下次在 VS 2022 中打开会重新从课程原件复制。"
+                .into(),
+        )
     } else {
         Ok("这一章的工作副本已删掉。下次在 VS 2022 中打开会重新从课程原件复制。".into())
     }
@@ -340,7 +349,11 @@ fn run_chapter_sync(id: String) -> Result<String, String> {
     with_toolchain(&mut cmd);
     cmd.spawn()
         .map_err(|e| format!("编译过了，但启动 {} 失败：{e}", exe.display()))?;
-    let where_from = if from_workspace { "工作副本" } else { "课程原件" };
+    let where_from = if from_workspace {
+        "工作副本"
+    } else {
+        "课程原件"
+    };
     Ok(format!("已启动 {exe_name}（{where_from}）"))
 }
 

@@ -62,7 +62,11 @@ pub fn load_config() -> Result<Config, String> {
     if let Ok(text) = std::fs::read_to_string(&path) {
         return serde_json::from_str(&text).map_err(|e| format!("{} 读不动：{e}", path.display()));
     }
-    let config = Config { endpoints: vec![DEFAULT_ENDPOINT.to_string()], user: 1, device: default_device() };
+    let config = Config {
+        endpoints: vec![DEFAULT_ENDPOINT.to_string()],
+        user: 1,
+        device: default_device(),
+    };
     std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     let text = serde_json::to_string_pretty(&config).map_err(|e| e.to_string())?;
     std::fs::write(&path, text).map_err(|e| e.to_string())?;
@@ -74,10 +78,17 @@ fn log(message: &str) {
     let Some(dir) = sync_dir() else { return };
     let _ = std::fs::create_dir_all(&dir);
     let path = dir.join("sync.log");
-    if std::fs::metadata(&path).map(|m| m.len() > 1_000_000).unwrap_or(false) {
+    if std::fs::metadata(&path)
+        .map(|m| m.len() > 1_000_000)
+        .unwrap_or(false)
+    {
         let _ = std::fs::rename(&path, dir.join("sync.log.1"));
     }
-    if let Ok(mut file) = std::fs::OpenOptions::new().create(true).append(true).open(path) {
+    if let Ok(mut file) = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(path)
+    {
         let _ = writeln!(file, "{} {message}", utc_stamp(SystemTime::now()));
     }
 }
@@ -174,11 +185,19 @@ impl HttpRemote {
             .timeout_connect(Duration::from_secs(2))
             .timeout(Duration::from_secs(20))
             .build();
-        Self { endpoints: config.endpoints.clone(), user: config.user, agent, active: 0 }
+        Self {
+            endpoints: config.endpoints.clone(),
+            user: config.user,
+            agent,
+            active: 0,
+        }
     }
 
     /// 按序试各端点：连不上就换下一个；连上了但服务端报错就如实返回，不换端点重试。
-    fn call(&mut self, make: impl Fn(&ureq::Agent, &str, &str) -> Result<ureq::Response, ureq::Error>) -> Result<ureq::Response, String> {
+    fn call(
+        &mut self,
+        make: impl Fn(&ureq::Agent, &str, &str) -> Result<ureq::Response, ureq::Error>,
+    ) -> Result<ureq::Response, String> {
         let user = self.user.to_string();
         let count = self.endpoints.len();
         let mut last = "没有配置任何端点".to_string();
@@ -204,7 +223,10 @@ impl Remote for HttpRemote {
     fn push(&mut self, app: &str, device: &str, rows: &[PushRow]) -> Result<(), String> {
         let body = json!({ "app": app, "device": device, "rows": rows });
         self.call(|agent, base, user| {
-            agent.post(&format!("{base}/push")).set("X-Athena-User", user).send_json(body.clone())
+            agent
+                .post(&format!("{base}/push"))
+                .set("X-Athena-User", user)
+                .send_json(body.clone())
         })
         .map(|_| ())
     }
@@ -219,7 +241,9 @@ impl Remote for HttpRemote {
                 .query("limit", &limit.to_string())
                 .call()
         })?;
-        response.into_json::<Page>().map_err(|e| format!("服务端响应读不懂：{e}"))
+        response
+            .into_json::<Page>()
+            .map_err(|e| format!("服务端响应读不懂：{e}"))
     }
 }
 
@@ -270,7 +294,9 @@ impl State {
             .conn
             .prepare_cached("SELECT hash, stamp, deleted, synced, data FROM row_state WHERE app=?1 AND tbl=?2 AND pk=?3")
             .map_err(|e| e.to_string())?;
-        let mut rows = stmt.query(params![app, tbl, pk]).map_err(|e| e.to_string())?;
+        let mut rows = stmt
+            .query(params![app, tbl, pk])
+            .map_err(|e| e.to_string())?;
         match rows.next().map_err(|e| e.to_string())? {
             None => Ok(None),
             Some(r) => Ok(Some(RowState {
@@ -284,12 +310,31 @@ impl State {
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn put(&self, app: &str, tbl: &str, pk: &str, hash: i64, stamp: &str, deleted: bool, synced: bool, data: Option<&str>) -> Result<(), String> {
+    fn put(
+        &self,
+        app: &str,
+        tbl: &str,
+        pk: &str,
+        hash: i64,
+        stamp: &str,
+        deleted: bool,
+        synced: bool,
+        data: Option<&str>,
+    ) -> Result<(), String> {
         self.conn
             .execute(
                 "INSERT OR REPLACE INTO row_state(app, tbl, pk, hash, stamp, deleted, synced, data)
                  VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
-                params![app, tbl, pk, hash, stamp, deleted as i64, synced as i64, data],
+                params![
+                    app,
+                    tbl,
+                    pk,
+                    hash,
+                    stamp,
+                    deleted as i64,
+                    synced as i64,
+                    data
+                ],
             )
             .map(|_| ())
             .map_err(|e| e.to_string())
@@ -346,20 +391,29 @@ impl State {
 
     fn cursor(&self, app: &str) -> i64 {
         self.conn
-            .query_row("SELECT since FROM cursor WHERE app=?1", params![app], |r| r.get(0))
+            .query_row("SELECT since FROM cursor WHERE app=?1", params![app], |r| {
+                r.get(0)
+            })
             .unwrap_or(0)
     }
 
     fn set_cursor(&self, app: &str, since: i64) -> Result<(), String> {
         self.conn
-            .execute("INSERT OR REPLACE INTO cursor(app, since) VALUES (?1, ?2)", params![app, since])
+            .execute(
+                "INSERT OR REPLACE INTO cursor(app, since) VALUES (?1, ?2)",
+                params![app, since],
+            )
             .map(|_| ())
             .map_err(|e| e.to_string())
     }
 
     fn pending(&self, app: &str) -> i64 {
         self.conn
-            .query_row("SELECT COUNT(*) FROM row_state WHERE app=?1 AND synced=0", params![app], |r| r.get(0))
+            .query_row(
+                "SELECT COUNT(*) FROM row_state WHERE app=?1 AND synced=0",
+                params![app],
+                |r| r.get(0),
+            )
             .unwrap_or(0)
     }
 }
@@ -384,7 +438,9 @@ fn table_info(db: &Connection, tbl: &str, spec: &TableSpec) -> Result<Option<Tab
     if !valid_identifier(tbl) {
         return Err(format!("表名「{tbl}」不合法"));
     }
-    let mut stmt = db.prepare(&format!("PRAGMA table_info({})", quote(tbl))).map_err(|e| e.to_string())?;
+    let mut stmt = db
+        .prepare(&format!("PRAGMA table_info({})", quote(tbl)))
+        .map_err(|e| e.to_string())?;
     let columns: Vec<(String, i64)> = stmt
         .query_map([], |r| Ok((r.get::<_, String>(1)?, r.get::<_, i64>(5)?)))
         .map_err(|e| e.to_string())?
@@ -394,7 +450,8 @@ fn table_info(db: &Connection, tbl: &str, spec: &TableSpec) -> Result<Option<Tab
         return Ok(None);
     }
     let all_cols: Vec<String> = columns.iter().map(|(name, _)| name.clone()).collect();
-    let mut primary: Vec<(String, i64)> = columns.iter().filter(|(_, pk)| *pk > 0).cloned().collect();
+    let mut primary: Vec<(String, i64)> =
+        columns.iter().filter(|(_, pk)| *pk > 0).cloned().collect();
     primary.sort_by_key(|(_, pk)| *pk);
     let primary: Vec<String> = primary.into_iter().map(|(name, _)| name).collect();
     let key = if spec.key.is_empty() {
@@ -406,12 +463,17 @@ fn table_info(db: &Connection, tbl: &str, spec: &TableSpec) -> Result<Option<Tab
         spec.key.clone()
     };
     if key.is_empty() {
-        return Err(format!("表 {tbl} 没有主键，app.json 的 progress.tables.{tbl}.key 必须写"));
+        return Err(format!(
+            "表 {tbl} 没有主键，app.json 的 progress.tables.{tbl}.key 必须写"
+        ));
     }
     // 业务键之外的主键列（典型是自增 id）只在本机有意义：各台机器的 id 会撞号，
     // 一旦随行传过去再写进来，`INSERT OR REPLACE` 会盖掉本机另一条记录。所以它既不读、
     // 不传，也不写，新行的 id 由本机自己的自增分配。
-    let cols = all_cols.into_iter().filter(|c| key.contains(c) || !primary.contains(c)).collect();
+    let cols = all_cols
+        .into_iter()
+        .filter(|c| key.contains(c) || !primary.contains(c))
+        .collect();
     Ok(Some(TableInfo { cols, key }))
 }
 
@@ -420,14 +482,18 @@ fn blob_hex(bytes: &[u8]) -> String {
 }
 
 fn hex_blob(text: &str) -> Vec<u8> {
-    (0..text.len() / 2).filter_map(|i| u8::from_str_radix(&text[i * 2..i * 2 + 2], 16).ok()).collect()
+    (0..text.len() / 2)
+        .filter_map(|i| u8::from_str_radix(&text[i * 2..i * 2 + 2], 16).ok())
+        .collect()
 }
 
 fn to_json(value: ValueRef) -> Value {
     match value {
         ValueRef::Null => Value::Null,
         ValueRef::Integer(i) => json!(i),
-        ValueRef::Real(f) => serde_json::Number::from_f64(f).map(Value::Number).unwrap_or(Value::Null),
+        ValueRef::Real(f) => serde_json::Number::from_f64(f)
+            .map(Value::Number)
+            .unwrap_or(Value::Null),
         ValueRef::Text(t) => Value::String(String::from_utf8_lossy(t).into_owned()),
         ValueRef::Blob(b) => json!({ "$blob": blob_hex(b) }),
     }
@@ -474,13 +540,24 @@ fn row_object(info: &TableInfo, row: &rusqlite::Row) -> rusqlite::Result<Map<Str
 }
 
 fn pk_of(info: &TableInfo, object: &Map<String, Value>) -> String {
-    let key: Vec<&Value> = info.key.iter().map(|k| object.get(k).unwrap_or(&Value::Null)).collect();
+    let key: Vec<&Value> = info
+        .key
+        .iter()
+        .map(|k| object.get(k).unwrap_or(&Value::Null))
+        .collect();
     serde_json::to_string(&key).unwrap_or_default()
 }
 
 fn read_rows(db: &Connection, tbl: &str, info: &TableInfo) -> Result<Vec<LocalRow>, String> {
-    let columns = info.cols.iter().map(|c| quote(c)).collect::<Vec<_>>().join(", ");
-    let mut stmt = db.prepare(&format!("SELECT {columns} FROM {}", quote(tbl))).map_err(|e| e.to_string())?;
+    let columns = info
+        .cols
+        .iter()
+        .map(|c| quote(c))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let mut stmt = db
+        .prepare(&format!("SELECT {columns} FROM {}", quote(tbl)))
+        .map_err(|e| e.to_string())?;
     let rows = stmt
         .query_map([], |r| row_object(info, r))
         .map_err(|e| e.to_string())?
@@ -491,19 +568,43 @@ fn read_rows(db: &Connection, tbl: &str, info: &TableInfo) -> Result<Vec<LocalRo
         .map(|object| {
             let pk = pk_of(info, &object);
             let data = Value::Object(object);
-            LocalRow { pk, hash: fingerprint(&data.to_string()), data }
+            LocalRow {
+                pk,
+                hash: fingerprint(&data.to_string()),
+                data,
+            }
         })
         .collect())
 }
 
-fn read_one(db: &Connection, tbl: &str, info: &TableInfo, pk: &[Value]) -> Result<Option<LocalRow>, String> {
-    let columns = info.cols.iter().map(|c| quote(c)).collect::<Vec<_>>().join(", ");
-    let filter = info.key.iter().map(|k| format!("{} IS ?", quote(k))).collect::<Vec<_>>().join(" AND ");
+fn read_one(
+    db: &Connection,
+    tbl: &str,
+    info: &TableInfo,
+    pk: &[Value],
+) -> Result<Option<LocalRow>, String> {
+    let columns = info
+        .cols
+        .iter()
+        .map(|c| quote(c))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let filter = info
+        .key
+        .iter()
+        .map(|k| format!("{} IS ?", quote(k)))
+        .collect::<Vec<_>>()
+        .join(" AND ");
     let mut stmt = db
-        .prepare(&format!("SELECT {columns} FROM {} WHERE {filter}", quote(tbl)))
+        .prepare(&format!(
+            "SELECT {columns} FROM {} WHERE {filter}",
+            quote(tbl)
+        ))
         .map_err(|e| e.to_string())?;
     let mut found = stmt
-        .query_map(params_from_iter(pk.iter().map(to_sql)), |r| row_object(info, r))
+        .query_map(params_from_iter(pk.iter().map(to_sql)), |r| {
+            row_object(info, r)
+        })
         .map_err(|e| e.to_string())?;
     match found.next() {
         None => Ok(None),
@@ -511,7 +612,11 @@ fn read_one(db: &Connection, tbl: &str, info: &TableInfo, pk: &[Value]) -> Resul
             let object = object.map_err(|e| e.to_string())?;
             let pk = pk_of(info, &object);
             let data = Value::Object(object);
-            Ok(Some(LocalRow { pk, hash: fingerprint(&data.to_string()), data }))
+            Ok(Some(LocalRow {
+                pk,
+                hash: fingerprint(&data.to_string()),
+                data,
+            }))
         }
     }
 }
@@ -527,15 +632,35 @@ pub struct Outcome {
 }
 
 /// 扫描本地库，把改动记成待推送。返回新发现的改动数。
-fn scan(state: &State, app: &str, spec: &ProgressSpec, db: &Connection, stamp: &str) -> Result<usize, String> {
+fn scan(
+    state: &State,
+    app: &str,
+    spec: &ProgressSpec,
+    db: &Connection,
+    stamp: &str,
+) -> Result<usize, String> {
     let mut changed = 0;
     for (tbl, table) in &spec.tables {
-        let Some(info) = table_info(db, tbl, table)? else { continue };
+        let Some(info) = table_info(db, tbl, table)? else {
+            continue;
+        };
         let mut seen = HashSet::new();
         for row in read_rows(db, tbl, &info)? {
             let known = state.get(app, tbl, &row.pk)?;
-            if known.as_ref().map_or(true, |k| k.hash != row.hash || k.deleted) {
-                state.put(app, tbl, &row.pk, row.hash, stamp, false, false, Some(&row.data.to_string()))?;
+            if known
+                .as_ref()
+                .map_or(true, |k| k.hash != row.hash || k.deleted)
+            {
+                state.put(
+                    app,
+                    tbl,
+                    &row.pk,
+                    row.hash,
+                    stamp,
+                    false,
+                    false,
+                    Some(&row.data.to_string()),
+                )?;
                 changed += 1;
             }
             seen.insert(row.pk);
@@ -559,7 +684,13 @@ fn scan(state: &State, app: &str, spec: &ProgressSpec, db: &Connection, stamp: &
     Ok(changed)
 }
 
-fn push_pending(state: &State, remote: &mut dyn Remote, device: &str, app: &str, spec: &ProgressSpec) -> Result<usize, String> {
+fn push_pending(
+    state: &State,
+    remote: &mut dyn Remote,
+    device: &str,
+    app: &str,
+    spec: &ProgressSpec,
+) -> Result<usize, String> {
     let pending: Vec<(String, String, RowState)> = state
         .unsynced(app)?
         .into_iter()
@@ -579,7 +710,10 @@ fn push_pending(state: &State, remote: &mut dyn Remote, device: &str, app: &str,
                 .to_string(),
                 stamp: row.stamp.clone(),
                 deleted: row.deleted,
-                data: row.data.as_deref().and_then(|d| serde_json::from_str(d).ok()),
+                data: row
+                    .data
+                    .as_deref()
+                    .and_then(|d| serde_json::from_str(d).ok()),
             })
             .collect();
         remote.push(app, device, &rows)?;
@@ -619,8 +753,18 @@ fn pull_and_apply(
             if row.device == device {
                 continue;
             }
-            let Some(table) = spec.tables.get(&row.tbl) else { continue };
-            if apply(state, app, db, &row.tbl, table, &infos[row.tbl.as_str()], row)? {
+            let Some(table) = spec.tables.get(&row.tbl) else {
+                continue;
+            };
+            if apply(
+                state,
+                app,
+                db,
+                &row.tbl,
+                table,
+                &infos[row.tbl.as_str()],
+                row,
+            )? {
                 applied += 1;
             }
         }
@@ -635,7 +779,15 @@ fn pull_and_apply(
 }
 
 /// 把一行来自别处的记录落进本地库与旁路库。返回是否真的改了本地。
-fn apply(state: &State, app: &str, db: &Connection, tbl: &str, table: &TableSpec, info: &TableInfo, row: &PullRow) -> Result<bool, String> {
+fn apply(
+    state: &State,
+    app: &str,
+    db: &Connection,
+    tbl: &str,
+    table: &TableSpec,
+    info: &TableInfo,
+    row: &PullRow,
+) -> Result<bool, String> {
     let pk: Vec<Value> = serde_json::from_str(&row.pk).map_err(|e| format!("主键串读不懂：{e}"))?;
     if pk.len() != info.key.len() {
         return Ok(false);
@@ -654,7 +806,16 @@ fn apply(state: &State, app: &str, db: &Connection, tbl: &str, table: &TableSpec
                 // 本地原有的行第一次见到时也要登记，免得下一轮把它当本地新增推出去。
                 if known.is_none() {
                     if let Some(local) = read_one(db, tbl, info, &pk)? {
-                        state.put(app, tbl, &row.pk, local.hash, &row.stamp, false, true, Some(&local.data.to_string()))?;
+                        state.put(
+                            app,
+                            tbl,
+                            &row.pk,
+                            local.hash,
+                            &row.stamp,
+                            false,
+                            true,
+                            Some(&local.data.to_string()),
+                        )?;
                     }
                 }
                 return Ok(false);
@@ -662,19 +823,32 @@ fn apply(state: &State, app: &str, db: &Connection, tbl: &str, table: &TableSpec
         }
         TableMode::Lww => {
             // 本地更新（时间更晚）的不被覆盖。推送先于拉取，走到这里本地的待推送行已经交给服务端裁决过。
-            if known.as_ref().is_some_and(|k| k.stamp.as_str() > row.stamp.as_str()) {
+            if known
+                .as_ref()
+                .is_some_and(|k| k.stamp.as_str() > row.stamp.as_str())
+            {
                 return Ok(false);
             }
         }
     }
     if row.deleted {
-        let filter = info.key.iter().map(|k| format!("{} IS ?", quote(k))).collect::<Vec<_>>().join(" AND ");
-        db.execute(&format!("DELETE FROM {} WHERE {filter}", quote(tbl)), params_from_iter(pk.iter().map(to_sql)))
-            .map_err(|e| e.to_string())?;
+        let filter = info
+            .key
+            .iter()
+            .map(|k| format!("{} IS ?", quote(k)))
+            .collect::<Vec<_>>()
+            .join(" AND ");
+        db.execute(
+            &format!("DELETE FROM {} WHERE {filter}", quote(tbl)),
+            params_from_iter(pk.iter().map(to_sql)),
+        )
+        .map_err(|e| e.to_string())?;
         state.put(app, tbl, &row.pk, 0, &row.stamp, true, true, None)?;
         return Ok(true);
     }
-    let Some(Value::Object(data)) = &row.data else { return Ok(false) };
+    let Some(Value::Object(data)) = &row.data else {
+        return Ok(false);
+    };
     // 只写本地认识的列：对端版本更新、多出来的列直接忽略；键列以主键串为准。
     let mut values: Vec<(&String, SqlValue)> = Vec::new();
     for col in &info.cols {
@@ -684,35 +858,65 @@ fn apply(state: &State, app: &str, db: &Connection, tbl: &str, table: &TableSpec
             values.push((col, to_sql(value)));
         }
     }
-    let columns = values.iter().map(|(c, _)| quote(c)).collect::<Vec<_>>().join(", ");
+    let columns = values
+        .iter()
+        .map(|(c, _)| quote(c))
+        .collect::<Vec<_>>()
+        .join(", ");
     let marks = vec!["?"; values.len()].join(", ");
     db.execute(
-        &format!("INSERT OR REPLACE INTO {} ({columns}) VALUES ({marks})", quote(tbl)),
+        &format!(
+            "INSERT OR REPLACE INTO {} ({columns}) VALUES ({marks})",
+            quote(tbl)
+        ),
         params_from_iter(values.iter().map(|(_, v)| v)),
     )
     .map_err(|e| e.to_string())?;
     // 以写完之后本地真实的样子记指纹，而不是对端传来的 JSON：类型亲和、默认值都会让两者有出入。
     if let Some(local) = read_one(db, tbl, info, &pk)? {
-        state.put(app, tbl, &row.pk, local.hash, &row.stamp, false, true, Some(&local.data.to_string()))?;
+        state.put(
+            app,
+            tbl,
+            &row.pk,
+            local.hash,
+            &row.stamp,
+            false,
+            true,
+            Some(&local.data.to_string()),
+        )?;
     }
     Ok(true)
 }
 
 /// 同步一个应用：扫描 → 推送 →（允许时）拉取。
-pub fn sync_with(state: &State, remote: &mut dyn Remote, device: &str, app: &str, spec: &ProgressSpec, db_path: &Path, allow_pull: bool) -> Result<Outcome, String> {
+pub fn sync_with(
+    state: &State,
+    remote: &mut dyn Remote,
+    device: &str,
+    app: &str,
+    spec: &ProgressSpec,
+    db_path: &Path,
+    allow_pull: bool,
+) -> Result<Outcome, String> {
     if !db_path.is_file() {
-        return Ok(Outcome { note: Some("还没有本地库".into()), ..Outcome::default() });
+        return Ok(Outcome {
+            note: Some("还没有本地库".into()),
+            ..Outcome::default()
+        });
     }
     let stamp = utc_stamp(db_mtime(db_path));
     let mut outcome = Outcome::default();
     {
-        let reader = Connection::open_with_flags(db_path, OpenFlags::SQLITE_OPEN_READ_ONLY).map_err(|e| format!("打不开 {}：{e}", db_path.display()))?;
+        let reader = Connection::open_with_flags(db_path, OpenFlags::SQLITE_OPEN_READ_ONLY)
+            .map_err(|e| format!("打不开 {}：{e}", db_path.display()))?;
         outcome.changed = scan(state, app, spec, &reader, &stamp)?;
     }
     outcome.pushed = push_pending(state, remote, device, app, spec)?;
     if allow_pull {
         let writer = Connection::open(db_path).map_err(|e| e.to_string())?;
-        writer.busy_timeout(Duration::from_secs(5)).map_err(|e| e.to_string())?;
+        writer
+            .busy_timeout(Duration::from_secs(5))
+            .map_err(|e| e.to_string())?;
         outcome.pulled = pull_and_apply(state, remote, device, app, spec, &writer)?;
     }
     Ok(outcome)
@@ -724,7 +928,9 @@ pub fn sync_with(state: &State, remote: &mut dyn Remote, device: &str, app: &str
 /// 只在新位置还没有库时复制一次；旧文件原样留着，是否撤出 git 是后一步的事。
 /// 必须赶在应用第一次用新路径之前：应用见不到库会自己建一个空的，之后就不会再搬了。
 fn migrate_legacy(app: &App, spec: &ProgressSpec) {
-    let Some(target) = local_db_path(spec) else { return };
+    let Some(target) = local_db_path(spec) else {
+        return;
+    };
     let legacy = app.dir.join("progress").join("learning.db");
     match copy_once(&legacy, &target) {
         Ok(true) => log(&format!("{} 旧进度库已搬到 {}", app.id, target.display())),
@@ -747,7 +953,10 @@ fn copy_once(legacy: &Path, target: &Path) -> std::io::Result<bool> {
 
 /// 同步一组声明了 `progress` 的应用。`may_pull` 回答「这个应用此刻能不能写它的库」：
 /// 应用在跑就只推不拉，拉取要写它的库。
-fn sync_apps(targets: &[&App], may_pull: &dyn Fn(&App) -> bool) -> Vec<(String, Result<Outcome, String>)> {
+fn sync_apps(
+    targets: &[&App],
+    may_pull: &dyn Fn(&App) -> bool,
+) -> Vec<(String, Result<Outcome, String>)> {
     if targets.is_empty() {
         return Vec::new();
     }
@@ -762,7 +971,12 @@ fn sync_apps(targets: &[&App], may_pull: &dyn Fn(&App) -> bool) -> Vec<(String, 
     })();
     let (config, state) = match session {
         Ok(pair) => pair,
-        Err(message) => return targets.iter().map(|app| (app.id.clone(), Err(message.clone()))).collect(),
+        Err(message) => {
+            return targets
+                .iter()
+                .map(|app| (app.id.clone(), Err(message.clone())))
+                .collect()
+        }
     };
     let mut remote = HttpRemote::new(&config);
     targets
@@ -771,12 +985,21 @@ fn sync_apps(targets: &[&App], may_pull: &dyn Fn(&App) -> bool) -> Vec<(String, 
             let spec = app.progress.as_ref().expect("调用方已过滤");
             let result = match local_db_path(spec) {
                 None => Err("找不到用户数据目录".to_string()),
-                Some(db) => sync_with(&state, &mut remote, &config.device, &app.id, spec, &db, may_pull(app)),
+                Some(db) => sync_with(
+                    &state,
+                    &mut remote,
+                    &config.device,
+                    &app.id,
+                    spec,
+                    &db,
+                    may_pull(app),
+                ),
             };
             match &result {
-                Ok(o) if o.changed + o.pushed + o.pulled > 0 => {
-                    log(&format!("{} 同步完成：本地新改动 {}，推送 {}，拉取 {}", app.id, o.changed, o.pushed, o.pulled))
-                }
+                Ok(o) if o.changed + o.pushed + o.pulled > 0 => log(&format!(
+                    "{} 同步完成：本地新改动 {}，推送 {}，拉取 {}",
+                    app.id, o.changed, o.pushed, o.pulled
+                )),
                 Ok(_) => {}
                 Err(message) => log(&format!("{} 同步失败：{message}", app.id)),
             }
@@ -786,7 +1009,11 @@ fn sync_apps(targets: &[&App], may_pull: &dyn Fn(&App) -> bool) -> Vec<(String, 
 }
 
 /// 同步全部（或指定的）声明了 `progress` 的应用，命令行用。
-pub fn sync_all(apps: &[App], snapshot: &ProcessSnapshot, only: Option<&str>) -> Vec<(String, Result<Outcome, String>)> {
+pub fn sync_all(
+    apps: &[App],
+    snapshot: &ProcessSnapshot,
+    only: Option<&str>,
+) -> Vec<(String, Result<Outcome, String>)> {
     let targets: Vec<&App> = apps
         .iter()
         .filter(|app| app.progress.is_some() && only.map_or(true, |id| id == app.id))
@@ -818,7 +1045,10 @@ pub fn tick(apps: &[App], states: &[RunState]) {
             if app.progress.is_none() || *state != RunState::Stopped {
                 continue;
             }
-            if map.get(&app.id).map_or(true, |at| at.elapsed() >= TICK_INTERVAL) {
+            if map
+                .get(&app.id)
+                .map_or(true, |at| at.elapsed() >= TICK_INTERVAL)
+            {
                 map.insert(app.id.clone(), Instant::now());
                 due.push(app.clone());
             }
@@ -844,7 +1074,9 @@ pub fn status(apps: &[App]) -> Vec<String> {
         let spec = app.progress.as_ref().expect("已过滤");
         let db = local_db_path(spec);
         let present = db.as_ref().is_some_and(|p| p.is_file());
-        let (pending, cursor) = state.as_ref().map_or((0, 0), |s| (s.pending(&app.id), s.cursor(&app.id)));
+        let (pending, cursor) = state
+            .as_ref()
+            .map_or((0, 0), |s| (s.pending(&app.id), s.cursor(&app.id)));
         lines.push(format!(
             "{:<18} 本地库 {:<4} 待推送 {:<4} 游标 {}",
             app.id,
@@ -866,15 +1098,22 @@ pub fn backup(apps: &[App], dir: &Path) -> Result<PathBuf, String> {
     for app in apps.iter().filter(|a| a.progress.is_some()) {
         let spec = app.progress.as_ref().expect("已过滤");
         if let Some(db_path) = local_db_path(spec).filter(|p| p.is_file()) {
-            let db = Connection::open_with_flags(&db_path, OpenFlags::SQLITE_OPEN_READ_ONLY).map_err(|e| e.to_string())?;
+            let db = Connection::open_with_flags(&db_path, OpenFlags::SQLITE_OPEN_READ_ONLY)
+                .map_err(|e| e.to_string())?;
             let mut tables = Map::new();
             for (tbl, table) in &spec.tables {
                 if let Some(info) = table_info(&db, tbl, table)? {
-                    let rows: Vec<Value> = read_rows(&db, tbl, &info)?.into_iter().map(|r| r.data).collect();
+                    let rows: Vec<Value> = read_rows(&db, tbl, &info)?
+                        .into_iter()
+                        .map(|r| r.data)
+                        .collect();
                     tables.insert(tbl.clone(), Value::Array(rows));
                 }
             }
-            write_json(&target.join(format!("{}.local.json", app.id)), &Value::Object(tables))?;
+            write_json(
+                &target.join(format!("{}.local.json", app.id)),
+                &Value::Object(tables),
+            )?;
         }
         if remote_error.is_none() {
             let mut all = Vec::new();
@@ -897,13 +1136,19 @@ pub fn backup(apps: &[App], dir: &Path) -> Result<PathBuf, String> {
                 }
             }
             if remote_error.is_none() {
-                write_json(&target.join(format!("{}.central.json", app.id)), &Value::Array(all))?;
+                write_json(
+                    &target.join(format!("{}.central.json", app.id)),
+                    &Value::Array(all),
+                )?;
             }
         }
     }
     match remote_error {
         None => Ok(target),
-        Some(message) => Err(format!("本地库已备份到 {}，但中心库没拉到：{message}", target.display())),
+        Some(message) => Err(format!(
+            "本地库已备份到 {}，但中心库没拉到：{message}",
+            target.display()
+        )),
     }
 }
 
@@ -917,9 +1162,9 @@ fn write_json(path: &Path, value: &Value) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::cell::RefCell;
     use std::collections::BTreeMap;
     use std::rc::Rc;
-    use std::cell::RefCell;
 
     /// 内存里的假服务端：规则与 nas_admin/progress_api/store.py 一致。
     #[derive(Default)]
@@ -944,17 +1189,34 @@ mod tests {
                 // 存活 → 墓碑（原数据保留）；可变记录比 (时间, 设备)。
                 let (take, keep_data) = match s.rows.get(&key) {
                     None => (true, None),
-                    Some((cur, _)) if r.mode == "append" => (r.deleted && !cur.deleted, cur.data.clone()),
-                    Some((cur, _)) => ((r.stamp.as_str(), device) > (cur.stamp.as_str(), cur.device.as_str()), None),
+                    Some((cur, _)) if r.mode == "append" => {
+                        (r.deleted && !cur.deleted, cur.data.clone())
+                    }
+                    Some((cur, _)) => (
+                        (r.stamp.as_str(), device) > (cur.stamp.as_str(), cur.device.as_str()),
+                        None,
+                    ),
                 };
                 if take {
                     s.seq += 1;
                     let seq = s.seq;
-                    let data = if r.mode == "append" && r.deleted { keep_data } else { r.data.clone() };
+                    let data = if r.mode == "append" && r.deleted {
+                        keep_data
+                    } else {
+                        r.data.clone()
+                    };
                     s.rows.insert(
                         key,
                         (
-                            PullRow { tbl: r.tbl.clone(), pk: r.pk.clone(), data, stamp: r.stamp.clone(), deleted: r.deleted, device: device.to_string(), seq },
+                            PullRow {
+                                tbl: r.tbl.clone(),
+                                pk: r.pk.clone(),
+                                data,
+                                stamp: r.stamp.clone(),
+                                deleted: r.deleted,
+                                device: device.to_string(),
+                                seq,
+                            },
                             r.mode.clone(),
                         ),
                     );
@@ -968,20 +1230,44 @@ mod tests {
             if s.down {
                 return Err("路由器不可达".into());
             }
-            let mut found: Vec<PullRow> = s.rows.iter().filter(|(k, (r, _))| k.0 == app && r.seq > since).map(|(_, (r, _))| r.clone()).collect();
+            let mut found: Vec<PullRow> = s
+                .rows
+                .iter()
+                .filter(|(k, (r, _))| k.0 == app && r.seq > since)
+                .map(|(_, (r, _))| r.clone())
+                .collect();
             found.sort_by_key(|r| r.seq);
             let more = found.len() > limit;
             found.truncate(limit);
             let next = found.last().map_or(since, |r| r.seq);
-            Ok(Page { rows: found, next, more })
+            Ok(Page {
+                rows: found,
+                next,
+                more,
+            })
         }
     }
 
     fn spec() -> ProgressSpec {
         let mut tables = BTreeMap::new();
-        tables.insert("mastery".to_string(), TableSpec { mode: TableMode::Lww, key: vec![] });
-        tables.insert("attempts".to_string(), TableSpec { mode: TableMode::Append, key: vec!["qid".into(), "at".into()] });
-        ProgressSpec { dir: "athena-test".into(), tables }
+        tables.insert(
+            "mastery".to_string(),
+            TableSpec {
+                mode: TableMode::Lww,
+                key: vec![],
+            },
+        );
+        tables.insert(
+            "attempts".to_string(),
+            TableSpec {
+                mode: TableMode::Append,
+                key: vec!["qid".into(), "at".into()],
+            },
+        );
+        ProgressSpec {
+            dir: "athena-test".into(),
+            tables,
+        }
     }
 
     struct Device {
@@ -999,7 +1285,11 @@ mod tests {
                  CREATE TABLE attempts(id INTEGER PRIMARY KEY AUTOINCREMENT, qid TEXT, at TEXT, ok INTEGER);",
             )
             .unwrap();
-            Self { dir, state: State::memory(), name }
+            Self {
+                dir,
+                state: State::memory(),
+                name,
+            }
         }
         fn db(&self) -> Connection {
             Connection::open(self.dir.path().join("learning.db")).unwrap()
@@ -1009,13 +1299,27 @@ mod tests {
         }
         fn sync(&self, remote: &FakeRemote, pull: bool) -> Result<Outcome, String> {
             let mut r = remote.clone();
-            sync_with(&self.state, &mut r, self.name, "demo", &spec(), &self.path(), pull)
+            sync_with(
+                &self.state,
+                &mut r,
+                self.name,
+                "demo",
+                &spec(),
+                &self.path(),
+                pull,
+            )
         }
         fn level(&self, topic: &str) -> Option<i64> {
-            self.db().query_row("SELECT level FROM mastery WHERE topic=?1", [topic], |r| r.get(0)).ok()
+            self.db()
+                .query_row("SELECT level FROM mastery WHERE topic=?1", [topic], |r| {
+                    r.get(0)
+                })
+                .ok()
         }
         fn attempts(&self) -> i64 {
-            self.db().query_row("SELECT COUNT(*) FROM attempts", [], |r| r.get(0)).unwrap()
+            self.db()
+                .query_row("SELECT COUNT(*) FROM attempts", [], |r| r.get(0))
+                .unwrap()
         }
     }
 
@@ -1028,28 +1332,51 @@ mod tests {
     #[test]
     #[ignore = "需要本机起 nas_admin 的进度接口"]
     fn e2e_对真实服务端() {
-        let Ok(endpoint) = std::env::var("ATHENA_E2E_ENDPOINT") else { return };
-        let config = Config { endpoints: vec![endpoint], user: 77, device: "pc-a".into() };
+        let Ok(endpoint) = std::env::var("ATHENA_E2E_ENDPOINT") else {
+            return;
+        };
+        let config = Config {
+            endpoints: vec![endpoint],
+            user: 77,
+            device: "pc-a".into(),
+        };
         let (a, b) = (Device::new("pc-a"), Device::new("pc-b"));
         let mut ra = HttpRemote::new(&config);
         let mut rb = HttpRemote::new(&config);
-        a.db().execute("INSERT INTO mastery VALUES('c.1', 3, '中文备注')", []).unwrap();
-        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)", []).unwrap();
+        a.db()
+            .execute("INSERT INTO mastery VALUES('c.1', 3, '中文备注')", [])
+            .unwrap();
+        a.db()
+            .execute(
+                "INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)",
+                [],
+            )
+            .unwrap();
         let out = sync_with(&a.state, &mut ra, "pc-a", "e2e", &spec(), &a.path(), true).unwrap();
         assert_eq!(out.pushed, 2);
         let out = sync_with(&b.state, &mut rb, "pc-b", "e2e", &spec(), &b.path(), true).unwrap();
         assert_eq!(out.pulled, 2);
         assert_eq!(b.level("c.1"), Some(3));
-        let note: String = b.db().query_row("SELECT note FROM mastery WHERE topic='c.1'", [], |r| r.get(0)).unwrap();
+        let note: String = b
+            .db()
+            .query_row("SELECT note FROM mastery WHERE topic='c.1'", [], |r| {
+                r.get(0)
+            })
+            .unwrap();
         assert_eq!(note, "中文备注");
         // b 改、a 拉回
         std::thread::sleep(Duration::from_millis(30));
-        b.db().execute("UPDATE mastery SET level=8 WHERE topic='c.1'", []).unwrap();
+        b.db()
+            .execute("UPDATE mastery SET level=8 WHERE topic='c.1'", [])
+            .unwrap();
         sync_with(&b.state, &mut rb, "pc-b", "e2e", &spec(), &b.path(), true).unwrap();
         sync_with(&a.state, &mut ra, "pc-a", "e2e", &spec(), &a.path(), true).unwrap();
         assert_eq!(a.level("c.1"), Some(8));
         // 服务端校验失败要如实报错
-        let mut bad = HttpRemote::new(&Config { user: 0, ..config.clone() });
+        let mut bad = HttpRemote::new(&Config {
+            user: 0,
+            ..config.clone()
+        });
         assert!(bad.pull("e2e", 0, 10).is_err());
     }
 
@@ -1073,8 +1400,14 @@ mod tests {
     #[test]
     fn 时间戳格式() {
         assert_eq!(utc_stamp(UNIX_EPOCH), "1970-01-01T00:00:00.000Z");
-        assert_eq!(utc_stamp(UNIX_EPOCH + Duration::from_millis(1_760_317_323_123)), "2025-10-13T01:02:03.123Z");
-        assert_eq!(utc_stamp(UNIX_EPOCH + Duration::from_secs(951_782_400)), "2000-02-29T00:00:00.000Z");
+        assert_eq!(
+            utc_stamp(UNIX_EPOCH + Duration::from_millis(1_760_317_323_123)),
+            "2025-10-13T01:02:03.123Z"
+        );
+        assert_eq!(
+            utc_stamp(UNIX_EPOCH + Duration::from_secs(951_782_400)),
+            "2000-02-29T00:00:00.000Z"
+        );
     }
 
     #[test]
@@ -1082,8 +1415,15 @@ mod tests {
         let server = remote();
         let a = Device::new("pc-a");
         let b = Device::new("pc-b");
-        a.db().execute("INSERT INTO mastery VALUES('c.1', 3, 'hi')", []).unwrap();
-        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)", []).unwrap();
+        a.db()
+            .execute("INSERT INTO mastery VALUES('c.1', 3, 'hi')", [])
+            .unwrap();
+        a.db()
+            .execute(
+                "INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)",
+                [],
+            )
+            .unwrap();
         let out = a.sync(&server, true).unwrap();
         assert_eq!((out.changed, out.pushed), (2, 2));
 
@@ -1098,7 +1438,9 @@ mod tests {
         let server = remote();
         let a = Device::new("pc-a");
         let b = Device::new("pc-b");
-        a.db().execute("INSERT INTO mastery VALUES('c.1', 3, NULL)", []).unwrap();
+        a.db()
+            .execute("INSERT INTO mastery VALUES('c.1', 3, NULL)", [])
+            .unwrap();
         a.sync(&server, true).unwrap();
         b.sync(&server, true).unwrap();
         let again = b.sync(&server, true).unwrap();
@@ -1110,12 +1452,16 @@ mod tests {
         let server = remote();
         let a = Device::new("pc-a");
         let b = Device::new("pc-b");
-        a.db().execute("INSERT INTO mastery VALUES('c.1', 1, NULL)", []).unwrap();
+        a.db()
+            .execute("INSERT INTO mastery VALUES('c.1', 1, NULL)", [])
+            .unwrap();
         a.sync(&server, true).unwrap();
         b.sync(&server, true).unwrap();
         // b 随后改成 5。库文件的修改时间天然晚于 a 的那次，所以 b 的更晚。
         std::thread::sleep(Duration::from_millis(20));
-        b.db().execute("UPDATE mastery SET level=5 WHERE topic='c.1'", []).unwrap();
+        b.db()
+            .execute("UPDATE mastery SET level=5 WHERE topic='c.1'", [])
+            .unwrap();
         b.sync(&server, true).unwrap();
         a.sync(&server, true).unwrap();
         assert_eq!(a.level("c.1"), Some(5));
@@ -1126,9 +1472,24 @@ mod tests {
         let server = remote();
         let a = Device::new("pc-a");
         let b = Device::new("pc-b");
-        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)", []).unwrap();
-        b.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)", []).unwrap(); // 同一条事件两边都有
-        b.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q2', 't2', 0)", []).unwrap();
+        a.db()
+            .execute(
+                "INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)",
+                [],
+            )
+            .unwrap();
+        b.db()
+            .execute(
+                "INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)",
+                [],
+            )
+            .unwrap(); // 同一条事件两边都有
+        b.db()
+            .execute(
+                "INSERT INTO attempts(qid, at, ok) VALUES('q2', 't2', 0)",
+                [],
+            )
+            .unwrap();
         a.sync(&server, true).unwrap();
         b.sync(&server, true).unwrap();
         a.sync(&server, true).unwrap();
@@ -1142,8 +1503,18 @@ mod tests {
         let a = Device::new("pc-a");
         let b = Device::new("pc-b");
         // 两边各自的第 1 条记录自增 id 都是 1，但内容不同。
-        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('qa', 't1', 1)", []).unwrap();
-        b.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('qb', 't2', 0)", []).unwrap();
+        a.db()
+            .execute(
+                "INSERT INTO attempts(qid, at, ok) VALUES('qa', 't1', 1)",
+                [],
+            )
+            .unwrap();
+        b.db()
+            .execute(
+                "INSERT INTO attempts(qid, at, ok) VALUES('qb', 't2', 0)",
+                [],
+            )
+            .unwrap();
         a.sync(&server, true).unwrap();
         b.sync(&server, true).unwrap();
         a.sync(&server, true).unwrap();
@@ -1165,14 +1536,26 @@ mod tests {
         let server = remote();
         let a = Device::new("pc-a");
         let b = Device::new("pc-b");
-        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)", []).unwrap();
-        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q2', 't2', 1)", []).unwrap();
+        a.db()
+            .execute(
+                "INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)",
+                [],
+            )
+            .unwrap();
+        a.db()
+            .execute(
+                "INSERT INTO attempts(qid, at, ok) VALUES('q2', 't2', 1)",
+                [],
+            )
+            .unwrap();
         a.sync(&server, true).unwrap();
         b.sync(&server, true).unwrap();
         assert_eq!(b.attempts(), 2);
 
         // a 重置了 q1 的作答（应用里真的 DELETE），两边都同步一轮。
-        a.db().execute("DELETE FROM attempts WHERE qid='q1'", []).unwrap();
+        a.db()
+            .execute("DELETE FROM attempts WHERE qid='q1'", [])
+            .unwrap();
         a.sync(&server, true).unwrap();
         let out = b.sync(&server, true).unwrap();
         assert_eq!(out.pulled, 1);
@@ -1181,7 +1564,12 @@ mod tests {
 
         // 服务端没有真删：墓碑行还在，原数据也还在。
         let s = server.0.borrow();
-        let tomb = s.rows.values().map(|(r, _)| r).find(|r| r.deleted).expect("服务端应有一条墓碑");
+        let tomb = s
+            .rows
+            .values()
+            .map(|(r, _)| r)
+            .find(|r| r.deleted)
+            .expect("服务端应有一条墓碑");
         assert!(tomb.data.is_some());
     }
 
@@ -1190,12 +1578,22 @@ mod tests {
         let server = remote();
         let a = Device::new("pc-a");
         let b = Device::new("pc-b");
-        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)", []).unwrap();
+        a.db()
+            .execute(
+                "INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)",
+                [],
+            )
+            .unwrap();
         a.sync(&server, true).unwrap();
         b.sync(&server, true).unwrap();
         // b 离线期间 a 删了 q1 并同步；b 仍带着旧副本再同步一轮。
         a.db().execute("DELETE FROM attempts", []).unwrap();
-        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q2', 't2', 0)", []).unwrap();
+        a.db()
+            .execute(
+                "INSERT INTO attempts(qid, at, ok) VALUES('q2', 't2', 0)",
+                [],
+            )
+            .unwrap();
         a.sync(&server, true).unwrap();
         b.sync(&server, true).unwrap();
         a.sync(&server, true).unwrap();
@@ -1218,7 +1616,12 @@ mod tests {
         // 不能把中心已有的历史记录全标成墓碑。
         let server = remote();
         let a = Device::new("pc-a");
-        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)", []).unwrap();
+        a.db()
+            .execute(
+                "INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)",
+                [],
+            )
+            .unwrap();
         a.sync(&server, true).unwrap();
         a.db().execute("DELETE FROM attempts", []).unwrap();
         let out = a.sync(&server, false).unwrap();
@@ -1231,12 +1634,16 @@ mod tests {
         let server = remote();
         let a = Device::new("pc-a");
         let b = Device::new("pc-b");
-        a.db().execute("INSERT INTO mastery VALUES('c.1', 1, NULL)", []).unwrap();
+        a.db()
+            .execute("INSERT INTO mastery VALUES('c.1', 1, NULL)", [])
+            .unwrap();
         a.sync(&server, true).unwrap();
         b.sync(&server, true).unwrap();
         assert_eq!(b.level("c.1"), Some(1));
         std::thread::sleep(Duration::from_millis(20));
-        a.db().execute("DELETE FROM mastery WHERE topic='c.1'", []).unwrap();
+        a.db()
+            .execute("DELETE FROM mastery WHERE topic='c.1'", [])
+            .unwrap();
         a.sync(&server, true).unwrap();
         b.sync(&server, true).unwrap();
         assert_eq!(b.level("c.1"), None);
@@ -1247,7 +1654,9 @@ mod tests {
         let server = remote();
         server.0.borrow_mut().down = true;
         let a = Device::new("pc-a");
-        a.db().execute("INSERT INTO mastery VALUES('c.1', 2, NULL)", []).unwrap();
+        a.db()
+            .execute("INSERT INTO mastery VALUES('c.1', 2, NULL)", [])
+            .unwrap();
         assert!(a.sync(&server, true).is_err());
         assert_eq!(a.state.pending("demo"), 1);
         // 恢复之后补发。
@@ -1262,7 +1671,9 @@ mod tests {
         let server = remote();
         let a = Device::new("pc-a");
         let b = Device::new("pc-b");
-        a.db().execute("INSERT INTO mastery VALUES('c.1', 3, NULL)", []).unwrap();
+        a.db()
+            .execute("INSERT INTO mastery VALUES('c.1', 3, NULL)", [])
+            .unwrap();
         a.sync(&server, true).unwrap();
         let out = b.sync(&server, false).unwrap();
         assert_eq!(out.pulled, 0);
@@ -1274,10 +1685,15 @@ mod tests {
     fn 新机器较旧的本地库不覆盖中心里更新的进度() {
         let server = remote();
         let old = Device::new("pc-old");
-        old.db().execute("INSERT INTO mastery VALUES('c.1', 1, NULL)", []).unwrap();
+        old.db()
+            .execute("INSERT INTO mastery VALUES('c.1', 1, NULL)", [])
+            .unwrap();
         std::thread::sleep(Duration::from_millis(30));
         let fresh = Device::new("pc-new");
-        fresh.db().execute("INSERT INTO mastery VALUES('c.1', 9, NULL)", []).unwrap();
+        fresh
+            .db()
+            .execute("INSERT INTO mastery VALUES('c.1', 9, NULL)", [])
+            .unwrap();
         fresh.sync(&server, true).unwrap(); // 中心里是较新的 9
         old.sync(&server, true).unwrap(); // 较旧的库首次同步：它的 1 不能盖掉 9
         assert_eq!(old.level("c.1"), Some(9));
@@ -1287,8 +1703,18 @@ mod tests {
     fn 没有主键又没声明键列的表报错() {
         let dir = tempfile::tempdir().unwrap();
         let db = Connection::open(dir.path().join("x.db")).unwrap();
-        db.execute_batch("CREATE TABLE loose(a TEXT, b TEXT)").unwrap();
-        let err = table_info(&db, "loose", &TableSpec { mode: TableMode::Append, key: vec![] }).err().unwrap();
+        db.execute_batch("CREATE TABLE loose(a TEXT, b TEXT)")
+            .unwrap();
+        let err = table_info(
+            &db,
+            "loose",
+            &TableSpec {
+                mode: TableMode::Append,
+                key: vec![],
+            },
+        )
+        .err()
+        .unwrap();
         assert!(err.contains("没有主键"), "{err}");
     }
 
@@ -1296,13 +1722,24 @@ mod tests {
     fn 表还没建时不拉取也不前进游标() {
         let server = remote();
         let a = Device::new("pc-a");
-        a.db().execute("INSERT INTO mastery VALUES('c.1', 3, NULL)", []).unwrap();
+        a.db()
+            .execute("INSERT INTO mastery VALUES('c.1', 3, NULL)", [])
+            .unwrap();
         a.sync(&server, true).unwrap();
         let dir = tempfile::tempdir().unwrap();
         Connection::open(dir.path().join("learning.db")).unwrap(); // 空库，没有任何表
         let fresh = State::memory();
         let mut r = server.clone();
-        let out = sync_with(&fresh, &mut r, "pc-b", "demo", &spec(), &dir.path().join("learning.db"), true).unwrap();
+        let out = sync_with(
+            &fresh,
+            &mut r,
+            "pc-b",
+            "demo",
+            &spec(),
+            &dir.path().join("learning.db"),
+            true,
+        )
+        .unwrap();
         assert_eq!(out.pulled, 0);
         assert_eq!(fresh.cursor("demo"), 0);
     }

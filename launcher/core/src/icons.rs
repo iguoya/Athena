@@ -38,12 +38,16 @@ pub fn render_all(apps: &[App], check: bool, mut line: impl FnMut(&str)) -> Resu
             continue;
         }
         let Some(source) = &app.icon_file else {
-            return Err(format!("{}：声明了 icon.renders，却没有可读的 icon.file", app.id));
+            return Err(format!(
+                "{}：声明了 icon.renders，却没有可读的 icon.file",
+                app.id
+            ));
         };
         let tree = load(source)?;
         for (relative, spec) in &app.icon_renders {
             let target = app.dir.join(relative);
-            let bytes = encode(&tree, *spec).map_err(|error| format!("{}：{relative}：{error}", app.id))?;
+            let bytes =
+                encode(&tree, *spec).map_err(|error| format!("{}：{relative}：{error}", app.id))?;
             let current = std::fs::read(&target).ok();
             if current.as_deref() == Some(bytes.as_slice()) {
                 report.unchanged += 1;
@@ -68,7 +72,8 @@ pub fn render_all(apps: &[App], check: bool, mut line: impl FnMut(&str)) -> Resu
 }
 
 pub fn load(path: &Path) -> Result<usvg::Tree, String> {
-    let data = std::fs::read(path).map_err(|error| format!("读不到 {}：{error}", path.display()))?;
+    let data =
+        std::fs::read(path).map_err(|error| format!("读不到 {}：{error}", path.display()))?;
     usvg::Tree::from_data(&data, &usvg::Options::default())
         .map_err(|error| format!("{} 不是合法 SVG：{error}", path.display()))
 }
@@ -81,7 +86,8 @@ fn encode(tree: &usvg::Tree, spec: RenderSpec) -> Result<Vec<u8>, String> {
         RenderSpec::Ico => {
             let mut dir = ico::IconDir::new(ico::ResourceType::Icon);
             for size in ICO_SIZES {
-                let image = ico::IconImage::from_rgba_data(size, size, straight_rgba(render(tree, size)?));
+                let image =
+                    ico::IconImage::from_rgba_data(size, size, straight_rgba(render(tree, size)?));
                 // 每一帧都存 PNG：体积小，且 Windows Vista 起全认；BMP 帧在 256 以下
                 // 会被 ico crate 选上，alpha 边缘在深色任务栏上有毛边。
                 let entry = ico::IconDirEntry::encode_as_png(&image)
@@ -89,7 +95,8 @@ fn encode(tree: &usvg::Tree, spec: RenderSpec) -> Result<Vec<u8>, String> {
                 dir.add_entry(entry);
             }
             let mut out = Vec::new();
-            dir.write(&mut out).map_err(|error| format!("ICO 写出失败：{error}"))?;
+            dir.write(&mut out)
+                .map_err(|error| format!("ICO 写出失败：{error}"))?;
             Ok(out)
         }
         RenderSpec::Icns => {
@@ -107,7 +114,9 @@ fn encode(tree: &usvg::Tree, spec: RenderSpec) -> Result<Vec<u8>, String> {
                     .map_err(|error| format!("ICNS 帧 {size} 编码失败：{error}"))?;
             }
             let mut out = Vec::new();
-            family.write(&mut out).map_err(|error| format!("ICNS 写出失败：{error}"))?;
+            family
+                .write(&mut out)
+                .map_err(|error| format!("ICNS 写出失败：{error}"))?;
             Ok(out)
         }
     }
@@ -116,7 +125,8 @@ fn encode(tree: &usvg::Tree, spec: RenderSpec) -> Result<Vec<u8>, String> {
 /// 按边长 `size` 渲染，SVG 等比缩放后居中。每个尺寸都从矢量直接画，
 /// 不从大图缩小——16px 的任务栏图标这样才不糊。
 pub fn render(tree: &usvg::Tree, size: u32) -> Result<Pixmap, String> {
-    let mut pixmap = Pixmap::new(size, size).ok_or_else(|| format!("分配不了 {size}×{size} 位图"))?;
+    let mut pixmap =
+        Pixmap::new(size, size).ok_or_else(|| format!("分配不了 {size}×{size} 位图"))?;
     let source = tree.size();
     let scale = (size as f32 / source.width()).min(size as f32 / source.height());
     let transform = Transform::from_scale(scale, scale).pre_translate(
@@ -172,6 +182,9 @@ mod tests {
     #[test]
     fn rendering_is_deterministic() {
         // `--check` 靠逐字节比较判断过期，同一份 SVG 两次渲染必须一模一样。
-        assert_eq!(encode(&tree(), RenderSpec::Icns).unwrap(), encode(&tree(), RenderSpec::Icns).unwrap());
+        assert_eq!(
+            encode(&tree(), RenderSpec::Icns).unwrap(),
+            encode(&tree(), RenderSpec::Icns).unwrap()
+        );
     }
 }

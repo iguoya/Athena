@@ -56,11 +56,14 @@ fn is_safe_id(id: &str) -> bool {
     !id.is_empty()
         && id.len() <= 128
         && !id.contains("..")
-        && id.chars().all(|c| c.is_ascii_alphanumeric() || c == '.' || c == '-' || c == '_')
+        && id
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '.' || c == '-' || c == '_')
 }
 
 fn read_json(path: &Path) -> Result<Value, String> {
-    let text = fs::read_to_string(path).map_err(|e| format!("读 {} 失败：{}", path.display(), e))?;
+    let text =
+        fs::read_to_string(path).map_err(|e| format!("读 {} 失败：{}", path.display(), e))?;
     serde_json::from_str(&text).map_err(|e| format!("{} 不是合法 JSON：{}", path.display(), e))
 }
 
@@ -95,7 +98,12 @@ fn get_section(state: State<AppState>, section_id: String) -> Result<Value, Stri
     if !is_safe_id(&section_id) {
         return Err(format!("非法节引用：{section_id}"));
     }
-    read_json(&state.content_root.join("sections").join(format!("{section_id}.json")))
+    read_json(
+        &state
+            .content_root
+            .join("sections")
+            .join(format!("{section_id}.json")),
+    )
 }
 
 /// 一节的「试一试」（content/exercises/<id>.json，手写）；没有就返回 null。
@@ -104,7 +112,10 @@ fn get_exercises(state: State<AppState>, section_id: String) -> Result<Value, St
     if !is_safe_id(&section_id) {
         return Err(format!("非法节引用：{section_id}"));
     }
-    let path = state.content_root.join("exercises").join(format!("{section_id}.json"));
+    let path = state
+        .content_root
+        .join("exercises")
+        .join(format!("{section_id}.json"));
     if !path.is_file() {
         return Ok(Value::Null);
     }
@@ -117,17 +128,30 @@ fn get_figure(state: State<AppState>, fig_id: String) -> Result<Option<String>, 
     if !is_safe_id(&fig_id) {
         return Err(format!("非法图引用：{fig_id}"));
     }
-    let path = state.content_root.join("figures").join(format!("{fig_id}.svg"));
+    let path = state
+        .content_root
+        .join("figures")
+        .join(format!("{fig_id}.svg"));
     if !path.is_file() {
         return Ok(None);
     }
-    fs::read_to_string(&path).map(Some).map_err(|e| format!("读 {} 失败：{}", path.display(), e))
+    fs::read_to_string(&path)
+        .map(Some)
+        .map_err(|e| format!("读 {} 失败：{}", path.display(), e))
 }
 
 #[tauri::command]
-fn record_attempt(state: State<AppState>, knowledge_id: String, item_id: String, correct: bool) -> Result<(), String> {
+fn record_attempt(
+    state: State<AppState>,
+    knowledge_id: String,
+    item_id: String,
+    correct: bool,
+) -> Result<(), String> {
     let conn = open_store(&state.store_path)?;
-    let now = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_secs())
+        .unwrap_or(0);
     conn.execute(
         "INSERT INTO attempts (knowledge_id, item_id, correct, answered_at) VALUES (?1, ?2, ?3, ?4)",
         rusqlite::params![knowledge_id, item_id, correct as i64, now],
@@ -152,16 +176,27 @@ fn get_attempts(state: State<AppState>) -> Result<Vec<AttemptRow>, String> {
             })
         })
         .map_err(|e| e.to_string())?;
-    rows.collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())
+    rows.collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())
 }
 
 pub fn run() {
-    let state = AppState { content_root: content_root(), store_path: store_path() };
+    let state = AppState {
+        content_root: content_root(),
+        store_path: store_path(),
+    };
     let _ = open_store(&state.store_path);
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .manage(state)
-        .invoke_handler(tauri::generate_handler![get_curriculum, get_section, get_exercises, get_figure, record_attempt, get_attempts])
+        .invoke_handler(tauri::generate_handler![
+            get_curriculum,
+            get_section,
+            get_exercises,
+            get_figure,
+            record_attempt,
+            get_attempts
+        ])
         .run(tauri::generate_context!())
         .expect("error while running athena-octave-manual");
 }
@@ -175,7 +210,17 @@ mod tests {
         for ok in ["basic_operations", "calculus", "a.b_c-1"] {
             assert!(is_safe_id(ok), "{ok} 应当合法");
         }
-        for bad in ["", "..", "../x", "a/b", "a\\b", "/etc/passwd", "C:x", "a..b", "x y"] {
+        for bad in [
+            "",
+            "..",
+            "../x",
+            "a/b",
+            "a\\b",
+            "/etc/passwd",
+            "C:x",
+            "a..b",
+            "x y",
+        ] {
             assert!(!is_safe_id(bad), "{bad} 应当被拒绝");
         }
         assert!(!is_safe_id(&"a".repeat(129)), "过长的 id 应当被拒绝");
@@ -189,8 +234,14 @@ mod tests {
         // 后入库但答题时间更早的记录（同步拉回的旧记录）必须排在前面：「最近一次」按 answered_at 认。
         conn.execute("INSERT INTO attempts (knowledge_id,item_id,correct,answered_at) VALUES ('k','i',1,200)", []).unwrap();
         conn.execute("INSERT INTO attempts (knowledge_id,item_id,correct,answered_at) VALUES ('k','i',0,100)", []).unwrap();
-        let mut stmt = conn.prepare("SELECT answered_at FROM attempts ORDER BY answered_at, id").unwrap();
-        let got: Vec<u64> = stmt.query_map([], |r| r.get(0)).unwrap().map(|x| x.unwrap()).collect();
+        let mut stmt = conn
+            .prepare("SELECT answered_at FROM attempts ORDER BY answered_at, id")
+            .unwrap();
+        let got: Vec<u64> = stmt
+            .query_map([], |r| r.get(0))
+            .unwrap()
+            .map(|x| x.unwrap())
+            .collect();
         assert_eq!(got, vec![100, 200]);
         let _ = std::fs::remove_dir_all(&dir);
     }

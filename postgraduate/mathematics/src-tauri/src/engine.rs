@@ -30,7 +30,13 @@ pub struct EngineReply {
 
 impl EngineReply {
     fn failed(msg: impl Into<String>) -> Self {
-        Self { ok: false, verdict: None, note: None, error: Some(msg.into()), ms: None }
+        Self {
+            ok: false,
+            verdict: None,
+            note: None,
+            error: Some(msg.into()),
+            ms: None,
+        }
     }
 }
 
@@ -114,7 +120,12 @@ impl Engine {
 
         let stdin = child.stdin.take().ok_or("拿不到引擎的 stdin")?;
         let stdout = BufReader::new(child.stdout.take().ok_or("拿不到引擎的 stdout")?);
-        self.running = Some(Running { child, stdin, stdout, next_id: 1 });
+        self.running = Some(Running {
+            child,
+            stdin,
+            stdout,
+            next_id: 1,
+        });
         Ok(())
     }
 
@@ -128,7 +139,10 @@ impl Engine {
             .map_err(|e| format!("写给引擎失败：{e}"))?;
 
         let mut buf = String::new();
-        let n = r.stdout.read_line(&mut buf).map_err(|e| format!("读引擎回包失败：{e}"))?;
+        let n = r
+            .stdout
+            .read_line(&mut buf)
+            .map_err(|e| format!("读引擎回包失败：{e}"))?;
         if n == 0 {
             return Err("引擎关闭了输出".into());
         }
@@ -137,7 +151,12 @@ impl Engine {
 
     /// 发一条请求；进程死了就重启一次再试。**只重试一次**——
     /// 反复重启会把一个确定的故障拖成一串看起来随机的超时。
-    fn call(&mut self, app_root: &Path, op: &str, extra: serde_json::Value) -> Result<serde_json::Value, String> {
+    fn call(
+        &mut self,
+        app_root: &Path,
+        op: &str,
+        extra: serde_json::Value,
+    ) -> Result<serde_json::Value, String> {
         for attempt in 0..2 {
             if self.running.is_none() {
                 if let Err(e) = self.start(app_root) {

@@ -1,9 +1,9 @@
 // Athena GTKMM — 独立壳：内容路径、进度库、演示进程 spawn 与 JSON-RPC 转发。
 // 不依赖主程序或其他应用。壳要薄：业务文案与课树不进 Rust（应用 ADR 0001）。
 
+use base64::Engine as _;
 use serde::Serialize;
 use serde_json::{json, Value};
-use base64::Engine as _;
 use std::collections::HashMap;
 use std::ffi::OsString;
 use std::fs;
@@ -131,7 +131,11 @@ fn msys2_mingw64() -> Option<PathBuf> {
     for candidate in ["C:/msys64/mingw64", "D:/msys64/mingw64"] {
         let dir = PathBuf::from(candidate);
         if dir.join("bin").join("pkgconf.exe").is_file()
-            && dir.join("lib").join("pkgconfig").join("gtkmm-4.0.pc").is_file()
+            && dir
+                .join("lib")
+                .join("pkgconfig")
+                .join("gtkmm-4.0.pc")
+                .is_file()
         {
             return Some(dir);
         }
@@ -269,7 +273,11 @@ fn is_safe_id(id: &str) -> bool {
 /// 官方节页的段落快照（content/chapters/<章>/<节>.json，原文+逐段中文，
 /// 由 scripts/sync_upstream.py 生成——应用 ADR 0002 的段落级追踪）。
 #[tauri::command]
-fn get_page_content(state: State<AppState>, chapter_id: String, page_id: String) -> Result<String, String> {
+fn get_page_content(
+    state: State<AppState>,
+    chapter_id: String,
+    page_id: String,
+) -> Result<String, String> {
     if !is_safe_id(&chapter_id) || !is_safe_id(&page_id) {
         return Err(format!("非法章节引用：{chapter_id}/{page_id}"));
     }
@@ -294,9 +302,8 @@ fn get_po_units(state: State<AppState>, chapter_id: String) -> Result<Value, Str
         .join("po-units")
         .join(format!("{chapter_id}.json"));
     match fs::read_to_string(&path) {
-        Ok(text) => {
-            serde_json::from_str(&text).map_err(|error| format!("{} 不是合法 JSON：{}", path.display(), error))
-        }
+        Ok(text) => serde_json::from_str(&text)
+            .map_err(|error| format!("{} 不是合法 JSON：{}", path.display(), error)),
         Err(_) => Ok(Value::Null),
     }
 }
@@ -317,8 +324,8 @@ fn get_figure(state: State<AppState>, image_ref: String) -> Result<String, Strin
         return Err(format!("非法图片引用：{image_ref}"));
     }
     let path = state.content_root.join(&image_ref);
-    let bytes = fs::read(&path)
-        .map_err(|error| format!("读 {} 失败：{}", path.display(), error))?;
+    let bytes =
+        fs::read(&path).map_err(|error| format!("读 {} 失败：{}", path.display(), error))?;
     let mime = match path
         .extension()
         .and_then(|ext| ext.to_str())
@@ -345,8 +352,8 @@ fn record_attempt(
     item_id: String,
     correct: bool,
 ) -> Result<(), String> {
-    let connection = rusqlite::Connection::open(&state.store_path)
-        .map_err(|error| error.to_string())?;
+    let connection =
+        rusqlite::Connection::open(&state.store_path).map_err(|error| error.to_string())?;
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_secs())
@@ -363,11 +370,14 @@ fn record_attempt(
 /// 补正机制：按 item_id 列表清除作答记录（重置某章/节的测验与自评）。
 #[tauri::command]
 fn reset_attempts(state: State<AppState>, item_ids: Vec<String>) -> Result<(), String> {
-    let connection = rusqlite::Connection::open(&state.store_path)
-        .map_err(|error| error.to_string())?;
+    let connection =
+        rusqlite::Connection::open(&state.store_path).map_err(|error| error.to_string())?;
     for item_id in &item_ids {
         connection
-            .execute("DELETE FROM attempts WHERE item_id = ?1", rusqlite::params![item_id])
+            .execute(
+                "DELETE FROM attempts WHERE item_id = ?1",
+                rusqlite::params![item_id],
+            )
             .map_err(|error| error.to_string())?;
     }
     Ok(())
@@ -378,8 +388,8 @@ fn get_attempts(state: State<AppState>) -> Result<Vec<AttemptRow>, String> {
     if !state.store_path.exists() {
         return Ok(vec![]);
     }
-    let connection = rusqlite::Connection::open(&state.store_path)
-        .map_err(|error| error.to_string())?;
+    let connection =
+        rusqlite::Connection::open(&state.store_path).map_err(|error| error.to_string())?;
     let mut statement = connection
         .prepare("SELECT knowledge_id, item_id, correct, answered_at FROM attempts ORDER BY id")
         .map_err(|error| error.to_string())?;
@@ -400,15 +410,18 @@ fn get_attempts(state: State<AppState>) -> Result<Vec<AttemptRow>, String> {
 /// 学习者自译：保存一段自己的译文；text 为空即删除该条。
 #[tauri::command]
 fn save_my_translation(state: State<AppState>, sha: String, text: String) -> Result<(), String> {
-    let connection = rusqlite::Connection::open(&state.store_path)
-        .map_err(|error| error.to_string())?;
+    let connection =
+        rusqlite::Connection::open(&state.store_path).map_err(|error| error.to_string())?;
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_secs())
         .unwrap_or(0);
     if text.trim().is_empty() {
         connection
-            .execute("DELETE FROM my_translations WHERE sha = ?1", rusqlite::params![sha])
+            .execute(
+                "DELETE FROM my_translations WHERE sha = ?1",
+                rusqlite::params![sha],
+            )
             .map_err(|error| error.to_string())?;
     } else {
         connection
@@ -427,8 +440,8 @@ fn get_my_translations(state: State<AppState>) -> Result<Vec<MyTranslationRow>, 
     if !state.store_path.exists() {
         return Ok(vec![]);
     }
-    let connection = rusqlite::Connection::open(&state.store_path)
-        .map_err(|error| error.to_string())?;
+    let connection =
+        rusqlite::Connection::open(&state.store_path).map_err(|error| error.to_string())?;
     let mut statement = connection
         .prepare("SELECT sha, text, updated_at FROM my_translations ORDER BY updated_at")
         .map_err(|error| error.to_string())?;
@@ -448,10 +461,16 @@ fn get_my_translations(state: State<AppState>) -> Result<Vec<MyTranslationRow>, 
 #[tauri::command]
 fn launch_demo(app: AppHandle, state: State<AppState>, demo_id: String) -> LaunchResult {
     let Ok(manifest) = read_content(&state.content_root, "demos.json") else {
-        return LaunchResult { ok: false, message: "读 demos.json 失败".into() };
+        return LaunchResult {
+            ok: false,
+            message: "读 demos.json 失败".into(),
+        };
     };
     if find_entity(&manifest, &demo_id).is_none() {
-        return LaunchResult { ok: false, message: format!("清单里没有 {}", demo_id) };
+        return LaunchResult {
+            ok: false,
+            message: format!("清单里没有 {}", demo_id),
+        };
     }
     // build-native 在应用根（check.py 的 CMake 输出目录）。
     let app_root = state
@@ -480,7 +499,10 @@ fn launch_demo(app: AppHandle, state: State<AppState>, demo_id: String) -> Launc
     {
         Ok(child) => child,
         Err(error) => {
-            return LaunchResult { ok: false, message: format!("启动失败：{}", error) };
+            return LaunchResult {
+                ok: false,
+                message: format!("启动失败：{}", error),
+            };
         }
     };
 
@@ -502,7 +524,9 @@ fn launch_demo(app: AppHandle, state: State<AppState>, demo_id: String) -> Launc
         thread::spawn(move || {
             for line in BufReader::new(stdout).lines() {
                 let Ok(line) = line else { break };
-                let Ok(message) = serde_json::from_str::<Value>(&line) else { continue };
+                let Ok(message) = serde_json::from_str::<Value>(&line) else {
+                    continue;
+                };
                 let method = message.get("method").and_then(|v| v.as_str()).unwrap_or("");
                 let params = message.get("params").cloned().unwrap_or(json!({}));
                 let _ = emitter.emit(
@@ -514,7 +538,10 @@ fn launch_demo(app: AppHandle, state: State<AppState>, demo_id: String) -> Launc
     }
 
     state.demos.lock().unwrap().insert(demo_id.clone(), child);
-    LaunchResult { ok: true, message: format!("{} 已启动", demo_id) }
+    LaunchResult {
+        ok: true,
+        message: format!("{} 已启动", demo_id),
+    }
 }
 
 #[tauri::command]
@@ -538,13 +565,24 @@ fn stop_demo(state: State<AppState>, demo_id: String) -> Result<(), String> {
 fn launch_example(state: State<AppState>, example_id: String) -> LaunchResult {
     let manifest = match read_content(&state.content_root, "demos.json") {
         Ok(manifest) => manifest,
-        Err(_) => return LaunchResult { ok: false, message: "读 demos.json 失败".into() },
+        Err(_) => {
+            return LaunchResult {
+                ok: false,
+                message: "读 demos.json 失败".into(),
+            }
+        }
     };
     let Some(entity) = find_example(&manifest, &example_id) else {
-        return LaunchResult { ok: false, message: format!("清单里没有官方示例 {example_id}") };
+        return LaunchResult {
+            ok: false,
+            message: format!("清单里没有官方示例 {example_id}"),
+        };
     };
     let Some(build_target) = entity.get("build_target").and_then(|v| v.as_str()) else {
-        return LaunchResult { ok: false, message: format!("{example_id}: 缺 build_target") };
+        return LaunchResult {
+            ok: false,
+            message: format!("{example_id}: 缺 build_target"),
+        };
     };
     let app_root = state
         .content_root
@@ -555,7 +593,12 @@ fn launch_example(state: State<AppState>, example_id: String) -> LaunchResult {
         Ok(binary) => binary,
         Err(message) => return LaunchResult { ok: false, message },
     };
-    let source_dir = app_root.join(entity.get("source_dir").and_then(|v| v.as_str()).unwrap_or(""));
+    let source_dir = app_root.join(
+        entity
+            .get("source_dir")
+            .and_then(|v| v.as_str())
+            .unwrap_or(""),
+    );
     let spawned = native_env(
         Command::new(&binary)
             .current_dir(&source_dir)
@@ -565,20 +608,32 @@ fn launch_example(state: State<AppState>, example_id: String) -> LaunchResult {
     )
     .spawn();
     match spawned {
-        Ok(_) => LaunchResult { ok: true, message: format!("{example_id} 已启动") },
-        Err(error) => LaunchResult { ok: false, message: format!("启动失败：{error}") },
+        Ok(_) => LaunchResult {
+            ok: true,
+            message: format!("{example_id} 已启动"),
+        },
+        Err(error) => LaunchResult {
+            ok: false,
+            message: format!("启动失败：{error}"),
+        },
     }
 }
 
 /// 官方示例源码（页内「查看源码」）：返回示例目录下源文件的相对路径与文本。
 /// 代码是教材本身，逐字返回、不加工（应用 ADR 0002、0006）。
 #[tauri::command]
-fn read_example_sources(state: State<AppState>, example_id: String) -> Result<Vec<SourceFile>, String> {
+fn read_example_sources(
+    state: State<AppState>,
+    example_id: String,
+) -> Result<Vec<SourceFile>, String> {
     let manifest = read_content(&state.content_root, "demos.json")?;
     let Some(entity) = find_example(&manifest, &example_id) else {
         return Err(format!("清单里没有官方示例 {example_id}"));
     };
-    let rel_dir = entity.get("source_dir").and_then(|v| v.as_str()).unwrap_or("");
+    let rel_dir = entity
+        .get("source_dir")
+        .and_then(|v| v.as_str())
+        .unwrap_or("");
     let app_root = state
         .content_root
         .parent()
@@ -604,7 +659,9 @@ fn read_example_sources(state: State<AppState>, example_id: String) -> Result<Ve
             path: format!(
                 "{}/{}",
                 rel_dir,
-                path.file_name().and_then(|name| name.to_str()).unwrap_or("?")
+                path.file_name()
+                    .and_then(|name| name.to_str())
+                    .unwrap_or("?")
             ),
             content,
         });
@@ -622,14 +679,21 @@ fn read_example_sources(state: State<AppState>, example_id: String) -> Result<Ve
 /// 工程内参与编译的源文件（.xpm 是运行时资源，不进 add_executable）。
 fn example_build_sources(dir: &Path) -> Result<Vec<String>, String> {
     let mut names: Vec<String> = Vec::new();
-    for entry in fs::read_dir(dir).map_err(|error| format!("读 {} 失败：{}", dir.display(), error))? {
+    for entry in
+        fs::read_dir(dir).map_err(|error| format!("读 {} 失败：{}", dir.display(), error))?
+    {
         let path = entry.map_err(|error| error.to_string())?.path();
         let ext = path
             .extension()
             .and_then(|ext| ext.to_str())
             .map(|ext| ext.to_ascii_lowercase());
         if path.is_file() && matches!(ext.as_deref(), Some("cc" | "h")) {
-            names.push(path.file_name().unwrap_or_default().to_string_lossy().into_owned());
+            names.push(
+                path.file_name()
+                    .unwrap_or_default()
+                    .to_string_lossy()
+                    .into_owned(),
+            );
         }
     }
     names.sort();
@@ -826,21 +890,22 @@ fn materialize_workspace(app_root: &Path, entity: &Value) -> Result<PathBuf, Str
         .and_then(|v| v.as_str())
         .ok_or_else(|| format!("{example_id}: 缺 build_target"))?;
     let source_dir = app_root.join(source_rel);
-    let workspace_dir = app_root.join("workspace").join(example_id.replace('.', "-"));
+    let workspace_dir = app_root
+        .join("workspace")
+        .join(example_id.replace('.', "-"));
 
     if !workspace_dir.join("CMakeLists.txt").is_file() {
         fs::create_dir_all(&workspace_dir)
             .map_err(|error| format!("建 {} 失败：{}", workspace_dir.display(), error))?;
         // 官方源文件原样复制（镜像 → 副本，一层目录，无子目录）
-        for entry in
-            fs::read_dir(&source_dir).map_err(|error| format!("读 {} 失败：{}", source_dir.display(), error))?
+        for entry in fs::read_dir(&source_dir)
+            .map_err(|error| format!("读 {} 失败：{}", source_dir.display(), error))?
         {
             let from = entry.map_err(|error| error.to_string())?.path();
             if from.is_file() {
                 let to = workspace_dir.join(from.file_name().unwrap_or_default());
-                fs::copy(&from, &to).map_err(|error| {
-                    format!("复制 {} 失败：{}", from.display(), error)
-                })?;
+                fs::copy(&from, &to)
+                    .map_err(|error| format!("复制 {} 失败：{}", from.display(), error))?;
             }
         }
         let sources = example_build_sources(&workspace_dir)?;
@@ -895,9 +960,8 @@ fn ensure_generated_file(
     fs::create_dir_all(&dir).map_err(|error| error.to_string())?;
     let path = dir.join(name);
     if !path.is_file() {
-        fs::write(&path, content).map_err(|error| {
-            format!("写 {} 失败：{}", path.display(), error)
-        })?;
+        fs::write(&path, content)
+            .map_err(|error| format!("写 {} 失败：{}", path.display(), error))?;
     }
     Ok(())
 }
@@ -939,9 +1003,8 @@ fn find_vscode() -> Option<PathBuf> {
         }
     }
     if cfg!(target_os = "macos") {
-        let candidate = PathBuf::from(
-            "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code",
-        );
+        let candidate =
+            PathBuf::from("/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code");
         if candidate.is_file() {
             return Some(candidate);
         }
@@ -956,10 +1019,18 @@ fn find_vscode() -> Option<PathBuf> {
 fn open_example_workspace(state: State<AppState>, example_id: String) -> LaunchResult {
     let manifest = match read_content(&state.content_root, "demos.json") {
         Ok(manifest) => manifest,
-        Err(_) => return LaunchResult { ok: false, message: "读 demos.json 失败".into() },
+        Err(_) => {
+            return LaunchResult {
+                ok: false,
+                message: "读 demos.json 失败".into(),
+            }
+        }
     };
     let Some(entity) = find_example(&manifest, &example_id) else {
-        return LaunchResult { ok: false, message: format!("清单里没有官方示例 {example_id}") };
+        return LaunchResult {
+            ok: false,
+            message: format!("清单里没有官方示例 {example_id}"),
+        };
     };
     let app_root = state
         .content_root
@@ -991,13 +1062,20 @@ fn open_example_workspace(state: State<AppState>, example_id: String) -> LaunchR
     } else {
         Command::new(&code)
     };
-    command.arg(&workspace_dir).stdin(Stdio::null()).stdout(Stdio::null()).stderr(Stdio::null());
+    command
+        .arg(&workspace_dir)
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null());
     match command.spawn() {
         Ok(_) => LaunchResult {
             ok: true,
             message: format!("{} 已在 VS Code 打开（工作区副本）", example_id),
         },
-        Err(error) => LaunchResult { ok: false, message: format!("启动 VS Code 失败：{error}") },
+        Err(error) => LaunchResult {
+            ok: false,
+            message: format!("启动 VS Code 失败：{error}"),
+        },
     }
 }
 
@@ -1046,7 +1124,17 @@ mod tests {
         for ok in ["chapter-basics", "sec-gtkmm", "changes-gtkmm4", "a.b_c-1"] {
             assert!(is_safe_id(ok), "{ok} 应当合法");
         }
-        for bad in ["", "..", "../x", "a/b", "a\\b", "/etc/passwd", "C:x", "a..b", "x y"] {
+        for bad in [
+            "",
+            "..",
+            "../x",
+            "a/b",
+            "a\\b",
+            "/etc/passwd",
+            "C:x",
+            "a..b",
+            "x y",
+        ] {
             assert!(!is_safe_id(bad), "{bad} 应当被拒绝");
         }
         assert!(!is_safe_id(&"a".repeat(129)), "过长的 id 应当被拒绝");
@@ -1059,7 +1147,10 @@ mod tests {
     fn workspace_copy_is_complete_and_configs_parse() {
         let root = std::env::temp_dir().join(format!(
             "athena-gtkmm-test-{}",
-            SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos()
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
         ));
         let source_dir = root.join("exercise/buttons/button");
         fs::create_dir_all(&source_dir).unwrap();
@@ -1118,7 +1209,10 @@ mod tests {
         let configs = launch["configurations"].as_array().unwrap();
         assert_eq!(configs.len(), 2, "应有 cppdbg 与 CodeLLDB 两个调试配置");
         for config in configs {
-            assert!(config["program"].as_str().unwrap().contains("example-buttons-button"));
+            assert!(config["program"]
+                .as_str()
+                .unwrap()
+                .contains("example-buttons-button"));
             assert_eq!(config["preLaunchTask"], "build");
         }
         assert_eq!(configs[0]["type"], "cppdbg");

@@ -96,7 +96,9 @@ pub fn load_all_mastery(path: &Path) -> Result<HashMap<String, i32>, String> {
         .prepare("SELECT function_id, mastery FROM knowledge_progress")
         .map_err(|e| e.to_string())?;
     let rows = stmt
-        .query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, i32>(1)?)))
+        .query_map([], |row| {
+            Ok((row.get::<_, String>(0)?, row.get::<_, i32>(1)?))
+        })
         .map_err(|e| e.to_string())?;
     Ok(rows.flatten().collect())
 }
@@ -165,7 +167,9 @@ pub fn load_all_lab_drafts(path: &Path) -> Result<HashMap<String, String>, Strin
         .prepare("SELECT lab_key, source FROM lab_draft")
         .map_err(|e| e.to_string())?;
     let rows = stmt
-        .query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?)))
+        .query_map([], |row| {
+            Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+        })
         .map_err(|e| e.to_string())?;
     Ok(rows.flatten().collect())
 }
@@ -197,7 +201,9 @@ pub fn load_all_quiz_picks(path: &Path) -> Result<HashMap<String, String>, Strin
         .prepare("SELECT quiz_key, picks FROM quiz_picks")
         .map_err(|e| e.to_string())?;
     let rows = stmt
-        .query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?)))
+        .query_map([], |row| {
+            Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+        })
         .map_err(|e| e.to_string())?;
     Ok(rows.flatten().collect())
 }
@@ -213,7 +219,10 @@ mod tests {
 
     impl TempDb {
         fn new(name: &str) -> Self {
-            let stamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
+            let stamp = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos();
             let dir = std::env::temp_dir().join(format!("athena-shell-test-{name}-{stamp}"));
             std::fs::create_dir_all(&dir).unwrap();
             Self(dir.join("learning.db"))
@@ -238,7 +247,11 @@ mod tests {
         assert_eq!(load_mastery(&db.0, "ds.list").unwrap(), 5, "越界夹到上限");
         save_mastery(&db.0, "ds.list", -4).unwrap();
         assert_eq!(load_mastery(&db.0, "ds.list").unwrap(), 0, "越界夹到下限");
-        assert_eq!(load_all_mastery(&db.0).unwrap().len(), 1, "同一个知识点只有一行");
+        assert_eq!(
+            load_all_mastery(&db.0).unwrap().len(),
+            1,
+            "同一个知识点只有一行"
+        );
     }
 
     #[test]
@@ -250,7 +263,10 @@ mod tests {
         // 旧版本可能写进过别的值：读出时不把未知字符串交给界面。
         Connection::open(&db.0)
             .unwrap()
-            .execute("INSERT INTO lab_progress(lab_key, status) VALUES('lab.old', 'weird')", [])
+            .execute(
+                "INSERT INTO lab_progress(lab_key, status) VALUES('lab.old', 'weird')",
+                [],
+            )
             .unwrap();
         let all = load_all_lab_status(&db.0).unwrap();
         assert_eq!(all["lab.a"], "done");
@@ -264,7 +280,10 @@ mod tests {
         let db = TempDb::new("draft");
         save_lab_draft(&db.0, "lab.a", "int main(){}").unwrap();
         save_lab_draft(&db.0, "lab.a", "int main(){return 1;}").unwrap();
-        assert_eq!(load_all_lab_drafts(&db.0).unwrap()["lab.a"], "int main(){return 1;}");
+        assert_eq!(
+            load_all_lab_drafts(&db.0).unwrap()["lab.a"],
+            "int main(){return 1;}"
+        );
         clear_lab_draft(&db.0, "lab.a").unwrap();
         assert!(load_all_lab_drafts(&db.0).unwrap().is_empty());
         save_quiz_picks(&db.0, "q.1", "[0,2]").unwrap();

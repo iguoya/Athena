@@ -19,22 +19,34 @@ fn record_attempt(
 
 #[tauri::command]
 fn attempts_summary() -> Result<Vec<KpSummary>, String> {
-    Store::open().map_err(|e| e.to_string())?.attempts_summary().map_err(|e| e.to_string())
+    Store::open()
+        .map_err(|e| e.to_string())?
+        .attempts_summary()
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn today_stats() -> Result<TodayStats, String> {
-    Store::open().map_err(|e| e.to_string())?.today_stats().map_err(|e| e.to_string())
+    Store::open()
+        .map_err(|e| e.to_string())?
+        .today_stats()
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn load_setting(key: String) -> Result<Option<String>, String> {
-    Store::open().map_err(|e| e.to_string())?.get_setting(&key).map_err(|e| e.to_string())
+    Store::open()
+        .map_err(|e| e.to_string())?
+        .get_setting(&key)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn save_setting(key: String, value: String) -> Result<(), String> {
-    Store::open().map_err(|e| e.to_string())?.set_setting(&key, &value).map_err(|e| e.to_string())
+    Store::open()
+        .map_err(|e| e.to_string())?
+        .set_setting(&key, &value)
+        .map_err(|e| e.to_string())
 }
 
 #[derive(serde::Serialize)]
@@ -49,10 +61,15 @@ struct SqlLabOutcome {
 /// 列名都一致才判通过。内存库不落盘，写坏什么都没关系；命令只碰 SQL，无文件
 /// 与进程访问（softcert ADR 0002）。
 #[tauri::command]
-fn run_sql_lab(setup: Vec<String>, user_sql: String, answer_sql: String) -> Result<SqlLabOutcome, String> {
+fn run_sql_lab(
+    setup: Vec<String>,
+    user_sql: String,
+    answer_sql: String,
+) -> Result<SqlLabOutcome, String> {
     let conn = rusqlite::Connection::open_in_memory().map_err(|e| e.to_string())?;
     for (i, batch) in setup.iter().enumerate() {
-        conn.execute_batch(batch).map_err(|e| format!("建表脚本第 {} 段出错：{e}", i + 1))?;
+        conn.execute_batch(batch)
+            .map_err(|e| format!("建表脚本第 {} 段出错：{e}", i + 1))?;
     }
     let (user_cols, mut user_rows) = query_rows(&conn, &user_sql)?;
     let (answer_cols, mut answer_rows) = query_rows(&conn, &answer_sql)?;
@@ -72,10 +89,18 @@ fn run_sql_lab(setup: Vec<String>, user_sql: String, answer_sql: String) -> Resu
             answer_rows.len()
         )
     };
-    Ok(SqlLabOutcome { columns: user_cols, rows: user_rows, passed, detail })
+    Ok(SqlLabOutcome {
+        columns: user_cols,
+        rows: user_rows,
+        passed,
+        detail,
+    })
 }
 
-fn query_rows(conn: &rusqlite::Connection, sql: &str) -> Result<(Vec<String>, Vec<Vec<String>>), String> {
+fn query_rows(
+    conn: &rusqlite::Connection,
+    sql: &str,
+) -> Result<(Vec<String>, Vec<Vec<String>>), String> {
     let mut stmt = conn.prepare(sql).map_err(|e| format!("SQL 错误：{e}"))?;
     let col_count = stmt.column_count();
     let columns: Vec<String> = stmt.column_names().into_iter().map(String::from).collect();

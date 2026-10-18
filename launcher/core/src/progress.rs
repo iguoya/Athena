@@ -39,10 +39,7 @@ pub fn sync(repo: &Path, apps: &[App], mut report: impl FnMut(&str)) -> Result<(
     } else {
         run(
             repo,
-            &join(
-                &["commit", "-m", "progress: 同步学习进度", "--"],
-                &paths,
-            ),
+            &join(&["commit", "-m", "progress: 同步学习进度", "--"], &paths),
         )?;
         report("已提交进度变更。");
     }
@@ -51,8 +48,10 @@ pub fn sync(repo: &Path, apps: &[App], mut report: impl FnMut(&str)) -> Result<(
 }
 
 fn push(repo: &Path, report: &mut impl FnMut(&str)) -> Result<(), String> {
-    let Some(upstream) = output(repo, &["rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}"])
-    else {
+    let Some(upstream) = output(
+        repo,
+        &["rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}"],
+    ) else {
         report(
             "当前分支没有上游，进度只提交在本地。\n\
              设好上游（git push -u origin <分支>）之后再同步就会自动推送。",
@@ -72,7 +71,11 @@ fn push(repo: &Path, report: &mut impl FnMut(&str)) -> Result<(), String> {
     if !others.is_empty() {
         // 只列头几条：待推送的代码提交攒到几十个很常见，全铺出来反而看不清。
         const SHOWN: usize = 5;
-        let mut listed: Vec<String> = others.iter().take(SHOWN).map(|s| format!("  {s}")).collect();
+        let mut listed: Vec<String> = others
+            .iter()
+            .take(SHOWN)
+            .map(|s| format!("  {s}"))
+            .collect();
         if others.len() > SHOWN {
             listed.push(format!("  …… 另有 {} 个", others.len() - SHOWN));
         }
@@ -87,9 +90,8 @@ fn push(repo: &Path, report: &mut impl FnMut(&str)) -> Result<(), String> {
         return Ok(());
     }
 
-    run(repo, &["push"]).map_err(|message| {
-        format!("{message}\n远端有新提交时，先 git pull --rebase 再同步。")
-    })?;
+    run(repo, &["push"])
+        .map_err(|message| format!("{message}\n远端有新提交时，先 git pull --rebase 再同步。"))?;
     report(&format!("已推送到 {upstream}。"));
     Ok(())
 }

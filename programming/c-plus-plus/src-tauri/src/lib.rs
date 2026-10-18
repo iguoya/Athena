@@ -103,9 +103,7 @@ fn ensure_column(conn: &Connection, name: &str) -> Result<(), String> {
         .any(|col| col == name);
     if !exists {
         conn.execute(
-            &format!(
-                "ALTER TABLE knowledge_progress ADD COLUMN {name} INTEGER NOT NULL DEFAULT 0"
-            ),
+            &format!("ALTER TABLE knowledge_progress ADD COLUMN {name} INTEGER NOT NULL DEFAULT 0"),
             [],
         )
         .map_err(|e| e.to_string())?;
@@ -218,10 +216,14 @@ fn compile_and_run(source: String) -> Result<RunOutput, String> {
     fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     let src = dir.join("main.cpp");
     let mut file = fs::File::create(&src).map_err(|e| e.to_string())?;
-    file.write_all(source.as_bytes()).map_err(|e| e.to_string())?;
+    file.write_all(source.as_bytes())
+        .map_err(|e| e.to_string())?;
     let out = dir.join(compiler.artifact_name());
 
-    let compile = run_bounded(compiler.compile_command(&src, &out), Duration::from_secs(30))?;
+    let compile = run_bounded(
+        compiler.compile_command(&src, &out),
+        Duration::from_secs(30),
+    )?;
     if !compile.status.success() {
         return Ok(RunOutput {
             ok: false,

@@ -66,7 +66,12 @@ pub fn orbit_layout(group_sizes: &[usize]) -> OrbitLayout {
         for slot in 0..count {
             let theta = start + slot as f32 * std::f32::consts::TAU / count as f32;
             let pos = orbit_point(&spec, theta);
-            nodes.push(OrbitNode { group: g, slot, pos, theta });
+            nodes.push(OrbitNode {
+                group: g,
+                slot,
+                pos,
+                theta,
+            });
         }
         orbits.push(spec);
     }
@@ -85,10 +90,9 @@ mod tests {
         let layout = orbit_layout(&[3, 4, 5]);
         for node in &layout.nodes {
             let spec = layout.orbits[node.group];
-            let d = (node.pos[0] * node.pos[0]
-                + node.pos[1] * node.pos[1]
-                + node.pos[2] * node.pos[2])
-                .sqrt();
+            let d =
+                (node.pos[0] * node.pos[0] + node.pos[1] * node.pos[1] + node.pos[2] * node.pos[2])
+                    .sqrt();
             let expected = spec.a * (1.0 - ECC * node.theta.cos());
             assert!(
                 (d - expected).abs() < 2.0,

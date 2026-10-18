@@ -6,9 +6,7 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Duration;
 
-use sysinfo::{
-    ProcessesToUpdate, ProcessRefreshKind, RefreshKind, System, UpdateKind,
-};
+use sysinfo::{ProcessRefreshKind, ProcessesToUpdate, RefreshKind, System, UpdateKind};
 
 use crate::manifest::{App, ReadySpec};
 use crate::paths;
@@ -62,11 +60,7 @@ fn process_refresh_kind() -> ProcessRefreshKind {
 impl ProcessSnapshot {
     pub fn take() -> Self {
         let mut system = System::new();
-        system.refresh_processes_specifics(
-            ProcessesToUpdate::All,
-            true,
-            process_refresh_kind(),
-        );
+        system.refresh_processes_specifics(ProcessesToUpdate::All, true, process_refresh_kind());
         Self { system }
     }
 
@@ -101,9 +95,11 @@ impl ProcessSnapshot {
                         continue;
                     }
                     let by_path = exe.starts_with(&prefixes[index]);
-                    let by_name = app.dev.binary.as_deref().is_some_and(|name| {
-                        exe.file_stem().is_some_and(|stem| stem == name)
-                    });
+                    let by_name = app
+                        .dev
+                        .binary
+                        .as_deref()
+                        .is_some_and(|name| exe.file_stem().is_some_and(|stem| stem == name));
                     windows[index] = by_path || by_name;
                 }
             }
@@ -144,9 +140,8 @@ impl ProcessSnapshot {
         self.system.processes().iter().find_map(|(pid, process)| {
             let exe = process.exe()?;
             let by_path = exe.starts_with(&prefix);
-            let by_name = binary.is_some_and(|name| {
-                exe.file_stem().is_some_and(|stem| stem == name)
-            });
+            let by_name =
+                binary.is_some_and(|name| exe.file_stem().is_some_and(|stem| stem == name));
             (by_path || by_name).then_some(*pid)
         })
     }
@@ -173,12 +168,7 @@ impl ProcessSnapshot {
             ReadySpec::Http(url) if window_present => reachable(url),
             _ => false,
         };
-        classify_run_state(
-            window_present,
-            self.is_busy(app),
-            &app.dev.ready,
-            http_up,
-        )
+        classify_run_state(window_present, self.is_busy(app), &app.dev.ready, http_up)
     }
 
     pub fn pid_of(&self, app: &App) -> Option<u32> {
@@ -211,12 +201,11 @@ fn reachable(url: &str) -> bool {
 /// 命令行里出现应用目录，才算这个构建进程属于它。
 ///
 /// 末尾必须带分隔符：`programming/c` 与 `programming/cpp` 这类前缀包含关系（`c` 已改名 `machine`，写法保留作示例），少了它两个应用会互相误判。
-fn command_line_belongs_to(
-    dir: &Path,
-    parts: impl IntoIterator<Item = impl AsRef<str>>,
-) -> bool {
+fn command_line_belongs_to(dir: &Path, parts: impl IntoIterator<Item = impl AsRef<str>>) -> bool {
     let needle = format!("{}{}", dir.display(), std::path::MAIN_SEPARATOR);
-    parts.into_iter().any(|part| part.as_ref().contains(&needle))
+    parts
+        .into_iter()
+        .any(|part| part.as_ref().contains(&needle))
 }
 
 /// 窗口在不在、构建进程在不在、端口通不通，三者不能折成「有动静就算运行中」。
@@ -312,7 +301,11 @@ pub fn launch(app: &App, repo: &Path, mut report: impl FnMut(&str)) -> Result<u3
         .open(&log_path)
         .map_err(|error| format!("打不开日志 {}：{error}", log_path.display()))?;
 
-    emit(&mut log, &mut report, &format!("===== 启动 {} =====", app.id));
+    emit(
+        &mut log,
+        &mut report,
+        &format!("===== 启动 {} =====", app.id),
+    );
 
     for step in &app.dev.prepare {
         if let Some(marker) = &step.when_missing {
@@ -320,10 +313,7 @@ pub fn launch(app: &App, repo: &Path, mut report: impl FnMut(&str)) -> Result<u3
                 continue;
             }
         }
-        let label = step
-            .label
-            .clone()
-            .unwrap_or_else(|| step.run.join(" "));
+        let label = step.label.clone().unwrap_or_else(|| step.run.join(" "));
         emit(&mut log, &mut report, &format!("[准备] {label}"));
         // 准备步骤的原文也进同一份日志，并经 report 回到界面。
         // 继承父进程时，托盘没有控制台，cmake / cargo 的输出会丢。
@@ -530,7 +520,10 @@ pub fn activate(app: &App) -> Result<(), String> {
                 return Ok(());
             }
         }
-        return Err(format!("{} 已经在运行，但没找到 wmctrl / xdotool", app.title));
+        return Err(format!(
+            "{} 已经在运行，但没找到 wmctrl / xdotool",
+            app.title
+        ));
     }
 
     activate_windows(pid, &app.title)

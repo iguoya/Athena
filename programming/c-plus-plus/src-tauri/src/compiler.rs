@@ -8,7 +8,9 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 pub enum Compiler {
-    GnuLike { program: String },
+    GnuLike {
+        program: String,
+    },
     #[cfg_attr(not(windows), allow(dead_code))]
     Msvc {
         program: PathBuf,

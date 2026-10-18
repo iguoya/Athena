@@ -65,7 +65,11 @@ impl Compiler {
                 // /nologo 去掉版权横幅，否则每次编译日志都顶着两行噪音。
                 // /EHsc 打开标准 C++ 异常模型——MSVC 默认不开，标准库一用就警告。
                 // /Od 对应 -O0，/W4 大致对应 -Wall -Wextra。
-                cmd.arg("/nologo").arg("/std:c++20").arg("/EHsc").arg("/Od").arg("/W4");
+                cmd.arg("/nologo")
+                    .arg("/std:c++20")
+                    .arg("/EHsc")
+                    .arg("/Od")
+                    .arg("/W4");
                 cmd.arg(src);
                 // /Fe: 指定产物；/Fo: 指定中间 .obj，否则它会散在当前目录里。
                 cmd.arg(format!("/Fe:{}", out.display()));

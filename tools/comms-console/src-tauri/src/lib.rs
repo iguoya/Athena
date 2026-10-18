@@ -446,8 +446,11 @@ fn ingest(client: &mut postgres::Client, root: &Path) -> Result<(), String> {
                 let events = parse_events(&body);
                 sync_file(client, &bay, &rel, &bytes, &move |c| {
                     let mut tx = c.transaction().map_err(|e| e.to_string())?;
-                    tx.execute("DELETE FROM task_events WHERE bay=$1 AND tid=$2", &[&bay2, &tid])
-                        .map_err(|e| e.to_string())?;
+                    tx.execute(
+                        "DELETE FROM task_events WHERE bay=$1 AND tid=$2",
+                        &[&bay2, &tid],
+                    )
+                    .map_err(|e| e.to_string())?;
                     tx.execute("DELETE FROM tasks WHERE bay=$1 AND tid=$2", &[&bay2, &tid])
                         .map_err(|e| e.to_string())?;
                     tx.execute(
@@ -514,7 +517,11 @@ fn ingest(client: &mut postgres::Client, root: &Path) -> Result<(), String> {
                 if path.extension().and_then(|s| s.to_str()) != Some("log") {
                     continue;
                 }
-                let sender = path.file_stem().and_then(|s| s.to_str()).unwrap_or("").to_string();
+                let sender = path
+                    .file_stem()
+                    .and_then(|s| s.to_str())
+                    .unwrap_or("")
+                    .to_string();
                 let bytes = match std::fs::read(&path) {
                     Ok(b) => b,
                     Err(_) => continue,
@@ -526,15 +533,23 @@ fn ingest(client: &mut postgres::Client, root: &Path) -> Result<(), String> {
                     .filter_map(|(i, line)| {
                         let mut it = line.splitn(3, '|');
                         let (ts, to, text) = (it.next()?, it.next()?, it.next()?);
-                        Some((i as i32, ts.trim().to_string(), to.trim().to_string(), text.to_string()))
+                        Some((
+                            i as i32,
+                            ts.trim().to_string(),
+                            to.trim().to_string(),
+                            text.to_string(),
+                        ))
                     })
                     .collect();
                 let rel = format!("chat/{sender}.log");
                 let bay2 = bay.clone();
                 sync_file(client, &bay, &rel, &bytes, &move |c| {
                     let mut tx = c.transaction().map_err(|e| e.to_string())?;
-                    tx.execute("DELETE FROM chats WHERE bay=$1 AND sender=$2", &[&bay2, &sender])
-                        .map_err(|e| e.to_string())?;
+                    tx.execute(
+                        "DELETE FROM chats WHERE bay=$1 AND sender=$2",
+                        &[&bay2, &sender],
+                    )
+                    .map_err(|e| e.to_string())?;
                     for (seq, ts, to, text) in &rows {
                         tx.execute(
                             "INSERT INTO chats (bay, sender, seq, ts, to_a, text_) VALUES ($1,$2,$3,$4,$5,$6)",
@@ -560,7 +575,11 @@ fn query_pg(client: &mut postgres::Client) -> Result<Snapshot, String> {
         bays.push(BayInfo {
             name: r.get(0),
             leader: r.get(1),
-            agents: agents.split(',').filter(|s| !s.is_empty()).map(String::from).collect(),
+            agents: agents
+                .split(',')
+                .filter(|s| !s.is_empty())
+                .map(String::from)
+                .collect(),
         });
     }
     let mut tasks = Vec::new();
@@ -662,7 +681,8 @@ fn load_inner() -> Snapshot {
         return local;
     };
     let attempt = || -> Result<Snapshot, String> {
-        let mut client = postgres::Client::connect(&dsn, postgres::NoTls).map_err(|e| e.to_string())?;
+        let mut client =
+            postgres::Client::connect(&dsn, postgres::NoTls).map_err(|e| e.to_string())?;
         let root = athena_root().ok_or("仓库根不可见")?;
         ingest(&mut client, &root)?;
         query_pg(&mut client)

@@ -43,7 +43,9 @@ impl Default for Tts {
     fn default() -> Self {
         // 系统没有可用的 TTS 后端时（例如 Linux 没装 speech-dispatcher）不 panic：
         // 朗读是锦上添花，前端拿到空语音表会自动退回 Web Speech。
-        Self { inner: tts::Tts::default().ok() }
+        Self {
+            inner: tts::Tts::default().ok(),
+        }
     }
 }
 
@@ -59,7 +61,10 @@ impl Tts {
         if text.trim().is_empty() {
             return Ok(());
         }
-        let t = self.inner.as_mut().ok_or("这台机器上没有可用的系统语音后端")?;
+        let t = self
+            .inner
+            .as_mut()
+            .ok_or("这台机器上没有可用的系统语音后端")?;
 
         if !voice.is_empty() {
             let wanted = t

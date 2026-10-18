@@ -153,7 +153,9 @@ pub fn install(
             let _ = window_for_event.hide();
             // 前端靠这个事件停 3D 帧循环；状态探测同时停掉，托盘里不再扫进程表。
             note_visibility(window_for_event.app_handle(), false);
-            let _ = window_for_event.app_handle().emit("launcher://visibility", false);
+            let _ = window_for_event
+                .app_handle()
+                .emit("launcher://visibility", false);
         }
     });
     Ok(tray)
@@ -227,7 +229,11 @@ fn handle_menu(app: &AppHandle, id: &str, quitting: &AtomicBool) {
 fn toggle_autostart(app: &AppHandle) {
     let auto = app.autolaunch();
     let currently = auto.is_enabled().unwrap_or(false);
-    let result = if currently { auto.disable() } else { auto.enable() };
+    let result = if currently {
+        auto.disable()
+    } else {
+        auto.enable()
+    };
     if let Err(error) = result {
         eprintln!("开机自启切换失败：{error}");
     }

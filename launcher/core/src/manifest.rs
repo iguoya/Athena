@@ -14,18 +14,14 @@ use serde::Deserialize;
 #[serde(untagged)]
 pub enum EnvValue {
     Literal(String),
-    FirstExisting {
-        first_existing: Vec<String>,
-    },
+    FirstExisting { first_existing: Vec<String> },
 }
 
 impl EnvValue {
     /// `${dir}` 展开成应用目录的绝对路径；候选路径取第一个真实存在的。
     pub fn resolve(&self, dir: &Path) -> Option<String> {
         match self {
-            EnvValue::Literal(text) => {
-                Some(text.replace("${dir}", &dir.to_string_lossy()))
-            }
+            EnvValue::Literal(text) => Some(text.replace("${dir}", &dir.to_string_lossy())),
             EnvValue::FirstExisting { first_existing } => first_existing
                 .iter()
                 .map(|candidate| candidate.replace("${dir}", &dir.to_string_lossy()))
@@ -340,14 +336,22 @@ fn parse(dir: &Path) -> Option<App> {
     };
     let icon = raw.icon.clone();
     let mut icon_renders = Vec::new();
-    for (path, spec) in icon.as_ref().map(|icon| &icon.renders).into_iter().flatten() {
+    for (path, spec) in icon
+        .as_ref()
+        .map(|icon| &icon.renders)
+        .into_iter()
+        .flatten()
+    {
         let spec = match spec {
             RawRender::Size(size) if *size > 0 => RenderSpec::Png(*size),
             RawRender::Format(format) if format == "ico" => RenderSpec::Ico,
             RawRender::Format(format) if format == "icns" => RenderSpec::Icns,
             _ => {
                 // 跟 accent 写错一样：不让启动器起不来，但要点名是谁、哪一项。
-                eprintln!("{} 的 icon.renders「{path}」：只认正整数边长、\"ico\"、\"icns\"，已跳过", dir.display());
+                eprintln!(
+                    "{} 的 icon.renders「{path}」：只认正整数边长、\"ico\"、\"icns\"，已跳过",
+                    dir.display()
+                );
                 continue;
             }
         };
@@ -418,7 +422,12 @@ pub fn fingerprint(apps: &[App]) -> String {
         let Some(icon) = &app.icon_file else { continue };
         match std::fs::metadata(icon) {
             Ok(meta) => {
-                out += &format!("icon {}\n{:?}\n{}\n", icon.display(), meta.modified(), meta.len());
+                out += &format!(
+                    "icon {}\n{:?}\n{}\n",
+                    icon.display(),
+                    meta.modified(),
+                    meta.len()
+                );
             }
             Err(error) => out += &format!("icon {} 失联：{error}\n", icon.display()),
         }
@@ -458,13 +467,17 @@ mod tests {
     /// lifecycle 解析：省略即 active；未知值点名回退，不让整个 app.json 读不动。
     #[test]
     fn lifecycle_解析() {
-        let dir = std::env::temp_dir().join(format!("athena-lifecycle-test-{}", std::process::id()));
+        let dir =
+            std::env::temp_dir().join(format!("athena-lifecycle-test-{}", std::process::id()));
         std::fs::create_dir_all(&dir).expect("建临时目录");
         let write = |text: &str| {
             std::fs::write(dir.join("app.json"), text).expect("写临时 app.json");
             parse(&dir).unwrap()
         };
-        assert_eq!(write(r#"{"id":"a","title":"甲"}"#).lifecycle, Lifecycle::Active);
+        assert_eq!(
+            write(r#"{"id":"a","title":"甲"}"#).lifecycle,
+            Lifecycle::Active
+        );
         assert_eq!(
             write(r#"{"id":"a","title":"甲","lifecycle":"archived"}"#).lifecycle,
             Lifecycle::Archived
@@ -489,14 +502,20 @@ mod tests {
 
     #[test]
     fn 改标题指纹要变() {
-        assert_ne!(fingerprint(&[app("a", "甲")]), fingerprint(&[app("a", "乙")]));
+        assert_ne!(
+            fingerprint(&[app("a", "甲")]),
+            fingerprint(&[app("a", "乙")])
+        );
     }
 
     #[test]
     fn 增删应用指纹要变() {
         let base = vec![app("a", "甲"), app("b", "乙")];
         assert_ne!(fingerprint(&base), fingerprint(&[app("a", "甲")]));
-        assert_ne!(fingerprint(&base), fingerprint(&[app("a", "甲"), app("b", "乙"), app("c", "丙")]));
+        assert_ne!(
+            fingerprint(&base),
+            fingerprint(&[app("a", "甲"), app("b", "乙"), app("c", "丙")])
+        );
     }
 
     /// 只改图标文件不动 app.json 也要能看出来：指纹里拼了修改时间与长度。

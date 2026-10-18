@@ -45,15 +45,17 @@ pub fn icon_data_url(path: &Path) -> Option<String> {
         "data:image/png;base64,{}",
         base64::engine::general_purpose::STANDARD.encode(png)
     );
-    ICON_CACHE
-        .lock()
-        .unwrap_or_else(|p| p.into_inner())
-        .insert(path.to_path_buf(), CacheEntry { fingerprint, url: url.clone() });
+    ICON_CACHE.lock().unwrap_or_else(|p| p.into_inner()).insert(
+        path.to_path_buf(),
+        CacheEntry {
+            fingerprint,
+            url: url.clone(),
+        },
+    );
     Some(url)
 }
 
-static SNAPSHOT: LazyLock<Mutex<Option<ProcessSnapshot>>> =
-    LazyLock::new(|| Mutex::new(None));
+static SNAPSHOT: LazyLock<Mutex<Option<ProcessSnapshot>>> = LazyLock::new(|| Mutex::new(None));
 
 /// 全部应用的运行状态。进程表全局只建一次，之后每轮增量刷新——runner 的
 /// 注释写明常驻探测别每轮从零建表（本机全量一轮 0.5–6.6 秒），轮询路径同理。
@@ -80,8 +82,7 @@ pub struct RingsImage {
     pub height: f32,
 }
 
-static RINGS_CACHE: LazyLock<Mutex<Option<(u64, RingsImage)>>> =
-    LazyLock::new(|| Mutex::new(None));
+static RINGS_CACHE: LazyLock<Mutex<Option<(u64, RingsImage)>>> = LazyLock::new(|| Mutex::new(None));
 
 pub fn rings_png(map: &MindMap, scale: f32) -> RingsImage {
     let fingerprint = layout_fingerprint(map, scale);

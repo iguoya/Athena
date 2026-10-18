@@ -74,14 +74,18 @@ impl Store {
     pub fn open_at(path: &Path) -> Result<Self, rusqlite::Error> {
         let conn = Connection::open(path)?;
         init_schema(&conn)?;
-        Ok(Self { conn: Mutex::new(conn) })
+        Ok(Self {
+            conn: Mutex::new(conn),
+        })
     }
 
     #[cfg(test)]
     fn open_memory() -> Result<Self, rusqlite::Error> {
         let conn = Connection::open_in_memory()?;
         init_schema(&conn)?;
-        Ok(Self { conn: Mutex::new(conn) })
+        Ok(Self {
+            conn: Mutex::new(conn),
+        })
     }
 
     pub fn record_attempt(
@@ -103,7 +107,10 @@ impl Store {
              VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
             params![course, chapter_id, kp_id, question_id, correct as i64, mode, answered_at],
         )?;
-        Ok(AttemptRecorded { id: conn.last_insert_rowid(), answered_at })
+        Ok(AttemptRecorded {
+            id: conn.last_insert_rowid(),
+            answered_at,
+        })
     }
 
     /// 按知识点聚合。streak 在 Rust 侧数:该知识点最近作答往前连续答对的
@@ -143,7 +150,13 @@ impl Store {
                 }
                 streak
             };
-            out.push(KpSummary { kp_id, total, correct, last_at, streak });
+            out.push(KpSummary {
+                kp_id,
+                total,
+                correct,
+                last_at,
+                streak,
+            });
         }
         Ok(out)
     }
@@ -163,7 +176,11 @@ impl Store {
         let (answered, correct) = stmt.query_row([&date], |row| {
             Ok((row.get::<_, i64>(0)?, row.get::<_, i64>(1)?))
         })?;
-        Ok(TodayStats { date, answered, correct })
+        Ok(TodayStats {
+            date,
+            answered,
+            correct,
+        })
     }
 
     pub fn get_setting(&self, key: &str) -> Result<Option<String>, rusqlite::Error> {
@@ -201,7 +218,8 @@ mod tests {
         let _ = std::fs::remove_file(&path);
         {
             let s = Store::open_at(&path).expect("open");
-            s.record_attempt("esd", "c2", "esd.mcu", "q1", true, "chapter").unwrap();
+            s.record_attempt("esd", "c2", "esd.mcu", "q1", true, "chapter")
+                .unwrap();
         }
         // 旧库上再开一次:建表语句全部 IF NOT EXISTS,升级路径不走迁移框架。
         let s = Store::open_at(&path).expect("reopen");
@@ -213,7 +231,8 @@ mod tests {
     fn summary_counts_and_streak_stop_at_first_wrong() {
         let s = store();
         let rec = |correct: bool| {
-            s.record_attempt("esd", "c2", "esd.mcu", "q", correct, "chapter").unwrap();
+            s.record_attempt("esd", "c2", "esd.mcu", "q", correct, "chapter")
+                .unwrap();
         };
         rec(true);
         rec(true);

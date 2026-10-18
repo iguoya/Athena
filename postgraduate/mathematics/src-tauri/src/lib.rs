@@ -128,8 +128,8 @@ fn get_app_info(state: tauri::State<'_, Mutex<AppState>>) -> Result<AppInfo, Str
 fn load_curriculum(state: tauri::State<'_, Mutex<AppState>>) -> Result<serde_json::Value, String> {
     let s = state.lock().unwrap();
     let path = s.content_root.join("content/curriculum.json");
-    let text = fs::read_to_string(&path)
-        .map_err(|e| format!("读取课表失败 {}：{e}", path.display()))?;
+    let text =
+        fs::read_to_string(&path).map_err(|e| format!("读取课表失败 {}：{e}", path.display()))?;
     serde_json::from_str(&text).map_err(|e| format!("课表 JSON 解析失败：{e}"))
 }
 
@@ -137,8 +137,8 @@ fn load_curriculum(state: tauri::State<'_, Mutex<AppState>>) -> Result<serde_jso
 fn load_diagnostics(state: tauri::State<'_, Mutex<AppState>>) -> Result<serde_json::Value, String> {
     let s = state.lock().unwrap();
     let path = s.content_root.join("content/diagnostics.json");
-    let text = fs::read_to_string(&path)
-        .map_err(|e| format!("读取诊断题失败 {}：{e}", path.display()))?;
+    let text =
+        fs::read_to_string(&path).map_err(|e| format!("读取诊断题失败 {}：{e}", path.display()))?;
     serde_json::from_str(&text).map_err(|e| format!("诊断题 JSON 解析失败：{e}"))
 }
 
@@ -162,9 +162,7 @@ fn save_progress(
 }
 
 #[tauri::command]
-fn load_all_progress(
-    state: tauri::State<'_, Mutex<AppState>>,
-) -> Result<Vec<ProgressRow>, String> {
+fn load_all_progress(state: tauri::State<'_, Mutex<AppState>>) -> Result<Vec<ProgressRow>, String> {
     let s = state.lock().unwrap();
     ensure_schema(&s.store_path)?;
     let conn = rusqlite::Connection::open(&s.store_path).map_err(|e| e.to_string())?;

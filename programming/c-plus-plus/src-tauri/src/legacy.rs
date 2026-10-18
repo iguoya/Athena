@@ -71,12 +71,9 @@ pub fn open(course_root: &Path) -> Result<String, String> {
         cmd.env("PATH", prepend_path(&runtime));
     }
 
-    let mut child = cmd.spawn().map_err(|error| {
-        format!(
-            "启动失败：{error}\n程序在 {}",
-            binary.display()
-        )
-    })?;
+    let mut child = cmd
+        .spawn()
+        .map_err(|error| format!("启动失败：{error}\n程序在 {}", binary.display()))?;
     thread::sleep(Duration::from_millis(500));
     match child.try_wait() {
         Ok(Some(status)) => Err(format!(

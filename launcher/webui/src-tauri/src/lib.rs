@@ -281,7 +281,10 @@ pub mod commands {
     }
 
     #[tauri::command]
-    pub fn mindmap(repo: State<Repo>, include_archived: Option<bool>) -> Result<MindmapDto, String> {
+    pub fn mindmap(
+        repo: State<Repo>,
+        include_archived: Option<bool>,
+    ) -> Result<MindmapDto, String> {
         let apps = discover_all(&repo.0);
         crate::watch::remember(&apps);
         // 归档默认不呈现（ADR 0139）；「显示归档」开关打开时以淡显节点进来。
@@ -429,8 +432,10 @@ pub fn run() {
             }
             match resident::install(app.handle(), &window, quitting) {
                 Ok(icon) => {
-                    *app.state::<resident::TraySlot>().0.lock().unwrap_or_else(|p| p.into_inner()) =
-                        Some(icon);
+                    *app.state::<resident::TraySlot>()
+                        .0
+                        .lock()
+                        .unwrap_or_else(|p| p.into_inner()) = Some(icon);
                 }
                 Err(error) => {
                     eprintln!("托盘没能建起来，窗口照常能用：{error}");

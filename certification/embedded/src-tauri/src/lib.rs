@@ -19,22 +19,34 @@ fn record_attempt(
 
 #[tauri::command]
 fn attempts_summary() -> Result<Vec<KpSummary>, String> {
-    Store::open().map_err(|e| e.to_string())?.attempts_summary().map_err(|e| e.to_string())
+    Store::open()
+        .map_err(|e| e.to_string())?
+        .attempts_summary()
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn today_stats() -> Result<TodayStats, String> {
-    Store::open().map_err(|e| e.to_string())?.today_stats().map_err(|e| e.to_string())
+    Store::open()
+        .map_err(|e| e.to_string())?
+        .today_stats()
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn load_setting(key: String) -> Result<Option<String>, String> {
-    Store::open().map_err(|e| e.to_string())?.get_setting(&key).map_err(|e| e.to_string())
+    Store::open()
+        .map_err(|e| e.to_string())?
+        .get_setting(&key)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn save_setting(key: String, value: String) -> Result<(), String> {
-    Store::open().map_err(|e| e.to_string())?.set_setting(&key, &value).map_err(|e| e.to_string())
+    Store::open()
+        .map_err(|e| e.to_string())?
+        .set_setting(&key, &value)
+        .map_err(|e| e.to_string())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

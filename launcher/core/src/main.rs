@@ -68,7 +68,13 @@ fn main() -> ExitCode {
                 } else {
                     "  （app.json 里还没有 dev.run）".to_string()
                 };
-                line(&format!("{}\t{}\t{}{}", app.id, app.title, state.label(), note));
+                line(&format!(
+                    "{}\t{}\t{}{}",
+                    app.id,
+                    app.title,
+                    state.label(),
+                    note
+                ));
             }
             ExitCode::SUCCESS
         }
@@ -101,7 +107,10 @@ fn main() -> ExitCode {
             // 默认清单已经包含 postgraduate/、practice/、certification/、mentor/ 与 tools/。指定了 --root 就只渲染那一层。
             match launcher_core::icons::render_all(&apps, check, line) {
                 Ok(report) if check && report.stale > 0 => {
-                    eprintln!("{} 份位图和 icon.svg 对不上，跑一次 `launcher icons`。", report.stale);
+                    eprintln!(
+                        "{} 份位图和 icon.svg 对不上，跑一次 `launcher icons`。",
+                        report.stale
+                    );
                     ExitCode::FAILURE
                 }
                 Ok(report) => {
@@ -130,7 +139,10 @@ fn main() -> ExitCode {
                 let only = arguments.get(2).map(String::as_str);
                 let results = launcher_core::progress_sync::sync_all(&apps, &snapshot, only);
                 if results.is_empty() {
-                    eprintln!("没有声明了 progress 的应用{}。", only.map(|id| format!("（{id}）")).unwrap_or_default());
+                    eprintln!(
+                        "没有声明了 progress 的应用{}。",
+                        only.map(|id| format!("（{id}）")).unwrap_or_default()
+                    );
                     return ExitCode::FAILURE;
                 }
                 let mut failed = false;
@@ -149,7 +161,11 @@ fn main() -> ExitCode {
                         }
                     }
                 }
-                if failed { ExitCode::FAILURE } else { ExitCode::SUCCESS }
+                if failed {
+                    ExitCode::FAILURE
+                } else {
+                    ExitCode::SUCCESS
+                }
             }
             Some("status") => {
                 for entry in launcher_core::progress_sync::status(&apps) {

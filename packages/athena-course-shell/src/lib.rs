@@ -173,7 +173,12 @@ fn safe_path_segment(raw: &str) -> String {
 }
 
 fn detect_clang_format() -> String {
-    for cand in ["clang-format", "clang-format-18", "clang-format-16", "clang-format-15"] {
+    for cand in [
+        "clang-format",
+        "clang-format-18",
+        "clang-format-16",
+        "clang-format-15",
+    ] {
         if Command::new(cand)
             .arg("--version")
             .output()
@@ -259,7 +264,11 @@ fn load_curriculum(state: State<'_>) -> Result<serde_json::Value, String> {
 }
 
 #[tauri::command]
-fn load_case_source(state: State<'_>, case_id: String, entrypoint: String) -> Result<String, String> {
+fn load_case_source(
+    state: State<'_>,
+    case_id: String,
+    entrypoint: String,
+) -> Result<String, String> {
     let root = state.lock().unwrap().content_root.clone();
     let path = case_path(&root, &case_id, &entrypoint)?;
     fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))
@@ -461,7 +470,18 @@ mod tests {
         for ok in ["main.cpp", "list-basic", "a_b.c", "_shared"] {
             assert!(is_plain_segment(ok), "{ok} 应当合法");
         }
-        for bad in ["", ".", "..", "../x", "a/b", "a\\b", "/etc/passwd", "C:x", "a b", "中文"] {
+        for bad in [
+            "",
+            ".",
+            "..",
+            "../x",
+            "a/b",
+            "a\\b",
+            "/etc/passwd",
+            "C:x",
+            "a b",
+            "中文",
+        ] {
             assert!(!is_plain_segment(bad), "{bad:?} 应当被拒绝");
         }
     }

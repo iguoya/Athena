@@ -72,7 +72,10 @@ impl Point {
         Self { x, y }
     }
     fn from_polar(center: Point, radius: f32, angle: f32) -> Self {
-        Self::new(center.x + radius * angle.cos(), center.y + radius * angle.sin())
+        Self::new(
+            center.x + radius * angle.cos(),
+            center.y + radius * angle.sin(),
+        )
     }
     fn minus(self, other: Point) -> Point {
         Point::new(self.x - other.x, self.y - other.y)
@@ -113,7 +116,10 @@ impl Ellipse {
     }
     /// 向外长一层（层距沿两个轴各长 `LAYER_GAP`，保证斜着相邻的两层图块错不开对角线）。
     fn next_layer(&self) -> Self {
-        Self { a: self.a + LAYER_GAP, b: self.b + LAYER_GAP }
+        Self {
+            a: self.a + LAYER_GAP,
+            b: self.b + LAYER_GAP,
+        }
     }
     fn at(&self, t: f32) -> Point {
         Point::new(self.a * t.cos(), self.b * t.sin())
@@ -160,10 +166,26 @@ fn clip_to_tile(center: Point, toward: Point, pad: f32) -> Point {
     let half_w = CONTENT_HALF_W + pad;
     let above = CONTENT_ABOVE + pad;
     let below = CONTENT_BELOW + pad;
-    let tx = if d.x > 0.0 { half_w / d.x } else if d.x < 0.0 { -half_w / d.x } else { f32::INFINITY };
-    let ty = if d.y > 0.0 { below / d.y } else if d.y < 0.0 { -above / d.y } else { f32::INFINITY };
+    let tx = if d.x > 0.0 {
+        half_w / d.x
+    } else if d.x < 0.0 {
+        -half_w / d.x
+    } else {
+        f32::INFINITY
+    };
+    let ty = if d.y > 0.0 {
+        below / d.y
+    } else if d.y < 0.0 {
+        -above / d.y
+    } else {
+        f32::INFINITY
+    };
     let t = tx.min(ty);
-    if t.is_finite() { center.plus(d.scale(t)) } else { center }
+    if t.is_finite() {
+        center.plus(d.scale(t))
+    } else {
+        center
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -179,7 +201,10 @@ pub struct GroupNode {
 
 /// 胶囊宽度：汉字按 14px、其余按 8px 估（13px 字号），两边各留 14px。
 pub fn pill_width(name: &str) -> f32 {
-    let text: f32 = name.chars().map(|c| if c.is_ascii() { 8.0 } else { 14.0 }).sum();
+    let text: f32 = name
+        .chars()
+        .map(|c| if c.is_ascii() { 8.0 } else { 14.0 })
+        .sum();
     (text + 28.0).clamp(64.0, 150.0)
 }
 
@@ -276,7 +301,11 @@ pub fn layout(apps: &[App]) -> MindMap {
     for (i, app) in apps.iter().enumerate() {
         for target in &app.also_under {
             let Some(t) = index_of(target) else { continue };
-            if t == i || attached_to[i] == Some(t) || raw_targets[t].is_some() || references.contains(&(i, t)) {
+            if t == i
+                || attached_to[i] == Some(t)
+                || raw_targets[t].is_some()
+                || references.contains(&(i, t))
+            {
                 continue;
             }
             references.push((i, t));
@@ -330,7 +359,12 @@ pub fn layout(apps: &[App]) -> MindMap {
     let mut group_refs: Vec<(usize, usize)> = Vec::new(); // (应用, 领域)
     for (i, app) in apps.iter().enumerate() {
         for name in &app.also_in {
-            let Some(g) = group_names.iter().position(|existing| existing == name.trim()) else { continue };
+            let Some(g) = group_names
+                .iter()
+                .position(|existing| existing == name.trim())
+            else {
+                continue;
+            };
             if g == group_of[i] || group_refs.contains(&(i, g)) {
                 continue;
             }
@@ -356,7 +390,10 @@ pub fn layout(apps: &[App]) -> MindMap {
     }
     // 引用节点（下标 ≥ apps.len()）没有子节点。
     let kids_of = |g: usize| -> usize {
-        members[g].iter().map(|&i| children_count.get(i).copied().unwrap_or(0)).sum()
+        members[g]
+            .iter()
+            .map(|&i| children_count.get(i).copied().unwrap_or(0))
+            .sum()
     };
     let mut layers: Vec<Ellipse> = vec![Ellipse::new((PILL_B + 153.0).max(INNER_B_MIN))];
     let mut layer_load: Vec<f32> = vec![0.0];
@@ -374,7 +411,9 @@ pub fn layout(apps: &[App]) -> MindMap {
             let ratio = layer.perimeter() / layer.next_layer().perimeter();
             member.max(kids as f32 * SLOT * ratio)
         };
-        (kids_of(y) > 0).cmp(&(kids_of(x) > 0)).then_with(|| share(y).total_cmp(&share(x)))
+        (kids_of(y) > 0)
+            .cmp(&(kids_of(x) > 0))
+            .then_with(|| share(y).total_cmp(&share(x)))
     });
     for &g in &order {
         let kids = kids_of(g);
@@ -421,7 +460,9 @@ pub fn layout(apps: &[App]) -> MindMap {
                 let need = if kids == 0 {
                     member
                 } else {
-                    member.max(kids as f32 * SLOT * layer.perimeter() / layer.next_layer().perimeter())
+                    member.max(
+                        kids as f32 * SLOT * layer.perimeter() / layer.next_layer().perimeter(),
+                    )
                 };
                 occupants.push((g, need));
             } else if ring_layer[g] + 1 == k && kids > 0 {
@@ -448,7 +489,10 @@ pub fn layout(apps: &[App]) -> MindMap {
     //    重叠。所以胶囊按「自己组成员扇区的中点角」排序后，沿轨道等弧长安放：
     //    顺序与组方向一致、相邻必隔一个最宽胶囊加间隙。装不下就把椭圆按比例
     //    放大，同时抬高内层下限（保持长短轴比例），层距不小于 ≈152。
-    let mut pill = Ellipse { a: PILL_B * ASPECT, b: PILL_B };
+    let mut pill = Ellipse {
+        a: PILL_B * ASPECT,
+        b: PILL_B,
+    };
     let widths: Vec<f32> = group_names.iter().map(|name| pill_width(name)).collect();
     let mut by_angle: Vec<usize> = (0..group_count).collect();
     by_angle.sort_by(|&x, &y| {
@@ -458,13 +502,19 @@ pub fn layout(apps: &[App]) -> MindMap {
     });
     let need = group_count as f32 * (widths.iter().copied().fold(0.0, f32::max) + PILL_GAP);
     while pill.perimeter() < need {
-        pill = Ellipse { a: pill.a + 8.0 * ASPECT, b: pill.b + 8.0 };
+        pill = Ellipse {
+            a: pill.a + 8.0 * ASPECT,
+            b: pill.b + 8.0,
+        };
     }
     let want = (pill.b + 153.0).max(INNER_B_MIN);
     if layers[0].b < want {
         let lift = want - layers[0].b;
         for layer in &mut layers {
-            *layer = Ellipse { a: layer.a + lift * ASPECT, b: layer.b + lift };
+            *layer = Ellipse {
+                a: layer.a + lift * ASPECT,
+                b: layer.b + lift,
+            };
         }
     }
     let pill_angle: Vec<f32> = (0..group_count)
@@ -534,7 +584,11 @@ pub fn layout(apps: &[App]) -> MindMap {
         let (t0, t1) = child_sector[g].unwrap_or(member_sector[g]);
         let seg = layer.arc_len(t0, t1);
         let n = children.len() as f32;
-        let gap = if n > 1.0 && n * SLOT > seg { seg / (n + 1.0) } else { SLOT };
+        let gap = if n > 1.0 && n * SLOT > seg {
+            seg / (n + 1.0)
+        } else {
+            SLOT
+        };
         let parent_s = layer.arc_len(t0, node_theta[p]);
         let span = gap * (n - 1.0);
         let (lo, hi) = (gap / 2.0, (seg - gap / 2.0).max(gap / 2.0));
@@ -569,7 +623,11 @@ pub fn layout(apps: &[App]) -> MindMap {
     let mut max_x = f32::NEG_INFINITY;
     let mut min_y = f32::INFINITY;
     let mut max_y = f32::NEG_INFINITY;
-    for p in node_at.iter().chain(attach_at.iter().flatten()).chain(groups.iter().map(|g| &g.at)) {
+    for p in node_at
+        .iter()
+        .chain(attach_at.iter().flatten())
+        .chain(groups.iter().map(|g| &g.at))
+    {
         min_x = min_x.min(p.x);
         max_x = max_x.max(p.x);
         min_y = min_y.min(p.y);
@@ -577,7 +635,10 @@ pub fn layout(apps: &[App]) -> MindMap {
     }
     if !min_x.is_finite() {
         // 空清单：画布只剩胶囊层的内容感。
-        min_x = -pill.a; max_x = pill.a; min_y = -pill.b; max_y = pill.b;
+        min_x = -pill.a;
+        max_x = pill.a;
+        min_y = -pill.b;
+        max_y = pill.b;
     }
     // 虎头在原点，也必须在画布里——内容可能全在一侧（比如只有一个应用）。
     min_x = min_x.min(-HUB_R);
@@ -595,7 +656,13 @@ pub fn layout(apps: &[App]) -> MindMap {
     for at in attach_at.iter_mut().flatten() {
         *at = at.plus(center);
     }
-    let mut groups: Vec<GroupNode> = groups.into_iter().map(|mut g| { g.at = g.at.plus(center); g }).collect();
+    let mut groups: Vec<GroupNode> = groups
+        .into_iter()
+        .map(|mut g| {
+            g.at = g.at.plus(center);
+            g
+        })
+        .collect();
 
     let mut nodes: Vec<AppNode> = apps
         .iter()
@@ -607,7 +674,11 @@ pub fn layout(apps: &[App]) -> MindMap {
                 Some(at) => at,
                 None => node_at[i],
             },
-            layer: if attached_to[i].is_some() { attach_layer[i] } else { node_layer[i] },
+            layer: if attached_to[i].is_some() {
+                attach_layer[i]
+            } else {
+                node_layer[i]
+            },
             reference: false,
         })
         .collect();
@@ -724,7 +795,15 @@ pub fn layout(apps: &[App]) -> MindMap {
         }
     }
 
-    MindMap { width: max_x - min_x, height: max_y - min_y, center, rings, groups, nodes, links }
+    MindMap {
+        width: max_x - min_x,
+        height: max_y - min_y,
+        center,
+        rings,
+        groups,
+        nodes,
+        links,
+    }
 }
 
 /// 同心环的静态位图：直通 alpha 的 RGBA，外加它覆盖的画布区域（逻辑像素）。
@@ -770,7 +849,11 @@ fn rings_pixmap(map: &MindMap, scale: f32) -> (resvg::tiny_skia::Pixmap, f32, f3
     let pw = ((w * scale).round() as u32).max(1);
     let ph = ((h * scale).round() as u32).max(1);
     let mut pixmap = resvg::tiny_skia::Pixmap::new(pw, ph).expect("同心环位图分配失败");
-    resvg::render(&tree, resvg::tiny_skia::Transform::from_scale(scale, scale), &mut pixmap.as_mut());
+    resvg::render(
+        &tree,
+        resvg::tiny_skia::Transform::from_scale(scale, scale),
+        &mut pixmap.as_mut(),
+    );
     (pixmap, map.center.x - half_w, map.center.y - half_h, w, h)
 }
 
@@ -788,7 +871,13 @@ pub struct RingsPng {
 pub fn rings_png(map: &MindMap, scale: f32) -> RingsPng {
     let (pixmap, x, y, w, h) = rings_pixmap(map, scale);
     let png = pixmap.encode_png().expect("同心环 PNG 编码失败");
-    RingsPng { png, x, y, width: w, height: h }
+    RingsPng {
+        png,
+        x,
+        y,
+        width: w,
+        height: h,
+    }
 }
 
 /// 把同心环画成一张静态位图，界面拿 Image 铺底。
@@ -823,7 +912,13 @@ pub fn rings_bitmap(map: &MindMap, scale: f32) -> RingsBitmap {
     }
 }
 
-fn straight(kind: LinkKind, color: &'static str, from: Point, to: Point, ends: (usize, usize)) -> Link {
+fn straight(
+    kind: LinkKind,
+    color: &'static str,
+    from: Point,
+    to: Point,
+    ends: (usize, usize),
+) -> Link {
     let c1 = from.plus(to.minus(from).scale(1.0 / 3.0));
     let c2 = from.plus(to.minus(from).scale(2.0 / 3.0));
     Link {
@@ -905,10 +1000,24 @@ fn curved(
         let normal = Point::new(-direction.y, direction.x);
         let tip = to.plus(direction.scale(6.0));
         let base = to.minus(direction.scale(8.0));
-        [tip, base.plus(normal.scale(6.0)), base.minus(normal.scale(6.0))]
+        [
+            tip,
+            base.plus(normal.scale(6.0)),
+            base.minus(normal.scale(6.0)),
+        ]
     });
     let dashes = dash_segments(from, c1, c2, to);
-    Link { kind, color, from, c1, c2, to, arrow, ends, dashes }
+    Link {
+        kind,
+        color,
+        from,
+        c1,
+        c2,
+        to,
+        arrow,
+        ends,
+        dashes,
+    }
 }
 
 #[cfg(test)]
@@ -943,10 +1052,20 @@ mod tests {
 
     /// 图块的外框（左、上、右、下）。
     fn tile_box(node: &AppNode) -> (f32, f32, f32, f32) {
-        (node.at.x - TILE_W / 2.0, node.at.y - ICON_CENTER_Y, node.at.x + TILE_W / 2.0, node.at.y - ICON_CENTER_Y + TILE_H)
+        (
+            node.at.x - TILE_W / 2.0,
+            node.at.y - ICON_CENTER_Y,
+            node.at.x + TILE_W / 2.0,
+            node.at.y - ICON_CENTER_Y + TILE_H,
+        )
     }
     fn pill_box(group: &GroupNode) -> (f32, f32, f32, f32) {
-        (group.at.x - group.width / 2.0, group.at.y - PILL_H / 2.0, group.at.x + group.width / 2.0, group.at.y + PILL_H / 2.0)
+        (
+            group.at.x - group.width / 2.0,
+            group.at.y - PILL_H / 2.0,
+            group.at.x + group.width / 2.0,
+            group.at.y + PILL_H / 2.0,
+        )
     }
     fn overlap(a: (f32, f32, f32, f32), b: (f32, f32, f32, f32)) -> bool {
         a.0 < b.2 && b.0 < a.2 && a.1 < b.3 && b.1 < a.3
@@ -955,7 +1074,10 @@ mod tests {
     fn assert_clean(map: &MindMap) {
         let tiles: Vec<_> = map.nodes.iter().map(tile_box).collect();
         for (i, a) in tiles.iter().enumerate() {
-            assert!(a.0 >= 0.0 && a.1 >= 0.0 && a.2 <= map.width && a.3 <= map.height, "图块 {i} 出了画布");
+            assert!(
+                a.0 >= 0.0 && a.1 >= 0.0 && a.2 <= map.width && a.3 <= map.height,
+                "图块 {i} 出了画布"
+            );
             for (j, b) in tiles.iter().enumerate().skip(i + 1) {
                 assert!(!overlap(*a, *b), "图块 {i} 与 {j} 重叠");
             }
@@ -967,7 +1089,12 @@ mod tests {
             let p = pill_box(group);
             assert!(p.0 >= 0.0 && p.1 >= 0.0 && p.2 <= map.width && p.3 <= map.height);
             for (j, other) in map.groups.iter().enumerate().skip(i + 1) {
-                assert!(!overlap(p, pill_box(other)), "分组 {i}（{}）与 {j}（{}）的胶囊重叠", group.name, other.name);
+                assert!(
+                    !overlap(p, pill_box(other)),
+                    "分组 {i}（{}）与 {j}（{}）的胶囊重叠",
+                    group.name,
+                    other.name
+                );
             }
         }
         for link in &map.links {
@@ -981,26 +1108,56 @@ mod tests {
             }
             for point in [link.from, link.c1, link.c2, link.to] {
                 assert!(point.x.is_finite() && point.y.is_finite());
-                assert!(point.x >= 0.0 && point.y >= 0.0 && point.x <= map.width && point.y <= map.height, "连线出了画布");
+                assert!(
+                    point.x >= 0.0
+                        && point.y >= 0.0
+                        && point.x <= map.width
+                        && point.y <= map.height,
+                    "连线出了画布"
+                );
             }
         }
     }
 
     #[test]
     fn 每个应用一个节点且与输入同序() {
-        let apps = vec![app("a", Some("甲"), None, &[]), app("b", Some("乙"), None, &[]), app("c", Some("甲"), None, &[])];
+        let apps = vec![
+            app("a", Some("甲"), None, &[]),
+            app("b", Some("乙"), None, &[]),
+            app("c", Some("甲"), None, &[]),
+        ];
         let map = layout(&apps);
-        assert_eq!(map.nodes.iter().map(|n| n.id.as_str()).collect::<Vec<_>>(), ["a", "b", "c"]);
+        assert_eq!(
+            map.nodes.iter().map(|n| n.id.as_str()).collect::<Vec<_>>(),
+            ["a", "b", "c"]
+        );
         assert_clean(&map);
     }
 
     #[test]
     fn 分组按首次出现排_没写_group_的归其他() {
-        let apps = vec![app("a", Some("乙"), None, &[]), app("b", None, None, &[]), app("c", Some("乙"), None, &[]), app("d", Some("  "), None, &[])];
+        let apps = vec![
+            app("a", Some("乙"), None, &[]),
+            app("b", None, None, &[]),
+            app("c", Some("乙"), None, &[]),
+            app("d", Some("  "), None, &[]),
+        ];
         let map = layout(&apps);
-        assert_eq!(map.groups.iter().map(|g| g.name.as_str()).collect::<Vec<_>>(), ["乙", "其他"]);
-        assert_eq!(map.groups.iter().map(|g| g.apps).collect::<Vec<_>>(), [2, 2]);
-        assert_eq!(map.nodes.iter().map(|n| n.group).collect::<Vec<_>>(), [0, 1, 0, 1]);
+        assert_eq!(
+            map.groups
+                .iter()
+                .map(|g| g.name.as_str())
+                .collect::<Vec<_>>(),
+            ["乙", "其他"]
+        );
+        assert_eq!(
+            map.groups.iter().map(|g| g.apps).collect::<Vec<_>>(),
+            [2, 2]
+        );
+        assert_eq!(
+            map.nodes.iter().map(|n| n.group).collect::<Vec<_>>(),
+            [0, 1, 0, 1]
+        );
     }
 
     #[test]
@@ -1015,9 +1172,17 @@ mod tests {
         assert_eq!(kinds(LinkKind::Evolves), 1);
         assert_eq!(kinds(LinkKind::Related), 1);
         assert_eq!(kinds(LinkKind::Branch), 3);
-        let evolves = map.links.iter().find(|l| l.kind == LinkKind::Evolves).unwrap();
+        let evolves = map
+            .links
+            .iter()
+            .find(|l| l.kind == LinkKind::Evolves)
+            .unwrap();
         assert!(evolves.arrow.is_some());
-        assert!(map.links.iter().filter(|l| l.kind != LinkKind::Evolves).all(|l| l.arrow.is_none()));
+        assert!(map
+            .links
+            .iter()
+            .filter(|l| l.kind != LinkKind::Evolves)
+            .all(|l| l.arrow.is_none()));
         assert_clean(&map);
     }
 
@@ -1025,7 +1190,9 @@ mod tests {
     fn 一个组应用很多时加外圈而不重叠() {
         // 数量要压得过放大后的内层周长预算（16 × SLOT > 内层周长 × 0.97），
         // 否则整组装得下单层，就构造不出「外推」的场景了。
-        let apps: Vec<App> = (0..16).map(|i| app(&format!("a{i}"), Some("大组"), None, &[])).collect();
+        let apps: Vec<App> = (0..16)
+            .map(|i| app(&format!("a{i}"), Some("大组"), None, &[]))
+            .collect();
         let map = layout(&apps);
         // 大组装不下内层时整组外推(兄弟同层,ADR 0101),而不是把后排兄弟拆到内层。
         assert!(
@@ -1043,11 +1210,26 @@ mod tests {
     #[test]
     fn 很多单应用的领域挨在一起时胶囊不重叠() {
         // 每个领域一个应用：扇区都是最小的，胶囊最容易叠在一起；名字长短不一
-        let names = ["编程语言", "英语", "数理基础与方法", "图谱", "考试", "算法", "Tools", "其它领域"];
-        let apps: Vec<App> = names.iter().enumerate().map(|(i, n)| app(&format!("a{i}"), Some(n), None, &[])).collect();
+        let names = [
+            "编程语言",
+            "英语",
+            "数理基础与方法",
+            "图谱",
+            "考试",
+            "算法",
+            "Tools",
+            "其它领域",
+        ];
+        let apps: Vec<App> = names
+            .iter()
+            .enumerate()
+            .map(|(i, n)| app(&format!("a{i}"), Some(n), None, &[]))
+            .collect();
         assert_clean(&layout(&apps));
         // 再多几个
-        let many: Vec<App> = (0..12).map(|i| app(&format!("m{i}"), Some(&format!("领域{i}")), None, &[])).collect();
+        let many: Vec<App> = (0..12)
+            .map(|i| app(&format!("m{i}"), Some(&format!("领域{i}")), None, &[]))
+            .collect();
         assert_clean(&layout(&many));
     }
 
@@ -1078,14 +1260,17 @@ mod tests {
             "挂靠节点应在挂靠者外一层"
         );
         // 但不与挂靠者径向共线:独子也偏开一个身位,父、子、连线不排成一条直线。
-        assert!(
-            p.minus(c).length() > 1.0,
-            "挂靠节点不应与挂靠者径向共线"
-        );
-        assert!(map.links.iter().any(|l| l.kind == LinkKind::Attach && l.arrow.is_some()));
+        assert!(p.minus(c).length() > 1.0, "挂靠节点不应与挂靠者径向共线");
+        assert!(map
+            .links
+            .iter()
+            .any(|l| l.kind == LinkKind::Attach && l.arrow.is_some()));
         // 挂靠节点没有领域分支线:softcert 与 ghost 是普通成员(2 条),dsa 只有挂靠线。
         assert_eq!(
-            map.links.iter().filter(|l| l.kind == LinkKind::Branch).count(),
+            map.links
+                .iter()
+                .filter(|l| l.kind == LinkKind::Branch)
+                .count(),
             2,
             "挂靠节点不应有领域胶囊连来的分支线"
         );
@@ -1121,22 +1306,29 @@ mod tests {
         let c_node = map.nodes.iter().find(|n| n.id == "c").unwrap();
         // 回退后的 c 不在画布原点，且没有指向它的挂靠线。
         assert!(c_node.at.x > 0.0 && c_node.at.y > 0.0);
-        assert!(!map.links.iter().any(|l| l.kind == LinkKind::Attach
-            && (l.to == c_node.at || l.from == c_node.at)));
+        assert!(!map
+            .links
+            .iter()
+            .any(|l| l.kind == LinkKind::Attach && (l.to == c_node.at || l.from == c_node.at)));
         assert!(map.links.iter().any(|l| l.kind == LinkKind::Attach)); // a→b 这条还在
         assert_clean(&map);
     }
 
     #[test]
     fn 布局是确定的() {
-        let apps = vec![app("a", Some("甲"), None, &["b"]), app("b", Some("乙"), Some("a"), &[])];
+        let apps = vec![
+            app("a", Some("甲"), None, &["b"]),
+            app("b", Some("乙"), Some("a"), &[]),
+        ];
         assert_eq!(layout(&apps), layout(&apps));
     }
 
     /// 拿仓库里真实的应用清单排一遍：新增应用或改 group 之后，这里先报错，不用等看截图。
     #[test]
     fn 仓库里的真实清单排得干净() {
-        let repo = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..").join("..");
+        let repo = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("..")
+            .join("..");
         let mut apps = crate::manifest::discover_all(&repo);
         if apps.is_empty() {
             return; // 不在完整仓库里（例如单独打包的 crate）
@@ -1144,7 +1336,10 @@ mod tests {
         // 与启动器画的是同一份：两个发现根，去掉隐藏的服务（ADR 0093）。
         apps.retain(|app| !app.hidden);
         let map = layout(&apps);
-        assert_eq!(map.nodes.iter().filter(|n| !n.reference).count(), apps.len());
+        assert_eq!(
+            map.nodes.iter().filter(|n| !n.reference).count(),
+            apps.len()
+        );
         // gui 冻结后（ADR 0125）同心椭圆布局不再修补：真实清单涨到 30+ 图块后
         // 画布装不下是已知问题、由 webui 的 3D 轨道布局接棒。重叠降为编译期警告
         // 输出，出画布仍是硬断言；合成清单的零重叠由上面的测试继续守护。
@@ -1157,7 +1352,9 @@ mod tests {
             }
         }
         assert!(
-            tiles.iter().all(|a| a.0 >= 0.0 && a.1 >= 0.0 && a.2 <= map.width && a.3 <= map.height),
+            tiles
+                .iter()
+                .all(|a| a.0 >= 0.0 && a.1 >= 0.0 && a.2 <= map.width && a.3 <= map.height),
             "图块出了画布"
         );
     }
@@ -1168,23 +1365,52 @@ mod tests {
         let b = app("b", Some("乙"), None, &[]);
         let mut c = app("c", Some("甲"), None, &[]);
         // 乙有效；甲是本体所在领域、丙不存在、乙重复一次——只留一个乙。
-        c.also_in = ["乙", "甲", "丙", "乙"].iter().map(|s| s.to_string()).collect();
+        c.also_in = ["乙", "甲", "丙", "乙"]
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
         let mut d = app("d", Some("甲"), None, &[]);
         d.parent = Some("a".to_string());
         // 挂靠节点的领域沿用挂靠者（甲），所以甲忽略；乙有效。
         d.also_in = vec!["甲".to_string(), "乙".to_string()];
         let map = layout(&[a, b, c, d]);
 
-        let ids: Vec<_> = map.nodes.iter().map(|n| (n.id.as_str(), n.reference)).collect();
-        assert_eq!(ids, [("a", false), ("b", false), ("c", false), ("d", false), ("c", true), ("d", true)]);
+        let ids: Vec<_> = map
+            .nodes
+            .iter()
+            .map(|n| (n.id.as_str(), n.reference))
+            .collect();
+        assert_eq!(
+            ids,
+            [
+                ("a", false),
+                ("b", false),
+                ("c", false),
+                ("d", false),
+                ("c", true),
+                ("d", true)
+            ]
+        );
         let yi = map.groups.iter().position(|g| g.name == "乙").unwrap();
         assert!(map.nodes[4..].iter().all(|n| n.group == yi));
         assert_eq!(map.groups[yi].apps, 3, "两个引用节点算进乙圈的成员");
         // 引用节点与 b 同层（同一条椭圆轨道）。
         assert_eq!(map.nodes[4].layer, map.nodes[1].layer);
         // 领域胶囊连向引用节点的是引用线，不是分支线：分支线只有 a、b、c 三条。
-        assert_eq!(map.links.iter().filter(|l| l.kind == LinkKind::Reference).count(), 2);
-        assert_eq!(map.links.iter().filter(|l| l.kind == LinkKind::Branch).count(), 3);
+        assert_eq!(
+            map.links
+                .iter()
+                .filter(|l| l.kind == LinkKind::Reference)
+                .count(),
+            2
+        );
+        assert_eq!(
+            map.links
+                .iter()
+                .filter(|l| l.kind == LinkKind::Branch)
+                .count(),
+            3
+        );
         assert_clean(&map);
     }
 
@@ -1195,7 +1421,10 @@ mod tests {
         let mut c = app("c", Some("甲"), None, &[]);
         c.parent = Some("a".to_string());
         // b 有效；a 与主挂靠重复、ghost 解析不到、c 指向自己、b 重复一次——都只留一个 b。
-        c.also_under = ["b", "a", "ghost", "c", "b"].iter().map(|s| s.to_string()).collect();
+        c.also_under = ["b", "a", "ghost", "c", "b"]
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
         let mut d = app("d", Some("甲"), None, &[]);
         d.parent = Some("a".to_string());
         d.also_under = vec!["c".to_string()]; // c 自己是挂靠节点：深度一层，忽略
@@ -1203,16 +1432,47 @@ mod tests {
         e.also_under = vec!["b".to_string()]; // 没有主挂靠的普通成员也能被引用到别处
         let map = layout(&[a, b, c, d, e]);
 
-        let ids: Vec<_> = map.nodes.iter().map(|n| (n.id.as_str(), n.reference)).collect();
-        assert_eq!(ids, [("a", false), ("b", false), ("c", false), ("d", false), ("e", false), ("c", true), ("e", true)]);
+        let ids: Vec<_> = map
+            .nodes
+            .iter()
+            .map(|n| (n.id.as_str(), n.reference))
+            .collect();
+        assert_eq!(
+            ids,
+            [
+                ("a", false),
+                ("b", false),
+                ("c", false),
+                ("d", false),
+                ("e", false),
+                ("c", true),
+                ("e", true)
+            ]
+        );
         // 引用节点着挂靠者的色，连线是单独的引用种类且带箭头。
         assert!(map.nodes[5..].iter().all(|n| n.group == map.nodes[1].group));
-        let refs: Vec<_> = map.links.iter().filter(|l| l.kind == LinkKind::Reference).collect();
+        let refs: Vec<_> = map
+            .links
+            .iter()
+            .filter(|l| l.kind == LinkKind::Reference)
+            .collect();
         assert_eq!(refs.len(), 2);
         assert!(refs.iter().all(|l| l.arrow.is_some()));
-        assert_eq!(map.links.iter().filter(|l| l.kind == LinkKind::Attach).count(), 2);
+        assert_eq!(
+            map.links
+                .iter()
+                .filter(|l| l.kind == LinkKind::Attach)
+                .count(),
+            2
+        );
         // 本体 e 仍在自己的领域里有分支线；引用节点没有分支线。
-        assert_eq!(map.links.iter().filter(|l| l.kind == LinkKind::Branch).count(), 3);
+        assert_eq!(
+            map.links
+                .iter()
+                .filter(|l| l.kind == LinkKind::Branch)
+                .count(),
+            3
+        );
         assert_clean(&map);
     }
 }
