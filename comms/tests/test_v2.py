@@ -81,7 +81,8 @@ def main() -> int:
             raise SystemExit("临时文件没有替换掉")
 
         run(["ack", "zcode", "--all", "--project", "_v2test"])
-        read = (home / "read" / "zcode.txt").read_text(encoding="utf-8")
+        # v3 起无 task 的消息进公共箱 .all.txt，不再写旧的单文件。
+        read = (home / "read" / "zcode.all.txt").read_text(encoding="utf-8")
         if msgs[0].name not in read.splitlines() or not read.endswith("\n"):
             raise SystemExit(f"已读记录不完整：{read!r}")
 

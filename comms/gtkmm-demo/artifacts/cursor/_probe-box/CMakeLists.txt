@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.21)
+project(probe-box CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTKMM4 REQUIRED IMPORTED_TARGET gtkmm-4.0)
+add_executable(probe-box main.cpp)
+target_link_libraries(probe-box PRIVATE PkgConfig::GTKMM4)

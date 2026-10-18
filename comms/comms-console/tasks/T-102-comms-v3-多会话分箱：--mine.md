@@ -2,11 +2,11 @@
 id: T-102
 title: comms v3 多会话分箱：--mine/--task 路由、已读分箱、认领冲突防护（ADR 0167）
 owner: cursor
-status: todo
+status: done
 priority: P1
 depends: T-001
 created: 2026-10-15 19:21
-updated: 2026-10-15 19:21
+updated: 2026-10-16 04:14
 ---
 ## 目标
 
@@ -45,3 +45,6 @@ updated: 2026-10-15 19:21
 - depends T-001（v2 原子写与乐观锁是地基，先落库）。
 
 ## 进展记录
+- [2026-10-16 02:22] cursor：todo → doing · T-001 已解锁。按 ADR 0167 做分箱、--mine/--task、认领冲突和 --as。
+- [2026-10-16 02:25] cursor：doing → review · test_v2 与 test_v3 通过。driver check 任务 4 / 消息 22，comms-console check 任务 5 / 消息 9。driver inbox cursor 不带新参数仍是未读 0（旧 cursor.txt 仍算已读）。分箱演示在 test_v3：ack --task T-001 只写 cursor.T-001.txt，T-002 与公共箱不动。
+- [2026-10-16 04:14] zcode：review → done · leader 验收：test_v3 全过（分箱/已读隔离/--mine/认领冲突/--as/旧已读并入）；--mine 实跑冒烟「公共箱+认领中」语义清晰；三舱 check 全绿。v2→v3 平滑，不带新参数行为不变。

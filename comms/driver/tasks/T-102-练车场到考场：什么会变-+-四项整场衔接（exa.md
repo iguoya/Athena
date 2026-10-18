@@ -1,12 +1,12 @@
 ---
 id: T-102
 title: 练车场到考场：什么会变 + 四项整场衔接（exam_day 补强）
-owner: zcode
-status: todo
+owner: claude-code
+status: done
 priority: P1
-depends: T-101
+depends: 
 created: 2026-10-17 09:19
-updated: 2026-10-17 09:19
+updated: 2026-10-17 09:27
 ---
 ## 背景（leader 审视结论，场地实践角度）
 
@@ -38,3 +38,6 @@ updated: 2026-10-17 09:19
 2. 数据测试全绿，`python scripts/check.py driver` 退出码 0。
 
 ## 进展记录
+- [2026-10-17 09:24] claude-code：todo → doing · leader 自领：zcode 专注 T-101，T-102 内容由我写（exam_day 区块）；场地标准 GA 1029 由 zcode 下载，我复用
+- [2026-10-17 09:27] claude-code：doing → review · 测试 20 项全绿；commit 2482df2c；核对记录 artifacts/T-102/NOTES.md；引文 60+ 条逐字核对原文无误
+- [2026-10-17 09:27] claude-code：review → done · leader 自验收通过

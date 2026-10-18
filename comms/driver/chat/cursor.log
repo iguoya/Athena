@@ -1,0 +1,18 @@
+2026-10-15 18:28:35|zcode|科目二建议已发到 driver 舱。方向听你的，派到我名下我就开工。
+2026-10-15 18:34:58|zcode|T-001 已交 review（6a4665d0）。T-002 等你标 done 后再动 subject2.json。
+2026-10-16 09:08:02|zcode|在线。T-002 的改动已落库（1c121622 项目手册 C2 卡片），这几处工作区是干净的，不挡你改同一批文件。T-901 我也看到已提交（1a004f34）。
+2026-10-16 09:21:48|zcode|收到 T-004、T-005。连接是通的。我先领 T-004，开工会标 doing。观察台 T-101 仍在 review，等你有空验收。
+2026-10-16 09:25:52|zcode|收到定调：重实操、完善细节把握、轻记录。顺序改为 T-004 → T-006 → T-005。T-006 没把握的修正逻辑不凑数。长效通道已接上：换会话也会看到你的未读。
+2026-10-16 21:11:16|zcode|在线。T-004 开工，按 09:55 任务书：科目二专用侧栏，练车日默认，理论 54 题垫底。科目一/四不动。
+2026-10-16 21:35:40|zcode|T-004 已交 review。check.py driver 退出码 0。截图没生成：测试里 toImage 在这台机器上挂起。科目一/四没动。T-006 等你验收后再开。
+2026-10-16 21:56:41|zcode|收到 T-006。先交直角转弯一项：schema（steer/reference/skill/fix）+ 5 步正文，动画直道拆成两步、总距离不变。曲线、侧方、倒库等你验收口径后再写。T-004 仍停在 review。
+2026-10-16 22:08:26|zcode|收到 T-008 立刻开工、T-006 收成数据层、T-009 归你。直角转弯 5 步正文已经写进 subject2.json。我起手先把 steer 画进了 subject2.dart，对照你 21:55 的修订已经撤掉，页面留给 T-007/T-009。guide.dart 只加了字段解析：不进 fromJson，后面谁都读不到。念稿仍是原来的「扣分点」句式。建议：门把手只放 reference，inside.look 继续避开死点位；mistakes 的 id/level/locator 没动，只改了说法，打分还靠 id。动画直道拆成两步、总距离不变，否则步数对不上。check 过了就把这一半交 review，然后开工 field_map.dart，不碰 step_flow、另外三项草表和 home.dart。
+2026-10-16 22:12:41|zcode|T-006 直角转弯一半已交 review。证据在 comms/driver/artifacts/T-006/NOTES.md。我接着做 T-008：只新建 field_map.dart 和它的测试，倒库 7 步草表。step_flow、另外三项草表、home.dart 留给你。
+2026-10-16 22:18:53|zcode|T-008 已交 review。倒库 7 步是车尾进库：入库后车头朝路。草表在 reverseParkSketch，你写另外三项时按这个形态对齐。T-007 我等 T-004 提交、T-006 验收后再动 subject2.dart。我在线。
+2026-10-16 22:28:30|zcode|我的科目二改动已提交，没有推送。T-008 是 92f95538，T-004 和 T-006 前半是 89cd5041。home.dart 可以按 T-009 动了。侧栏、step_flow、另外三项草表我没提交。接下来接 T-007 倒车入库项目页：用你的 StepFlow 和 reverseParkSketch，不动 home.dart。
+2026-10-16 22:31:19|zcode|倒车入库页已接上，提交 2fe12d8c：FieldMap 和 StepFlow 跟当前步走，这一页不再出评判题。侧栏和注意事项归口等你改 home.dart。我没跑全量 check，页面测试和 analyze 过了。
+2026-10-17 09:19:34|claude-code|在线，听你指挥。倒库页已接静态俯视图（2fe12d8c）。zcode 留下的未读我已读完：其余三项页改用 FieldMapAnimated，播这一步做成醒目入口，T-006 把倒库、侧方、曲线的方向盘/参照/修正补上，caution 去掉扣分复述。field_map.dart 和 field_sketches.dart 我不动。你如果要改这个顺序，直接回我；没改我就按这个做。
+2026-10-17 09:39:37|claude-code|T-006 倒库、侧方、曲线已补方向盘/参照/修正，注意事项不再复述扣分，第一弯仍是左弯。提交 b23c46b5。T-007 四项页改 FieldMapAnimated，播这一步在图旁，项目页不出题，已交 review，提交 03c2e7e3。subject2、页面、点位、默演测试通过。全量 check 被你让我别动的 field_sketches.dart 挡住：_sideBounds 未使用，曲线有一步车身出了画布。请让 zcode 收一下，我再跑 check。T-011 等你验收 T-007。
+2026-10-17 17:02:46|claude-code|T-007 截图已补在 comms/driver/artifacts/T-007/：四项各宽（1440）窄（1280）一张，另有 notes-entry.png。注意事项 · 54 题在侧栏，项目页上能看到。曲线第 2 步我没改。T-011 前半（标定引导 + 参照下就地显示/去标定）正在做。
+2026-10-17 17:55:35|claude-code|T-014 已交 review，提交 a1de4153。版面收成一张俯视图加方向盘、参照、注意。夹具宽窄截图在 artifacts/T-014。check.py 被 field_map.dart 和 field_kinematics_test.dart 的多余 import 挡住，我没改这两个文件。
+2026-10-17 18:55:49|claude-code|在线。T-014 验收通过已读。T-011 停在 review。这轮先做完 gtkmm 译法预填，素材到来前不空等。

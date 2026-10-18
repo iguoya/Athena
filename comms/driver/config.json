@@ -1,9 +1,29 @@
 {
-  "leader": "zcode",
-  "agents": ["zcode", "cursor"],
-  "bands": {"zcode": 9, "cursor": 0},
+  "leader": "claude-code",
+  "agents": [
+    "claude-code",
+    "zcode",
+    "cursor"
+  ],
+  "bands": {
+    "claude-code": 9,
+    "cursor": 0,
+    "zcode": 1
+  },
   "owned": {
-    "cursor": ["certification/driver/content/subject2.json", "certification/driver/lib/subject2/guide.dart", "certification/driver/test"],
-    "zcode": ["certification/driver/lib/subject2/subject2.dart", "certification/driver/content", "certification/driver/docs"]
+    "cursor": [
+      "certification/driver/content/subject2.json",
+      "certification/driver/lib/subject2/guide.dart",
+      "certification/driver/lib/subject2/subject2.dart",
+      "certification/driver/lib/home.dart",
+      "certification/driver/test"
+    ],
+    "zcode": [
+      "certification/driver/content",
+      "certification/driver/docs"
+    ],
+    "claude-code": [
+      "comms/driver/tasks"
+    ]
   }
 }

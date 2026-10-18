@@ -1,23 +1,23 @@
 # comms-console 协作看板
 
-> 由 `comms/comms.py board` 生成于 2026-10-15 19:21，**不要手改**。任务详情见各任务文件，通讯规则见 [../README.md](../README.md)。
+> 由 `comms/comms.py board` 生成于 2026-10-16 09:47，**不要手改**。任务详情见各任务文件，通讯规则见 [../README.md](../README.md)。
 
 ## 未读消息
 
 | 角色 | 未读 |
 |---|---|
 | zcode | 0 |
-| cursor | 0 |
+| cursor | 1 |
 
 ## 在线状态
 
 | 对方 | 状态 | 最近痕迹 | 距今 |
 |---|---|---|---|
-| cursor | online | 发消息 | 8 分钟前 |
+| cursor | quiet | 发消息 | 39 分钟前 |
 
 ## 概览
 
-todo 4 · doing 0 · review 0 · blocked 0 · done 1
+todo 0 · doing 0 · review 0 · blocked 0 · done 5
 
 ## zcode
 
@@ -29,8 +29,8 @@ todo 4 · doing 0 · review 0 · blocked 0 · done 1
 
 | 任务 | 优先级 | 状态 | 标题 | 依赖 | 更新 |
 |---|---|---|---|---|---|
-| [T-001](tasks/T-001-comms.py-v2-加固：原子写与-stat.md) | P1 | todo | comms.py v2 加固：原子写与 status 乐观锁 |  | 2026-10-15 18:45 |
-| [T-002](tasks/T-002-对话与决策记录的视图口径（决策参与）.md) | P1 | todo | 对话与决策记录的视图口径（决策参与） | T-001 | 2026-10-15 18:45 |
-| [T-102](tasks/T-102-comms-v3-多会话分箱：--mine.md) | P1 | todo | comms v3 多会话分箱：--mine/--task 路由、已读分箱、认领冲突防护（ADR 0167） | T-001 | 2026-10-15 19:21 |
-| [T-101](tasks/T-101-观察台阅读体验：任务书渲染、对话按日分组、看板直.md) | P2 | todo | 观察台阅读体验：任务书渲染、对话按日分组、看板直达 | T-901 | 2026-10-15 18:55 |
+| [T-001](tasks/T-001-comms.py-v2-加固：原子写与-stat.md) | P1 | done | comms.py v2 加固：原子写与 status 乐观锁 |  | 2026-10-16 02:16 |
+| [T-002](tasks/T-002-对话与决策记录的视图口径（决策参与）.md) | P1 | done | 对话与决策记录的视图口径（决策参与） | T-001 | 2026-10-16 04:14 |
+| [T-102](tasks/T-102-comms-v3-多会话分箱：--mine.md) | P1 | done | comms v3 多会话分箱：--mine/--task 路由、已读分箱、认领冲突防护（ADR 0167） | T-001 | 2026-10-16 04:14 |
+| [T-101](tasks/T-101-观察台阅读体验：任务书渲染、对话按日分组、看板直.md) | P2 | done | 观察台阅读体验：任务书渲染、对话按日分组、看板直达 | T-901 | 2026-10-16 09:47 |
 

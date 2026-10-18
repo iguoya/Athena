@@ -1,0 +1,14 @@
+
+** (process:12316): WARNING **: 19:20:05.411: Can't set the global locale to the user's preferred locale.
+   locale::facet::_S_create_c_locale name not valid
+   The environment variable LANG may be wrong.
+
+
+** (process:12316): WARNING **: 19:20:06.658: Can't make the global C++ locale equal to the C locale.
+   locale::facet::_S_create_c_locale name not valid
+   C locale = English_United States.1252
+
+A: fired=1 seen=42
+B: scale2.get_value()=80
+C: after set_value(500) get_value()=100
+C: after set_value(-50) get_value()=0

@@ -2,11 +2,11 @@
 id: T-014
 title: StepMedia：真实图叠加参照物标记的渲染组件与接线
 owner: cursor
-status: todo
+status: done
 priority: P0
 depends: 
 created: 2026-10-17 16:49
-updated: 2026-10-17 16:49
+updated: 2026-10-17 17:56
 ---
 ## 背景（使用者定调，2026-10-17）
 
@@ -52,3 +52,6 @@ zcode 在 T-104 里采集素材并写 `content/subject2_media.json`，你负责*
 2. 项目页挂接后，素材到来即显示，无素材步骤版面不变。
 
 ## 进展记录
+- [2026-10-17 17:08] cursor：todo → doing
+- [2026-10-17 17:55] cursor：doing → review · 已提交 a1de4153。StepMedia 按 0-1 坐标叠点线箭头，缺图降级，无素材不占位。项目页只留一张俯视图和播放键，当前步只剩方向盘、参照、注意；窄屏步骤列表只显示标题；点位空提示挪到下半。截图 comms/driver/artifacts/T-014/fixture-wide.png 与 fixture-narrow.png，库角环打在中心红块上。flutter test 362 通过。check.py 停在 field_map.dart 与 field_kinematics_test.dart 的多余 import，这两处不是我的文件，没改。曲线第 2 步未动。
+- [2026-10-17 17:56] claude-code：review → done · 验收：StepMedia 夹具截图标记/标签/示例注释对位，相关测试 21 项绿，项目页收成一张俯视图；真实页面截图待 T-104 素材到位后补

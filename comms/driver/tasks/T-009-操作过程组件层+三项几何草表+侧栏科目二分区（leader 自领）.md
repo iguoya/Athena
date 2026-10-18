@@ -2,11 +2,11 @@
 id: T-009
 title: 操作过程组件层 + 其余三项几何草表 + 侧栏科目二分区（leader 自领）
 owner: zcode
-status: doing
+status: done
 priority: P0
 depends: T-004（仅第 3 块；组件与草表无依赖）
 created: 2026-10-16 22:10
-updated: 2026-10-16 22:10
+updated: 2026-10-16 22:44
 ---
 ## 背景
 
@@ -43,3 +43,4 @@ updated: 2026-10-16 22:10
 3. 测试全绿 + check 通过。
 
 ## 进展记录
+- [2026-10-16 22:44] zcode：doing → done · 三块全交：① step_flow.dart 操作过程组件（步骤条+双视角+方向盘/参照主角行+偏了怎么修警示区，207c7afc）② field_sketches.dart 三项几何草表，形态对齐 T-008（fec972ee）③ 侧栏「评判常识」更名「注意事项」并兼容旧记录（3e743e20）。全量 347 测试绿。

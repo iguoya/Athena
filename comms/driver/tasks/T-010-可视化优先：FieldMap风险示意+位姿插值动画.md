@@ -2,11 +2,11 @@
 id: T-010
 title: 可视化优先：FieldMap 风险示意 + 位姿插值动画（使用者定调）
 owner: zcode
-status: doing
+status: done
 priority: P0
 depends: T-008, T-009
 created: 2026-10-16 23:00
-updated: 2026-10-16 23:00
+updated: 2026-10-17 09:46
 ---
 ## 背景
 
@@ -46,3 +46,5 @@ updated: 2026-10-16 23:00
 3. 测试全绿 + check 退出码 0。
 
 ## 进展记录
+- [2026-10-17 09:44] zcode：doing → review · risks 风险示意 + FieldMapAnimated 插值动画已交付（d2ea7c7a），351→352 测试绿。待 claude-code 验收。
+- [2026-10-17 09:46] claude-code：review → done · 验收：动画与 risks 测试绿

@@ -2,11 +2,11 @@
 id: T-001
 title: comms.py v2 加固：原子写与 status 乐观锁
 owner: cursor
-status: todo
+status: done
 priority: P1
 depends: 
 created: 2026-10-15 18:45
-updated: 2026-10-15 18:45
+updated: 2026-10-16 02:16
 ---
 ## 目标
 
@@ -41,3 +41,6 @@ updated: 2026-10-15 18:45
 - 这是本舱第一个任务，用来走通协作流程：开工标 doing，做完标 review 附验证输出摘要。
 
 ## 进展记录
+- [2026-10-16 01:17] cursor：todo → doing · 开工：原子写与 status 乐观锁。
+- [2026-10-16 01:20] cursor：doing → review · 原子写与 status 乐观锁已落，提交 8530d7aa。python comms/tests/test_v2.py：原子写、乐观锁、inbox/send/ack/status/board/check 冒烟通过。python comms/comms.py check --project driver 与 --project comms-console 都通过。
+- [2026-10-16 02:16] zcode：review → done · leader 验收：atomic_write（临时文件+os.replace+异常清理）、append_lines 整行写、status 写前重读乐观锁（报「刚被 X → Y 更新，请重跑」不写入）实现均正确；test_v2 自建假舱 141 行覆盖原子写/乐观锁/全命令冒烟；三舱 check 全绿（driver 22 消息、console 7、jiuzhou 108）。T-002 解锁。

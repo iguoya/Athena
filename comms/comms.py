@@ -4,7 +4,9 @@
 
 设计原则（承九州实战版）：任何一方永远不修改别人写的文件，所以不会互相覆盖。
   - 任务：<舱>/tasks/T-xxx-*.md，每个任务一个文件，只有负责人和 leader 能改状态。
-  - 消息：<舱>/msgs/*.md，只新增、不修改；已读记在 <舱>/read/<name>.txt（各写各的）。
+  - 消息：<舱>/msgs/*.md，只新增、不修改。已读按箱记在
+    <舱>/read/<name>.all.txt（无 --task 的公共箱）和 read/<name>.<任务>.txt；
+    旧的 read/<name>.txt 仍算已读，不迁移、不删除。
   - 看板：<舱>/BOARD.md 由本工具生成，不要手改。
 
 角色（舱内 config.json 声明）：leader 拆任务、验收 done、裁决；worker 执行、交
@@ -21,10 +23,10 @@ ATHENA_COMMS_PROJECT）。舱内 config.json：
     }
 
 常用命令（NAME 为舱内 config.json 的 agents 之一）：
-  python comms/comms.py inbox NAME --project P        # 每轮开工先跑：未读消息 + 我的待办
+  python comms/comms.py inbox NAME [--mine | --task T-001] [--all] [--project P]
   python comms/comms.py send --from NAME --to NAME2 --subject 主题 --body 正文 [--task T-001] [--project P]
-  python comms/comms.py ack NAME --all [--project P]  # 标记已读
-  python comms/comms.py status T-001 doing --by NAME --note 说明 [--project P]
+  python comms/comms.py ack NAME --all [--mine | --task T-001] [--project P]
+  python comms/comms.py status T-001 doing --by NAME [--as 短标记] --note 说明 [--project P]
   python comms/comms.py board [--project P]           # 重新生成 BOARD.md（status 命令会自动做）
   python comms/comms.py task new --owner NAME --title 标题 --priority P0 --body-file x.md [--project P]
   python comms/comms.py check [--project P]           # 校验任务与消息结构
@@ -33,7 +35,7 @@ ATHENA_COMMS_PROJECT）。舱内 config.json：
   python comms/comms.py thread FILE|ID [--project P]  # 按时间顺序看一个线程
   python comms/comms.py say --from NAME --to NAME2|all 一句话 [--project P]  # 即时消息（短、不进任务系统）
   python comms/comms.py chat NAME [--tail N] [--project P]  # 看发给我的即时消息（未读，并标记已读）
-  python comms/comms.py notify NAME [--project P]     # 给 hook 用：有未读时只打印 1~3 行摘要，没有则静默
+  python comms/comms.py notify NAME [--mine] [--project P]  # hook：有未读时最多 3 行，没有则静默
   python comms/comms.py watch NAME [--timeout 3300] [--project P]  # 阻塞等待新消息，来了就打印并退出
   python comms/comms.py ping NAME|all [--project P]   # leader 发「联络」消息，之后用 presence 看有没有回应
 """
@@ -154,26 +156,62 @@ def find_task(tid: str):
     raise SystemExit(f"找不到任务 {tid}")
 
 
-def read_set(name: str) -> set[str]:
-    f = READ / f"{name}.txt"
-    if not f.exists():
+def _read_lines(path: Path) -> set[str]:
+    if not path.exists():
         return set()
-    return {l.strip() for l in f.read_text(encoding="utf-8").splitlines() if l.strip()}
+    return {ln.strip() for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip()}
 
 
-def messages_for(name: str, unread_only: bool = True):
-    seen = read_set(name)
+def box_of(meta: dict) -> str:
+    """带 task 的进该任务箱，否则进公共箱。"""
+    task = (meta.get("task") or "").strip()
+    return task if task else "all"
+
+
+def box_file(name: str, box: str) -> Path:
+    return READ / f"{name}.{box}.txt"
+
+
+def seen_in_box(name: str, box: str) -> set[str]:
+    """这个箱的已读。旧的单文件 read/<名>.txt 并进来一起算，避免已经 ack 过的消息重新冒出来。不改、不删那个旧文件。"""
+    return _read_lines(box_file(name, box)) | _read_lines(READ / f"{name}.txt")
+
+
+def doing_owned(name: str) -> set[str]:
+    return {m.get("id", "") for _, m, _ in tasks() if m.get("owner") == name and m.get("status") == "doing"}
+
+
+def visible_messages(name: str, unread_only: bool = True, mode: str | None = None, task: str | None = None):
+    """mode 为空看全部；mine = 公共箱 + 名下 doing 任务箱；task = 只看那一个任务箱。"""
+    doing = doing_owned(name) if mode == "mine" else set()
     out = []
     for p in sorted(MSGS.glob("*.md")):
         m, b = parse(p)
-        if m.get("to") not in (name, "all"):
+        if m.get("to") not in (name, "all") or m.get("from") == name:
             continue
-        if m.get("from") == name:
+        box = box_of(m)
+        if mode == "task" and box != task:
             continue
-        if unread_only and p.name in seen:
+        if mode == "mine" and box != "all" and box not in doing:
+            continue
+        if unread_only and p.name in seen_in_box(name, box):
             continue
         out.append((p, m, b))
     return out
+
+
+def messages_for(name: str, unread_only: bool = True):
+    return visible_messages(name, unread_only=unread_only)
+
+
+def last_doing_agent(body: str) -> str | None:
+    """进展记录里最后一次把状态改成 doing 的人。cursor(tab2) 只取 cursor。"""
+    who = None
+    for line in body.splitlines():
+        m = re.match(r"^- \[[^\]]+\] ([^：]+)：.* → doing(?: ·.*)?$", line.strip())
+        if m:
+            who = m.group(1).strip().split("(", 1)[0]
+    return who
 
 
 def check_agent(name: str) -> None:
@@ -182,10 +220,33 @@ def check_agent(name: str) -> None:
 
 
 # ------------------------------------------------------------------ 命令
+def _route(a):
+    """inbox/ack/notify 共用：--task 与 --mine 互斥。返回 (mode, task)。"""
+    task = getattr(a, "task", None)
+    mine = getattr(a, "mine", False)
+    if task and mine:
+        raise SystemExit("--task 与 --mine 只能选一个")
+    if task:
+        find_task(task)
+        return "task", task
+    if mine:
+        return "mine", None
+    return None, None
+
+
 def cmd_inbox(a):
     check_agent(a.name)
-    msgs = messages_for(a.name, unread_only=not a.all)
-    print(f"=== {a.name} 的收件箱（{'全部' if a.all else '未读'} {len(msgs)} 条）===")
+    mode, task = _route(a)
+    # --task 要能看到这个任务箱里已经读过的历史，接手做到一半的任务时用。
+    unread_only = not a.all and mode != "task"
+    msgs = visible_messages(a.name, unread_only=unread_only, mode=mode, task=task)
+    if mode == "task":
+        scope = f"任务 {task}，含历史"
+    elif mode == "mine":
+        scope = "公共箱 + 认领中" + ("，含已读" if a.all else "")
+    else:
+        scope = "全部" if a.all else "未读"
+    print(f"=== {a.name} 的收件箱（{scope} {len(msgs)} 条）===")
     for p, m, b in msgs:
         print(f"\n--- {p.name}\n来自 {m.get('from')} · {m.get('created')} · 主题：{m.get('subject')}"
               + (f" · 任务 {m['task']}" if m.get("task") else ""))
@@ -201,8 +262,9 @@ def cmd_inbox(a):
         waiting = [d.strip() for d in deps if d.strip() not in done_ids]
         flag = f"（等待 {','.join(waiting)}）" if waiting else ""
         print(f"[{m.get('priority')}] {m.get('id')} · {m.get('status'):7} · {m.get('title')}{flag}\n      文件：{p.relative_to(ATHENA).as_posix()}")
-    if msgs:
-        print(f"\n读完后请运行：python comms/comms.py ack {a.name} --all{'' if PROJECT == 'default' else f' --project {PROJECT}'}")
+    if msgs and unread_only:
+        extra = f" --task {task}" if mode == "task" else (" --mine" if mode == "mine" else "")
+        print(f"\n读完后请运行：python comms/comms.py ack {a.name} --all{extra}{'' if PROJECT == 'default' else f' --project {PROJECT}'}")
 
 
 def cmd_send(a):
@@ -277,9 +339,21 @@ def cmd_thread(a):
 
 
 def cmd_notify(a):
-    """给 hook 用的轻量提示：没有未读就什么都不打印（不打扰），有则最多 3 行摘要。"""
+    """给 hook 用的轻量提示：没有未读就什么都不打印（不打扰），有则最多 3 行摘要。
+
+    --mine 与 inbox --mine 同一套箱，另外标题里带「紧急」的未读不论在哪个箱都提示。
+    """
     check_agent(a.name)
-    msgs = messages_for(a.name)
+    if getattr(a, "mine", False):
+        chosen: dict[str, tuple] = {}
+        for item in visible_messages(a.name, mode="mine"):
+            chosen[item[0].name] = item
+        for item in messages_for(a.name):
+            if "紧急" in (item[1].get("subject") or ""):
+                chosen[item[0].name] = item
+        msgs = [chosen[k] for k in sorted(chosen)]
+    else:
+        msgs = messages_for(a.name)
     chats = chat_unread(a.name)
     if not msgs and not chats:
         return 0
@@ -386,14 +460,29 @@ def cmd_chat(a):
 
 def cmd_ack(a):
     check_agent(a.name)
+    mode, task = _route(a)
     READ.mkdir(parents=True, exist_ok=True)
-    unread = [p.name for p, _, _ in messages_for(a.name)]
-    names = unread if a.all else a.files
-    f = READ / f"{a.name}.txt"
-    seen = read_set(a.name)
-    add = [n for n in names if n not in seen]
-    append_lines(f, add)
-    print(f"已标记 {len(add)} 条为已读")
+    pool = visible_messages(a.name, unread_only=True, mode=mode, task=task)
+    names = [p.name for p, _, _ in pool] if a.all else a.files
+    by_box: dict[str, list[str]] = {}
+    for n in names:
+        path = MSGS / n
+        if path.exists():
+            meta, _ = parse(path)
+            box = box_of(meta)
+        else:
+            box = "all"
+        if mode == "task" and box != task:
+            continue
+        if mode == "mine" and box != "all" and box not in doing_owned(a.name):
+            continue
+        if n not in seen_in_box(a.name, box):
+            by_box.setdefault(box, []).append(n)
+    total = 0
+    for box, add in by_box.items():
+        append_lines(box_file(a.name, box), add)
+        total += len(add)
+    print(f"已标记 {total} 条为已读")
 
 
 def cmd_status(a):
@@ -416,12 +505,20 @@ def cmd_status(a):
         raise SystemExit(f"改成 {a.status} 必须写 --note（review 附验证命令输出摘要；blocked 写卡在哪、要谁帮忙）")
     old = m.get("status")
     # 读过之后、写下之前，别人可能已经改过这个任务（验收和交 review 撞在一起）。
-    fresh, _ = parse(p)
+    fresh, fresh_body = parse(p)
     if fresh.get("status") != old:
         raise SystemExit(f"{a.task} 刚被 {old} → {fresh.get('status')} 更新，请重跑一次 status")
+    if a.status == "doing" and fresh.get("status") == "doing":
+        who = last_doing_agent(fresh_body)
+        if who != a.by:
+            raise SystemExit(f"该任务正在被认领（by {who or '未知'}），请选别的任务或找 leader")
+    session = getattr(a, "session", None)
+    if session and not re.fullmatch(r"[A-Za-z0-9_-]{1,24}", session):
+        raise SystemExit("--as 只能是 1–24 位字母、数字、短横线或下划线")
+    actor = f"{a.by}({session})" if session else a.by
     m["status"] = a.status
     m["updated"] = now()
-    line = f"- [{now()}] {a.by}：{old} → {a.status}" + (f" · {a.note}" if a.note else "")
+    line = f"- [{now()}] {actor}：{old} → {a.status}" + (f" · {a.note}" if a.note else "")
     b = b.rstrip() + "\n" + line + "\n"
     atomic_write(p, dump(m, b))
     print(f"{a.task}: {old} → {a.status}")
@@ -488,7 +585,7 @@ QUIET_UNTIL = timedelta(hours=4)          # 超过这个时间一直没痕迹 = 
 PING_GRACE = timedelta(minutes=15)        # ping 之后这么久还没痕迹 = 联系不上
 
 MSG_TS = re.compile(r"^(\d{8}-\d{6})__([^_]+(?:-[^_]+)*)__([^_]+(?:-[^_]+)*)__")
-NOTE_TS = re.compile(r"^- \[(\d{4}-\d{2}-\d{2} \d{2}:\d{2})\] ([\w-]+)[：:]", re.M)
+NOTE_TS = re.compile(r"^- \[(\d{4}-\d{2}-\d{2} \d{2}:\d{2})\] ([\w-]+)(?:\([^)]*\))?[：:]", re.M)
 
 
 def _git_last_commit(paths: list[str]):
@@ -512,9 +609,10 @@ def signs(name: str) -> list[tuple[datetime, str]]:
     for ts, frm, _to, _t in chat_lines():
         if frm == name:
             out.append((datetime.strptime(ts, "%Y-%m-%d %H:%M:%S"), "即时消息"))
-    rf = READ / f"{name}.txt"
-    if rf.exists():
-        out.append((datetime.fromtimestamp(rf.stat().st_mtime), "读消息"))
+    read_files = [p for p in (READ / f"{name}.txt", READ / f"{name}.all.txt", *READ.glob(f"{name}.T-*.txt")) if p.exists()]
+    if read_files:
+        newest = max(read_files, key=lambda p: p.stat().st_mtime)
+        out.append((datetime.fromtimestamp(newest.stat().st_mtime), "读消息"))
     for p in TASKS.glob("*.md"):
         for ts, who in NOTE_TS.findall(p.read_text(encoding="utf-8")):
             if who == name:
@@ -660,15 +758,18 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--project", default=None, help="协作舱名（comms/<project>/），可放子命令前或后；缺省取环境变量 ATHENA_COMMS_PROJECT，再缺省 default")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    s = sub.add_parser("inbox"); s.add_argument("name"); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_inbox)
+    s = sub.add_parser("inbox"); s.add_argument("name"); s.add_argument("--all", action="store_true")
+    s.add_argument("--mine", action="store_true"); s.add_argument("--task"); s.set_defaults(fn=cmd_inbox)
     s = sub.add_parser("send")
     s.add_argument("--from", dest="from", required=True); s.add_argument("--to", required=True)
     s.add_argument("--subject", required=True); s.add_argument("--body"); s.add_argument("--body-file")
     s.add_argument("--task"); s.add_argument("--thread"); s.set_defaults(fn=cmd_send)
     s = sub.add_parser("ack"); s.add_argument("name"); s.add_argument("--all", action="store_true")
+    s.add_argument("--mine", action="store_true"); s.add_argument("--task")
     s.add_argument("files", nargs="*"); s.set_defaults(fn=cmd_ack)
     s = sub.add_parser("status"); s.add_argument("task"); s.add_argument("status")
-    s.add_argument("--by", required=True); s.add_argument("--note"); s.set_defaults(fn=cmd_status)
+    s.add_argument("--by", required=True); s.add_argument("--note"); s.add_argument("--as", dest="session")
+    s.set_defaults(fn=cmd_status)
     s = sub.add_parser("board"); s.set_defaults(fn=cmd_board)
     t = sub.add_parser("task"); tsub = t.add_subparsers(dest="sub", required=True)
     n = tsub.add_parser("new"); n.add_argument("--owner", required=True); n.add_argument("--title", required=True)
@@ -681,7 +782,7 @@ def main() -> int:
     s = sub.add_parser("say"); s.add_argument("--from", dest="from", required=True); s.add_argument("--to", required=True)
     s.add_argument("text"); s.set_defaults(fn=cmd_say)
     s = sub.add_parser("chat"); s.add_argument("name"); s.add_argument("--tail", type=int, default=0); s.set_defaults(fn=cmd_chat)
-    s = sub.add_parser("notify"); s.add_argument("name"); s.set_defaults(fn=cmd_notify)
+    s = sub.add_parser("notify"); s.add_argument("name"); s.add_argument("--mine", action="store_true"); s.set_defaults(fn=cmd_notify)
     s = sub.add_parser("watch"); s.add_argument("name"); s.add_argument("--timeout", type=int, default=3300)
     s.add_argument("--interval", type=int, default=3); s.set_defaults(fn=cmd_watch)
     s = sub.add_parser("presence"); s.add_argument("name", nargs="?"); s.set_defaults(fn=cmd_presence)
