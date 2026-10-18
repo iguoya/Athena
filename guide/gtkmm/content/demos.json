@@ -69,6 +69,37 @@
           "note": "关闭按钮发出 close-request；处理函数返回 false 才继续默认关闭"
         }
       ]
+    },
+    {
+      "id": "demo.container-box",
+      "title": "盒式布局：多余宽度分给谁",
+      "purpose": "具象化水平 Box 里 hexpand 把多余宽度分给谁，以及 halign 为 CENTER 时按钮本身并不变宽。",
+      "theory_refs": [
+        "gtkmm.container.box-layout"
+      ],
+      "source_dir": "demos/container-box",
+      "build_target": "demo-container-box",
+      "translation_ref": {
+        "chapter": 9,
+        "title": "Container Widgets"
+      },
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "url": "https://docs.gtk.org/gtk4/property.Widget.hexpand.html",
+          "note": "多余水平空间分给 hexpand 为 true 的部件"
+        },
+        {
+          "relation": "adapted",
+          "url": "https://docs.gtk.org/gtk4/property.Widget.halign.html",
+          "note": "CENTER 不填满分配宽度，FILL 才填满"
+        },
+        {
+          "relation": "adapted",
+          "url": "https://docs.gtk.org/gtk4/method.Widget.get_width.html",
+          "note": "标签上报的是 get_width() 的内容宽"
+        }
+      ]
     }
   ],
   "experiments": [

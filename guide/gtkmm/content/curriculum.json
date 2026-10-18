@@ -2004,8 +2004,8 @@
       ],
       "knowledge_points": [
         {
-          "id": "gtkmm.container.quizset",
-          "title": "容器部件测验集",
+          "id": "gtkmm.container.single-item",
+          "title": "单子项容器：Frame、Paned、ScrolledWindow、AspectFrame",
           "type": "concept",
           "difficulty": 2,
           "mastery_goal": "required",
@@ -2106,6 +2106,121 @@
                   "note": "AspectFrame 示例：强制 2:1 宽高比，子部件请求 200×200 实际得到 200×100"
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "gtkmm.container.box-layout",
+          "title": "Box 布局：hexpand 如何分配多余宽度",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [],
+          "page_ref": "sec-multi-item-containers",
+          "blocks": [
+            {
+              "type": "simulation",
+              "sim": "box-layout",
+              "demo_ref": "demo.container-box",
+              "note": "模型简化：外框按固定自然宽度加 flex 增长来画，不模拟主题内边距，也不模拟最小宽度。乙居中时虚线是占位、实心块才是按钮。真机标签的 a、b、c 是 get_width()，比外框少一圈内边距，谁变宽与这里一致。",
+              "page_ref": "sec-multi-item-containers"
+            },
+            {
+              "type": "demo",
+              "demo_ref": "demo.container-box"
+            },
+            {
+              "type": "observation_quiz",
+              "id": "box9-oq1",
+              "page_ref": "sec-multi-item-containers",
+              "demo_ref": "demo.container-box",
+              "stem": "打开真机演示。只打开「乙 hexpand」，另外三个开关保持关闭。把窗口拉宽一截，标签里哪些数字变大？",
+              "options": [
+                "只有 b 变大，a 与 c 不动",
+                "只有 a 变大，b 与 c 不动",
+                "只有 c 变大，a 与 b 不动",
+                "a、b、c 三个数字全部都变大了"
+              ],
+              "answer": 0,
+              "explanation": "水平 Box 先把多余宽度分给设了 hexpand 的子部件。这里只有乙打开了 hexpand，halign 仍是默认的 FILL，所以乙把拿到的那一档填满，标签里只有 b 变大。甲和丙没有 hexpand，停在自然宽度。具体像素随主题和窗口宽度变，变的是谁不会变。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方页 sec-multi-item-containers",
+                  "note": "Boxes：子部件默认不扩展，set_hexpand() 之后才会拿走多余空间"
+                },
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/property.Widget.hexpand.html",
+                  "locator": "GtkWidget:hexpand",
+                  "note": "hexpand 为 true 时，父级把多余的水平空间分给这个部件"
+                }
+              ]
+            },
+            {
+              "type": "observation_quiz",
+              "id": "box9-oq2",
+              "page_ref": "sec-multi-item-containers",
+              "demo_ref": "demo.container-box",
+              "stem": "接着再打开「甲 hexpand」（「乙居中」和「间距 16」仍然关闭）。把窗口再拉宽一截，多出来的宽度进了谁的数字？",
+              "options": [
+                "全部进 c，a 与 b 数字不动",
+                "a 与 b 均分，c 的数字不动",
+                "只进了 a，b 与 c 数字不动",
+                "按 1:2:3 的比例分给这三者"
+              ],
+              "answer": 1,
+              "explanation": "两个按钮都 hexpand、对齐又都是 FILL 时，Box 把多余宽度均分给它们。标题一样短时自然宽度相同，所以 a 和 b 一起变大、增量相同；除不尽的像素给排在前面的甲，a 可能比 b 大 1。丙没有 hexpand，数字不动。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方页 sec-multi-item-containers",
+                  "note": "An improved Hello World：两个子部件都 set_expand() 时一起扩展"
+                },
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/class.Box.html",
+                  "locator": "GtkBox",
+                  "note": "水平 Box 把分配宽度里多出来的部分分给 hexpand 的子部件"
+                }
+              ]
+            },
+            {
+              "type": "observation_quiz",
+              "id": "box9-oq3",
+              "page_ref": "sec-multi-item-containers",
+              "demo_ref": "demo.container-box",
+              "stem": "关掉「甲 hexpand」，保持「乙 hexpand」打开，并打开「乙居中」。把窗口再拉宽一截，标签里 b 怎么变？",
+              "options": [
+                "b 会变大，居中只把乙的文字摆正",
+                "b 会变小，居中会把乙收成一半了",
+                "a 与 c 变大，b 停在原数字",
+                "b 的数字不变，空白留在乙的两侧"
+              ],
+              "answer": 3,
+              "explanation": "hexpand 决定乙占的那一档变宽，halign 为 CENTER 时按钮不填满这一档，而是保持自然宽度并画在档的正中。get_width() 读的是按钮自己的内容宽，所以 a、b、c 的数字都不变；窗口越宽，乙两侧的空白越多，丙被推向右边。只打开「乙居中」、不打开 hexpand 时，乙没有多余的档，看起来和全关一样。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方页 sec-multi-item-containers",
+                  "note": "Boxes：set_halign() 与 set_hexpand() 一起决定子部件怎样使用分到的空间"
+                },
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/property.Widget.halign.html",
+                  "locator": "GtkWidget:halign",
+                  "note": "FILL 填满分配到的宽度；CENTER 保持自然宽度并在该宽度内居中"
+                },
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/method.Widget.get_width.html",
+                  "locator": "gtk_widget_get_width",
+                  "note": "返回交给 size-allocate 的内容宽；居中时它不包含两侧留白"
+                }
+              ]
             },
             {
               "type": "quiz",
@@ -2154,7 +2269,19 @@
                   "note": "An improved Hello World：部件默认不扩展，set_expand() 让它扩展"
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "id": "gtkmm.container.grid-notebook-assistant",
+          "title": "Grid、Notebook 与 Assistant",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [
+            "gtkmm.container.box-layout"
+          ],
+          "blocks": [
             {
               "type": "quiz",
               "id": "ctn-mi-3",
