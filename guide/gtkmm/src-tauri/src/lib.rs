@@ -663,7 +663,7 @@ fn msys2_bin_forward() -> Option<String> {
     msys2_mingw64().map(|dir| dir.join("bin").to_string_lossy().replace('\\', "/"))
 }
 
-fn vscode_tasks_json(target: &str, run_binary: &str) -> String {
+fn vscode_tasks_json(run_binary: &str) -> String {
     // Windows 需要 MSYS2 前缀（cmake 找 ninja/gcc、产物找 GTK DLL）；macOS/Linux
     // 的 pkg-config 与运行时走系统路径，不需要 env 覆盖。副本是本机个人区，
     // 按当前平台生成即可。
@@ -857,7 +857,7 @@ fn materialize_workspace(app_root: &Path, entity: &Value) -> Result<PathBuf, Str
         &workspace_dir,
         ".vscode",
         "tasks.json",
-        &vscode_tasks_json(target, target),
+        &vscode_tasks_json(target),
     )?;
     ensure_generated_file(
         &workspace_dir,
