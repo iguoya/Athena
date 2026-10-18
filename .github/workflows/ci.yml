@@ -26,6 +26,11 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# Windows 上 Actions 的 Python 管道默认 cp1252，打印中文会 UnicodeEncodeError
+# （2026-10-07 的 gtkmm、math-tools 就是这样失败的）。只改 stdio，不动文件路径。
+env:
+  PYTHONIOENCODING: utf-8
+
 jobs:
   # 跨应用检查：内容出处（ADR 0043）、skill 两处一致、GitHub 工作流。纯文本规则，
   # 和平台无关，跑一个就够。

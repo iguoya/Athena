@@ -1007,19 +1007,37 @@ jobs:
         run: |
           version="${{ steps.version.outputs.value }}"
           platform="${{ matrix.platform }}"
+          app="${{ matrix.app }}"
           mkdir -p dist
-          bundle="$GITHUB_WORKSPACE/.cache/cargo-target/release/bundle"
+          # 工作目录是 <分组>/<应用>。Windows 的 bash 里 GITHUB_WORKSPACE 是 D:\...，
+          # 拼进 cp 之后反斜杠路径找不到文件（v9 能拷走是因为用了相对路径
+          # src-tauri/target）。cargo 现在把产物放在仓库根 .cache/cargo-target
+          # （ADR 0140），用 pwd 拿本 shell 认识的路径。
+          repo="$(cd ../.. && pwd)"
+          bundle="$repo/.cache/cargo-target/release/bundle"
+          echo "bundle dir: $bundle"
+          if [ ! -d "$bundle" ]; then
+            echo "::error::没有找到安装包目录 $bundle"
+            exit 1
+          fi
+          shopt -s nullglob
           case "$RUNNER_OS" in
             Windows)
-              cp "$bundle"/nsis/*-setup.exe \
-                "dist/athena-${{ matrix.app }}-$version-$platform-setup.exe" ;;
+              files=("$bundle"/nsis/*-setup.exe)
+              dest="dist/athena-${app}-${version}-${platform}-setup.exe" ;;
             macOS)
-              cp "$bundle"/dmg/*.dmg \
-                "dist/athena-${{ matrix.app }}-$version-$platform.dmg" ;;
+              files=("$bundle"/dmg/*.dmg)
+              dest="dist/athena-${app}-${version}-${platform}.dmg" ;;
             Linux)
-              cp "$bundle"/deb/*.deb \
-                "dist/athena-${{ matrix.app }}_${version}_amd64.deb" ;;
+              files=("$bundle"/deb/*.deb)
+              dest="dist/athena-${app}_${version}_amd64.deb" ;;
           esac
+          if [ "${#files[@]}" -ne 1 ]; then
+            echo "::error::期望恰好 1 个安装包，实际 ${#files[@]}：${files[*]}"
+            find "$bundle" -type f
+            exit 1
+          fi
+          cp "${files[0]}" "$dest"
           ls -l dist
 
       - name: Verify package
