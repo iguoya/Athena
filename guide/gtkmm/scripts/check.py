@@ -110,10 +110,11 @@ def check_knowledge_point(kp: dict, where: str, kp_ids: set[str],
         if ref not in kp_ids:
             fail(f"{where}: requires 指向不存在的知识点 {ref!r}（{kp_id}；ADR 0030）")
     for block in kp.get("blocks", []):
-        check_block(block, f"{where}/{kp_id}", page_ids)
+        check_block(block, f"{where}/{kp_id}", page_ids, kp.get("page_ref"))
 
 
-def check_block(block: dict, where: str, page_ids: set[str] | None = None) -> None:
+def check_block(block: dict, where: str, page_ids: set[str] | None = None,
+                kp_page_ref: str | None = None) -> None:
     block_type = block.get("type")
     if block_type not in BLOCK_TYPES:
         fail(f"{where}: 未知块类型 {block_type!r}（白名单：{sorted(BLOCK_TYPES)}）")
@@ -122,6 +123,14 @@ def check_block(block: dict, where: str, page_ids: set[str] | None = None) -> No
         demo_ref = block.get("demo_ref")
         if not isinstance(demo_ref, str) or not demo_ref:
             fail(f"{where}: {block_type} 块必须带 demo_ref（强制配对，ADR 0001 决策 3）")
+    if block_type not in ("quiz", "observation_quiz"):
+        # 讲解/模拟/演示/实验块只在节页底部「本节演示与讲解」里显示：没有落点就永远看不见
+        page_ref = block.get("page_ref") or kp_page_ref
+        if page_ids is not None:
+            if not page_ref:
+                fail(f"{where}: {block_type} 块没有落点——块或所属知识点须带 page_ref，否则界面上看不到")
+            elif page_ref not in page_ids:
+                fail(f"{where}: page_ref {page_ref!r} 不是官方节页")
     if block_type in ("quiz", "observation_quiz"):
         check_quiz_item(block, where)
         # 随堂题挂在官方节页尾部（应用 ADR 0002 的阅读流内即时测试）

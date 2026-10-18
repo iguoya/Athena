@@ -48,13 +48,17 @@ export interface ExampleEntity {
   source_refs: SourceRef[];
 }
 
+/**
+ * 块挂在哪一节页：块自带的 page_ref 优先，否则取所属知识点的 page_ref。
+ * 讲解、模拟、演示、实验块只有挂到某个节页才看得见（节页底部「本节演示与讲解」）。
+ */
 export type Block =
-  | { type: "text"; text: string }
-  | { type: "code"; lang: string; source: string; caption?: string }
-  | { type: "callout"; variant: "note" | "warning" | "tip"; text: string }
-  | { type: "simulation"; sim: string; demo_ref?: string; note?: string }
-  | { type: "demo"; demo_ref: string; caption?: string }
-  | { type: "experiment"; demo_ref: string }
+  | { type: "text"; text: string; page_ref?: string }
+  | { type: "code"; lang: string; source: string; caption?: string; page_ref?: string }
+  | { type: "callout"; variant: "note" | "warning" | "tip"; text: string; page_ref?: string }
+  | { type: "simulation"; sim: string; demo_ref?: string; note?: string; page_ref?: string }
+  | { type: "demo"; demo_ref: string; caption?: string; page_ref?: string }
+  | { type: "experiment"; demo_ref: string; page_ref?: string }
   | ({ type: "observation_quiz"; demo_ref: string; page_ref?: string } & QuizItem)
   | ({ type: "quiz"; page_ref?: string } & QuizItem);
 
@@ -65,6 +69,8 @@ export interface KnowledgePoint {
   difficulty: number;
   mastery_goal: "master" | "required" | "familiar" | "";
   requires: string[];
+  /** 本知识点的讲解/模拟/演示块默认挂在哪个节页（块自带 page_ref 时以块为准） */
+  page_ref?: string;
   blocks: Block[];
 }
 

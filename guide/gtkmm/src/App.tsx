@@ -660,12 +660,6 @@ export default function App() {
                 <h2 className="mt-1 font-display text-[42px] font-semibold">
                   {page.title_en ?? page.title}
                 </h2>
-                <button
-                  onClick={() => setView({ kind: "kp", sectionId: section.id, kpId: null })}
-                  className="mt-2 text-[20px] text-accent hover:underline"
-                >
-                  ← 本章节页
-                </button>
                 {/* 官方示例（应用 ADR 0006、0008）：页面最上方、正文之前——
                     先跑官方代码再读教程。本章 + 锚定本节（page_ref），章级示例
                     （无 page_ref）随本章各节页重复出现；清单是唯一事实源 */}
@@ -1006,7 +1000,7 @@ function PageAssessments({
   onAnswer,
   passed,
 }: {
-  section: { id: string; pages: { id: string }[]; knowledge_points: { blocks: Block[] }[]; checkpoint: QuizItem[] };
+  section: { id: string; pages: { id: string }[]; knowledge_points: { page_ref?: string; blocks: Block[] }[]; checkpoint: QuizItem[] };
   pageId: string;
   demos: Map<string, ManifestEntity>;
   experiments: Map<string, ExperimentEntity>;
@@ -1014,44 +1008,63 @@ function PageAssessments({
   onAnswer: (itemId: string, correct: boolean) => void;
   passed: boolean;
 }) {
-  // 本节的随堂测验：读完本节即时测（题面按 page_ref 归属各节）
-  const quizzes = section.knowledge_points
-    .flatMap((kp) => kp.blocks)
-    .filter(
-      (b) =>
-        (b.type === "quiz" || b.type === "observation_quiz") &&
-        "page_ref" in b &&
-        b.page_ref === pageId,
-    );
-  if (quizzes.length === 0) return null;
+  // 挂在本节的块：块自带 page_ref 优先，否则取所属知识点的 page_ref。
+  // 讲解/模拟/演示/实验在前（先看后测），随堂测验在后（题面按 page_ref 归属各节）
+  const onPage = section.knowledge_points.flatMap((kp) =>
+    kp.blocks.filter((b) => (b.page_ref ?? kp.page_ref) === pageId),
+  );
+  const isQuiz = (b: Block) => b.type === "quiz" || b.type === "observation_quiz";
+  const teaching = onPage.filter((b) => !isQuiz(b));
+  const quizzes = onPage.filter(isQuiz);
+  if (teaching.length === 0 && quizzes.length === 0) return null;
   return (
-    <section className="mt-16">
-      <div className="flex items-center gap-3">
-        <h3 className="font-display text-[26px] font-semibold text-accent">
-          本节测验 · {quizzes.length} 题
-        </h3>
-        {passed && (
-          <motion.span
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-4 py-1 text-[20px] font-medium text-green-700 ring-1 ring-green-500/40"
-          >
-            <CheckCircle2 className="size-5" /> 已全部通过，本节标绿
-          </motion.span>
-        )}
-      </div>
-      {quizzes.map((block, index) => (
-        <BlockView
-          key={index}
-          block={block}
-          demos={demos}
-          experiments={experiments}
-          onLaunch={onLaunch}
-          onAnswer={onAnswer}
-          scopeId={`${section.id}:${pageId}`}
-        />
-      ))}
-    </section>
+    <>
+      {teaching.length > 0 && (
+        <section className="mt-16">
+          <h3 className="font-display text-[26px] font-semibold text-accent">本节演示与讲解</h3>
+          {teaching.map((block, index) => (
+            <BlockView
+              key={index}
+              block={block}
+              demos={demos}
+              experiments={experiments}
+              onLaunch={onLaunch}
+              onAnswer={onAnswer}
+              scopeId={`${section.id}:${pageId}`}
+            />
+          ))}
+        </section>
+      )}
+      {quizzes.length > 0 && (
+        <section className="mt-16">
+          <div className="flex items-center gap-3">
+            <h3 className="font-display text-[26px] font-semibold text-accent">
+              本节测验 · {quizzes.length} 题
+            </h3>
+            {passed && (
+              <motion.span
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-4 py-1 text-[20px] font-medium text-green-700 ring-1 ring-green-500/40"
+              >
+                <CheckCircle2 className="size-5" /> 已全部通过，本节标绿
+              </motion.span>
+            )}
+          </div>
+          {quizzes.map((block, index) => (
+            <BlockView
+              key={index}
+              block={block}
+              demos={demos}
+              experiments={experiments}
+              onLaunch={onLaunch}
+              onAnswer={onAnswer}
+              scopeId={`${section.id}:${pageId}`}
+            />
+          ))}
+        </section>
+      )}
+    </>
   );
 }
 
