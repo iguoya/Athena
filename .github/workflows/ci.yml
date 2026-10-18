@@ -273,7 +273,7 @@ jobs:
   tauri:
     name: ${{ matrix.app }}（${{ matrix.os }}）
     if: >-
-      contains(fromJSON('["algorithms","ascent","c-plus-plus","chinese-chess","competitions","cs408","database",
+      contains(fromJSON('["all","algorithms","ascent","c-plus-plus","chinese-chess","competitions","cs408","database",
       "data-structures","deep-learning","design-patterns","earth","edge-ai","embedded","firmware",
       "comms-console","gtkmm","jiuzhou","linux","llm-app","llm-finetune","math-tools","mathematics",
       "machine-learning","microcontroller","network","organization","os","polaris",
@@ -352,10 +352,24 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v7
 
+      # 教程壳在仓库根 pnpm 工作区里（ADR 0140），check.py 要用 pnpm 跑前端检查。
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends             cmake ninja-build pkg-config g++ libgtkmm-4.0-dev xvfb gettext
+          pnpm install --frozen-lockfile
 
       - name: Fetch gtkmm upstream docs
         run: python3 guide/gtkmm/scripts/fetch_upstream.py
@@ -449,8 +463,15 @@ jobs:
             .cache/cargo-target
           key: launcher-${{ matrix.os }}-${{ hashFiles('launcher/Cargo.lock', 'Cargo.lock') }}
 
+      # Linux 只编 core：工作区里的 webui 是 Tauri，需要 webkit2gtk 与 glib 全套。
       - name: Build
-        run: cargo build --manifest-path launcher/Cargo.toml --all-targets
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            cargo build --manifest-path launcher/Cargo.toml -p launcher-core --all-targets
+          else
+            cargo build --manifest-path launcher/Cargo.toml --all-targets
+          fi
 
   # 驾考后台：Flask 服务，check.py 自建 .venv 装依赖后用 test_client 打健康检查、登录页
   # 与仪表盘壳。应用启动就 create_all，必须连上 PostgreSQL：CI 起一个与生产同大版本

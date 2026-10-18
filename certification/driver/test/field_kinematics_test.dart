@@ -7,7 +7,6 @@ library;
 
 import "dart:math" as math;
 
-import "package:flutter/material.dart";
 
 import "package:athena_driver/subject2/field_map.dart";
 import "package:athena_driver/subject2/field_sketches.dart";

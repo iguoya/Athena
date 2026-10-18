@@ -8,7 +8,6 @@ import "dart:async";
 import "dart:math" as math;
 
 import "package:flutter/material.dart";
-import "package:flutter/painting.dart";
 
 /// 一条场地线。控制线画成虚线，库位线用库位色，其余是边线。
 class FieldLine {
