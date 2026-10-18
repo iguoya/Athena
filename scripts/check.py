@@ -71,7 +71,9 @@ def run_app(app: str, extra: list[str]) -> None:
         if not (REPO_ROOT / "pnpm-lock.yaml").is_file():
             raise SystemExit("仓库根没有 pnpm-lock.yaml，先在仓库根执行 pnpm install（ADR 0140）")
         print("== 安装工作区前端依赖 ==", flush=True)
-        completed = subprocess.run(["pnpm", "install", "--frozen-lockfile"], cwd=REPO_ROOT)
+        # Windows 上 pnpm 是 pnpm.CMD，CreateProcess 不按 PATHEXT 找裸名字，要先解析成全路径。
+        pnpm = shutil.which("pnpm") or "pnpm"
+        completed = subprocess.run([pnpm, "install", "--frozen-lockfile"], cwd=REPO_ROOT)
         if completed.returncode != 0:
             raise SystemExit(completed.returncode)
     print(f"== 检查应用：{app} ==", flush=True)
