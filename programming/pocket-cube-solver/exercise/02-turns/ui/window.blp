@@ -1,0 +1,224 @@
+using Gtk 4.0;
+
+// 控件树写在这里。九个转法按钮、输入框和历史都是普通控件；魔方的两个视图是自绘的，放进空位。
+ApplicationWindow main_window {
+  title: "二阶魔方";
+  default-width: 1200;
+  default-height: 820;
+
+  titlebar: HeaderBar {
+    show-title-buttons: true;
+    title-widget: Label {
+      label: "二阶魔方 · 转一转";
+      styles ["title"]
+    };
+  };
+
+  Box {
+    orientation: vertical;
+
+    Box {
+      orientation: horizontal;
+      spacing: 12;
+      margin-top: 12;
+      margin-bottom: 8;
+      margin-start: 12;
+      margin-end: 12;
+
+      Box {
+        orientation: vertical;
+        spacing: 8;
+        hexpand: true;
+
+        Box cube_slot {
+          hexpand: true;
+          vexpand: true;
+        }
+
+        Box {
+          orientation: horizontal;
+          spacing: 8;
+          halign: center;
+
+          Button scramble {
+            label: "打乱";
+          }
+
+          Button undo {
+            label: "撤销";
+          }
+
+          Button reset {
+            label: "复原";
+          }
+        }
+      }
+
+      Box {
+        orientation: vertical;
+        spacing: 8;
+        width-request: 380;
+
+        Box net_slot {
+          height-request: 250;
+        }
+
+        Grid {
+          row-spacing: 6;
+          column-spacing: 6;
+          row-homogeneous: true;
+          column-homogeneous: true;
+
+          Button turn_0 {
+            label: "U";
+            tooltip-text: "上层顺时针 90°";
+            styles ["turn"]
+            layout {
+              column: 0;
+              row: 0;
+            }
+          }
+
+          Button turn_1 {
+            label: "U2";
+            tooltip-text: "上层转 180°";
+            styles ["turn"]
+            layout {
+              column: 1;
+              row: 0;
+            }
+          }
+
+          Button turn_2 {
+            label: "U'";
+            tooltip-text: "上层逆时针 90°";
+            styles ["turn"]
+            layout {
+              column: 2;
+              row: 0;
+            }
+          }
+
+          Button turn_3 {
+            label: "R";
+            tooltip-text: "右层顺时针 90°";
+            styles ["turn"]
+            layout {
+              column: 0;
+              row: 1;
+            }
+          }
+
+          Button turn_4 {
+            label: "R2";
+            tooltip-text: "右层转 180°";
+            styles ["turn"]
+            layout {
+              column: 1;
+              row: 1;
+            }
+          }
+
+          Button turn_5 {
+            label: "R'";
+            tooltip-text: "右层逆时针 90°";
+            styles ["turn"]
+            layout {
+              column: 2;
+              row: 1;
+            }
+          }
+
+          Button turn_6 {
+            label: "F";
+            tooltip-text: "前层顺时针 90°";
+            styles ["turn"]
+            layout {
+              column: 0;
+              row: 2;
+            }
+          }
+
+          Button turn_7 {
+            label: "F2";
+            tooltip-text: "前层转 180°";
+            styles ["turn"]
+            layout {
+              column: 1;
+              row: 2;
+            }
+          }
+
+          Button turn_8 {
+            label: "F'";
+            tooltip-text: "前层逆时针 90°";
+            styles ["turn"]
+            layout {
+              column: 2;
+              row: 2;
+            }
+          }
+        }
+
+        Box {
+          orientation: horizontal;
+          spacing: 8;
+
+          Entry entry {
+            hexpand: true;
+            placeholder-text: "写一串记号，如 R U R' U'，回车执行";
+          }
+
+          Button run {
+            label: "执行";
+            styles ["suggested-action"]
+          }
+        }
+
+        ScrolledWindow {
+          vexpand: true;
+          hscrollbar-policy: never;
+
+          Label history {
+            halign: start;
+            valign: start;
+            xalign: 0;
+            wrap: true;
+            styles ["history"]
+          }
+        }
+
+        Box {
+          orientation: horizontal;
+          spacing: 8;
+
+          Label {
+            label: "速度";
+          }
+
+          Scale speed {
+            hexpand: true;
+            draw-value: false;
+            adjustment: Adjustment {
+              lower: 0.4;
+              upper: 3;
+              value: 1;
+              step-increment: 0.1;
+            };
+          }
+        }
+      }
+    }
+
+    Label status {
+      label: "";
+      margin-top: 4;
+      margin-bottom: 10;
+      margin-start: 12;
+      margin-end: 12;
+      halign: start;
+      wrap: true;
+      styles ["status"]
+    }
+  }
+}

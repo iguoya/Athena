@@ -1,0 +1,187 @@
+{
+  "id": "cube.turns",
+  "exercise": "02-turns",
+  "title": "转一转",
+  "lead": "这一章回答：转一下，程序里到底发生了什么。答案不是手写一张置换表，而是从三维坐标算出来。魔方现在能转、能撤销、能放动画；还不会求解，也还没有「角块」这个视角，是有意的：先把转动做对。",
+  "cooperation": {
+    "intro": "状态在 cube 里，动画在 CubeView 里，Session 管一个转法队列：按钮、输入框、打乱都往队列里放转法，队列里的一步步放成动画。",
+    "roster": [
+      { "name": "cube::rotate", "role": "把一个坐标绕轴顺时针转 90°，用叉乘和点乘两行算完。", "with": "perform 的初始化" },
+      { "name": "cube::perform", "role": "对一个状态转一步或一串，返回新状态，不改原状态。", "with": "rotate、slot_index" },
+      { "name": "cube::parse / to_string", "role": "记号和转法互相转换；写错的记号抛异常。", "with": "Session::run_entry" },
+      { "name": "cube::random_alg", "role": "随机给出一串转法，相邻两步不转同一个面。", "with": "Session::scramble" },
+      { "name": "CubeView::show_turning", "role": "在转之前的状态上，把某一层转到 0 到 1 的某个进度。", "with": "Session::tick" },
+      { "name": "Session::enqueue", "role": "把转法放进队列；空闲时立刻开始放第一步。", "with": "按钮、输入框、打乱" },
+      { "name": "Session::tick", "role": "每 16 毫秒推进一次动画，进度满了就调 finish。", "with": "CubeView、finish" },
+      { "name": "Session::finish", "role": "动画放完才真正换状态、记进历史，再取队列里的下一步。", "with": "cube::perform" }
+    ],
+    "figures": [
+      {
+        "kind": "flow",
+        "title": "一步转动的一生",
+        "caption": "状态在 finish 里才改变。tick 只让画面动，所以动画中途不会弄坏魔方。",
+        "steps": [
+          { "name": "enqueue", "role": "转法进队列" },
+          { "name": "start_next", "role": "取出队首，开始计时" },
+          { "name": "tick × 多次", "role": "show_turning(进度)" },
+          { "name": "finish", "role": "perform 换状态，记历史" }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "记号：U R F，加撇和 2",
+      "body": "一个字母是一个面。〔重点〕单独的字母是从这个面外面看顺时针转 90°，加 ' 是逆时针，加 2 是转半圈。〔〕R U R' U' 就是：右面顺时针、上面顺时针、右面逆时针、上面逆时针。\n\n2 阶魔方没有中心块当参照，转 D、L、B 等于把整个魔方换个姿势再转 U、R、F。所以〔要点〕只用 U、R、F 三个面，就覆盖了全部本质不同的转法。〔〕这样左下后的角块 DBL 永远不会被碰到，后面就拿它当参照。",
+      "figure": {
+        "kind": "cube",
+        "title": "R U R' U' 一步一步",
+        "caption": "圈出的是刚转过的那一层。程序窗口里的转动动画放的就是这个过程。",
+        "moves": "R U R' U'"
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "转动是算出来的，不是抄出来的",
+      "body": "每张贴纸有两个量：它所在角块的中心坐标（每个分量是 −1 或 1），和它朝外的方向。〔重点〕转一个面，就是把这一层里的贴纸，位置和朝向一起绕轴转 90°。〔〕转完落在哪个贴纸位上，那个位置的颜色就来自转之前的这一格。\n\n18 种转法的置换表是程序启动时算出来的，方向和手性由几何决定。手写 18 张表，抄错一个数都看不出来；〔难点〕而且「顺时针」是从面的外面看，坐标系是右手系，方向搞反一次，整个魔方就是镜像的。〔〕"
+    },
+    {
+      "role": "focus",
+      "heading": "转动的性质，直接拿来当测试",
+      "body": "转一个面四次回到原样；转了再反着转抵消；转两次等于转半圈；R U R' U' 重复 6 次回到原样。〔考点〕这些性质程序从来没被告知过，全是几何算出来的结果，所以拿来当测试最合适。〔〕\n\n还有一条：只转 U、R、F 时，DBL 的三张贴纸永远不变。后面求解时，这是整个方法的前提。",
+      "figure": {
+        "kind": "cube",
+        "title": "R U R' U' 转 6 遍",
+        "caption": "共 24 步。每 4 步是一遍；走完第 6 遍，魔方回到复原。拖到结尾看看。",
+        "moves": "R U R' U' R U R' U' R U R' U' R U R' U' R U R' U' R U R' U'"
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "动画不是状态",
+      "body": "窗口里的转动是个动画：在转之前的状态上，把这一层从 0 转到 100%。〔重点〕动画只是画面，状态要等转完才换。〔〕所以动画中途再点别的按钮也不会弄坏状态：Session 把转法放进队列，一个一个放。\n\n撤销也不特殊：它只是把最后一步反着转一次，并且从历史里拿掉。"
+    },
+    {
+      "role": "advanced",
+      "heading": "另外三个面，和两份实现",
+      "body": "cube.cc 其实实现了六个面，basic_moves 只列出 U、R、F。第 6 章要把任意姿势的魔方摆正，会用到另外三个面。\n\n讲解页里这些图用的是另一份 TypeScript 小模型（src/cube.ts），思路相同。两份实现各写一遍，怎么保证不分叉？scripts/cube_golden.json 里有 11 条黄金向量：C++ 在 cube_test.cc 里断言，TypeScript 在 scripts/check_model.ts 里断言，结果逐字相同。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "cube.turns.notation",
+      "kind": "重点",
+      "stem": "记号 R' 表示什么？",
+      "choices": [
+        "右面顺时针转 90°",
+        "右面逆时针转 90°",
+        "右面转 180°",
+        "把整个魔方向右翻转"
+      ],
+      "answer": 1,
+      "explanation": "单独字母是顺时针，加 ' 是逆时针，加 2 是转半圈。顺逆都是从这个面的外面看过去。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 2 章 · 记号",
+          "note": "魔方圈通用的 Singmaster 记号；本课程的写法见 cube.cc 的 parse 与 to_string，没有现成中文题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.turns.three",
+      "kind": "重点",
+      "stem": "为什么只用 U、R、F 三个面就够了？",
+      "choices": [
+        "因为 D、L、B 三个面转不动",
+        "因为 2 阶魔方没有中心块，转 D、L、B 等于整体换姿势再转 U、R、F",
+        "因为 U、R、F 三个面的角块最多",
+        "因为 D、L、B 的记号太难写"
+      ],
+      "answer": 1,
+      "explanation": "没有中心块，就没有「这个面该是什么颜色」的固定参照。转 D 等于整个魔方翻个姿势再转 U。这样 DBL 永远不动，可以当参照。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "wikipedia-pocket-cube",
+          "locator": "结构：没有中心块，没有固定朝向",
+          "note": "条目说明 2 阶魔方没有中心块；「只用 U R F」是本课程的做法，题目自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.turns.order",
+      "kind": "要点",
+      "stem": "从复原态起，R U R' U' 要重复几遍才回到复原？",
+      "choices": ["4 遍", "6 遍", "8 遍", "12 遍"],
+      "answer": 1,
+      "explanation": "cube_test.cc 里逐遍检查：前 5 遍都没复原，第 6 遍复原。讲解里的回放走完 24 步就是这个结果。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 2 章 · 转动的性质",
+          "note": "结论由本章的测试断言得到，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.turns.derived",
+      "kind": "难点",
+      "stem": "转动的置换表为什么从坐标算出来，不直接手写？",
+      "choices": [
+        "手写太慢，程序启动会卡",
+        "手写 18 张表很容易抄错，错了还看不出来；几何算出的方向和手性不会错",
+        "C++ 不支持数组常量",
+        "坐标计算比查表省内存"
+      ],
+      "answer": 1,
+      "explanation": "表里错一个数，魔方就悄悄变成另一个魔方。几何推出来的结果还能用 U⁴ = 1 这类性质去验证。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 2 章 · 转动是算出来的",
+          "note": "对应 cube.cc 的 permutations() 注释，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.turns.animation",
+      "kind": "考点",
+      "stem": "一步转动的动画放到一半时，Session 里存的魔方状态是什么？",
+      "choices": [
+        "已经是转完的状态",
+        "转之前的状态，转完（finish）才换",
+        "一个只转了一半的中间状态",
+        "空状态"
+      ],
+      "answer": 1,
+      "explanation": "动画只是画面：CubeView 在转之前的状态上算出这一层转到哪一刻。finish 里才 perform 换状态。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 2 章 · 动画不是状态",
+          "note": "对应 Session::tick 与 finish，没有现成题，自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "02-turns", "label": "打开本章程序", "primary": true }],
+  "files": [
+    "exercise/02-turns/ui/window.blp",
+    "exercise/02-turns/session.cc",
+    "exercise/02-turns/session.hh",
+    "exercise/02-turns/cube.cc",
+    "exercise/02-turns/cube.hh",
+    "exercise/02-turns/view.cc",
+    "exercise/02-turns/view.hh",
+    "exercise/02-turns/ui/style.css",
+    "exercise/02-turns/ui/main.cc",
+    "exercise/02-turns/cube_test.cc",
+    "exercise/02-turns/meson.build"
+  ]
+}

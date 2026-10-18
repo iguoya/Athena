@@ -1,0 +1,187 @@
+{
+  "id": "cube.optimal",
+  "exercise": "07-optimal",
+  "title": "最短解",
+  "lead": "这一章回答：能不能不分阶段，直接找最少的步数。答案是反过来搜：从复原态出发，把 367 万个状态各自离复原多少步一次算完，存成一张表。之后任何状态，查表一路往下走，走到头就是最短解，最多 11 步。",
+  "cooperation": {
+    "intro": "新增的东西集中在 optimal 里：给状态编号、在角块视角下转一步、建表、查表求解。窗口只多了一个「最短解」按钮，建表放在后台线程，界面不卡。",
+    "roster": [
+      { "name": "to_index / from_index", "role": "角块状态和 0 到 3 674 159 的编号互相转换：排列的 Lehmer 码 × 729 加朝向的三进制数。", "with": "DistanceTable" },
+      { "name": "perform(Cubie, Move)", "role": "在角块视角下转一步，只动 7 块；效果表从贴纸版的转动里读出来。", "with": "cubie_of、DistanceTable" },
+      { "name": "DistanceTable::DistanceTable", "role": "从复原态做广度优先，每一层的状态都试遍 9 种转法，没见过的写进表。", "with": "perform、to_index" },
+      { "name": "DistanceTable::solve", "role": "从状态出发，每步选一个让距离减 1 的转法，走到距离 0。", "with": "dist_" },
+      { "name": "Session::solve_optimal", "role": "第一次用时在后台线程建表，建好后查表，把最短解摊成计划回放。", "with": "std::async、adopt" }
+    ],
+    "figures": [
+      {
+        "kind": "flow",
+        "title": "第一次点「最短解」",
+        "caption": "表只建一次。建表期间按钮变灰，界面照常响应；之后每次点都是毫秒级。",
+        "steps": [
+          { "name": "后台线程", "role": "DistanceTable 建表（约 5 秒）" },
+          { "name": "定时轮询", "role": "每 100 毫秒问一次建好没有" },
+          { "name": "查表", "role": "solve 给出最短转法" },
+          { "name": "回放", "role": "计划交给 adopt，和层先法一样播放" }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "反过来搜：从复原态出发",
+      "body": "层先法是从你的魔方往复原走，每一步都有道理，但步数不是最少的。机器可以换个方向：〔重点〕从复原态出发，一层一层往外数——转 1 步能到哪些状态，转 2 步能到哪些……每个状态第一次被碰到的那一层，就是它离复原的最少步数。〔〕这叫广度优先搜索，做一次就把所有状态的距离都算完了。\n\n状态一共 3 674 160 个，一个状态存一个字节，整张表只有 3.5 MB。",
+      "figure": {
+        "kind": "bars",
+        "title": "离复原 d 步的状态有多少个",
+        "caption": "半转算一步。最远的状态离复原 11 步；离复原 9 步的最多，将近 190 万个。数字是 cube_test.cc 里逐项断言过的。",
+        "items": [
+          { "label": "0 步", "value": 1 },
+          { "label": "1 步", "value": 9 },
+          { "label": "2 步", "value": 54 },
+          { "label": "3 步", "value": 321 },
+          { "label": "4 步", "value": 1847 },
+          { "label": "5 步", "value": 9992 },
+          { "label": "6 步", "value": 50136 },
+          { "label": "7 步", "value": 227536 },
+          { "label": "8 步", "value": 870072 },
+          { "label": "9 步", "value": 1887748 },
+          { "label": "10 步", "value": 623800 },
+          { "label": "11 步", "value": 2644 }
+        ]
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "给 367 万个状态编号",
+      "body": "表是一个数组，状态要能变成下标。固定 DBL，剩下 7 块的排列有 5040 种，用 Lehmer 码编成 0 到 5039：每一位数「右边比我小的有几个」。朝向的前 6 块当三进制数，有 729 种，最后一块由总和模 3 为 0 定下来，不用存。\n\n〔重点〕下标 = 排列编号 × 729 + 朝向编号，一一对应，没有空洞。〔〕from_index 反过来把下标还原成状态，cube_test.cc 对随机状态检查往返一致。"
+    },
+    {
+      "role": "focus",
+      "heading": "有了表，求解就是往下走",
+      "body": "〔重点〕求解时每一步只做一件事：试 9 种转法，挑一个让距离减 1 的。〔〕距离是几，就走几步，走完正好到复原；因为表里的距离已经是最少步数，所以走出来的就是最短解。\n\n对同一个打乱 R U F' U2 R2 F U'：层先法走了 41 步，最短解只有 7 步。",
+      "figure": {
+        "kind": "cube",
+        "title": "同一个打乱的最短解",
+        "caption": "7 步复原。前一章的层先法要 41 步。",
+        "setup": "R U F' U2 R2 F U'",
+        "moves": "U F' R2 U2 F U' R'",
+        "expect": "solved"
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "为什么建表要在角块视角下跑",
+      "body": "建表要转 3 674 160 × 9 ≈ 3300 万次。贴纸视角每次要复制 24 格；角块视角只动 7 块，还能直接换成下标。\n\n〔难点〕两个视角必须一致：cube_test.cc 对 300 个随机状态的全部 9 种转法，检查角块视角转一步的结果，和贴纸视角转一步完全相同。〔〕不一致的话，表里的距离就是错的，而且错得无声无息。"
+    },
+    {
+      "role": "focus",
+      "heading": "和层先法比一比",
+      "body": "500 个随机状态：最短解平均约 8.7 步，层先法平均约 35 步。最短解最多 11 步，层先法最长到 48 步。\n\n人想事情靠阶段，机器靠一张表。人记得住的是口诀和阶段，所以真正拧魔方时仍然用层先法；机器没有记忆负担，所以直接查表。"
+    },
+    {
+      "role": "advanced",
+      "heading": "11 步和 14 步",
+      "body": "「最多 11 步」是把半转（如 U2）算一步。如果只允许 90° 的转动（半转算两步），最远的状态要 14 步。这两个数是已经证明的结论，不是这里实测的；本章的表给出的是前一个。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "cube.optimal.table",
+      "kind": "重点",
+      "stem": "从复原态做一次广度优先，为什么就能求解所有状态？",
+      "choices": [
+        "因为它把每个状态离复原的最少步数都存进了表",
+        "因为它随机试出了所有解",
+        "因为它记下了所有人用过的公式",
+        "因为状态太少，不用搜"
+      ],
+      "answer": 0,
+      "explanation": "表里的距离就是最少步数。任何状态，每一步选一个让距离减 1 的转法，走到 0 就是最短解。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 7 章 · 反过来搜",
+          "note": "广度优先的性质，对应 optimal.cc 的 DistanceTable，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.optimal.god",
+      "kind": "重点",
+      "stem": "2 阶魔方的任何状态，最多几步（半转算一步）就能复原？",
+      "choices": ["7 步", "9 步", "11 步", "14 步"],
+      "answer": 2,
+      "explanation": "半转算一步是 11 步；只许 90° 转动的话是 14 步。本章的表里最远的层是 11。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "wikipedia-pocket-cube",
+          "locator": "God's number：半转度量 11、四分之一转度量 14",
+          "note": "数字来自条目，与本章的表一致；题目自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.optimal.byte",
+      "kind": "要点",
+      "stem": "为什么每个状态只需要一个字节来存距离？",
+      "choices": [
+        "因为距离最大只有 11，远小于 255",
+        "因为字节是 C++ 最小的类型",
+        "因为状态编号已经包含了距离",
+        "因为只存奇偶性"
+      ],
+      "answer": 0,
+      "explanation": "一个字节能存 0 到 255。距离最大 11，所以 3 674 160 个状态一共 3.5 MB。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 7 章 · 表的大小",
+          "note": "对应 DistanceTable 的 dist_ 数组，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.optimal.descent",
+      "kind": "难点",
+      "stem": "有了距离表，求解时每一步怎么选转法？",
+      "choices": [
+        "随机选一个转法",
+        "选一个让距离减 1 的转法",
+        "选转动面最多的转法",
+        "按层先法的阶段选"
+      ],
+      "answer": 1,
+      "explanation": "距离是几，就恰好走几步。每一步都让距离减 1，走到 0 就复原了，步数不会比距离多。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 7 章 · 查表求解",
+          "note": "对应 DistanceTable::solve，没有现成题，自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "07-optimal", "label": "打开本章程序", "primary": true }],
+  "files": [
+    "exercise/07-optimal/ui/window.blp",
+    "exercise/07-optimal/optimal.cc",
+    "exercise/07-optimal/optimal.hh",
+    "exercise/07-optimal/session.cc",
+    "exercise/07-optimal/session.hh",
+    "exercise/07-optimal/cube.hh",
+    "exercise/07-optimal/cube.cc",
+    "exercise/07-optimal/solver.cc",
+    "exercise/07-optimal/solver.hh",
+    "exercise/07-optimal/view.cc",
+    "exercise/07-optimal/view.hh",
+    "exercise/07-optimal/ui/style.css",
+    "exercise/07-optimal/ui/main.cc",
+    "exercise/07-optimal/cube_test.cc",
+    "exercise/07-optimal/meson.build"
+  ]
+}

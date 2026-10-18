@@ -1,0 +1,166 @@
+{
+  "id": "cube.solver",
+  "exercise": "06-solver",
+  "title": "任意状态",
+  "lead": "这一章回答：手里的魔方是任意姿势、任意状态，程序怎么接得住。答案是三件事：先检查输入是不是真魔方能出现的，再整体转到白下绿前，最后才交给前面三章的流水线。窗口里终于可以逐格涂色输入了。",
+  "cooperation": {
+    "intro": "这一章 cube 里新增的都是「入口」：diagnose 检查、normalize 摆正、to_input_frame 换算回去、random_normalized 均匀打乱。求解本身一行没改，Session 多了涂色。",
+    "roster": [
+      { "name": "cube::diagnose", "role": "检查一份涂色是不是真魔方能出现的；不是就返回中文原因，是就返回空串。", "with": "read_corner" },
+      { "name": "cube::cubie_of / stickers_of", "role": "在贴纸视角和角块视角（每个位置放的是哪块、拧了几格）之间互相转换。", "with": "diagnose、random_normalized" },
+      { "name": "cube::normalize", "role": "试遍 24 种整体旋转，找出让 DBL 角块回到左下后的那一种。", "with": "all_rotations" },
+      { "name": "cube::to_input_frame", "role": "把摆正姿势下的转法换成输入姿势下的转法：面按对应关系替换。", "with": "Oriented" },
+      { "name": "cube::random_normalized", "role": "均匀地随机一个状态：7 块任意排列，朝向任意但总和模 3 为 0。", "with": "Session::scramble" },
+      { "name": "Session::prepare", "role": "求解前的共同准备：先 diagnose，再 normalize，状态换成摆正后的。", "with": "diagnose、normalize" },
+      { "name": "Session::paint_slot / check", "role": "涂色模式下点一格就给它涂上画笔的颜色；「检查」按钮把 diagnose 的结果写在状态栏。", "with": "NetView、diagnose" }
+    ],
+    "figures": [
+      {
+        "kind": "sequence",
+        "title": "点「求解」之后",
+        "caption": "任何一步失败都停在这里，状态栏说出原因；只有输入合法才会走到 solve。",
+        "actors": ["Session", "cube", "solver"],
+        "messages": [
+          { "from": 0, "to": 1, "label": "diagnose(state)" },
+          { "from": 1, "to": 0, "label": "空串 = 合法" },
+          { "from": 0, "to": 1, "label": "normalize(state)" },
+          { "from": 1, "to": 0, "label": "摆正后的状态" },
+          { "from": 0, "to": 2, "label": "solve(state)" },
+          { "from": 2, "to": 0, "label": "Plan" }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "先检查：不是所有涂色都是真魔方",
+      "body": "逐格涂色很容易涂错。〔重点〕diagnose 依次检查：每种颜色恰好 4 格；每个角块位置上的三种颜色，能对上某个真实的角块（必须有且只有一格黄或白）；顺时针的顺序没有反；8 个角块不重复；角块朝向之和是 3 的倍数。〔〕任何一项不满足，就说出具体原因，不去求解。\n\n〔难点〕最后一项最隐蔽：把一个角块原地拧一下，每种颜色仍是 4 格，每个角块也都存在，但真魔方永远转不出这种状态。〔〕",
+      "figure": {
+        "kind": "cube",
+        "title": "被拧过一个角块的魔方",
+        "caption": "圈出的 URF 角块被原地拧了 120°。颜色数、角块组合都没问题，只有朝向之和不是 3 的倍数：diagnose 会报告「有角块被单独拧过」。",
+        "state": "000201112122333344445555",
+        "marks": [3, 4, 9]
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "再摆正：任意姿势都转成白下绿前",
+      "body": "前三章的解法有个前提：参照角块 DBL 在左下后。手里的魔方可以是任意姿势，所以求解之前先整体转一下。\n\n〔重点〕整体旋转一共 24 种（6 个面朝上 × 4 个方向）。normalize 逐个试，找到让「白蓝红」角块回到左下后的那一种，它唯一。〔〕摆正之后求出的转法，在你手里的魔方上要换个面转：to_input_frame 按面的对应关系替换。"
+    },
+    {
+      "role": "focus",
+      "heading": "为什么随机状态要「均匀」",
+      "body": "前几章打乱用的是「随机转 25 步」。它能到达所有状态，但并不均匀：有的状态更容易出现。这一章的 random_normalized 直接在状态上随机：7 块任意排列，朝向任意，最后一块的朝向由「总和模 3 为 0」定下来。\n\n〔要点〕这样每个可到达的状态被抽到的机会相同。〔〕可到达的状态一共 7!×3⁶ = 3 674 160 个。",
+      "figure": {
+        "kind": "cube",
+        "title": "一个随机状态的求解",
+        "caption": "这就是前三章的流水线在做的事：先第一层，再翻顶面，最后摆顶层。窗口里可以随机打乱后点「求解」，每一步都有圈出和说明。",
+        "setup": "D L B' R2 U F2"
+      }
+    },
+    {
+      "role": "advanced",
+      "heading": "3 674 160 是怎么数出来的",
+      "body": "8 个角块的排列 8!，每个角块 3 种朝向 3⁸，但「朝向总和模 3 为 0」砍掉一个 3 的因子，剩 8!×3⁷。魔方整体可以有 24 种姿势，而 2 阶魔方没有中心块，没法区分这 24 种，所以再除以 24：8!×3⁷/24 = 3 674 160。\n\n换个角度：固定 DBL 不动，其余 7 块排列 7!，朝向 3⁶（最后一块由总和定），同样是 3 674 160。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "cube.solver.legal",
+      "kind": "重点",
+      "stem": "下面哪一种涂色，是真魔方永远转不出来的？",
+      "choices": [
+        "每种颜色 4 格，其中一个角块被原地拧了一下，其余都对",
+        "把魔方整个翻过来放",
+        "打乱 20 步后的任何状态",
+        "把 R 面转 90°"
+      ],
+      "answer": 0,
+      "explanation": "拧一个角块会让朝向之和不是 3 的倍数。真魔方的每一次转动都保持这个和，所以永远转不出来。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "wikipedia-pocket-cube",
+          "locator": "位置数 8!×3⁷/24",
+          "note": "条目的位置数公式里已经含有「朝向之和模 3」这一约束；题目按 diagnose 的检查项自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.solver.count",
+      "kind": "要点",
+      "stem": "固定 DBL 不动后，2 阶魔方有多少种可到达的状态？",
+      "choices": ["5 040", "40 320", "3 674 160", "88 179 840"],
+      "answer": 2,
+      "explanation": "7 块排列 7! = 5040，朝向 3⁶ = 729，5040×729 = 3 674 160。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "wikipedia-pocket-cube",
+          "locator": "位置数 3,674,160",
+          "note": "数字与条目一致；用 7!×3⁶ 的算法是本章自己的表述。"
+        }
+      ]
+    },
+    {
+      "id": "cube.solver.normalize",
+      "kind": "难点",
+      "stem": "为什么求解之前要先摆正？",
+      "choices": [
+        "因为摆正后魔方更好看",
+        "因为前三章的解法以 DBL 在左下后为前提，输入的姿势是任意的",
+        "因为涂色输入只接受白下绿前",
+        "因为摆正能减少转动步数"
+      ],
+      "answer": 1,
+      "explanation": "U、R、F 三个面不碰 DBL，解法才成立。输入姿势不同，DBL 可能在任何位置，所以先整体转一下。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 6 章 · normalize",
+          "note": "对应 cube.cc 的 normalize，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.solver.frame",
+      "kind": "考点",
+      "stem": "摆正姿势下要转 U 面，在你手里（输入姿势）的魔方上，转的是哪个面？",
+      "choices": [
+        "一定还是 U 面",
+        "输入姿势里，和摆正后 U 位置对应的那个面",
+        "一定是 D 面",
+        "随机一个面"
+      ],
+      "answer": 1,
+      "explanation": "摆正是整体旋转，每个面都换到了另一个位置。to_input_frame 就是查这张对应表，把每一步的面换回去，转的方向不变。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 6 章 · to_input_frame",
+          "note": "对应 cube.cc 的 to_input_frame，没有现成题，自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "06-solver", "label": "打开本章程序", "primary": true }],
+  "files": [
+    "exercise/06-solver/ui/window.blp",
+    "exercise/06-solver/session.cc",
+    "exercise/06-solver/session.hh",
+    "exercise/06-solver/cube.hh",
+    "exercise/06-solver/cube.cc",
+    "exercise/06-solver/solver.cc",
+    "exercise/06-solver/solver.hh",
+    "exercise/06-solver/view.cc",
+    "exercise/06-solver/view.hh",
+    "exercise/06-solver/ui/style.css",
+    "exercise/06-solver/ui/main.cc",
+    "exercise/06-solver/cube_test.cc",
+    "exercise/06-solver/meson.build"
+  ]
+}

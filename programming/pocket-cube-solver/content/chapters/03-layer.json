@@ -1,0 +1,170 @@
+{
+  "id": "cube.layer",
+  "exercise": "03-layer",
+  "title": "做第一层",
+  "lead": "这一章回答：怎样把「做第一层」变成程序能判定、能执行的事。答案是先写出完成条件，再让机器一块一块地搜。顶层还是乱的，第二、三阶段留给后面两章，是有意的：先把第一个阶段做扎实，它的完成条件就是下一阶段的前提。",
+  "cooperation": {
+    "intro": "cube 多了「角块」这个视角，solver 里是第一个阶段的求解，Session 把求出来的计划摊成一步一步的列表来回放。计划分三层：Plan 有若干 Stage（阶段），Stage 有若干 Segment（讲解里的一句话），Segment 才是转法。",
+    "roster": [
+      { "name": "cube::corner_solved", "role": "某个角块位置上的三张贴纸是不是都回到了原来的颜色。", "with": "corner_slots、corner_home" },
+      { "name": "layer_done", "role": "阶段 1 的完成条件：DFR、DLF、DRB 和不动的 DBL 都在原位原向。", "with": "corner_solved" },
+      { "name": "search", "role": "深度限定的搜索：试遍 9 种转法的所有组合，看能不能在 depth 步内装好前 placed 块。", "with": "cube::perform" },
+      { "name": "solve_layer", "role": "按 DFR、DLF、DRB 的顺序，一块一块用迭代加深找最短装法。", "with": "search、corner_solved" },
+      { "name": "Segment / Stage / Plan", "role": "计划的三层结构：转法 → 一句话 → 一个阶段。", "with": "Session" },
+      { "name": "Session::solve / adopt", "role": "调用 solve，把计划摊成逐步列表，记下每个阶段的起止步号。", "with": "solver、view" },
+      { "name": "Session::refresh", "role": "按当前走到第几步更新两个视图、阶段标签、转法条和说明。", "with": "NetView、CubeView" }
+    ],
+    "figures": [
+      {
+        "kind": "flow",
+        "title": "solve_layer 的循环",
+        "caption": "每块一个循环。已经就位就跳过；否则从 1 步开始加深，第一次成功就停。",
+        "steps": [
+          { "name": "第 k 块", "role": "DFR → DLF → DRB" },
+          { "name": "已就位？", "role": "是就跳过" },
+          { "name": "depth = 1, 2, 3…", "role": "search 能不能装好" },
+          { "name": "记 Segment", "role": "转法写进计划，状态推进" }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "第一层是什么",
+      "body": "把魔方白色朝下。第一层完成，指的是底层 4 个角块都回到原位，方向也对：白色拼成一面，侧面的颜色两两对上。\n\n〔重点〕2 阶魔方没有中心块，「对」只能用角块之间的相对关系来说：DBL 角块永远不动，其余 3 块各回到自己的位置和方向。〔〕程序里的判定是 layer_done：DFR、DLF、DRB 加上不动的 DBL，每个角块的三张贴纸都是原来的颜色。",
+      "figure": {
+        "kind": "cube",
+        "title": "第一层做好了，顶层还乱着",
+        "caption": "这个状态底层是白色一面、侧面两两对上。展开图里看 D 行和各面下排；顶层是下两章要解决的。",
+        "setup": "R U R' U R U2 R'",
+        "expect": "layer"
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "一块一块装，让机器去搜",
+      "body": "人做第一层靠口诀：把白色角块转到目标位置上方，反复做 R U R' U'，直到它落进去。机器没有这种直觉，但它能搜。\n\n〔重点〕先试 1 步能不能装好，不行再试 2 步、3 步……第一次成功的就是最短的装法，这叫迭代加深。〔〕每次只装一块；装第 2 块时，第 1 块也是目标，搜索不许把它弄坏。",
+      "figure": {
+        "kind": "cube",
+        "title": "程序为这个打乱找到的第一层",
+        "caption": "三块依次装进 DFR、DLF、DRB：R'，再 F U' F'，最后 R2 U' R2 U R2，共 9 步。",
+        "setup": "R U F' U2 R2 F U'",
+        "moves": "R' F U' F' R2 U' R2 U R2",
+        "expect": "layer"
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "搜索为什么不会太慢",
+      "body": "9 种转法里，同一个面连着转两次可以并成一步（或者互相抵消），所以每一步只需要试另外两个面的 6 种转法。深度 d 的路径大约 9×6^(d−1) 条。\n\n〔难点〕实测 2 万个随机打乱：第一层平均 9 步，最长 14 步；每一块最深只搜到 3、5、6 步，深度 6 最多约 7 万条路径，瞬间就搜完。〔〕三块分别搜到最短，合起来不一定是整层的最短，但这样每一块都对得上讲解里的一句话。"
+    },
+    {
+      "role": "advanced",
+      "heading": "搜索的规模",
+      "body": "深度 d 最多 9×6^(d−1) 条路径：深度 6 约 7 万条，深度 8 约 250 万条，深度 9 约 1500 万条。2 万个随机打乱里，第 1、2、3 块最深分别搜到 3、5、6 步：第三块最难装，因为它要避开前两块。\n\n更省的做法是预先算好一张距离表（第 7 章就这么做），但那样就不再是「像人一样一块一块想」了。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "cube.layer.done",
+      "kind": "重点",
+      "stem": "layer_done 判定第一层完成，检查的是哪些角块位置？",
+      "choices": [
+        "只检查 DFR、DLF、DRB 三个",
+        "DFR、DLF、DRB 加上永远不动的 DBL，共 4 个底层位置",
+        "顶层 4 个位置",
+        "全部 8 个位置"
+      ],
+      "answer": 1,
+      "explanation": "底层共 4 个角块。DBL 不会被 U、R、F 碰到，所以实际要装的是另外 3 块，判定时 4 个一起看。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · layer_done",
+          "note": "对应 solver.cc 的 layer_done，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.layer.keep",
+      "kind": "重点",
+      "stem": "装第 2 块时，为什么第 1 块也算搜索的目标？",
+      "choices": [
+        "为了让搜索更快",
+        "否则搜索可能为了装第 2 块把已经装好的第 1 块拆掉",
+        "因为两块必须同时转",
+        "因为第 1 块比第 2 块更重要"
+      ],
+      "answer": 1,
+      "explanation": "目标是「前 k 块都在原位」。这样每装好一块，它就被保护起来，不会在后面被碰坏。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · search 的 placed 参数",
+          "note": "对应 solver.cc 的 search，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.layer.iddfs",
+      "kind": "难点",
+      "stem": "迭代加深为什么能保证第一次成功的就是最短装法？",
+      "choices": [
+        "因为它总是先试最短的转法",
+        "因为它从浅到深一层一层试，更浅的层已经全部失败过了",
+        "因为它用了距离表",
+        "因为随机选的路径通常最短"
+      ],
+      "answer": 1,
+      "explanation": "1 步试遍了才试 2 步，2 步试遍了才试 3 步。第一次成功的深度前面所有更浅的深度都没有解，所以不会更短。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · 迭代加深",
+          "note": "迭代加深的性质，按 solve_layer 的循环自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.layer.prune",
+      "kind": "考点",
+      "stem": "搜索时为什么可以不让同一个面连着转两次？",
+      "choices": [
+        "因为连转会让魔方卡住",
+        "因为 U U 可以并成 U2，U U' 互相抵消，都不会更短，不用单独搜",
+        "因为 R、U、F 不能连着用",
+        "因为这样会改变 DBL"
+      ],
+      "answer": 1,
+      "explanation": "同一个面的连续转动总能并成一步或消掉。砍掉它们，每一层的分叉从 9 个降到 6 个，深度 8 时路径数少了一个数量级。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · 剪枝",
+          "note": "对应 search 里的 last_face，没有现成题，自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "03-layer", "label": "打开本章程序", "primary": true }],
+  "files": [
+    "exercise/03-layer/ui/window.blp",
+    "exercise/03-layer/solver.cc",
+    "exercise/03-layer/solver.hh",
+    "exercise/03-layer/session.cc",
+    "exercise/03-layer/session.hh",
+    "exercise/03-layer/cube.hh",
+    "exercise/03-layer/cube.cc",
+    "exercise/03-layer/view.cc",
+    "exercise/03-layer/view.hh",
+    "exercise/03-layer/ui/style.css",
+    "exercise/03-layer/ui/main.cc",
+    "exercise/03-layer/cube_test.cc",
+    "exercise/03-layer/meson.build"
+  ]
+}

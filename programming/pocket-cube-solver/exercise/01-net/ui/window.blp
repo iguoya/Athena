@@ -1,0 +1,68 @@
+using Gtk 4.0;
+
+// 这一章只有展开图和一块说明。展开图是自绘的，放进空位。
+ApplicationWindow main_window {
+  title: "二阶魔方";
+  default-width: 980;
+  default-height: 620;
+
+  titlebar: HeaderBar {
+    show-title-buttons: true;
+    title-widget: Label {
+      label: "二阶魔方 · 看见魔方";
+      styles ["title"]
+    };
+  };
+
+  Box {
+    orientation: horizontal;
+    spacing: 16;
+    margin-top: 12;
+    margin-bottom: 12;
+    margin-start: 12;
+    margin-end: 12;
+
+    Box net_slot {
+      hexpand: true;
+      vexpand: true;
+    }
+
+    Box {
+      orientation: vertical;
+      spacing: 10;
+      width-request: 300;
+
+      Label {
+        label: "6 个面 × 每面 4 格 = 24 张贴纸\n8 个角块 × 每块 3 张贴纸 = 24 张贴纸";
+        halign: start;
+        xalign: 0;
+        styles ["fact"]
+      }
+
+      Label info {
+        label: "";
+        halign: start;
+        valign: start;
+        xalign: 0;
+        vexpand: true;
+        wrap: true;
+        styles ["info"]
+      }
+
+      Box {
+        orientation: horizontal;
+        spacing: 8;
+        homogeneous: true;
+
+        Button show_sample {
+          label: "打乱的例子";
+          styles ["suggested-action"]
+        }
+
+        Button show_solved {
+          label: "复原的魔方";
+        }
+      }
+    }
+  }
+}

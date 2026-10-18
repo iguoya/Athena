@@ -1,0 +1,155 @@
+{
+  "id": "cube.net",
+  "exercise": "01-net",
+  "title": "看见魔方",
+  "lead": "这一章只回答一件事：一个 2 阶魔方在程序里是什么。答案是 24 个数，加上一张角块表。魔方还不能转、更不会求解，是有意的：先学会读展开图，后面每一章都靠它看结果。",
+  "cooperation": {
+    "intro": "这一章的代码很短：cube 管数据，NetView 只管画，Session 把点击和说明接起来。点一格会发生什么，用时序图看最清楚。",
+    "roster": [
+      { "name": "cube::sample / solved", "role": "给出 24 个颜色号：打乱的例子和复原的魔方。", "with": "Session" },
+      { "name": "cube::corner_slots", "role": "手抄的角块表：每个角块上 3 张贴纸的编号。", "with": "corner_of、Session" },
+      { "name": "cube::corner_of", "role": "第 slot 号贴纸属于哪个角块。", "with": "corner_slots" },
+      { "name": "NetView::draw", "role": "把 24 个颜色号画成十字形展开图，被圈出的格子加粗框。", "with": "Cairo" },
+      { "name": "NetView::on_click", "role": "把点击的像素换算成第几格，发出 picked 信号。", "with": "Session::pick" },
+      { "name": "Session::pick", "role": "找到这一格所在的角块，圈出它的三张贴纸，写出说明。", "with": "cube、NetView、Label" }
+    ],
+    "figures": [
+      {
+        "kind": "sequence",
+        "title": "点一格之后",
+        "caption": "NetView 不知道什么是角块，它只报告点了第几格；角块的含义全在 cube 里。",
+        "actors": ["你", "NetView", "Session", "cube"],
+        "messages": [
+          { "from": 0, "to": 1, "label": "点一格" },
+          { "from": 1, "to": 2, "label": "picked(slot)" },
+          { "from": 2, "to": 3, "label": "corner_of(slot)" },
+          { "from": 3, "to": 2, "label": "角块编号" },
+          { "from": 2, "to": 1, "label": "show(state, marks)" }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "24 张贴纸，6 个面",
+      "body": "2 阶魔方每个面是 2×2 格，6 个面共 24 张贴纸。程序里的状态就是 24 个颜色号。\n\n〔重点〕展开图按 U R F D L B 的顺序，每个面占 4 格，第 i 格属于 i÷4 号面。〔〕颜色号和「这个颜色在复原态属于哪个面」是同一个数：0 黄、1 橙、2 绿、3 白、4 红、5 蓝。",
+      "figure": {
+        "kind": "cube",
+        "title": "复原的魔方",
+        "caption": "展开图：U 在上，L F R B 排成一排，D 在下。右边的立体图是同一个状态，只画朝向你的三个面。"
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "8 个角块，每块 3 张贴纸",
+      "body": "2 阶魔方没有中心块和棱块，只有 8 个角块。〔重点〕每张贴纸既属于某个面，也属于某个角块：24 = 6×4 = 8×3。〔〕\n\n复原态下，每个角块的三种颜色互不相同，8 个角块的颜色组合也各不相同。黄和白是对面，一个角块碰不到两个相对的面，所以每个角块上有且只有一张黄或白。",
+      "figure": {
+        "kind": "cube",
+        "title": "圈出 URF 角块",
+        "caption": "这是转过 R U R' U' 的状态。圈出的三张贴纸属于同一个角块：它们分散在 U、R、F 三个面上。",
+        "setup": "R U R' U'",
+        "marks": [3, 4, 9]
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "颜色和姿势不是随便定的",
+      "body": "本课程把魔方摆成白色在下、黄色在上、绿色在前，这时右面是橙、左面是红、后面是蓝。〔要点〕这是真实魔方的手性：红、白、蓝三种颜色绕着它们共用的角块顺时针排列。〔〕画反了，程序里的魔方就和你手里的不是同一个。\n\n后面所有章节、所有图都按这个姿势。你手里的魔方摆法不同也没关系，第 6 章会替你转正。"
+    },
+    {
+      "role": "advanced",
+      "heading": "为什么要先看角块表",
+      "body": "corner_slots 在这一章是手抄的 24 个数。〔难点〕手抄就可能抄错，所以 cube_test.cc 检查：每张贴纸恰好属于一个角块，每个角块上恰好一张黄或白，8 个角块的颜色组合各不相同。〔〕下一章会用 3D 坐标把它们自己推出来，那时这张表就不需要手抄了。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "cube.net.count",
+      "kind": "重点",
+      "stem": "2 阶魔方一共有多少张贴纸？它们和角块是什么关系？",
+      "choices": [
+        "24 张；8 个角块，每个角块上 3 张",
+        "24 张；6 个角块，每个角块上 4 张",
+        "48 张；8 个角块，每个角块上 6 张",
+        "12 张；每个面只有 2 张"
+      ],
+      "answer": 0,
+      "explanation": "6 个面 × 每面 4 格 = 24；同样的 24 张也可以按角块数：8 × 3。每张贴纸既属于一个面，也属于一个角块。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "wikipedia-pocket-cube",
+          "locator": "结构：8 个角块，没有中心块",
+          "note": "条目只给出 8 个角块、没有中心块；24 张贴纸是本章按 2×2×6 数出来的，没有现成中文题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.net.index",
+      "kind": "重点",
+      "stem": "展开图里第 13 号贴纸（从 0 数）属于哪个面？",
+      "choices": ["U 面", "R 面", "F 面", "D 面"],
+      "answer": 3,
+      "explanation": "13 ÷ 4 = 3，余数 1。面的顺序是 U R F D L B，3 号是 D。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 1 章 · 贴纸编号",
+          "note": "编号规则是本课程自己定的（cube.hh 的注释），没有现成题，按它自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.net.colors",
+      "kind": "难点",
+      "stem": "复原态下，哪一种颜色组合不可能出现在同一个角块上？",
+      "choices": ["黄、绿、橙", "白、蓝、红", "黄、白、绿", "白、绿、橙"],
+      "answer": 2,
+      "explanation": "黄和白是对面，一个角块只碰到三个两两相邻的面，不会同时碰到相对的两个面，所以黄和白不会同在一个角块上。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "wikipedia-rubiks-cube",
+          "locator": "标准配色：白对黄、蓝对绿、橙对红",
+          "note": "对面配对来自条目；「角块碰不到相对的面」是几何事实，题目自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.net.separation",
+      "kind": "考点",
+      "stem": "NetView 为什么不自己判断「点的这格属于哪个角块」？",
+      "choices": [
+        "因为 Cairo 做不了这种计算",
+        "因为角块的含义属于魔方本身，放在 cube 里；视图只负责画和报告点了哪一格",
+        "因为信号不能带参数",
+        "因为角块表太长，放不进视图"
+      ],
+      "answer": 1,
+      "explanation": "数据在 cube，画在 NetView，接线在 Session。以后魔方的表示再变，视图不用改。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 1 章 · 职责划分",
+          "note": "对应本章职责表和时序图，没有现成题，自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "01-net", "label": "打开本章程序", "primary": true }],
+  "files": [
+    "exercise/01-net/ui/window.blp",
+    "exercise/01-net/session.cc",
+    "exercise/01-net/session.hh",
+    "exercise/01-net/cube.hh",
+    "exercise/01-net/cube.cc",
+    "exercise/01-net/view.cc",
+    "exercise/01-net/ui/style.css",
+    "exercise/01-net/ui/main.cc",
+    "exercise/01-net/cube_test.cc",
+    "exercise/01-net/meson.build"
+  ]
+}

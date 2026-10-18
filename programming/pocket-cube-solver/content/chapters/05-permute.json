@@ -1,0 +1,172 @@
+{
+  "id": "cube.permute",
+  "exercise": "05-permute",
+  "title": "摆顶层",
+  "lead": "这一章回答：顶层 4 个角块的位置，怎样换回去。答案是两个换位公式，加上上一章那台小机器原样复用。三个阶段到这里连成一条流水线，随便打乱都能复原；步数却不少，是有意的：怎样更短留给最后一章。",
+  "cooperation": {
+    "intro": "阶段 3 几乎没有新代码：宏换成「U 的三种转法加两个换位公式」，目标换成 is_solved，其余全是阶段 2 的小机器。真正新的是 solve 把三个阶段串成一份 Plan。",
+    "roster": [
+      { "name": "swap_adjacent", "role": "公式：只交换顶层相邻的两个角块，第一层和顶层朝向都不变。", "with": "Macro" },
+      { "name": "swap_diagonal", "role": "公式：只交换顶层对角的两个角块，其余同上。", "with": "Macro" },
+      { "name": "solve_permute", "role": "宏 = U 的三种转法 + 两个换位公式，目标是 is_solved。", "with": "run_macros" },
+      { "name": "solve", "role": "依次做阶段 1、2、3，每个阶段把状态推进到自己的完成条件，合成一份 Plan。", "with": "solve_layer、solve_orient、solve_permute" },
+      { "name": "Plan::flat / length", "role": "把所有阶段的所有转法按顺序摊平；步数就是摊平后的长度。", "with": "Session::adopt" }
+    ],
+    "figures": [
+      {
+        "kind": "flow",
+        "title": "solve：三个阶段连成流水线",
+        "caption": "每个阶段的完成条件，就是下一个阶段的前提。前面阶段没做完，后面的公式就不保证有效。",
+        "steps": [
+          { "name": "solve_layer", "role": "layer_done" },
+          { "name": "solve_orient", "role": "top_oriented" },
+          { "name": "solve_permute", "role": "is_solved" },
+          { "name": "Plan", "role": "三个 Stage 合起来" }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "目标：每个角块回到自己的位置",
+      "body": "前两个阶段做完，第一层是完整的，顶面是一整片黄色。〔重点〕剩下的只是顶层 4 个角块的位置：一共 24 种排法，转 U 能解决其中一部分，其余需要交换。〔〕\n\n阶段 3 的完成条件就是整个魔方复原：is_solved。"
+    },
+    {
+      "role": "focus",
+      "heading": "两个换位公式",
+      "body": "〔重点〕两个公式都只交换顶层的两个角块，第一层和顶层的朝向都不动。〔〕一个换相邻的两块（14 步），一个换对角的两块（17 步）。cube_test.cc 对复原态各做一次，断言：第一层完好，顶面仍是黄色，恰好两个位置变了，且前者相邻、后者对角。\n\n两个公式都很长，没人想背它们的转法。程序里它们只是两个常量，是否正确由测试担保。",
+      "figure": {
+        "kind": "cube",
+        "title": "换相邻两块（14 步）",
+        "caption": "从复原态做一次：顶层只有两个相邻的角块互换了位置，其余全部原样。",
+        "moves": "R U R' U' R' F R2 U' R' U' R U R' F'"
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "复用同一台小机器",
+      "body": "阶段 3 的求解和阶段 2 一样：把能用的转动包成宏，在宏之间找总步数最短的组合。\n\n〔难点〕实测 2 万个随机打乱：阶段 3 平均 13.5 步，最长 18 步；最多只用 1 次换位公式，约六分之一的魔方只转几下 U 就复原了。〔〕\n\n〔要点〕为什么阶段 2 必须在阶段 3 之前？换位公式都不改朝向，朝向没翻好就换位，再怎么换也解不出来。〔〕",
+      "figure": {
+        "kind": "cube",
+        "title": "三个阶段连起来",
+        "caption": "同一个打乱 R U F' U2 R2 F U'，程序做出的完整解：第一层 9 步、翻顶面 16 步、摆顶层 16 步，共 41 步。拖到结尾，魔方复原。",
+        "setup": "R U F' U2 R2 F U'",
+        "moves": "R' F U' F' R2 U' R2 U R2 U' R U R' U R U2 R' U2 R U2 R' U' R U' R' U R U R' U' R' F R2 U' R' U' R U R' F' U2",
+        "expect": "solved"
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "能解，但不短",
+      "body": "2 万个随机打乱：三个阶段平均 9、12.5、13.5 步，合计平均约 35 步，最长 48 步。步数不少，因为每个阶段只看自己的完成条件，不管整体。这是人想事情的方式，不是最省的方式。",
+      "figure": {
+        "kind": "bars",
+        "title": "三个阶段的平均步数",
+        "caption": "2 万个随机打乱的实测平均值。",
+        "items": [
+          { "label": "第一层", "value": 9 },
+          { "label": "翻顶面", "value": 12.5 },
+          { "label": "摆顶层", "value": 13.5 }
+        ]
+      }
+    },
+    {
+      "role": "advanced",
+      "heading": "换位公式的来历",
+      "body": "这两个公式在魔方圈里很常见，原本是 3 阶魔方上换两个角块、同时换两条棱的公式。2 阶魔方没有棱块，棱块那部分在这里没有任何效果，只剩下换角块。\n\n也就是说，同一个公式在不同的魔方里作用不同。验证它们的唯一可靠办法，仍然是在自己的模型上跑一遍。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "cube.permute.formulas",
+      "kind": "重点",
+      "stem": "两个换位公式（相邻、对角）有什么共同点？",
+      "choices": [
+        "都把整个魔方复原",
+        "都只交换顶层两个角块的位置，第一层和顶层朝向都不变",
+        "都会改变顶层角块的朝向",
+        "都只转 U 面"
+      ],
+      "answer": 1,
+      "explanation": "测试里对复原态各做一次：第一层完好、U 面仍是黄色、恰好两个位置变了。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 5 章 · 两个换位公式",
+          "note": "公式性质由 cube_test.cc 断言验证，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.permute.order",
+      "kind": "难点",
+      "stem": "为什么必须先翻顶面、再摆顶层？",
+      "choices": [
+        "因为摆顶层的公式更长",
+        "因为换位公式不改朝向：朝向没翻好就换位，永远复原不了",
+        "因为翻顶面会用到 U 面，摆顶层不会",
+        "没有为什么，只是习惯"
+      ],
+      "answer": 1,
+      "explanation": "阶段的次序由完成条件决定：后一阶段的公式假设前一阶段的结果成立。换位公式只换位置，不会把拧着的角块翻正。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 5 章 · 阶段的次序",
+          "note": "由两个换位公式不改朝向这一测试结论推出，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.permute.count",
+      "kind": "要点",
+      "stem": "2 万个随机打乱里，阶段 3 最多用了几次换位公式？",
+      "choices": ["0 次", "1 次", "2 次", "3 次"],
+      "answer": 1,
+      "explanation": "转 U 加一个换位公式，已经能覆盖顶层 24 种排法，所以最多 1 次；约六分之一的魔方只转 U 就够。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 5 章 · 实测",
+          "note": "数字来自对 solve 的 2 万次随机打乱统计，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.permute.length",
+      "kind": "考点",
+      "stem": "三个阶段合起来，层先法平均要多少步？",
+      "choices": ["约 10 步", "约 20 步", "约 35 步", "约 90 步"],
+      "answer": 2,
+      "explanation": "平均约 9 + 12.5 + 13.5 ≈ 35 步，最长 48 步。第 7 章会看到：机器直接找，平均不到 9 步。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 5 章 · 能解，但不短",
+          "note": "数字来自 2 万次随机打乱统计，没有现成题，自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "05-permute", "label": "打开本章程序", "primary": true }],
+  "files": [
+    "exercise/05-permute/ui/window.blp",
+    "exercise/05-permute/solver.cc",
+    "exercise/05-permute/solver.hh",
+    "exercise/05-permute/session.cc",
+    "exercise/05-permute/session.hh",
+    "exercise/05-permute/cube.hh",
+    "exercise/05-permute/cube.cc",
+    "exercise/05-permute/view.cc",
+    "exercise/05-permute/view.hh",
+    "exercise/05-permute/ui/style.css",
+    "exercise/05-permute/ui/main.cc",
+    "exercise/05-permute/cube_test.cc",
+    "exercise/05-permute/meson.build"
+  ]
+}

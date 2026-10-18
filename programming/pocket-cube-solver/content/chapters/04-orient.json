@@ -1,0 +1,165 @@
+{
+  "id": "cube.orient",
+  "exercise": "04-orient",
+  "title": "翻顶面",
+  "lead": "这一章回答：顶层 4 个角块的黄色，怎样全翻到上面。答案是一个公式 Sune，加一台在「公式」之间找最短组合的小机器。翻完以后顶层角块的位置还是乱的，是有意的：位置留给下一章。",
+  "cooperation": {
+    "intro": "阶段 2 的求解 solve_orient 很短，因为难的部分都交给了通用的小机器：把转动包装成「宏」，在宏之间做最短路。阶段 3 下一章会原样复用它。",
+    "roster": [
+      { "name": "top_oriented", "role": "阶段 2 的完成条件：U 面的 4 格都是黄色。", "with": "solve_orient" },
+      { "name": "top_twists", "role": "读出顶层 4 个角块的朝向：0 是黄色朝上，1、2 是顺时针拧了几格。", "with": "corner_slots" },
+      { "name": "sune / antisune", "role": "两个公式：改朝向、不动第一层；后者是前者的逆。", "with": "Macro" },
+      { "name": "Macro", "role": "一个整体的转动：名字、说明、转法、是不是只为对位。", "with": "shortest" },
+      { "name": "shortest", "role": "在宏之间做最短路：每个宏的代价是它的转动数，找到第一个满足完成条件的状态。", "with": "perform、Macro" },
+      { "name": "run_macros", "role": "把 shortest 找到的宏序列依次作用到状态上，记成计划里的 Segment。", "with": "shortest、Stage" },
+      { "name": "solve_orient", "role": "准备好宏（U 的三种转法加两个公式），目标是 top_oriented。", "with": "run_macros" }
+    ],
+    "figures": [
+      {
+        "kind": "flow",
+        "title": "shortest 的一次搜索",
+        "caption": "状态不多（顶层的朝向和位置合起来只有几千种），所以不需要任何「遇到这种情形就这样转」的分支。",
+        "steps": [
+          { "name": "起点", "role": "代价 0" },
+          { "name": "每个宏试一遍", "role": "得到新状态，代价加上宏的转动数" },
+          { "name": "取代价最小的", "role": "再往外展开" },
+          { "name": "满足完成条件", "role": "沿来路取出宏序列" }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "目标：黄色全朝上，不管位置",
+      "body": "第一层做好以后，顶层 4 个角块各有一张黄色贴纸。〔重点〕阶段 2 的完成条件是：这 4 张黄色全在顶面。〔〕顶层角块此时可以还在错的位置上，没关系，位置留给下一章。\n\n朝向用 0、1、2 记：0 是黄色朝上，1、2 是顺时针拧了 1 格或 2 格。判定函数 top_oriented 只看 U 面 4 格是不是都是黄色；top_twists 读出四个角块的朝向，调试时用。",
+      "figure": {
+        "kind": "cube",
+        "title": "公式 Sune 一步一步",
+        "caption": "从复原态做一次 Sune：圈出的是刚转过的一层。第一层始终不动；做完以后顶面只剩 1 块黄色朝上。",
+        "moves": "R U R' U R U2 R'",
+        "expect": "layer"
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "一个公式：Sune",
+      "body": "公式 R U R' U R U2 R' 叫 Sune。〔重点〕它不动第一层，只改变顶层角块的朝向，顺带也挪动了它们的位置。〔〕它的逆 R U2 R' U' R U' R' 叫反 Sune，往另一个方向拧。\n\n顶层 4 个角块的朝向，扣掉已经完成的，一共只有 7 种情形（顶层转一转算同一种）：朝上的黄色有 0 个的 2 种，1 个的 2 种（正好是 Sune 和反 Sune 各一种），2 个的 3 种。",
+      "figure": {
+        "kind": "cube",
+        "title": "反 Sune 把它翻回去",
+        "caption": "起点是做过一次 Sune 的魔方。反 Sune 是 Sune 的逆，做完回到复原。",
+        "setup": "R U R' U R U2 R'",
+        "moves": "R U2 R' U' R U' R'",
+        "expect": "solved"
+      }
+    },
+    {
+      "role": "focus",
+      "heading": "让机器在公式之间找路",
+      "body": "人看一眼就知道「这种情形该转几下 U，再用哪个公式」。程序不写这张分支表：〔重点〕把 U、U'、U2、Sune、反 Sune 都包成「宏」，每个宏的代价是它的转动数，用最短路搜索找到总步数最少的组合。〔〕\n\n〔难点〕搜索的状态是整个魔方，但能到达的只有几千种，一眨眼就搜完。2 万个随机打乱里，阶段 2 平均 12.5 步，最长 16 步，最多用 2 次公式。〔〕"
+    },
+    {
+      "role": "advanced",
+      "heading": "为什么公式不动第一层",
+      "body": "没有简单的一句话解释：R U R' 这样的一小段会动到底层，整串合在一起才恰好抵消。公式是魔方圈里流传的，程序不依赖这个解释，依赖的是测试：cube_test.cc 对复原态做一次 Sune，断言 layer_done 仍然成立；再用反 Sune 做回去，断言复原。\n\n公式的可靠来自验证，不来自记忆。后面两个换位公式同样如此。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "cube.orient.sune",
+      "kind": "重点",
+      "stem": "公式 Sune 对魔方做了什么？",
+      "choices": [
+        "把整个魔方复原",
+        "不动第一层，只改变顶层角块的朝向（顺带挪动位置）",
+        "只交换顶层两个角块的位置，不改朝向",
+        "只转顶层，其余都不变"
+      ],
+      "answer": 1,
+      "explanation": "作用的结果是顶层朝向变了，第一层不受影响。这一点由 cube_test.cc 对复原态做一次 Sune 来断言。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 4 章 · Sune",
+          "note": "公式的性质由 cube_test.cc 断言验证，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.orient.done",
+      "kind": "重点",
+      "stem": "top_oriented 怎样判定阶段 2 完成？",
+      "choices": [
+        "顶层 4 个角块都在原位",
+        "U 面的 4 格都是黄色",
+        "第一层和顶层都复原",
+        "顶层 4 个角块的朝向之和为 0"
+      ],
+      "answer": 1,
+      "explanation": "阶段 2 只要求黄色朝上，不管角块在什么位置。U 面 4 格都是黄，就说明 4 个角块的黄色都朝上了。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 4 章 · top_oriented",
+          "note": "对应 solver.cc 的 top_oriented，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.orient.search",
+      "kind": "难点",
+      "stem": "为什么阶段 2 不写「遇到这种情形就这样转」的分支，而用最短路搜索？",
+      "choices": [
+        "分支表在 C++ 里写不出来",
+        "状态不多，机器按总步数找最短组合就行；手写分支表容易漏情形，也更难验证",
+        "最短路比分支表占内存更少",
+        "因为公式只有两个"
+      ],
+      "answer": 1,
+      "explanation": "能到达的状态只有几千种。搜索对任何情形都有效，测试只要确认「随机打乱都能做完」，不用逐个情形核对。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 4 章 · 宏的最短路",
+          "note": "对应 solver.cc 的 shortest，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.orient.cases",
+      "kind": "考点",
+      "stem": "顶层朝向还没完成的情形一共 7 种（转 U 算同一种）。其中恰好有 1 个黄色朝上的有几种？",
+      "choices": ["1 种", "2 种", "3 种", "4 种"],
+      "answer": 1,
+      "explanation": "0 个朝上的 2 种、1 个朝上的 2 种（Sune 和反 Sune 各一种）、2 个朝上的 3 种，合计 7 种。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 4 章 · 七种情形",
+          "note": "数量由枚举顶层 27 种合法朝向并按 U 转动归类得到，没有现成题，自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "04-orient", "label": "打开本章程序", "primary": true }],
+  "files": [
+    "exercise/04-orient/ui/window.blp",
+    "exercise/04-orient/solver.cc",
+    "exercise/04-orient/solver.hh",
+    "exercise/04-orient/session.cc",
+    "exercise/04-orient/session.hh",
+    "exercise/04-orient/cube.hh",
+    "exercise/04-orient/cube.cc",
+    "exercise/04-orient/view.cc",
+    "exercise/04-orient/view.hh",
+    "exercise/04-orient/ui/style.css",
+    "exercise/04-orient/ui/main.cc",
+    "exercise/04-orient/cube_test.cc",
+    "exercise/04-orient/meson.build"
+  ]
+}
