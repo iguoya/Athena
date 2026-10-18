@@ -4,20 +4,28 @@ import { Cooperate, type Cooperation } from "./cooperate";
 import { VisualFigure, type Visual } from "./cubefig";
 
 type Section = {
-  role: "focus" | "advanced";
+  role: "focus" | "advanced" | "experiment";
   heading: string;
   body: string;
   /** 这一节配的图：魔方步骤回放或条形图。 */
   figure?: Visual;
+  /** experiment 专用：改之前先猜的那个问题。 */
+  predict?: string;
+  /** experiment 专用：实测到的结果，点开才看。 */
+  observe?: string;
 };
 
 type Question = {
   id: string;
   kind: string;
   stem: string;
+  /** 题干配图，做题前就显示。预测题在这里只给起点，不给转法。 */
+  figure?: Visual;
   choices: string[];
   answer: number;
   explanation: string;
+  /** 作答后才出现的回放，让读者对照自己的预测。 */
+  reveal?: Visual;
 };
 
 type Run = {
@@ -394,6 +402,21 @@ export default function App() {
                   </details>
                 );
               }
+              if (section.role === "experiment") {
+                return (
+                  <section className="panel step experiment" key={section.heading}>
+                    <h3>{section.heading}</h3>
+                    {body}
+                    {section.predict ? <p className="predict">{section.predict}</p> : null}
+                    {section.observe ? (
+                      <details className="observe">
+                        <summary>看实测结果</summary>
+                        <p>{section.observe}</p>
+                      </details>
+                    ) : null}
+                  </section>
+                );
+              }
               return (
                 <section className={`panel step ${section.role}`} key={section.heading}>
                   <h3>{section.heading}</h3>
@@ -412,6 +435,7 @@ export default function App() {
               <article className="question" key={question.id}>
                 <p className={`kind ${kindClass(question.kind)}`}>{question.kind}</p>
                 <p>{question.stem}</p>
+                {question.figure ? <VisualFigure spec={question.figure} /> : null}
                 <div className="choices">
                   {question.choices.map((choice, index) => {
                     let mark = "";
@@ -432,6 +456,7 @@ export default function App() {
                   })}
                 </div>
                 {revealed ? <p className="explain">{question.explanation}</p> : null}
+                {revealed && question.reveal ? <VisualFigure spec={question.reveal} /> : null}
               </article>
             );
             })}

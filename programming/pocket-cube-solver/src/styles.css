@@ -884,3 +884,14 @@ details.step > summary {
   font-weight: 700;
   margin-bottom: 0.4rem;
 }
+
+/* 试一试：先猜再改再看，结果默认收起，免得没猜就看见答案 */
+.step.experiment {
+  border-left: 0.28rem solid var(--advanced-edge);
+}
+.step.experiment .predict {
+  font-weight: 600;
+}
+.step.experiment .observe summary {
+  cursor: pointer;
+}

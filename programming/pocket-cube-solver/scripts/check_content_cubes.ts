@@ -9,11 +9,18 @@ let failed = 0;
 
 for (const name of readdirSync(dir).filter((f) => f.endsWith(".json")).sort()) {
   const lesson = JSON.parse(readFileSync(new URL(name, dir), "utf-8"));
+  // 讲解节的配图，加上题目的 figure（题干图）和 reveal（作答后回放）
+  const holders: { where: string; fig: any }[] = [];
   for (const section of lesson.sections ?? []) {
-    const fig = section.figure;
+    holders.push({ where: `${name} · ${section.heading}`, fig: section.figure });
+  }
+  for (const q of lesson.questions ?? []) {
+    holders.push({ where: `${name} · 题 ${q.id} figure`, fig: q.figure });
+    holders.push({ where: `${name} · 题 ${q.id} reveal`, fig: q.reveal });
+  }
+  for (const { where, fig } of holders) {
     if (!fig || fig.kind !== "cube") continue;
     figures += 1;
-    const where = `${name} · ${section.heading}`;
     try {
       const start: number[] = fig.state
         ? fig.state.split("").map(Number)
@@ -44,4 +51,4 @@ for (const name of readdirSync(dir).filter((f) => f.endsWith(".json")).sort()) {
   }
 }
 if (failed > 0) process.exit(1);
-console.log(`讲解里的 ${figures} 张魔方回放图都核对过`);
+console.log(`讲解与题目里的 ${figures} 张魔方图都核对过`);
