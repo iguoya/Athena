@@ -12,5 +12,6 @@ pkg_check_modules(GTKMM4 REQUIRED IMPORTED_TARGET gtkmm-4.0)
 # （demo.<id> 的 id 中 `.` 换成 `-`，见应用 ADR 0001 决策 6）。
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
+add_subdirectory(basics-signals)
 add_subdirectory(buttons)
 add_subdirectory(buttons-lab)

@@ -38,6 +38,37 @@
           "note": "部件行为以 GTK4 C 文档为语义基准"
         }
       ]
+    },
+    {
+      "id": "demo.basics-signals",
+      "title": "信号时序：两个处理函数与窗口生命周期",
+      "purpose": "具象化同一 clicked 上两个处理函数的调用顺序，以及窗口从构造、激活、显示到关闭的信号顺序。",
+      "theory_refs": [
+        "gtkmm.basics.signals"
+      ],
+      "source_dir": "demos/basics-signals",
+      "build_target": "demo-basics-signals",
+      "translation_ref": {
+        "chapter": 3,
+        "title": "Basics"
+      },
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "url": "https://docs.gtk.org/gtk4/signal.Button.clicked.html",
+          "note": "clicked 的语义以 GTK4 C 文档为基准"
+        },
+        {
+          "relation": "adapted",
+          "url": "https://docs.gtk.org/gtk4/signal.Widget.show.html",
+          "note": "show / map 的发出时机以 GTK4 C 文档为基准"
+        },
+        {
+          "relation": "adapted",
+          "url": "https://docs.gtk.org/gtk4/signal.Window.close-request.html",
+          "note": "关闭按钮发出 close-request；处理函数返回 false 才继续默认关闭"
+        }
+      ]
     }
   ],
   "experiments": [

@@ -445,10 +445,10 @@
       ],
       "knowledge_points": [
         {
-          "id": "gtkmm.basics.quizset",
-          "title": "基础测验集",
+          "id": "gtkmm.basics.hello",
+          "title": "Hello World：最小的 gtkmm 程序",
           "type": "concept",
-          "difficulty": 2,
+          "difficulty": 1,
           "mastery_goal": "required",
           "requires": [],
           "blocks": [
@@ -524,6 +524,66 @@
             },
             {
               "type": "quiz",
+              "id": "basic3-hw-1",
+              "page_ref": "sec-helloworld",
+              "stem": "如果删掉构造函数里的 set_child(m_button)，运行 Hello World 会看到什么？",
+              "code": "HelloWorld::HelloWorld()\n: m_button(\"Hello World\")\n{\n  m_button.set_margin(10);\n  m_button.signal_clicked().connect(sigc::mem_fun(*this,\n    &HelloWorld::on_button_clicked));\n  set_child(m_button);   // ← 删掉这一行\n}",
+              "lang": "cpp",
+              "options": [
+                "编译失败，Gtk::Window 必须设置了子部件才能构造",
+                "按钮照样出现在窗口里，成员变量会自动成为子部件",
+                "窗口能打开但里面是空的，按钮没有放进窗口，也就点不到",
+                "窗口一打开就崩溃，因为 m_button 没有父部件"
+              ],
+              "answer": 2,
+              "explanation": "成员变量只是创建了按钮对象，要让它出现在窗口里，必须用 set_child() 把它放进去。没有这一步，窗口是空的，按钮即使连了信号也不会被点到。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-helloworld",
+                  "note": "Hello World：set_child() 把按钮放进窗口"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic3-hw-2",
+              "page_ref": "sec-helloworld",
+              "stem": "main.cc 里没有出现 HelloWorld 类型的变量，窗口对象是谁、什么时候创建的？",
+              "code": "auto app = Gtk::Application::create(\"org.gtkmm.example\");\nreturn app->make_window_and_run<HelloWorld>(argc, argv);",
+              "lang": "cpp",
+              "options": [
+                "Gtk::Application::create() 在初始化时顺便创建了它",
+                "它是全局对象，在 main() 开始之前就已经创建好了",
+                "窗口关闭之后才创建，用来保存用户所做的修改内容",
+                "make_window_and_run<HelloWorld>() 运行时创建并显示它"
+              ],
+              "answer": 3,
+              "explanation": "make_window_and_run<HelloWorld>() 创建 HelloWorld 对象、显示窗口并启动事件循环；窗口关闭后函数返回，main() 随之结束。窗口类的构造函数里完成布置部件与连接信号的初始化。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-helloworld",
+                  "note": "Hello World：make_window_and_run() 创建窗口对象、显示并启动事件循环"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gtkmm.basics.headers",
+          "title": "头文件与链接",
+          "type": "concept",
+          "difficulty": 1,
+          "mastery_goal": "required",
+          "requires": [
+            "gtkmm.basics.hello"
+          ],
+          "blocks": [
+            {
+              "type": "quiz",
               "id": "basic3-hl-1",
               "page_ref": "sec-headers-and-linking",
               "stem": "执行下面这行 meson.build 代码时，实际发生了什么？",
@@ -567,7 +627,19 @@
                   "note": "Headers and Linking：gtkmm-4.0 是当前稳定 API 的名字，旧 API 并行安装"
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "id": "gtkmm.basics.widgets",
+          "title": "部件与所有权",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [
+            "gtkmm.basics.hello"
+          ],
+          "blocks": [
             {
               "type": "quiz",
               "id": "basic3-w-1",
@@ -613,6 +685,96 @@
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-widgets-overview",
                   "note": "Widgets：Gtk::make_managed() 让部件归其所放入的容器所有"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gtkmm.basics.signals",
+          "title": "信号：登记处理函数与调用顺序",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [
+            "gtkmm.basics.widgets"
+          ],
+          "blocks": [
+            {
+              "type": "text",
+              "text": "信号是事件驱动的入口：事件发生时，部件发出对应信号，我们用 connect() 登记的处理函数被调用。同一个信号可以登记多个处理函数，普通 connect 按登记顺序依次调用；窗口从构造到关闭，也会按固定顺序发出 map、show、close_request 等信号。"
+            },
+            {
+              "type": "callout",
+              "variant": "tip",
+              "text": "先预测再运行：下面的模拟先让你选「A、B 谁先」，真机日志则回答窗口信号的顺序——动手前先写下你的预测。"
+            },
+            {
+              "type": "simulation",
+              "sim": "signal-order",
+              "demo_ref": "demo.basics-signals",
+              "note": "模型简化：不画 GDK 事件分发和捕获阶段，也不画窗口的 show / map。真实顺序以真机日志为准。",
+              "page_ref": "sec-signals-overview"
+            },
+            {
+              "type": "demo",
+              "demo_ref": "demo.basics-signals"
+            },
+            {
+              "type": "observation_quiz",
+              "id": "basic3-oq1",
+              "page_ref": "sec-helloworld",
+              "demo_ref": "demo.basics-signals",
+              "stem": "打开真机演示，先不要点按钮。日志前四行的顺序是什么？",
+              "options": [
+                "constructed，activate，map，show",
+                "constructed，activate，show，map",
+                "activate，constructed，show，map",
+                "constructed，show，map，close_request"
+              ],
+              "answer": 0,
+              "explanation": "窗口在 run() 之前就构造完，所以第一行是 constructed。接着 signal_activate 的处理函数先记一行 activate，再调用 show()。show 与 map 都是 Run First：show 的默认处理函数会先把窗口映射，map 的用户处理函数因此排在 show 的用户处理函数前面。此时还没点关闭，不会有 close_request。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方页 sec-helloworld",
+                  "note": "Hello World：窗口构造、显示、进入事件循环；本演示在 signal_activate 里 show()，窗口先于 run() 构造，与 make_window_and_run（在激活回调里构造窗口）的构造时机不同"
+                },
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/signal.Widget.show.html",
+                  "locator": "GtkWidget::show，Flags: Run First",
+                  "note": "show 的默认处理函数先跑并映射窗口，用户处理函数看到的顺序是 map 然后 show"
+                }
+              ]
+            },
+            {
+              "type": "observation_quiz",
+              "id": "basic3-oq2",
+              "page_ref": "sec-signals-overview",
+              "demo_ref": "demo.basics-signals",
+              "stem": "接着点一次「点击我」。日志里紧跟着出现的两行是什么？",
+              "options": [
+                "先 B 后 A，两行都是 button handler",
+                "只有一行 handler A，B 要再点一次才出现",
+                "先 A 后 B，两行都是 button handler",
+                "先 close_request，然后才是 handler A"
+              ],
+              "answer": 2,
+              "explanation": "同一个 signal_clicked() 上先 connect A、再 connect B。普通连接按登记顺序调用，所以点一次先出现 handler A，再出现 handler B。close_request 要等点窗口关闭才会出现。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方页 sec-signals-overview",
+                  "note": "Signals：signal_clicked().connect 只登记处理函数，点击时才调用"
+                },
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/signal.Button.clicked.html",
+                  "locator": "GtkButton::clicked",
+                  "note": "clicked 在按下并释放后发出；多个普通处理函数按连接顺序调用，本演示日志为 A 然后 B"
                 }
               ]
             },
@@ -661,7 +823,19 @@
                   "note": "Signals：事件发生时由被按下的部件发出相应信号"
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "id": "gtkmm.basics.ustring",
+          "title": "Glib::ustring：UTF-8 字符串",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [
+            "gtkmm.basics.hello"
+          ],
+          "blocks": [
             {
               "type": "quiz",
               "id": "basic3-u-1",
@@ -709,7 +883,20 @@
                   "note": "Glib::ustring：避免 C 风格指针算术和 strlen()，UTF-8 字符占 1~6 字节"
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "id": "gtkmm.basics.mixing",
+          "title": "混用 C 与 C++ API",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [
+            "gtkmm.basics.widgets",
+            "gtkmm.basics.ustring"
+          ],
+          "blocks": [
             {
               "type": "quiz",
               "id": "basic3-mix-1",
@@ -755,54 +942,6 @@
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-basics-gobj-and-wrap",
                   "note": "Mixing C and C++ APIs：用 gobj() 取得底层 C 实例"
-                }
-              ]
-            },
-            {
-              "type": "quiz",
-              "id": "basic3-hw-1",
-              "page_ref": "sec-helloworld",
-              "stem": "如果删掉构造函数里的 set_child(m_button)，运行 Hello World 会看到什么？",
-              "code": "HelloWorld::HelloWorld()\n: m_button(\"Hello World\")\n{\n  m_button.set_margin(10);\n  m_button.signal_clicked().connect(sigc::mem_fun(*this,\n    &HelloWorld::on_button_clicked));\n  set_child(m_button);   // ← 删掉这一行\n}",
-              "lang": "cpp",
-              "options": [
-                "编译失败，Gtk::Window 必须设置了子部件才能构造",
-                "按钮照样出现在窗口里，成员变量会自动成为子部件",
-                "窗口能打开但里面是空的，按钮没有放进窗口，也就点不到",
-                "窗口一打开就崩溃，因为 m_button 没有父部件"
-              ],
-              "answer": 2,
-              "explanation": "成员变量只是创建了按钮对象，要让它出现在窗口里，必须用 set_child() 把它放进去。没有这一步，窗口是空的，按钮即使连了信号也不会被点到。",
-              "source_refs": [
-                {
-                  "relation": "adapted",
-                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
-                  "locator": "官方节页 sec-helloworld",
-                  "note": "Hello World：set_child() 把按钮放进窗口"
-                }
-              ]
-            },
-            {
-              "type": "quiz",
-              "id": "basic3-hw-2",
-              "page_ref": "sec-helloworld",
-              "stem": "main.cc 里没有出现 HelloWorld 类型的变量，窗口对象是谁、什么时候创建的？",
-              "code": "auto app = Gtk::Application::create(\"org.gtkmm.example\");\nreturn app->make_window_and_run<HelloWorld>(argc, argv);",
-              "lang": "cpp",
-              "options": [
-                "Gtk::Application::create() 在初始化时顺便创建了它",
-                "它是全局对象，在 main() 开始之前就已经创建好了",
-                "窗口关闭之后才创建，用来保存用户所做的修改内容",
-                "make_window_and_run<HelloWorld>() 运行时创建并显示它"
-              ],
-              "answer": 3,
-              "explanation": "make_window_and_run<HelloWorld>() 创建 HelloWorld 对象、显示窗口并启动事件循环；窗口关闭后函数返回，main() 随之结束。窗口类的构造函数里完成布置部件与连接信号的初始化。",
-              "source_refs": [
-                {
-                  "relation": "adapted",
-                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
-                  "locator": "官方节页 sec-helloworld",
-                  "note": "Hello World：make_window_and_run() 创建窗口对象、显示并启动事件循环"
                 }
               ]
             }
