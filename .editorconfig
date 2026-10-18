@@ -1,0 +1,24 @@
+# 编辑器层面的最低公约数；换行符由 .gitattributes 管（全仓库 LF），这里让编辑器与之一致。
+# 只写全仓库成立的规则：缩进宽度各语言惯例不同（Python、Rust 四格，前端与 Dart 两格），
+# 没有统一结论的类型（C++ 等）不替它们拍板。
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+# Markdown 行尾两个空格是硬换行，不能裁。
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{py,rs}]
+indent_size = 4
+
+[*.{json,yml,yaml,ts,tsx,js,jsx,mjs,css,html,dart,blp}]
+indent_size = 2
+
+[Makefile]
+indent_style = tab

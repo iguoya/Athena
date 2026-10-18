@@ -1,0 +1,6 @@
+# cargo-deny 配置（ADR 0170）：只查依赖漏洞公告。
+# 许可证与重复版本不查——自用软件、不分发给第三方（ADR 0159），重复版本由 Tauri 间接依赖决定，
+# 不是我们能治的。两个 Cargo 工作区（仓库根、launcher/）共用这一份。
+[advisories]
+version = 2
+yanked = "deny"

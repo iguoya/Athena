@@ -193,8 +193,13 @@ archive/        历史归档，不参与构建
 ```sh
 python3 scripts/check.py                  # 跨应用检查 + 每个应用自己的检查
 python3 scripts/check.py cpp              # 只跑某个应用，余下参数原样透传给它
-python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处一致、出处、工作流）
+python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处一致、出处、工作流、工具链一致、Rust 格式）
+python3 scripts/check.py --security       # 密钥与依赖漏洞扫描（ADR 0170）
 ```
+
+Rust 版本钉在 `rust-toolchain.toml`、Node 钉在 `.node-version`，改 Rust 代码后在对应 Cargo 工作区
+（仓库根、`launcher/`）跑 `cargo fmt --all`（ADR 0170）；克隆后跑一次
+`python3 scripts/install_hooks.py` 启用推送前检查。
 
 检查逻辑归各应用自己的 `scripts/check.py`（各应用根目录下都扫）。**每个应用都
 必须有这份脚本**，没有它的应用会被静默跳过，等于没人验证。

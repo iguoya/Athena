@@ -14,7 +14,10 @@ check.py 就会被带上，不用改这个文件，也不用改 CI。
 用法：
     python3 scripts/check.py                  跨应用检查 + 每个应用自己的检查
     python3 scripts/check.py cpp [参数...]    只跑某个应用，余下参数透传给它
-    python3 scripts/check.py --sources-only   只跑跨应用检查（skill 两处一致 + 出处 + 工作流 + 结构卫生）
+    python3 scripts/check.py --sources-only   只跑跨应用检查（skill 两处一致 + 出处 + 工作流 + 结构卫生
+                                              + 工具链一致 + Rust 格式）
+    python3 scripts/check.py --security       供应链与密钥扫描（gitleaks、cargo-deny、pnpm audit），
+                                              CI 的跨应用任务里跑，本地按需（ADR 0170）
 """
 
 from __future__ import annotations
@@ -24,6 +27,8 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+import hygiene
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -417,6 +422,7 @@ _GROUP_RE = re.compile(r"^(" + _ROOTS_RE + r")/")
 _ROOT_ALLOW = {
     "AGENTS.md", "CLAUDE.md", "README.md", "CHANGELOG.md", "LICENSE",
     ".git", ".gitignore", ".gitattributes", ".zcodeignore",
+    ".editorconfig", ".node-version", "rust-toolchain.toml", ".gitleaks.toml", "deny.toml",
     ".agents", ".claude", ".cursor", ".gemini", ".vscode", ".github",
     ".cargo", "Cargo.toml", "Cargo.lock",
     "package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml",
@@ -707,6 +713,12 @@ def main(argv: list[str]) -> int:
         run_shared_build_check()
         run_react_frontend_check()
         run_structure_check()
+        hygiene.run_toolchain_check()
+        hygiene.run_rustfmt_check()
+        return 0
+
+    if argv[:1] == ["--security"]:
+        hygiene.run_security_scan()
         return 0
 
     if argv:
@@ -720,6 +732,8 @@ def main(argv: list[str]) -> int:
     run_shared_build_check()
     run_react_frontend_check()
     run_structure_check()
+    hygiene.run_toolchain_check()
+    hygiene.run_rustfmt_check()
     for root in APP_ROOTS:
         for entry in sorted((REPO_ROOT / root).iterdir()):
             if (entry / "scripts" / "check.py").is_file():

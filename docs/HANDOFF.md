@@ -79,7 +79,25 @@ Octave 文档站、大学站点 PDF 一律拒绝；没有显示设备；不能�
     （已登记在 `verify_examples.py` 的 `KNOWN_STALE`）。
   - Octave 手册：`isvector` 说明被上游截断（`<` 之后的内容丢失）；多处函数说明有半截句（`eye`、`quad` 等）；`quadgk` 简介写成 Gauss-Konrod。
 
-## 五、已知的取舍（不是缺陷，记在这里免得再问）
+## 五、工程基线收尾（ADR 0170，云会话做不到的部分）
+
+- [ ] **Actions 钉提交 SHA**
+  - 现状：`ci.yml`、`release.yml`、`pages.yml` 里的第三方 action 都只钉了标签（`actions/checkout@v7`、`tauri-apps/tauri-action@v0` 等），标签可被改写，发版任务又带写权限。
+  - 为什么：要读各 action 仓库里标签对应的提交，云会话只能访问本仓库。
+  - 怎么做：本地装 `pinact`（`pinact run`）或 `ratchet`，一次把标签换成「提交 SHA + 版本注释」；`dependabot.yml` 已有 `github-actions` 生态，会继续按月维护 SHA。
+  - 验收：`python3 scripts/check.py --sources-only` 通过（actionlint）；`gh workflow run ci.yml -f app=sources` 通过。
+- [ ] **主分支保护与仓库安全开关**（GitHub 仓库设置，不在代码里）
+  - 怎么做：Settings → Branches：对 `main` 打开「禁止强推、禁止删除」（单人直推可保留，不必强制 PR）；Settings → Code security：打开 Secret scanning、Push protection、Dependabot alerts。
+  - 为什么要做：本地 `main` 与远端 `main` 曾出现各 50 个提交的分叉，说明远端被强制更新过；Push protection 能在密钥进历史之前拦下。
+- [ ] **首次 CI 上跑 `--security`，确认 cargo-deny**
+  - 现状：云里连不上 RustSec 公告库，只验证了 `deny.toml` 能被解析；gitleaks 与 `pnpm audit` 已在云里跑通。
+  - 怎么做：`gh workflow run ci.yml -f app=sources`，看「Security scan」步骤里 cargo-deny 两个工作区的输出。若只有我们治不了的公告（如 gtk3 绑定停止维护），把它们写进 `deny.toml` 的 `ignore` 并注明理由，再考虑把 cargo-deny 升级为阻断。
+- [ ] **两处真实依赖公告**（pnpm audit 首扫发现，按风险排期，不借工程基线盲升）
+  - `maplibre-gl`（`mentor/jiuzhou`）：5.24.0，公告要求 ≥ 6.4.1，跨大版本，需在真机上验证九州地图渲染。
+  - `katex`（`certification/embedded`）：0.16.47，低危，公告要求 ≥ 0.18.2。
+- [ ] **rustfmt 全仓库格式化后，Tauri 矩阵确认编译通过**：排版不改语义，但 Tauri 壳依赖 GTK/webkit，云里只编过 `launcher-core`。下一次手动 CI 全量跑时留意。
+
+## 六、已知的取舍（不是缺陷，记在这里免得再问）
 
 - Octave 手册是参考手册，按「基础/进阶」分层、默认只显示基础（见 ADR 0164 决策 2）；SymPy 教程本身就薄，不分层。
 - 两本线代教材按使用者要求精读全书，不分层。

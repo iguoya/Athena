@@ -1,0 +1,16 @@
+# 密钥扫描配置（ADR 0170）。沿用 gitleaks 默认规则，只登记已核实的误报，不放宽规则本身。
+# 首次全历史扫描（253 个提交）的 20 条命中全部是误报，来源就下面两类。
+[extend]
+useDefault = true
+
+[allowlist]
+description = "已核实的误报"
+paths = [
+  # 牛津词表 CSV：「单词,音频文件名,哈希」一行被误判成 generic-api-key。
+  '''postgraduate/ascent/reference/english2/reference/github/oxford/.*\.csv''',
+]
+regexTarget = "line"
+regexes = [
+  # 驾考测试里的 draftKey 是业务概念（草稿键），不是凭据。
+  '''draftKey:\s*"[^"]*"''',
+]

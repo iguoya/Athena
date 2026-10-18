@@ -1,0 +1,8 @@
+# Rust 工具链钉在一个具体版本，本地、CI、发版用同一个编译器，不被「stable 又升了一版」
+# 悄悄改变构建结果（ADR 0170）。升级时同时改这里和两份工作流里 dtolnay/rust-toolchain
+# 的版本号，scripts/check.py 的「工具链一致」检查会对账。
+# 仓库根的工作区与 launcher/ 的独立工作区都在这个目录树下，同时受它约束。
+[toolchain]
+channel = "1.97.0"
+components = ["rustfmt", "clippy"]
+profile = "minimal"

@@ -80,7 +80,8 @@ ADR 里写清成本、收益与降级，应用文档里写明哪个平台不支�
 ```sh
 python3 scripts/check.py            # 跨应用内容出处检查 + 每个应用自己的检查
 python3 scripts/check.py cpp        # 只跑某个应用，余下参数原样透传给它
-python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处一致、出处、工作流、结构卫生）
+python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处一致、出处、工作流、结构卫生、工具链一致、Rust 格式）
+python3 scripts/check.py --security       # 密钥与依赖漏洞扫描（gitleaks、cargo-deny、pnpm audit），ADR 0170
 ```
 
 检查逻辑归各应用自己（各应用目录（`<分类目录>/<id>/`）下的 `scripts/check.py`），根入口只负责依次调用，
@@ -96,3 +97,14 @@ CI 跑的是同一条入口，每个应用一个 job：依赖各装各的，命�
 `gh workflow run ci.yml -f app=<id>` 只跑一个应用；推 `v*.*.*` tag 时全量。日常
 提交不触发——改了平台相关代码、动了依赖或准备发布时再手动跑。
 支持哪个平台就在那个平台上跑，否则支持会悄悄退化（ADR 0047）。
+
+**工具链与格式（ADR 0170）**：Rust 版本钉在仓库根 `rust-toolchain.toml`，Node 钉在 `.node-version`，
+发版工作流的 `dtolnay/rust-toolchain` 版本号必须与前者相同，升级时三处一起改，`check.py` 会对账。
+Rust 代码一律 rustfmt 默认风格（不写 `rustfmt.toml`），提交前在对应工作区跑 `cargo fmt --all`；
+仓库根与 `launcher/` 是两个独立的 Cargo 工作区，两边都要跑。
+
+**推送前钩子**：克隆后跑一次 `python3 scripts/install_hooks.py`，之后每次 `git push` 前自动跑
+`check.py --sources-only`；临时绕过用 `--no-verify`。CI 的显式触发（ADR 0064）不变。
+
+**安全扫描**：`--security` 在 CI 的跨应用任务里跑。gitleaks 阻断（已核实的误报写在 `.gitleaks.toml`）；
+cargo-deny 的漏洞公告与 `pnpm audit --prod` 只报告，不阻断。本机需要先装 `gitleaks` 与 `cargo-deny`。

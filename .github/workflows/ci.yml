@@ -32,21 +32,30 @@ env:
   PYTHONIOENCODING: utf-8
 
 jobs:
-  # 跨应用检查：内容出处（ADR 0043）、skill 两处一致、GitHub 工作流。纯文本规则，
-  # 和平台无关，跑一个就够。
+  # 跨应用检查：内容出处（ADR 0043）、skill 两处一致、GitHub 工作流、工具链一致、Rust 格式，
+  # 外加供应链与密钥扫描（ADR 0170）。纯文本规则，和平台无关，跑一个就够。
   sources:
     name: 跨应用检查
     runs-on: ubuntu-26.04
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
+      # gitleaks 要扫全部提交历史，所以不用默认的浅克隆。
       - name: Check out source
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version-file: .node-version
+
+      # pnpm audit 只读锁文件，不装依赖；版本与 package.json 的 packageManager 一致。
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
 
       # 版本与本地 winget 装的一致；官方脚本把可执行文件下到当前目录
       - name: Install actionlint and shellcheck
@@ -55,8 +64,20 @@ jobs:
           bash <(curl -sSfL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash) 1.7.12 "$RUNNER_TEMP"
           echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
 
+      # 固定版本的发布二进制，不走 cargo install（编译要几分钟）。
+      - name: Install gitleaks and cargo-deny
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.30.0/gitleaks_8.30.0_linux_x64.tar.gz \
+            | tar xz -C "$RUNNER_TEMP" gitleaks
+          curl -sSfL https://github.com/EmbarkStudios/cargo-deny/releases/download/0.18.9/cargo-deny-0.18.9-x86_64-unknown-linux-musl.tar.gz \
+            | tar xz -C "$RUNNER_TEMP" --strip-components=1 cargo-deny-0.18.9-x86_64-unknown-linux-musl/cargo-deny
+
       - name: Verify
         run: python3 scripts/check.py --sources-only
+
+      # gitleaks 阻断；cargo-deny 与 pnpm audit 只报告，理由见 scripts/hygiene.py。
+      - name: Security scan
+        run: python3 scripts/check.py --security
 
   # GTK4 + gtkmm + Meson：魔方（pocket_cube）与拆出的旧 C++ 窗口（cpp，ADR 0141）。
   # C++ 教程走下面的 tauri 矩阵。三个平台各装各的依赖，跑的是同一条 Python 入口。
@@ -305,7 +326,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version-file: .node-version
           cache: pnpm
           # 同栈应用共用仓库根这一份锁（ADR 0140）。
           cache-dependency-path: pnpm-lock.yaml
@@ -361,7 +382,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version-file: .node-version
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
@@ -444,7 +465,7 @@ jobs:
         if: runner.os != 'Linux'
         uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version-file: .node-version
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
@@ -524,7 +545,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version-file: .node-version
 
       - name: Verify
         run: python3 scripts/check.py c-gui-lab --skip-build

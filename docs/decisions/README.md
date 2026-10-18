@@ -163,3 +163,4 @@
 | [0167](0167-multi-session-task-routing.md) | 多会话并行按任务分箱：任务是路由单位（doing 即绑定声明）、inbox/ack/notify 支持 --mine 与 --task、已读游标按箱分文件、认领冲突防护、可选 --as 会话标记 | 已接受；实现派 comms-console 舱 T-102 |
 | [0168](0168-release-mature-apps-uniformly.md) | 相对成熟的应用按同一标准进入发布：取消 0151、0153 对贪吃蛇和中国象棋的发版排除；archived 空壳与仍是 planned 占位的应用不进 | 已接受 |
 | [0169](0169-pocket-cube-solver-app.md) | 新增 `programming/pocket-cube-solver`：象棋同款壳 + 七章独立 gtkmm 程序，按初学者层先法的阶段切章，终点是能解任意状态的程序；旧版 `practice/pocket_cube` 原地保留作参考 | 已接受 |
+| [0170](0170-engineering-baseline-toolchain-and-supply-chain.md) | 工程基线补强：Rust 与 Node 工具链钉版本并由检查对账；全仓库 rustfmt 默认风格并入检查；`check.py --security` 做密钥（gitleaks，阻断）与依赖漏洞（cargo-deny、pnpm audit，只报告）扫描；pre-push 钩子跑便宜的跨应用检查；补 .editorconfig、CODEOWNERS | 已接受（补充 0007，不改 0064） |

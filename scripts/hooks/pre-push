@@ -1,0 +1,9 @@
+#!/bin/sh
+# 推送前跑跨应用检查（ADR 0170）。CI 不在每次提交时触发（ADR 0064），这是推送前唯一的自动拦截，
+# 只跑便宜的 --sources-only：出处、工作流、工具链一致、Rust 格式、结构卫生。
+# 临时绕过：git push --no-verify。
+# Git 的钩子只能是 sh 脚本；Windows 上由 Git for Windows 自带的 sh 执行，所以这里只做转调，
+# 逻辑全在 Python 里。
+root=$(git rev-parse --show-toplevel) || exit 1
+if command -v python3 >/dev/null 2>&1; then py=python3; else py=python; fi
+exec "$py" "$root/scripts/check.py" --sources-only
