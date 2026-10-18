@@ -24,11 +24,13 @@ ApplicationWindow main_window {
       margin-bottom: 8;
       margin-start: 12;
       margin-end: 12;
+      vexpand: true;
 
       Box {
         orientation: vertical;
         spacing: 8;
         hexpand: true;
+        vexpand: true;
 
         Box cube_slot {
           hexpand: true;
@@ -60,6 +62,7 @@ ApplicationWindow main_window {
         orientation: vertical;
         spacing: 8;
         width-request: 380;
+        vexpand: true;
 
         Box net_slot {
           height-request: 250;
@@ -79,9 +82,11 @@ ApplicationWindow main_window {
           styles ["stage"]
         }
 
+        // 步数一多，标签的最小高度会把下面的按钮顶出窗口。钉住滚动区的最小高度，多出来的步数在里面滚。
         ScrolledWindow {
           vexpand: true;
           hscrollbar-policy: never;
+          min-content-height: 72;
 
           Label moves {
             halign: start;

@@ -85,7 +85,19 @@ fn mingw_bin() -> Option<PathBuf> {
 fn with_toolchain(cmd: &mut Command) {
     if let Some(bin) = mingw_bin() {
         let old = std::env::var_os("PATH").unwrap_or_default();
+        // mingw64 在前，编译器和 GTK 运行库用这一套。usr\bin 紧随其后：Meson 生成的
+        // ninja 规则要用真正的 env.exe 包一层环境变量，本机 PATH 里同名的是一段
+        // shell 脚本，Windows 直接 CreateProcess 会失败。
         let mut paths = vec![bin.clone()];
+        let usr = bin
+            .parent()
+            .and_then(|root| root.parent())
+            .map(|msys| msys.join("usr").join("bin"));
+        if let Some(usr) = usr {
+            if usr.is_dir() {
+                paths.push(usr);
+            }
+        }
         paths.extend(std::env::split_paths(&old));
         if let Ok(joined) = std::env::join_paths(paths) {
             cmd.env("PATH", joined);

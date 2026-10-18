@@ -22,8 +22,8 @@ public:
         need<Gtk::Box>("net_slot")->append(session_.net_view());
         session_.cube_view().set_hexpand(true);
         session_.cube_view().set_vexpand(true);
+        // 展开图保持 net_slot 的高度。它再往上要 vexpand 的话，会把阶段和播放按钮顶出窗口。
         session_.net_view().set_hexpand(true);
-        session_.net_view().set_vexpand(true);
 
         Widgets w;
         w.status = need<Gtk::Label>("status");
