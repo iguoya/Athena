@@ -162,3 +162,4 @@
 | [0166](0166-comms-console-and-projection.md) | 协作观察台 comms-console（tools/，Tauri 2 + React，端口 1521）：文件是唯一权威、PG 是投影、观察台只读；看任务泳道、任务流转与裁决时间线、统一对话流；comms.py 加固原子写与 status 乐观锁 | 已接受 |
 | [0167](0167-multi-session-task-routing.md) | 多会话并行按任务分箱：任务是路由单位（doing 即绑定声明）、inbox/ack/notify 支持 --mine 与 --task、已读游标按箱分文件、认领冲突防护、可选 --as 会话标记 | 已接受；实现派 comms-console 舱 T-102 |
 | [0168](0168-release-mature-apps-uniformly.md) | 相对成熟的应用按同一标准进入发布：取消 0151、0153 对贪吃蛇和中国象棋的发版排除；archived 空壳与仍是 planned 占位的应用不进 | 已接受 |
+| [0169](0169-pocket-cube-solver-app.md) | 新增 `programming/pocket-cube-solver`：象棋同款壳 + 七章独立 gtkmm 程序，按初学者层先法的阶段切章，终点是能解任意状态的程序；旧版 `practice/pocket_cube` 原地保留作参考 | 已接受 |
