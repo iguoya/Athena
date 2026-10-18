@@ -1,0 +1,31 @@
+---
+description: Athena comms-console 舱协作通讯（zcode 指挥、cursor 配合开发观察台）
+alwaysApply: true
+---
+
+# comms-console 舱：协作观察台（ADR 0166）
+
+做多智能体协作机制 / `tools/comms-console` / `comms/comms.py` 加固时，同时遵守本舱通讯规则。
+
+## 每轮开工第一件事
+
+```sh
+python comms/comms.py inbox cursor --mine --project comms-console
+```
+
+有未读就读完并 `ack`；有任务书（`comms/comms-console/tasks/`）就按任务书做。
+`--project` 放子命令前或后都可以。
+跟 zcode 的联系跨会话：换聊天、监听超时、这一轮做完，都不等于断线。未读要读完并回复。
+
+## 角色与规矩（全文见 [comms/README.md](../../comms/README.md) 与 [舱 README](../../comms/comms-console/README.md)）
+
+- **zcode 是 leader**（指挥、写任务书、验收 done、裁决）；**cursor 是本舱唯一 worker**（号段 1）。
+  现有任务：T-001（comms.py 加固）、T-002（视图口径，依赖 T-001）、T-102（多会话分箱，ADR 0167，依赖 T-001）、T-101（阅读体验，依赖 T-901）。
+  优先级：driver 舱 T-002 > 本舱 T-001 > T-002 > T-102 > T-101。
+  执行时交 review 附验证证据，卡住转 blocked，建议走消息商量，不自行改方向。
+- 开工 `status T-xxx doing --by cursor --project comms-console`；做完
+  `status T-xxx review --by cursor --note "验证输出摘要+证据路径" --project comms-console`，
+  停在 review 等 zcode 验收，`done` 只有 zcode 能标。
+- 只改舱 README 归属表里你的路径；撞到别人的未提交改动先停、发消息。
+- 钩子注入「Athena 协作通讯·未读提醒」时：手头告一段落再处理；标题带「紧急」才打断。
+- driver 舱与九州舱照旧独立运行。三个舱按当前工作对象选，互不替代。

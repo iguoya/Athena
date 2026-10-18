@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "python .cursor/hooks/jiuzhou-comms-notify.py",
+        "timeout": 15
+      },
+      {
+        "command": "python comms/hooks/agent-notify.py --agent cursor",
+        "timeout": 15
+      },
+      {
+        "command": "python .cursor/hooks/zcode-link.py",
+        "timeout": 15
+      }
+    ],
+    "beforeSubmitPrompt": [
+      {
+        "command": "python .cursor/hooks/jiuzhou-comms-notify.py",
+        "timeout": 15
+      },
+      {
+        "command": "python comms/hooks/agent-notify.py --agent cursor",
+        "timeout": 15
+      },
+      {
+        "command": "python .cursor/hooks/zcode-link.py",
+        "timeout": 15
+      }
+    ],
+    "stop": [
+      {
+        "command": "python .cursor/hooks/zcode-link.py",
+        "timeout": 15,
+        "loop_limit": 2
+      }
+    ]
+  }
+}

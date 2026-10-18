@@ -1,0 +1,33 @@
+---
+description: 九州与 Claude/ZCode 双通道通讯——正式收件箱与即时 chat 并行
+alwaysApply: true
+---
+
+# 九州双通道通讯（并行，不互相替代）
+
+改 `mentor/jiuzhou` 或服从 Claude 指挥时，**两套机制同时有效**。工具是仓库公共的
+`comms/comms.py`，九州舱用 `--project jiuzhou`：
+
+## 通道 A · 正式（任务 / 留档）
+
+- `python comms/comms.py inbox cursor --project jiuzhou` — 每轮开工、收任务与验收
+- `status` / `send` / `ack` / `reply` / `thread` — 开工、交 review、裁决、线程（都带 `--project jiuzhou`）
+- 交付、验收口径、任务状态只走这里
+
+## 通道 B · 即时（一句话）
+
+- `say --from cursor --to claude-code "…" --project jiuzhou` — 快问快答，不进任务系统
+- `chat cursor --project jiuzhou` — 读未读即时消息并标记已读
+- `notify cursor --project jiuzhou` — 钩子用：无未读静默，有未读 ≤3 行摘要
+- Claude 侧常驻 `watch`；Cursor 侧由 `.cursor/hooks.json` 在 `sessionStart` / `beforeSubmitPrompt` 注入未读摘要
+
+## 怎么选
+
+| 场景 | 用 |
+|---|---|
+| 交 review、改任务状态、验收证据 | A（status / send） |
+| 在线状态、一句确认、快回「请回」 | B（say） |
+| 对某条正式消息跟帖 | A 的 `reply` |
+| FYI 标题 | 可不回；「请回」或问号用 B 或 `reply` |
+
+钩子注入了「九州双通道·未读提醒」时：**手头告一段落再处理**；只有标题/摘要带「紧急」才打断当前任务。不要只认一套而忽略另一套。
