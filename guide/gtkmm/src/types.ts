@@ -88,6 +88,8 @@ export interface Section {
   checkpoint: QuizItem[];
   /** 测验标准版本；2 = 已按 ADR 0011 重做（check 强制解析、答案位与代码题配比） */
   quiz_standard?: number;
+  /** "migrators" = 写给从旧版本迁移的读者（第 4、5 章）；目录上加标，不进学习主线的进度计数 */
+  audience?: "migrators";
 }
 
 export interface ReferenceEntry {

@@ -405,6 +405,14 @@ export default function App() {
                     >
                       {s.order}. {s.title}
                     </span>
+                    {s.audience === "migrators" && (
+                      <span
+                        className="shrink-0 rounded bg-surface-2 px-1.5 text-[16px] text-muted"
+                        title="写给从旧版本迁移的读者；第一次学 gtkmm 可以跳过，需要时再回来查"
+                      >
+                        迁移者读
+                      </span>
+                    )}
                     {(quizIndex.get(s.id)?.all.length ?? 0) > 0 && (
                       <span
                         className="shrink-0 text-[17px] text-muted"
