@@ -1,5 +1,8 @@
 # jiuzhou 舱：九州历史地理图鉴
 
+**2026-10-19 关闭。** 使用者决定冻结九州，以后不再开发。`config.json` 的 `closed`
+为 true，钩子不再提醒这个舱。下面是关闭前的协作记录。
+
 九州（`mentor/jiuzhou`）的三方协作。通讯规则、命令、状态机见 [../README.md](../README.md)
 （通用协议，ADR 0165）；本舱就是该机制 2026-10-13 起的原型实战现场，2026-10-15 从
 `mentor/jiuzhou/docs/comms/` 与 `mentor/jiuzhou/scripts/comms.py` 迁入公共机制，旧工具已删。

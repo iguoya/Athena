@@ -57,6 +57,7 @@ COMMS_ROOT = ATHENA / "comms"
 
 AGENTS: tuple[str, ...] = ()
 LEADER = ""
+CLOSED = False
 BANDS: dict[str, int] = {}
 OWNED: dict[str, list[str]] = {}
 STATUSES = ("todo", "doing", "review", "blocked", "done")
@@ -78,6 +79,8 @@ def load_config(project: str) -> Path:
     AGENTS = tuple(cfg.get("agents", []))
     BANDS = {k: int(v) for k, v in cfg.get("bands", {}).items()}
     OWNED = {k: list(v) for k, v in cfg.get("owned", {}).items()}
+    global CLOSED
+    CLOSED = bool(cfg.get("closed"))
     if not LEADER or not AGENTS:
         raise SystemExit(f"{cfg_path} 缺 leader 或 agents")
     if LEADER not in AGENTS:
@@ -341,9 +344,13 @@ def cmd_thread(a):
 def cmd_notify(a):
     """给 hook 用的轻量提示：没有未读就什么都不打印（不打扰），有则最多 3 行摘要。
 
+    舱配置 `"closed": true` 时静默，用来关掉已冻结项目的提醒。
+
     --mine 与 inbox --mine 同一套箱，另外标题里带「紧急」的未读不论在哪个箱都提示。
     """
     check_agent(a.name)
+    if CLOSED:
+        return 0
     if getattr(a, "mine", False):
         chosen: dict[str, tuple] = {}
         for item in visible_messages(a.name, mode="mine"):
