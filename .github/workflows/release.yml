@@ -815,6 +815,26 @@ jobs:
             os: ubuntu-26.04
             platform: linux-x86_64
             bundles: deb
+          - app: pocket-cube-solver
+            root: programming
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: pocket-cube-solver
+            root: programming
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: pocket-cube-solver
+            root: programming
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: pocket-cube-solver
+            root: programming
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
           - app: polaris
             root: mentor
             os: windows-latest
