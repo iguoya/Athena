@@ -1,0 +1,16 @@
+[
+  {
+    "role": "experiment",
+    "heading": "试一试：搜索时不再保护已装好的块",
+    "body": "在 workspace/03-layer/solver.cc 的 search 里，depth == 0 时原先用 for (int i = 0; i < placed; ++i) 检查前 placed 个底层槽位。改成只检查当前块：for (int i = placed - 1; i < placed; ++i)。保存后编译并跑 cube-test。",
+    "predict": "先猜：装第三块时，前面两块还会不会稳稳留在原位？layer_done 还能不能过？",
+    "observe": "实测：stdout 仍打印第一层随机统计，但 EXPECT(layer_done(at))（line 142）反复失败，合计 904 项。搜索「找到」的路径会弄坏已装块，完成条件兜不住。"
+  },
+  {
+    "role": "experiment",
+    "heading": "试一试：把搜索深度砍到 4",
+    "body": "在 workspace/03-layer/solver.cc 的 solve_layer 里，把迭代加深循环 depth <= 11 改成 depth <= 4。保存后编译并跑 cube-test。",
+    "predict": "先猜：第三块（DRB）还装得上吗？程序会显示什么？",
+    "observe": "实测：cube-test 未跑完断言就 abort，stderr 抛出 std::logic_error，what() 为「第一层找不到解」（exit 3）。深度 4 盖不住需要更长装法的打乱。"
+  }
+]

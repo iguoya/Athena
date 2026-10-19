@@ -1,0 +1,222 @@
+
+=== snake ===
+  原题 44 · 补丁 44
+  四选一题数: 44/44
+  答案位置: 第1位 25%(11) 第2位 25%(11) 第3位 25%(11) 第4位 25%(11)
+  正确项独占最长: 13/44 = 30%
+  含中文括号选项: 0
+  重复从句(≥6字且≥3选项): 0
+  正确项措辞改写: 36 题
+    - snake.window.font
+        原: 默认字体只带 ASCII 字形，中文要另外加载 TTF 字体
+        新: 默认字体只带 ASCII 字形，中文要另加载 TTF
+    - snake.grid.acc
+        原: 掉帧时 acc 一次攒了多个节拍，要一口气补完，逻辑速度才与帧率无关
+        新: 掉帧时 acc 攒了多个节拍，要一口气补完
+    - snake.grid.fps
+        原: 还是 5 格，逻辑节拍与帧率无关
+        新: 还是 5 格，逻辑节拍并不跟着帧率走
+    - snake.body.fold
+        原: 输入的产生比逻辑的消费快：两帧内方向连改两次，一步之内掉头，头叠进自己的身体
+        新: 两帧内连改两次方向，一步之内掉头叠身
+    - snake.body.foldnotdead
+        原: 因为这一章的死亡判定只有出界：固定长度的蛇就算折叠也碰不到「死」这个后果，它只是看起来错了
+        新: 本章只判出界，折叠碰不到「死」的后果
+    - snake.input.queue
+        原: 它把「产生快、消费慢」解耦了：键盘只是排队，逻辑每步只认队首一个方向
+        新: 键盘只排队，逻辑每步只消费队首方向
+    - snake.input.opposite
+        原: 压队时能看见队列里已排的方向，连同当前朝向一起判，一步掉头在入口就被挡死；消费时再判为时已晚
+        新: 压队时能对照队尾与朝向，一步掉头挡在入口
+    - snake.input.capacity
+        原: 缓冲太深，早先按下的方向要很久之后才生效，手感发飘
+        新: 缓冲太深，早先的方向很久才生效，手感发飘
+    - snake.input.verify
+        原: 把触发它的同一组操作（朝右走、两帧内按「上、左」）重放一遍，看蛇先上后左
+        新: 把触发它的同一组操作重放一遍：朝右走，两帧内按上再左，看蛇先上后左
+    - snake.food.selfbite
+        原: 固定长度的蛇折叠也死不了；变长之后头撞进身体才可能发生，它才成为真实的死法
+        新: 固定长度时折叠也死不了；变长后头撞身才成死法
+    - snake.food.random
+        原: 蛇快占满盘面、空格稀少时，重试次数暴涨，那时才值得换成「收集空格再抽样」
+        新: 空格稀少、重试暴涨时，才值得改成先收集再抽
+    - snake.food.wallbite
+        原: 写进同一个判定：出界，或头落在身体占据的格子上，都是死
+        新: 写进同一判定：出界或头落在身体格上都死
+    - snake.state.phase
+        原: 同一颗键、同一段逻辑在不同局面下含义不同，需要明确的安放处
+        新: 同一键在不同局面含义不同，需要明确安放处
+    - snake.state.adopt
+        原: 第六章：开始画面与暂停加入后，散装判断排不出优先级，才收进状态机的相位
+        新: 第六章加入开始与暂停后，才收进状态机相位
+    - snake.state.pause
+        原: 暂停期间流逝的时间不是游戏时间，不清零恢复后会一口气补走几十步
+        新: 暂停流逝的时间不是游戏时间，不清会瞬移补步
+    - snake.state.over
+        原: 升格成状态机的一个相：Phase::Over，开始画面、暂停与它平级
+        新: 升格成 Phase::Over，与开始、暂停同级
+    - snake.score.event
+        原: 吃到食物
+        新: 分数加在吃到食物这一次事件上
+    - snake.score.timing
+        原: 一次对局只有死亡才是终局，终局才有最终成绩；判定挂在状态转移上只有一条路径
+        新: 只有死亡才是终局，终局判定挂在状态转移上
+    - snake.score.location
+        原: 位置随启动方式漂移、可能没有写权限、多用户互相覆盖——应写用户数据目录
+        新: 落点随启动方式漂移，还可能没写权限、互相覆盖
+    - snake.score.const
+        原: TextFormat 返回 const char*，而 SaveFileText 的第二个参数要求非 const 的 char*
+        新: TextFormat 给出 const 指针，SaveFileText 要非 const 缓冲
+    - snake.logic.pure
+        原: 规则不依赖窗口；不依赖图形库，它才能被不装图形库的程序编译和验证
+        新: 规则不靠窗口；不沾图形库才能被无窗口程序验证
+    - snake.logic.move
+        原: 搬家与改行为混在一起，出错时说不清是搬坏的还是改错的；先保证搬运不改变行为
+        新: 搬家与改行为混做，出错时分不清是谁坏的
+    - snake.logic.stays
+        原: 关掉窗口它们就不成立：呈现方式与宿命属于这一局，不属于蛇的规则
+        新: 关掉窗口它们就不成立：呈现与宿命不属于规则
+    - snake.logic.samesight
+        原: 规则第一次有了独立于窗口的住址——改变在验证途径上，不在画面上
+        新: 规则第一次有了独立住址——变的是验证途径
+    - snake.test.memory
+        原: 把当年触发折叠的那组操作写成代码断言，让每一次构建都自动重放一遍
+        新: 把触发折叠的操作写成断言，每次构建自动重放
+    - snake.test.pure
+        原: 被测的规则不依赖窗口；不链图形库，测试在哪都能编、能跑、能进 CI
+        新: 被测规则不靠窗口；不链图形库，测试哪都能跑
+    - snake.test.what
+        原: 「头在哪、死没死」有明确答案，「看起来对」没有；能断言的先是关掉窗口仍成立的东西
+        新: 「头在哪、死没死」可断言；「看起来对」没有标准答案
+    - snake.test.ctest
+        原: 构建之后 ctest 一条命令跑完；本应用的 check --native 和 CI 都会跑它
+        新: 构建后用 ctest 一条命令跑完，check 与 CI 都会调用
+    - snake.polish.lerp
+        原: acc 是自上一步起攒下的时间；t 接近 1 表示快到下一格，蛇身几乎滑进目标格
+        新: acc 是自上一步攒下的时间；t 近 1 时几乎滑进目标格
+    - snake.polish.sound
+        原: 每秒用 22050 个采样点描述波形；写入与还原用同一速率，波形才不走样
+        新: 每秒用 22050 个点描述波形；写入与还原须同速
+    - snake.polish.accel
+        原: 关掉窗口，「越吃越快」依然成立——它是规则；试金石永远是这条
+        新: 关掉窗口「越吃越快」仍成立——它属于规则层
+    - snake.polish.observe
+        原: 吃到的分支在规则层，而声音是呈现层的事——渲染层观察「蛇长了」这个输出就够了，不必侵入规则
+        新: 吃到在规则层，声音属呈现——观察「变长」即可
+    - snake.design.asbuilt
+        原: 十章是演化出来的，没有当初的设计稿；总览整理的是终点，不能倒过来决定该教什么
+        新: 十章是演化出来的；总览整理终点，不能倒推该教什么
+    - snake.design.invariant
+        原: 无论按键序列怎样，局面始终合法——例子只覆盖想到的场景，不变式还能挡住没想到的序列
+        新: 无论按键序列怎样局面都合法——能挡住没想到的序列
+    - snake.design.trace
+        原: 音效在呈现层，依赖音频设备，不能脱离窗口自动验证；如实标「人工」，check.py 就不会要求它有 @covers
+        新: 音效在呈现层、靠设备，不能脱离窗口自动验，故标人工
+    - snake.design.tail
+        原: 现行的设计决策（D-3）：判定先于尾巴出队；用测试钉住，要改就同时改 step 的顺序和那条测试
+        新: 现行设计决策 D-3：判定先于尾巴出队；用测试钉住，要改就连 step 顺序和那条测试一起改
+  WARN: 11 题正确项与干扰项长度差>40%: ['snake.window.dt', 'snake.body.foldnotdead', 'snake.body.deadstep', 'snake.input.queue', 'snake.input.capacity', 'snake.state.adopt', 'snake.score.event', 'snake.score.location']…
+
+=== chinese-chess ===
+  原题 21 · 补丁 21
+  四选一题数: 21/21
+  答案位置: 第1位 24%(5) 第2位 24%(5) 第3位 29%(6) 第4位 24%(5)
+  正确项独占最长: 6/21 = 29%
+  含中文括号选项: 0
+  重复从句(≥6字且≥3选项): 0
+  正确项措辞改写: 13 题
+    - chess.window.builder
+        原: C++ 仍要创建 Application，用 Builder 取出窗口并 present
+        新: C++ 仍要建 Application，用 Builder 取出窗口并 present
+    - chess.window.header
+        原: HeaderBar 的 title-widget，一个 Label
+        新: HeaderBar 的 title-widget，也就是那个 Label
+    - chess.window.both
+        原: 因为都标了 NON_UNIQUE，再启动一次就再开一扇
+        新: 都标了 NON_UNIQUE，再启动一次就再开一扇
+    - chess.layout.box
+        原: 写在 window.blp：board_slot 设 hexpand，侧栏设 width-request 260
+        新: 写在 window.blp：棋盘 hexpand，侧栏 width-request 260
+    - chess.layout.css
+        原: 写在 style.css 的 .side 和 .player 上
+        新: 写在 style.css 的 .side 与 .player 选择器上
+    - chess.layout.slot
+        原: 因为 DrawingArea 的绘制要在 C++ 里，界面文件只留出 board_slot
+        新: DrawingArea 绘制在 C++，界面文件只留 board_slot
+    - chess.layout.sensitive
+        原: 因为按钮标了 sensitive: false，只占位置
+        新: 按钮标了 sensitive: false，这一章只占位置
+    - chess.board.cross
+        原: 落在交叉点上，横 9 路、竖 10 行，共 90 个点
+        新: 落在交叉点上，横 9 路、竖 10 行，共 90 点
+    - chess.board.shared
+        原: 因为两个程序都编译同一份 BoardView，界面文件只留 board_slot
+        新: 两程序都编同一份 BoardView，界面只留 board_slot
+    - chess.board.nine
+        原: 最左边，x = 0
+        新: 最左边那一路，对应坐标 x = 0
+    - chess.move.owner
+        原: 按钮在界面文件里，点击后做什么在 C++ 的 Session，规则在 Position
+        新: 按钮在界面文件；点击后做什么在 Session，规则在 Position
+    - chess.move.block
+        原: 马腿或象眼有子，这一跳就不行；仕和象都不能过河
+        新: 马腿或象眼有子就不能跳；仕象都不能过河
+    - chess.move.step
+        原: 向前走了一步，不是路名
+        新: 向前走了一步，这里的「一」是步数不是路名
+  WARN: 4 题正确项与干扰项长度差>40%: ['chess.layout.box', 'chess.move.rook', 'chess.move.block', 'chess.move.step']…
+
+=== c-plus-plus ===
+  原题 18 · 补丁 18
+  四选一题数: 18/18
+  答案位置: 第1位 28%(5) 第2位 22%(4) 第3位 28%(5) 第4位 22%(4)
+  正确项独占最长: 5/18 = 28%
+  含中文括号选项: 0
+  重复从句(≥6字且≥3选项): 0
+  正确项措辞改写: 14 题
+    - cpp.TypeSemantics.object_lifetime#0
+        原: return 语句执行完、离开作用域时，按构造的逆序
+        新: return 执行完、离开作用域时，按构造的逆序析构
+    - cpp.TypeSemantics.value_category#0
+        原: 把左值表达式变成将亡值，好让重载选中移动操作
+        新: 把左值表达式变成将亡值，好让重载选中移动
+    - cpp.TypeSemantics.value_category#1
+        原: 纯右值没有对象身份，将亡值指向一个即将结束的对象
+        新: 纯右值没有对象身份；将亡值指向即将结束的对象
+    - cpp.Reference.reference_basics#0
+        原: 引用声明时必须绑定到一个对象，之后不能改绑
+        新: 引用声明时必须绑到对象，之后也不能改绑
+    - cpp.Reference.reference_basics#1
+        原: a 被赋成 b 的值，r 仍然是 a 的名字
+        新: a 被赋成 b 的值，r 仍然只是 a 的名字
+    - cpp.ValueSemantics.copy_control#0
+        原: 两个对象共享同一指针，各自析构时重复释放
+        新: 两对象共享同一指针，析构时会重复释放
+    - cpp.ValueSemantics.rvalue#0
+        原: 临时对象，或被 std::move 转成将亡值的左值
+        新: 临时对象，或经 std::move 得到的将亡值
+    - cpp.ValueSemantics.rvalue#1
+        原: 让重载能区分「还要继续用」和「可以被掏空」
+        新: 好让重载区分「还要用」和「可以被掏空」
+    - cpp.ValueSemantics.move_semantics#0
+        原: 有效但未指定：可以析构和重新赋值，原来的值不要再读
+        新: 有效但未指定：可析构、可再赋值，勿读旧值
+    - cpp.ValueSemantics.move_semantics#1
+        原: 少了一次对元素缓冲区的深拷贝
+        新: 少了一次对元素内部缓冲区的深拷贝
+    - cpp.RAII.basic#0
+        原: 析构函数
+        新: 放在类的析构函数里
+    - cpp.RAII.basic#1
+        原: 栈展开时析构，资源被释放
+        新: 栈展开时照常析构，资源仍然被释放掉
+    - cpp.RAII.unique#0
+        原: 拷贝会让两个指针都认为自己拥有同一块资源
+        新: 拷贝会让两个指针都以为自己拥有同一资源
+    - cpp.RAII.unique#1
+        原: q 释放，p 不再拥有
+        新: q 负责释放，p 在移动后不再拥有资源
+  WARN: 4 题正确项与干扰项长度差>40%: ['cpp.TypeSemantics.initialization#0', 'cpp.TypeSemantics.initialization#1', 'cpp.ValueSemantics.rvalue#0', 'cpp.RAII.basic#0']…
+
+=== 汇总 ===
+PASS

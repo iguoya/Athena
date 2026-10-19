@@ -1,0 +1,16 @@
+[
+  {
+    "role": "experiment",
+    "heading": "试一试：把 Sune 的第四步多加一个撇",
+    "body": "在 workspace/04-orient/solver.cc 的 sune() 里，把 parse(\"R U R' U R U2 R'\") 改成 parse(\"R U R' U' R U2 R'\")（第四步 U 改成 U'）。保存后编译并跑 cube-test。",
+    "predict": "先猜：改坏的「Sune」还对第一层手下留情吗？反 Sune 还能不能把它抵消？",
+    "observe": "实测：前两阶段随机轮次仍打印通过统计，但公式性质断言 FAIL line 137/139/140/142（layer_done、复原、互逆、朝向计数），共 4 项失败。一字之差就不再是「只拧顶面朝向」的宏。"
+  },
+  {
+    "role": "experiment",
+    "heading": "试一试：把顶面完成条件改成看底面",
+    "body": "在 workspace/04-orient/solver.cc 的 top_oriented 里，把比较的 Face::U 改成 Face::D（注释也可改成「故意改成看底面白」）。保存后编译并跑 cube-test。",
+    "predict": "先猜：宏搜索还会不会宣告「翻顶面完成」？会卡在什么错误上？",
+    "observe": "实测：cube-test abort，stderr 抛出 std::logic_error，what() 为「宏步骤找不到解：状态不在这个阶段的范围里」（exit 3）。目标写成底面白色后，顶面全黄永远对不上完成条件。"
+  }
+]

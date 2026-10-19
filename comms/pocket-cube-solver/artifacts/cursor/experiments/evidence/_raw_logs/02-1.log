@@ -1,0 +1,35 @@
+$ meson compile -C build
+exit=0
+ninja: Entering directory `C:/Users/tiger/AppData/Local/Temp/pcs-t002-experiments/02-turns/build'
+[1/4] Compiling C++ object cube-test.exe.p/cube.cc.obj
+../cube.cc:52:5: warning: 'cube::Vec cube::{anonymous}::operator-(cube::Vec)' defined but not used [-Wunused-function]
+   52 | Vec operator-(Vec a) { return {-a.x, -a.y, -a.z}; }
+      |     ^~~~~~~~
+[2/4] Compiling C++ object cube-02.exe.p/cube.cc.obj
+../cube.cc:52:5: warning: 'cube::Vec cube::{anonymous}::operator-(cube::Vec)' defined but not used [-Wunused-function]
+   52 | Vec operator-(Vec a) { return {-a.x, -a.y, -a.z}; }
+      |     ^~~~~~~~
+[3/4] Linking target cube-test.exe
+[4/4] Linking target cube-02.exe
+INFO: autodetecting backend as ninja
+INFO: calculating backend command to run: C:\msys64\mingw64\bin\ninja.exe -C C:/Users/tiger/AppData/Local/Temp/pcs-t002-experiments/02-turns/build
+
+
+
+$ cube-test.exe
+exit=1
+
+FAIL line 55
+FAIL line 57
+FAIL line 59
+FAIL line 116
+FAIL line 116
+FAIL line 116
+FAIL line 116
+FAIL line 116
+FAIL line 116
+FAIL line 116
+FAIL line 116
+FAIL line 116
+FAIL line 116
+13 项失败

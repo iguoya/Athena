@@ -1,0 +1,16 @@
+[
+  {
+    "role": "experiment",
+    "heading": "试一试：把顺时针公式的负号拿掉",
+    "body": "在 workspace/02-turns/cube.cc 里找到函数 rotate_cw，把返回值里的 (-cross(a, v)) 改成 (cross(a, v))（去掉负号）。保存后用本章运行按钮重新编译，或在本章目录 meson compile -C build 后跑 build/cube-test。",
+    "predict": "先猜：改完之后，单步 R 还会不会把前面的绿色翻到顶面右侧？cube-test 会在哪一类断言上先红？",
+    "observe": "实测：cube-test 退出码 1，先在转动方向断言（约 line 55/57/59）失败，随后黄金向量核对连续 FAIL line 116，合计 13 项失败。说明符号决定顺/逆时针，不是装饰。"
+  },
+  {
+    "role": "experiment",
+    "heading": "试一试：让转动作用在对面那一层",
+    "body": "在 workspace/02-turns/cube.cc 的 permutations() 里，把判断「不在被转的这一层」的条件从 dot(s.pos, axis) != 1 改成 != -1。保存后重新编译并跑 cube-test。",
+    "predict": "先猜：只转 U 时，左下后角块 DBL 还能不能保持不动？黄金向量还会不会对得上？",
+    "observe": "实测：cube-test 退出码 1，黄金向量大量 FAIL line 125，并出现 FAIL line 129（DBL 相关），合计 309 项失败。转对面层会直接动到参照角块。"
+  }
+]

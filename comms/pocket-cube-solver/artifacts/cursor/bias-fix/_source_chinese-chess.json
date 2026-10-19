@@ -1,0 +1,275 @@
+[
+  {
+    "id": "chess.window.builder",
+    "prompt": "window.blp 写好了 ApplicationWindow 之后，程序还要做什么才能看见这扇窗？",
+    "choices": [
+      "什么都不用做，编译 blp 时窗口会自己弹出来",
+      "C++ 仍要创建 Application，用 Builder 取出窗口并 present",
+      "把 blp 里的控件再在 C++ 里 append 一遍",
+      "只要写 style.css，窗口就会出现"
+    ],
+    "answer": 1,
+    "explanation": "界面文件描述控件树。进程、Application 和把窗口显示出来，仍在 ui/main.cc。",
+    "_file": "programming/chinese-chess/content/chapters/01-window.json"
+  },
+  {
+    "id": "chess.window.identity",
+    "prompt": "应用 id 写成 cn.athena.chinese-chess.ch01ui，窗口标题写成「中国象棋」。哪一句对？",
+    "choices": [
+      "两边必须是同一个字符串，否则窗口开不出来",
+      "id 不能含连字符，所以用下划线；标题可以是中文",
+      "id 必须用中文，否则输入法进不了窗口",
+      "标题栏的 Label 会覆盖 id，id 写什么都行"
+    ],
+    "answer": 1,
+    "explanation": "id 给会话总线用，连字符不合法。标题是给人看的，两套字各写各的。",
+    "_file": "programming/chinese-chess/content/chapters/01-window.json"
+  },
+  {
+    "id": "chess.window.header",
+    "prompt": "HeaderBar 放进 titlebar 之后，窗口上方看见的「中国象棋」是哪一个？",
+    "choices": [
+      "Application 的 id",
+      "窗口的 title 属性本身画在标题栏中间",
+      "HeaderBar 的 title-widget，一个 Label",
+      "style.css 里写的文字"
+    ],
+    "answer": 2,
+    "explanation": "title 是任务栏名字。标题栏中间那几个字是 Label。CSS 只负责颜色，不负责写标题。",
+    "_file": "programming/chinese-chess/content/chapters/01-window.json"
+  },
+  {
+    "id": "chess.window.both",
+    "prompt": "为什么界面文件版和代码版可以同时开着？",
+    "choices": [
+      "因为两份用了同一个应用 id",
+      "因为都标了 NON_UNIQUE，再启动一次就再开一扇",
+      "因为 blp 和 C++ 会自动合并成一个进程",
+      "因为这一章还没有棋盘，窗口不受单实例限制"
+    ],
+    "answer": 1,
+    "explanation": "两份 id 不同，并且都标 NON_UNIQUE。默认的单实例会把第二次启动交回已经开着的那份。",
+    "_file": "programming/chinese-chess/content/chapters/01-window.json"
+  },
+  {
+    "id": "chess.layout.box",
+    "prompt": "棋盘占满左边、侧栏保持 260 像素宽，这两件事写在哪里？",
+    "choices": [
+      "写在 window.blp：board_slot 设 hexpand，侧栏设 width-request 260",
+      "写在 style.css 的窗口宽度里",
+      "只能在 C++ 里 set_size_request，blp 排不了横向盒子",
+      "由 Wood 的涂色决定，盒子不参与"
+    ],
+    "answer": 0,
+    "explanation": "横向盒子、撑开和侧栏宽度都是控件树的事，写在 blp。代码版用等价的 append 和 set_size_request 做同一件事。",
+    "_file": "programming/chinese-chess/content/chapters/02-layout.json"
+  },
+  {
+    "id": "chess.layout.css",
+    "prompt": "侧栏的浅纸色和「黑方 / 红方」的粗体写在哪里？",
+    "choices": [
+      "写在每个 Label 的构造函数里",
+      "写在 style.css 的 .side 和 .player 上",
+      "写在 window.blp 的 label 文字旁边，用十六进制颜色",
+      "由 Wood 的木色自动带出来"
+    ],
+    "answer": 1,
+    "explanation": "控件只挂样式类。颜色和字号在 style.css。代码版用同一套类名，样式放在 C++ 字符串里。",
+    "_file": "programming/chinese-chess/content/chapters/02-layout.json"
+  },
+  {
+    "id": "chess.layout.slot",
+    "prompt": "为什么木色棋盘不写进 window.blp？",
+    "choices": [
+      "因为 blp 不能放盒子",
+      "因为 DrawingArea 的绘制要在 C++ 里，界面文件只留出 board_slot",
+      "因为木色必须用 CSS 画，不能用控件",
+      "因为这一章还没有侧栏"
+    ],
+    "answer": 1,
+    "explanation": "界面文件排位置。Wood 怎么涂色是绘制，ui/main.cc 把它放进 board_slot。两个窗口用同一份 wood.hh。",
+    "_file": "programming/chinese-chess/content/chapters/02-layout.json"
+  },
+  {
+    "id": "chess.layout.sensitive",
+    "prompt": "这一章的「新局」和「悔棋」为什么按不了？",
+    "choices": [
+      "因为窗口还没有标题栏",
+      "因为按钮标了 sensitive: false，只占位置",
+      "因为侧栏宽 260 像素，按钮被挤出窗口",
+      "因为 Wood 挡住了点击"
+    ],
+    "answer": 1,
+    "explanation": "界面文件版在 blp 里写 sensitive: false。代码版调用 set_sensitive(false)。走子留到第 5 章。",
+    "_file": "programming/chinese-chess/content/chapters/02-layout.json"
+  },
+  {
+    "id": "chess.board.vector",
+    "prompt": "窗口拉大之后，棋盘线为什么还是清楚的？",
+    "choices": [
+      "因为线是位图，放大时由系统平滑",
+      "因为按当前控件的像素，用矢量图重新画了一遍",
+      "因为 style.css 里写了图像分辨率",
+      "因为界面文件会在拉大时重排九宫"
+    ],
+    "answer": 1,
+    "explanation": "格子来自棋盘图上的 100 单位。layout_for 换成当前像素，librsvg 按这个大小重画。",
+    "_file": "programming/chinese-chess/content/chapters/03-board.json"
+  },
+  {
+    "id": "chess.board.cross",
+    "prompt": "这张棋盘上，棋子应该落在哪里？",
+    "choices": [
+      "落在格子中心，一共 9×8 格",
+      "落在交叉点上，横 9 路、竖 10 行，共 90 个点",
+      "落在河界的空白里",
+      "落在侧栏的 260 像素里"
+    ],
+    "answer": 1,
+    "explanation": "中国象棋的子在交叉点上。河界把第 1 到第 7 路的竖线在第 4、5 行之间断开，点数不变。",
+    "_file": "programming/chinese-chess/content/chapters/03-board.json"
+  },
+  {
+    "id": "chess.board.shared",
+    "prompt": "界面文件版和代码版的棋盘线，为什么是同一套？",
+    "choices": [
+      "因为 blp 里画了线，C++ 再抄一遍",
+      "因为两个程序都编译同一份 BoardView，界面文件只留 board_slot",
+      "因为 style.css 的 .side 会画出九宫",
+      "因为后一章会自动更新前一章的线"
+    ],
+    "answer": 1,
+    "explanation": "线在 BoardView 里。blp 不画棋盘。章与章仍不共用库，但同一章的两个窗口共用这一份绘制。",
+    "_file": "programming/chinese-chess/content/chapters/03-board.json"
+  },
+  {
+    "id": "chess.board.nine",
+    "prompt": "红方的「九」在棋盘的哪一侧？",
+    "choices": [
+      "最右边，x = 8",
+      "最左边，x = 0",
+      "正中间，x = 4",
+      "河界右侧，和黑方的 9 重合"
+    ],
+    "answer": 1,
+    "explanation": "红方在下，报路从右往左。最左是九，最右是一。黑方上方的数字从左往右是 1 到 9。",
+    "_file": "programming/chinese-chess/content/chapters/03-board.json"
+  },
+  {
+    "id": "chess.piece.center",
+    "prompt": "棋子画在棋盘的什么位置？",
+    "choices": [
+      "画在格子中心，边长正好是一格",
+      "画在交叉点中心，边长大约是一格的 0.92",
+      "画在侧栏里，棋盘上只留线",
+      "画在河界的「楚河汉界」四个字上"
+    ],
+    "answer": 1,
+    "explanation": "子的中心对准交叉点。矢量图按窗口像素重画，放大不糊。",
+    "_file": "programming/chinese-chess/content/chapters/04-pieces.json"
+  },
+  {
+    "id": "chess.piece.general",
+    "prompt": "开局时，红方的帅在哪个点？",
+    "choices": [
+      "(0, 0)，棋盘左上角",
+      "(4, 0)，黑方底线正中",
+      "(4, 9)，红方底线正中",
+      "(8, 9)，红方底线最右边"
+    ],
+    "answer": 2,
+    "explanation": "红方在下，底线 y = 9。帅在这一行的正中，x = 4。将在 (4, 0)。",
+    "_file": "programming/chinese-chess/content/chapters/04-pieces.json"
+  },
+  {
+    "id": "chess.piece.axis",
+    "prompt": "下面哪一句和这一章的坐标一致？",
+    "choices": [
+      "y 往上增大，红方在 y = 0",
+      "y 往下增大，红方用帅仕相兵，黑方用将士象卒",
+      "红黑共用一张「帅」的图，只靠 CSS 变色",
+      "兵和卒都画在 y = 5 的河界上"
+    ],
+    "answer": 1,
+    "explanation": "屏幕向下是 y 增大。红黑的帅仕相和将士象是两套图。兵在 y = 6，卒在 y = 3。",
+    "_file": "programming/chinese-chess/content/chapters/04-pieces.json"
+  },
+  {
+    "id": "chess.piece.click",
+    "prompt": "这一章点一下帅，会发生什么？",
+    "choices": [
+      "帅向前走一步，棋谱记下「帅五进一」",
+      "弹出可走的点，但还不能真的走",
+      "什么都不走。棋子只是画上去的",
+      "界面文件版能走，代码版不能走"
+    ],
+    "answer": 2,
+    "explanation": "这一章的 BoardView 不接收走子。两个窗口都是这样。按钮也仍然按不了。",
+    "_file": "programming/chinese-chess/content/chapters/04-pieces.json"
+  },
+  {
+    "id": "chess.move.owner",
+    "prompt": "「新局」按下去会重新开局。这件事情写在哪里？",
+    "choices": [
+      "写在 window.blp 的按钮属性里",
+      "写在 style.css 的 button.play 里",
+      "按钮在界面文件里，点击后做什么在 C++ 的 Session，规则在 Position",
+      "界面文件版写在 blp，代码版写在 Position，两套规则各算各的"
+    ],
+    "answer": 2,
+    "explanation": "blp 只提供有名字的按钮。两个窗口都 bind 到同一份 Session，Session 改的是同一份 Position。",
+    "_file": "programming/chinese-chess/content/chapters/05-move.json"
+  },
+  {
+    "id": "chess.move.rook",
+    "prompt": "车和炮沿直线吃子，中间的子要怎么数？",
+    "choices": [
+      "都要中间恰好一个子",
+      "车中间不能有子；炮吃子时中间恰好一个子",
+      "都要中间一个子都没有",
+      "炮不能吃子，只能走空位"
+    ],
+    "answer": 1,
+    "explanation": "车的路径必须是空的。炮平移到空位时路径也是空的；吃子必须隔一个炮架。",
+    "_file": "programming/chinese-chess/content/chapters/05-move.json"
+  },
+  {
+    "id": "chess.move.block",
+    "prompt": "下面哪一句符合这一章的规则？",
+    "choices": [
+      "马腿有子仍可跳，象眼有子就不能过",
+      "马腿或象眼有子，这一跳就不行；仕和象都不能过河",
+      "象可以过河，只要象眼是空的",
+      "仕可以出九宫，只要是斜着走"
+    ],
+    "answer": 1,
+    "explanation": "马先跨的一格、象田字中心有子，都不能走。仕只在九宫，象只在己方半边。",
+    "_file": "programming/chinese-chess/content/chapters/05-move.json"
+  },
+  {
+    "id": "chess.move.step",
+    "prompt": "棋谱里的「帅五进一」，「一」指什么？",
+    "choices": [
+      "走到红方的一路，也就是 x = 8",
+      "向前走了一步，不是路名",
+      "吃掉了对方的「一」字子",
+      "帅移到了黑方的 1 路"
+    ],
+    "answer": 1,
+    "explanation": "车、炮、帅、兵直着进退，数字是步数。马、象、仕的进退才写落到哪一路。平，写目标路。",
+    "_file": "programming/chinese-chess/content/chapters/05-move.json"
+  },
+  {
+    "id": "chess.move.end",
+    "prompt": "轮到红方，红方没有合法着法，可是帅并没有被将军。这一章怎么判？",
+    "choices": [
+      "和棋，因为没有被将军",
+      "黑胜 · 红方困毙",
+      "黑胜 · 红方被将死",
+      "先不判，要等长将出现"
+    ],
+    "answer": 1,
+    "explanation": "无着法且被将军才是将死。无着法但没被将军是困毙，走方负。长将、长捉不判。",
+    "_file": "programming/chinese-chess/content/chapters/05-move.json"
+  }
+]

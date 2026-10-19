@@ -1,0 +1,16 @@
+[
+  {
+    "role": "experiment",
+    "heading": "试一试：关掉「朝向总和模 3」检查",
+    "body": "在 workspace/06-solver/cube.cc 的 diagnose 里，找到 twist_sum % 3 != 0 的分支，把条件改成 false && twist_sum % 3 != 0（或整段注释掉），让单独拧一角也能通过。保存后编译并跑 cube-test。",
+    "predict": "先猜：把一个角块单独拧一下再 diagnose，还能不能看到「拧过」字样？",
+    "observe": "实测：其余复原统计仍通过，唯独 EXPECT(diagnose(twisted).find(\"拧过\") != npos) 在 line 162 失败，共 1 项。合法性检查缺了模 3，非法朝向会被放行。"
+  },
+  {
+    "role": "experiment",
+    "heading": "试一试：normalize 不再要求 DBL 就位",
+    "body": "在 workspace/06-solver/cube.cc 的 normalize 里，去掉 if (corner_solved(moved, kDBL)) 判断，对 all_rotations() 里第一个旋转就构造 Oriented 并 return。保存后编译并跑 cube-test。",
+    "predict": "先猜：任意姿势还会不会被摆到「左下后参照」？后面的 solve 会不会拒绝？",
+    "observe": "实测：先 FAIL line 208（EXPECT corner_solved(o.state, kDBL)），随后 solve 抛出 std::invalid_argument，what() 为「要先摆正：DBL 角块必须在左下后」（exit 3）。摆正失败会把参照约定整条链路弄断。"
+  }
+]

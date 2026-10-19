@@ -1,0 +1,17 @@
+$ meson compile -C build
+exit=0
+ninja: Entering directory `C:/Users/tiger/AppData/Local/Temp/pcs-t002-experiments/03-layer/build'
+[1/4] Compiling C++ object cube-test.exe.p/solver.cc.obj
+[2/4] Linking target cube-test.exe
+[3/4] Compiling C++ object cube-03.exe.p/solver.cc.obj
+[4/4] Linking target cube-03.exe
+INFO: autodetecting backend as ninja
+INFO: calculating backend command to run: C:\msys64\mingw64\bin\ninja.exe -C C:/Users/tiger/AppData/Local/Temp/pcs-t002-experiments/03-layer/build
+
+
+
+$ cube-test.exe
+exit=3
+
+terminate called after throwing an instance of 'std::logic_error'
+  what():  第一层找不到解

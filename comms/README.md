@@ -28,6 +28,7 @@ python comms/comms.py check --project <舱>                # 校验通讯结构
 | `driver/` | 驾考应用（certification/driver） | zcode | cursor |
 | `comms-console/` | 协作观察台（ADR 0166，`tools/comms-console`） | zcode | cursor |
 | `jiuzhou/` | 九州历史地理图鉴（`mentor/jiuzhou`；机制原型，2026-10-15 迁入） | claude-code | cursor、zcode |
+| `pocket-cube-solver/` | 二阶魔方教材整改（`programming/pocket-cube-solver`，2026-10-19；worker 只写 artifacts，leader 集成） | claude-code | cursor |
 
 新开一个舱：建 `comms/<舱>/config.json`（`leader`、`agents`、`bands`、`owned` 四个键，
 见 [comms.py](comms.py) 文件头示例）和一份本舱 README 写主题与文件归属，即可用同一

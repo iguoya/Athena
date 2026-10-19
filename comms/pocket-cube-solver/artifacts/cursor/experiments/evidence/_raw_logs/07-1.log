@@ -1,0 +1,27 @@
+$ meson compile -C build
+exit=0
+ninja: Entering directory `C:/Users/tiger/AppData/Local/Temp/pcs-t002-experiments/07-optimal/build'
+[1/4] Compiling C++ object cube-test.exe.p/optimal.cc.obj
+[2/4] Linking target cube-test.exe
+[3/4] Compiling C++ object cube-07.exe.p/optimal.cc.obj
+[4/4] Linking target cube-07.exe
+INFO: autodetecting backend as ninja
+INFO: calculating backend command to run: C:\msys64\mingw64\bin\ninja.exe -C C:/Users/tiger/AppData/Local/Temp/pcs-t002-experiments/07-optimal/build
+
+
+
+$ cube-test.exe
+exit=1
+层先法：2000 个随机状态全部复原，最长 47 步，平均 34.8455 步
+最短解：500 个随机状态平均 8.63 步，层先法平均 34.86 步
+
+FAIL line 261
+FAIL line 268
+FAIL line 269
+FAIL line 268
+FAIL line 269
+FAIL line 268
+FAIL line 269
+FAIL line 268
+FAIL line 269
+9 项失败

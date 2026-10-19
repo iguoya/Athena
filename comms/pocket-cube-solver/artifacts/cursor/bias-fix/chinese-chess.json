@@ -1,0 +1,212 @@
+[
+  {
+    "id": "chess.window.builder",
+    "choices": [
+      "编译 blp 时窗口会自己创建并弹出来，C++ 不必再写启动代码",
+      "把 blp 里的控件再在 C++ 里 append 一遍才算数",
+      "只要写好 style.css，进程启动后窗口就会出现",
+      "C++ 仍要建 Application，用 Builder 取出窗口并 present"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "chess.window.identity",
+    "choices": [
+      "两边必须是同一个字符串，否则窗口开不出来",
+      "id 必须用中文，否则输入法进不了窗口",
+      "标题栏的 Label 会覆盖 id，id 写什么都行",
+      "id 不能含连字符，所以用下划线；标题可以是中文"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "chess.window.header",
+    "choices": [
+      "Application 的 id 字符串会被直接画在标题栏正中间当作标题",
+      "窗口 title 属性本身就会画在标题栏正中，不必再挂 title-widget",
+      "style.css 里用 content 属性写进去的文字会覆盖标题栏原有内容",
+      "HeaderBar 的 title-widget，也就是那个 Label"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "chess.window.both",
+    "choices": [
+      "两份程序复用了完全相同的应用 id，所以第二次启动必然再开一扇",
+      "blp 与 C++ 会在运行时自动合并成一个进程，单实例限制因此失效",
+      "还没有棋盘，所以单实例限制暂时不生效，两扇窗口可以并存",
+      "都标了 NON_UNIQUE，再启动一次就再开一扇"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "chess.layout.box",
+    "choices": [
+      "写在 window.blp：棋盘 hexpand，侧栏 width-request 260",
+      "写在 style.css 的窗口最小宽度规则里，跟 blp 无关",
+      "只能在 C++ 里 set_size_request，blp 排不了横盒",
+      "由 Wood 涂色逻辑顺便决定，盒子本身不参与"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "chess.layout.css",
+    "choices": [
+      "写在每个 Label 构造时传入的内联属性里",
+      "写在 style.css 的 .side 与 .player 选择器上",
+      "写在 window.blp 标签旁，直接填十六进制颜色",
+      "由 Wood 组件的木色自动传导到侧栏文字"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "chess.layout.slot",
+    "choices": [
+      "因为 Blueprint 语法不允许在窗口里放置任何盒子或占位控件，所以只能空着",
+      "DrawingArea 绘制在 C++，界面文件只留 board_slot",
+      "木色只能靠 CSS 背景图铺出来，控件树本身画不出可供挂载的棋盘区域",
+      "这一章还没有侧栏，所以棋盘无处可挂，只能先空着那个 board_slot 占位"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "chess.layout.sensitive",
+    "choices": [
+      "窗口还缺少 HeaderBar，按钮事件到不了",
+      "按钮标了 sensitive: false，这一章只占位置",
+      "侧栏固定 260 像素，把按钮挤出了可见区",
+      "Wood 绘制层盖住了按钮，点击被吃掉"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "chess.board.vector",
+    "choices": [
+      "因为按当前控件的像素，用矢量图重新画了一遍",
+      "因为线是位图，放大时由系统平滑",
+      "因为 style.css 里写了图像分辨率",
+      "因为界面文件会在拉大时重排九宫"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "chess.board.cross",
+    "choices": [
+      "落在交叉点上，横 9 路、竖 10 行，共 90 点",
+      "棋子落在格子中心，盘面一共划分成 9×8 个可站立的方格",
+      "棋子落在河界那条空白带的几何中心，而不是交叉点网格上",
+      "棋子落在侧栏预留的那 260 像素宽区域内，棋盘只负责画线"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "chess.board.shared",
+    "choices": [
+      "两程序都编同一份 BoardView，界面只留 board_slot",
+      "blp 里先画线，C++ 再把同样的线抄一份，两套描边叠在一起",
+      "style.css 的 .side 规则会顺带描出九宫，不必共享 BoardView",
+      "后一章的构建脚本会回写前一章的棋盘线，所以看起来像共享"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "chess.board.nine",
+    "choices": [
+      "最左边那一路，对应坐标 x = 0",
+      "最右边那一路，对应坐标 x = 8",
+      "正中间那一路，对应坐标 x = 4",
+      "河界右侧，与黑方的数字 9 完全重合"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "chess.piece.center",
+    "choices": [
+      "画在格子中心，边长正好等于一格宽，交叉点只用来对齐线条",
+      "画在侧栏列表里，棋盘上只保留线条，子力用文字列表表示",
+      "画在交叉点中心，边长大约是一格的 0.92",
+      "叠在河界「楚河汉界」四个字的正上方，用来强调楚河分界"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "chess.piece.general",
+    "choices": [
+      "(0, 0)，棋盘左上角",
+      "(4, 0)，黑方底线正中",
+      "(8, 9)，红方底线最右边",
+      "(4, 9)，红方底线正中"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "chess.piece.axis",
+    "choices": [
+      "y 往上增大，红方在 y = 0",
+      "红黑共用一张「帅」的图，只靠 CSS 变色",
+      "y 往下增大，红方用帅仕相兵，黑方用将士象卒",
+      "兵和卒都画在 y = 5 的河界上"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "chess.piece.click",
+    "choices": [
+      "帅向前走一步，棋谱记下「帅五进一」",
+      "弹出可走的点，但还不能真的走",
+      "什么都不走。棋子只是画上去的",
+      "界面文件版能走，代码版不能走"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "chess.move.owner",
+    "choices": [
+      "写在 window.blp 按钮的 on-clicked 属性里",
+      "写在 style.css 针对 button.play 的规则里",
+      "按钮在界面文件；点击后做什么在 Session，规则在 Position",
+      "界面版规则写在 blp，代码版规则写在 Position，两套各算"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "chess.move.rook",
+    "choices": [
+      "车和炮吃子都要求中间恰好隔着一个子，走法在这一点上完全对称",
+      "车和炮吃子都要求中间一个子都没有，隔子就不能吃，只能平移",
+      "车中间不能有子；炮吃子时中间恰好一个子",
+      "炮根本不能吃子，只允许平移到空交叉点，隔子吃是后世规则引申"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "chess.move.block",
+    "choices": [
+      "马腿有子仍可跳，象眼有子才真正卡住；仕象过不过河另说",
+      "马腿或象眼有子就不能跳；仕象都不能过河",
+      "象可以过河，前提只是象眼那一格是空的，九宫限制对它无效",
+      "仕可以离开九宫，只要每一步都是斜线，河界对它也不构成障碍"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "chess.move.step",
+    "choices": [
+      "走到红方的一路，也就是坐标 x = 8，这里的「一」是路名不是步数",
+      "吃掉了对方棋盘上某个「一」字标记的子，记谱习惯借了这个字",
+      "向前走了一步，这里的「一」是步数不是路名",
+      "帅平移到了黑方报路里的第 1 路，数字来自对方视角的编号"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "chess.move.end",
+    "choices": [
+      "和棋，因为没有被将军",
+      "黑胜 · 红方困毙",
+      "黑胜 · 红方被将死",
+      "先不判，要等长将出现"
+    ],
+    "answer": 1
+  }
+]

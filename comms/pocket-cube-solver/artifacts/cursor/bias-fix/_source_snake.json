@@ -1,0 +1,574 @@
+[
+  {
+    "id": "snake.window.redraw",
+    "prompt": "想让方块随时间移动，immediate mode 的做法是？",
+    "choices": [
+      "给方块设置一个速度属性，等库通知它移动",
+      "每帧用当前时间算出新位置，从头重画一遍",
+      "只重画方块动过的那一小块区域",
+      "注册一个移动回调，到点自动触发"
+    ],
+    "answer": 1,
+    "explanation": "画面没有持久对象，每帧从清屏开始重画。位置是时间的函数，每帧求值一次。",
+    "_file": "programming/snake/content/chapters/01-window.json"
+  },
+  {
+    "id": "snake.window.fps",
+    "prompt": "SetTargetFPS(60) 约束的是？",
+    "choices": [
+      "游戏逻辑每秒最多走 60 步",
+      "渲染循环每秒最多跑 60 帧",
+      "输入每秒最多采样 60 次",
+      "计时器每秒溢出 60 次"
+    ],
+    "answer": 1,
+    "explanation": "它管的是循环的空转节奏。逻辑速度是另一回事，第 2 章用固定步进把两者正式分开。",
+    "_file": "programming/snake/content/chapters/01-window.json"
+  },
+  {
+    "id": "snake.window.dt",
+    "prompt": "GetFrameTime() 的返回值是什么？",
+    "choices": [
+      "开机至今的秒数",
+      "窗口开了多少秒",
+      "上一帧从开始到结束花掉的秒数",
+      "距离下一次帧交换还有多久"
+    ],
+    "answer": 2,
+    "explanation": "它是上一帧的实际耗时。第 2 章把它累加起来攒节拍，第 10 章用它算插值比例。",
+    "_file": "programming/snake/content/chapters/01-window.json"
+  },
+  {
+    "id": "snake.window.font",
+    "prompt": "HUD 文字为什么全用英文？",
+    "choices": [
+      "raylib 不支持 UTF-8 字符串",
+      "C++ 源码不允许出现中文字符",
+      "默认字体只带 ASCII 字形，中文要另外加载 TTF 字体",
+      "英文字体渲染比中文快"
+    ],
+    "answer": 2,
+    "explanation": "DrawText 用内置字体，字形只覆盖 ASCII。中文要 LoadFontEx 加载 TTF 并声明码点，属于资源管线，不是这一章的事。",
+    "_file": "programming/snake/content/chapters/01-window.json"
+  },
+  {
+    "id": "snake.grid.acc",
+    "prompt": "补步为什么用 while (acc >= stepTime) 而不是 if？",
+    "choices": [
+      "while 更快，if 有分支预测惩罚",
+      "掉帧时 acc 一次攒了多个节拍，要一口气补完，逻辑速度才与帧率无关",
+      "if 在某些编译器下不能比较浮点数",
+      "while 能保证 acc 恰好归零"
+    ],
+    "answer": 1,
+    "explanation": "渲染卡一帧 dt 可能是两个节拍。用 if 就要等下一帧才补，蛇在卡顿机器上走得慢；while 把欠的步全部补齐。",
+    "_file": "programming/snake/content/chapters/02-grid.json"
+  },
+  {
+    "id": "snake.grid.cell",
+    "prompt": "格子和像素，谁是逻辑世界的真身？",
+    "choices": [
+      "像素，绘制才是程序的真实输出",
+      "格子；像素只是它每帧的投影",
+      "两个都是，各自独立演化",
+      "都不是，真正的主人是屏幕"
+    ],
+    "answer": 1,
+    "explanation": "规则全在格子上发生（第 3 章起）。像素坐标每帧由格子算出，画完就丢。",
+    "_file": "programming/snake/content/chapters/02-grid.json"
+  },
+  {
+    "id": "snake.grid.fps",
+    "prompt": "把 SetTargetFPS(60) 改成 30，方块每秒走几格？",
+    "choices": [
+      "约 2.5 格，跟着帧率减半",
+      "还是 5 格，逻辑节拍与帧率无关",
+      "10 格，补偿机制翻倍",
+      "不确定，取决于显卡"
+    ],
+    "answer": 1,
+    "explanation": "stepTime 是 0.2 秒，节拍每秒 5 次。帧率只影响画面多细腻，不影响逻辑走多快。",
+    "_file": "programming/snake/content/chapters/02-grid.json"
+  },
+  {
+    "id": "snake.grid.hz",
+    "prompt": "stepTime = 0.2f 写下的是哪一条承诺？",
+    "choices": [
+      "每帧最多更新一次逻辑",
+      "每 0.2 秒逻辑恰好前进一步",
+      "逻辑每秒运行 0.2 次",
+      "渲染延迟不超过 0.2 秒"
+    ],
+    "answer": 1,
+    "explanation": "这是逻辑步长：5 Hz。渲染再快也只按节拍走，渲染再卡也用 while 补齐。",
+    "_file": "programming/snake/content/chapters/02-grid.json"
+  },
+  {
+    "id": "snake.body.deque",
+    "prompt": "蛇「向前移动一格」在队列上对应哪一组操作？",
+    "choices": [
+      "所有节各向前复制一步",
+      "头进一格、尾出一格，其余不动",
+      "整条队列反向再遍历",
+      "按节号交换相邻两节"
+    ],
+    "answer": 1,
+    "explanation": "队列的进出就是蛇的移动。只有头尾两个动作，中间的节完全不动。",
+    "_file": "programming/snake/content/chapters/03-body.json"
+  },
+  {
+    "id": "snake.body.fold",
+    "prompt": "第三章的蛇为什么会「折叠」？",
+    "choices": [
+      "渲染时坐标算错",
+      "输入的产生比逻辑的消费快：两帧内方向连改两次，一步之内掉头，头叠进自己的身体",
+      "队列溢出",
+      "帧率太低导致丢帧"
+    ],
+    "answer": 1,
+    "explanation": "逻辑每 0.18 秒消费一次方向，键盘却随时能改。直接改写等于最后一次输入说了算——两连按就是一步掉头。",
+    "_file": "programming/snake/content/chapters/03-body.json"
+  },
+  {
+    "id": "snake.body.foldnotdead",
+    "prompt": "折叠发生时蛇为什么没有死？",
+    "choices": [
+      "因为死亡判定还没写",
+      "因为这一章的死亡判定只有出界：固定长度的蛇就算折叠也碰不到「死」这个后果，它只是看起来错了",
+      "因为折叠的那一步头没有入队",
+      "因为输入缓冲挡住了第二次按键"
+    ],
+    "answer": 1,
+    "explanation": "本章唯一的死法是撞墙。折叠是错误状态而不是死——「错误必须造成后果才会被重视」也是真实工程的教训。",
+    "_file": "programming/snake/content/chapters/03-body.json"
+  },
+  {
+    "id": "snake.body.deadstep",
+    "prompt": "撞死的那一步，蛇头为什么不入队？",
+    "choices": [
+      "省一次内存分配",
+      "让画面停在撞墙前一刻，死因看得见",
+      "避免队列越界异常",
+      "下一章会用这颗头复活"
+    ],
+    "answer": 1,
+    "explanation": "头入队等于又走了一步，画面就显示不出「死在墙上」。规则与画面对齐，是调试体验的一部分。",
+    "_file": "programming/snake/content/chapters/03-body.json"
+  },
+  {
+    "id": "snake.input.queue",
+    "prompt": "输入缓冲为什么修得掉折叠 bug？",
+    "choices": [
+      "它挡住了第二次按键",
+      "它把「产生快、消费慢」解耦了：键盘只是排队，逻辑每步只认队首一个方向",
+      "它让逻辑跑得更快",
+      "它丢弃了所有快速按键"
+    ],
+    "answer": 1,
+    "explanation": "一步之内只有一个生效方向。方向不再被最后一刻的输入篡改，掉头自然不可能。",
+    "_file": "programming/snake/content/chapters/04-input.json"
+  },
+  {
+    "id": "snake.input.opposite",
+    "prompt": "反向的输入为什么在「压队时」丢弃，而不是在「消费时」判断？",
+    "choices": [
+      "压队时判断写起来短",
+      "压队时能看见队列里已排的方向，连同当前朝向一起判，一步掉头在入口就被挡死；消费时再判为时已晚",
+      "消费时判断会让蛇变慢",
+      "两者等价，随便选"
+    ],
+    "answer": 1,
+    "explanation": "「上、左」各自都不与朝向反向，但连起来是一步掉头——只有对着队尾判才能识破这种组合。入口挡住，队列里永远是一串可安全执行的方向。",
+    "_file": "programming/snake/content/chapters/04-input.json"
+  },
+  {
+    "id": "snake.input.capacity",
+    "prompt": "输入缓冲的容量为什么限制在三格，而不是越大越好？",
+    "choices": [
+      "内存放不下更多方向",
+      "缓冲太深，早先按下的方向要很久之后才生效，手感发飘",
+      "deque 的实现限制",
+      "防止玩家按出循环"
+    ],
+    "answer": 1,
+    "explanation": "缓冲换来「连续转向不丢键」，但每格积压都推迟生效时机。三格是可玩性折中，不是技术上限。",
+    "_file": "programming/snake/content/chapters/04-input.json"
+  },
+  {
+    "id": "snake.input.verify",
+    "prompt": "验证这个 bug 修好了，正确的做法是？",
+    "choices": [
+      "玩两分钟没看见折叠",
+      "把触发它的同一组操作（朝右走、两帧内按「上、左」）重放一遍，看蛇先上后左",
+      "看代码里有没有 pending",
+      "把帧率调到 120 再玩"
+    ],
+    "answer": 1,
+    "explanation": "用触发它的操作重放，才算对准了靶子。把这个操作固化成断言，就是第九章测试的种子。",
+    "_file": "programming/snake/content/chapters/04-input.json"
+  },
+  {
+    "id": "snake.food.grow",
+    "prompt": "吃到食物时，蛇变长的实现是？",
+    "choices": [
+      "给队列尾部插入一个新格子",
+      "正常移动之外再复制一份蛇头",
+      "照常头进，只是这一步尾不出队",
+      "把食物的格子标记成蛇身"
+    ],
+    "answer": 2,
+    "explanation": "移动的本体是「头进尾出」。只进不出，队列就长了——变长是省略一个操作，不是新增一个。",
+    "_file": "programming/snake/content/chapters/05-food.json"
+  },
+  {
+    "id": "snake.food.selfbite",
+    "prompt": "为什么自吃判定到第五章才出现？",
+    "choices": [
+      "作者前面忘了写",
+      "固定长度的蛇折叠也死不了；变长之后头撞进身体才可能发生，它才成为真实的死法",
+      "判定依赖食物的位置",
+      "第四章的输入缓冲已经挡住了自吃"
+    ],
+    "answer": 1,
+    "explanation": "规则跟着世界的复杂度长。判定本身只有一行，难的是知道它什么时候才成为必要。",
+    "_file": "programming/snake/content/chapters/05-food.json"
+  },
+  {
+    "id": "snake.food.random",
+    "prompt": "生成食物时「落在蛇身上就重试」，什么时候这个做法不再够用？",
+    "choices": [
+      "蛇一变长就不够用，必须一开始就换算法",
+      "蛇快占满盘面、空格稀少时，重试次数暴涨，那时才值得换成「收集空格再抽样」",
+      "永远够用，空格再少重试也是常数次",
+      "取决于编译器优化等级"
+    ],
+    "answer": 1,
+    "explanation": "空格占比高时重试期望次数接近 1，简单重试就是正解；算法的更换时机由数据规模决定，不由洁癖决定。",
+    "_file": "programming/snake/content/chapters/05-food.json"
+  },
+  {
+    "id": "snake.food.wallbite",
+    "prompt": "「撞墙」和「咬到自己」在代码里是怎么安放的？",
+    "choices": [
+      "两个独立的死循环各自检测",
+      "写进同一个判定：出界，或头落在身体占据的格子上，都是死",
+      "撞墙在 step 里，自吃在渲染里",
+      "自吃交给玩家自己注意"
+    ],
+    "answer": 1,
+    "explanation": "对蛇来说它们是同一件事：下一步的格子不合法。判定共用一处，死法共用一个后果。",
+    "_file": "programming/snake/content/chapters/05-food.json"
+  },
+  {
+    "id": "snake.state.phase",
+    "prompt": "引入状态机主要解决什么问题？",
+    "choices": [
+      "让代码行数更少",
+      "同一颗键、同一段逻辑在不同局面下含义不同，需要明确的安放处",
+      "提高渲染帧率",
+      "省掉输入缓冲"
+    ],
+    "answer": 1,
+    "explanation": "Enter 在 Ready 是开始、在 Over 是重来，方向键 / WASD 只在 Playing 有效。按相分发让每个局面只回答自己的问题。",
+    "_file": "programming/snake/content/chapters/06-state.json"
+  },
+  {
+    "id": "snake.state.adopt",
+    "prompt": "第三章那行「game = Game{}」的凑合重开，是在哪一章、因为什么被收编的？",
+    "choices": [
+      "第三章当晚就重构成了 reset 函数",
+      "第六章：开始画面与暂停加入后，散装判断排不出优先级，才收进状态机的相位",
+      "永远不会被收编，凑合可以一直用",
+      "被输入缓冲替代了"
+    ],
+    "answer": 1,
+    "explanation": "重构的真实时机是功能挤压出来的。凑合被保留到收编那一刻，是演化被显式记录的一部分。",
+    "_file": "programming/snake/content/chapters/06-state.json"
+  },
+  {
+    "id": "snake.state.pause",
+    "prompt": "离开 Playing 时把 acc 清零，是为了什么？",
+    "choices": [
+      "acc 是浮点数，时间长了精度不够",
+      "暂停期间流逝的时间不是游戏时间，不清零恢复后会一口气补走几十步",
+      "让下一帧从整数开始计步",
+      "避免 while 死循环"
+    ],
+    "answer": 1,
+    "explanation": "第二章用 while 补齐掉帧欠下的步；暂停期间的时间不是欠的，补了就是瞬移。同一个机制，语义决定用不用。",
+    "_file": "programming/snake/content/chapters/06-state.json"
+  },
+  {
+    "id": "snake.state.over",
+    "prompt": "第五章里蛇有一个 dead 布尔，第六章它变成了什么？",
+    "choices": [
+      "被删掉了，死亡不再需要表示",
+      "升格成状态机的一个相：Phase::Over，开始画面、暂停与它平级",
+      "拆成两个布尔：dying 和 dead",
+      "移进了渲染层，由画面推断"
+    ],
+    "answer": 1,
+    "explanation": "布尔只能表达「死 / 没死」两态；局面一多，两态不够分，布尔自然升格成相位。",
+    "_file": "programming/snake/content/chapters/06-state.json"
+  },
+  {
+    "id": "snake.score.event",
+    "prompt": "分数加十的时机挂在哪个事件上？",
+    "choices": [
+      "每走一步",
+      "吃到食物",
+      "每转向一次",
+      "每隔固定时间"
+    ],
+    "answer": 1,
+    "explanation": "分数是对「吃到」这个已有事件的计数。为观察量发明新事件几乎总是错的。",
+    "_file": "programming/snake/content/chapters/07-score.json"
+  },
+  {
+    "id": "snake.score.timing",
+    "prompt": "破纪录的判定为什么放在死亡那一步，而不是每次得分时？",
+    "choices": [
+      "省电",
+      "一次对局只有死亡才是终局，终局才有最终成绩；判定挂在状态转移上只有一条路径",
+      "文件写入太频繁会磨损磁盘",
+      "避免渲染时竞争读写"
+    ],
+    "answer": 1,
+    "explanation": "挂在 Over 转移上，一次对局恰好判定一次。中途比较会产生「破纪录瞬间」和「最终成绩」两个概念的纠缠。",
+    "_file": "programming/snake/content/chapters/07-score.json"
+  },
+  {
+    "id": "snake.score.location",
+    "prompt": "最高分写进进程工作目录，这个做法差在哪？",
+    "choices": [
+      "工作目录的文件读写太慢",
+      "位置随启动方式漂移、可能没有写权限、多用户互相覆盖——应写用户数据目录",
+      "文件格式不能跨平台",
+      "raylib 不支持相对路径"
+    ],
+    "answer": 1,
+    "explanation": "相对路径的落点由「从哪里启动」决定，教学从简可以接受，真实程序要落到每用户的数据目录。",
+    "_file": "programming/snake/content/chapters/07-score.json"
+  },
+  {
+    "id": "snake.score.const",
+    "prompt": "save_best 里为什么要把数字先 snprintf 进自己的缓冲，再交给 SaveFileText？",
+    "choices": [
+      "TextFormat 返回 const char*，而 SaveFileText 的第二个参数要求非 const 的 char*",
+      "snprintf 比字符串拼接快",
+      "SaveFileText 不认数字，只认格式化的浮点",
+      "为了让文件末尾多一个换行"
+    ],
+    "answer": 0,
+    "explanation": "这是编译器教的一次类型修正：库函数的签名决定了调用方式。真实的编译反馈比记忆可靠。",
+    "_file": "programming/snake/content/chapters/07-score.json"
+  },
+  {
+    "id": "snake.logic.pure",
+    "prompt": "logic.hh 为什么一个 raylib 头文件都不 include？",
+    "choices": [
+      "raylib 与 C++ 不兼容",
+      "规则不依赖窗口；不依赖图形库，它才能被不装图形库的程序编译和验证",
+      "include 会拖慢编译",
+      "raylib 不允许被静态链接"
+    ],
+    "answer": 1,
+    "explanation": "依赖越少，可验证面越大。下一章的测试不链 raylib 正是靠这一条。",
+    "_file": "programming/snake/content/chapters/08-logic.json"
+  },
+  {
+    "id": "snake.logic.move",
+    "prompt": "为什么第八章「只做搬运，不改行为」？",
+    "choices": [
+      "省时间，一步到位太累",
+      "搬家与改行为混在一起，出错时说不清是搬坏的还是改错的；先保证搬运不改变行为",
+      "raylib 不允许同时改两者",
+      "为了凑章节"
+    ],
+    "answer": 1,
+    "explanation": "一次只引入一类变化，出错时嫌疑对象只有一个。这是演化能被讲清楚的前提。",
+    "_file": "programming/snake/content/chapters/08-logic.json"
+  },
+  {
+    "id": "snake.logic.stays",
+    "prompt": "phase（Ready / Playing / Paused / Over）和最高分文件 IO 为什么留在 main，不进 logic.hh？",
+    "choices": [
+      "logic.hh 装不下了",
+      "关掉窗口它们就不成立：呈现方式与宿命属于这一局，不属于蛇的规则",
+      "它们写起来太短，不值得搬",
+      "raylib 禁止其他文件使用它们"
+    ],
+    "answer": 1,
+    "explanation": "试金石：关掉窗口它还成立吗？成立的是规则，不成立的是呈现。文件路径连 window 都没有，但「存到哪」同样不是蛇的生物学。",
+    "_file": "programming/snake/content/chapters/08-logic.json"
+  },
+  {
+    "id": "snake.logic.samesight",
+    "prompt": "这一章结束时，游戏看起来和第七章一模一样。那它改变了什么？",
+    "choices": [
+      "什么都没变，这一章是多余的",
+      "规则第一次有了独立于窗口的住址——改变在验证途径上，不在画面上",
+      "游戏变快了",
+      "文件变少了"
+    ],
+    "answer": 1,
+    "explanation": "分离的价值不在当帧画面，在下一步的可能性：下一章的测试、将来的规则演化，都站在这章铺的地上。",
+    "_file": "programming/snake/content/chapters/08-logic.json"
+  },
+  {
+    "id": "snake.test.memory",
+    "prompt": "「把触发 bug 的操作固化成断言」是什么意思？",
+    "choices": [
+      "把 bug 截图存档",
+      "把当年触发折叠的那组操作写成代码断言，让每一次构建都自动重放一遍",
+      "在注释里记下 bug 的经过",
+      "给 bug 编号归档到文档"
+    ],
+    "answer": 1,
+    "explanation": "人玩两分钟会忘，断言在每次构建里重问。修复被验证一次是运气，被验证永远才是修好。",
+    "_file": "programming/snake/content/chapters/09-test.json"
+  },
+  {
+    "id": "snake.test.pure",
+    "prompt": "tests/logic_test.cc 为什么一个 raylib 头文件都不 include？",
+    "choices": [
+      "raylib 与 C++ 不兼容",
+      "被测的规则不依赖窗口；不链图形库，测试在哪都能编、能跑、能进 CI",
+      "include 会拖慢编译",
+      "raylib 不允许被静态链接"
+    ],
+    "answer": 1,
+    "explanation": "依赖越少，可验证面越大。链接列表里没有 raylib，恰好证明规则层没沾渲染层。",
+    "_file": "programming/snake/content/chapters/09-test.json"
+  },
+  {
+    "id": "snake.test.what",
+    "prompt": "tests 里的断言全部盯 snake::Game 的字段，一个都不盯画面。为什么？",
+    "choices": [
+      "画面不重要",
+      "「头在哪、死没死」有明确答案，「看起来对」没有；能断言的先是关掉窗口仍成立的东西",
+      "画面没法自动化",
+      "raylib 禁止测试读取"
+    ],
+    "answer": 1,
+    "explanation": "测什么跟分家走：规则层给出确定答案，呈现层的对错留给人的眼睛和将来的黄金帧对比。",
+    "_file": "programming/snake/content/chapters/09-test.json"
+  },
+  {
+    "id": "snake.test.ctest",
+    "prompt": "add_test 注册之后，规则测试怎么跑？",
+    "choices": [
+      "每次打开窗口自动跑",
+      "构建之后 ctest 一条命令跑完；本应用的 check --native 和 CI 都会跑它",
+      "要手动双击测试程序",
+      "只有调试器里能跑"
+    ],
+    "answer": 1,
+    "explanation": "CTest 是 CMake 自带的测试入口。进了 ctest，测试就能被 check 脚本和 CI 无脑调用。",
+    "_file": "programming/snake/content/chapters/09-test.json"
+  },
+  {
+    "id": "snake.polish.lerp",
+    "prompt": "插值比例 t = acc / stepTime 里，acc 是什么？t 接近 1 时画面是什么样？",
+    "choices": [
+      "acc 是当前帧号；t 接近 1 时蛇回到起点",
+      "acc 是自上一步起攒下的时间；t 接近 1 表示快到下一格，蛇身几乎滑进目标格",
+      "acc 是蛇的加速度；t 接近 1 时蛇加速",
+      "acc 是音频缓冲；t 接近 1 时声音变高"
+    ],
+    "answer": 1,
+    "explanation": "每节从 previous 滑向当前格，t 就是这场滑动的进度条。暂停时 t 定格为 1，蛇停在格子正中。",
+    "_file": "programming/snake/content/chapters/10-polish.json"
+  },
+  {
+    "id": "snake.polish.sound",
+    "prompt": "make_beep 里采样率 22050 写下的是哪一条承诺？",
+    "choices": [
+      "声音最长持续 22050 采样",
+      "每秒用 22050 个采样点描述波形；写入与还原用同一速率，波形才不走样",
+      "音量是 22050 分贝的千分之一",
+      "缓冲区大小固定为 22050 字节"
+    ],
+    "answer": 1,
+    "explanation": "采样率是「每秒多少个数字」。所以 Wave 结构里要填 sampleRate，播放器才知道还原的速度。",
+    "_file": "programming/snake/content/chapters/10-polish.json"
+  },
+  {
+    "id": "snake.polish.accel",
+    "prompt": "「吃到加速」写进 logic.hh 的 step，而不是写在渲染层。判断依据是什么？",
+    "choices": [
+      "渲染层放不下",
+      "关掉窗口，「越吃越快」依然成立——它是规则；试金石永远是这条",
+      "渲染层每帧执行，太频繁",
+      "加速需要随机数，只有 logic.hh 有随机引擎"
+    ],
+    "answer": 1,
+    "explanation": "规则住在规则层。下一个长出规则的版本（道具、传送门）也该长在同一个地方。",
+    "_file": "programming/snake/content/chapters/10-polish.json"
+  },
+  {
+    "id": "snake.polish.observe",
+    "prompt": "main 在每次 step 之后用「game.body.size() > previous.size() 就播放吃食物声」来触发音效，为什么不直接在吃到的分支里响？",
+    "choices": [
+      "声音延迟一帧更自然",
+      "吃到的分支在规则层，而声音是呈现层的事——渲染层观察「蛇长了」这个输出就够了，不必侵入规则",
+      "PlaySound 不能在 step 里调用",
+      "这样省一个布尔变量"
+    ],
+    "answer": 1,
+    "explanation": "调用方观察输出的形状（变长了），而不是让规则层替它做决定。规则保持纯粹，声音的时机仍准确——前提是判断写在这一步之内，写在步外就会每帧重响。",
+    "_file": "programming/snake/content/chapters/10-polish.json"
+  },
+  {
+    "id": "snake.design.asbuilt",
+    "prompt": "设计总览为什么要在开头写明自己是「回溯性的成品设计」？",
+    "choices": [
+      "因为文档是后补的，质量可以低一些",
+      "十章是演化出来的，没有当初的设计稿；总览整理的是终点，不能倒过来决定该教什么",
+      "因为 as-built 是国家标准要求的标题",
+      "为了说明代码不会再改了"
+    ],
+    "answer": 1,
+    "explanation": "写明性质，读者才不会把它当成「先设计后实现」的证据，也不会据此改教学大纲。教学方向仍然自上而下。",
+    "_file": "programming/snake/content/chapters/11-design.json"
+  },
+  {
+    "id": "snake.design.invariant",
+    "prompt": "rules_test.cc 的随机游走在每一步前后检查 7 条不变式，它比手写的例子多保证了什么？",
+    "choices": [
+      "测试跑得更快",
+      "无论按键序列怎样，局面始终合法——例子只覆盖想到的场景，不变式还能挡住没想到的序列",
+      "可以取代所有例子测试",
+      "保证游戏好玩"
+    ],
+    "answer": 1,
+    "explanation": "不变式管「任何时候都不许出现的局面」，例子管「这个具体行为是什么」。两者互补：比如「头进当前尾格判死」是具体行为，只能用例子钉住。",
+    "_file": "programming/snake/content/chapters/11-design.json"
+  },
+  {
+    "id": "snake.design.trace",
+    "prompt": "追溯矩阵里 FR-9（音效）标「人工」而不是「测试」，依据是什么？",
+    "choices": [
+      "音效不重要，不需要测试",
+      "音效在呈现层，依赖音频设备，不能脱离窗口自动验证；如实标「人工」，check.py 就不会要求它有 @covers",
+      "测试框架不支持音频",
+      "因为 FR-9 是最后一条需求"
+    ],
+    "answer": 1,
+    "explanation": "矩阵的价值在诚实：能自动验证的标「测试」并被机器核对，不能的标「人工」写明怎么观察，没验证的标「未覆盖」。标错类别比留空更糟。",
+    "_file": "programming/snake/content/chapters/11-design.json"
+  },
+  {
+    "id": "snake.design.tail",
+    "prompt": "蛇长 4 格，绕成 2×2 的一圈，头朝前一步正好是当前尾巴所在的格子。现行的 step 判这一步撞死。总览里这算什么？",
+    "choices": [
+      "一个待修的 bug，应该允许追尾",
+      "现行的设计决策（D-3）：判定先于尾巴出队；用测试钉住，要改就同时改 step 的顺序和那条测试",
+      "raylib 的限制",
+      "没有被记录，属于未定义行为"
+    ],
+    "answer": 1,
+    "explanation": "两种规则都合理，关键是选了哪个要说出来并有测试守着。碰巧如此的行为一动就悄悄变；写进决策和测试的行为，改动时会被拦住。",
+    "_file": "programming/snake/content/chapters/11-design.json"
+  }
+]

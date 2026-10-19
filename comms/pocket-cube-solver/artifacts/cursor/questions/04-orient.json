@@ -1,0 +1,163 @@
+[
+  {
+    "id": "cube.orient.sune",
+    "kind": "重点",
+    "stem": "公式 Sune 对魔方做了什么？",
+    "choices": [
+      "不动第一层，只改变顶层角块的朝向，并顺带挪动它们的位置",
+      "把当前打乱的整个魔方一次性全部恢复到复原态",
+      "只交换顶层两个角的位置，完全不改任何角的朝向",
+      "只空转顶层一圈，其它所有贴纸的颜色都保持不动"
+    ],
+    "answer": 0,
+    "explanation": "顶层朝向变、第一层不动；位置会顺带变。cube_test 对复原态做一次即断言此事。「整立方复原」「只换位」「只空转 U」都不是 Sune 的作用。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 4 章 · Sune",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.orient.done",
+    "kind": "重点",
+    "stem": "top_oriented 怎样判定阶段 2 完成？",
+    "choices": [
+      "顶层 4 个角块都在原位",
+      "U 面的 4 格都是黄色",
+      "第一层和顶层都复原",
+      "顶层 4 个角块朝向之和为 0"
+    ],
+    "answer": 1,
+    "explanation": "阶段 2 只要求黄色朝上，不管位置。U 面四格皆黄即四角黄色都朝上。「都在原位」是阶段 3；「都复原」是最终；「朝向和为 0」不是本章谓词。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 4 章 · top_oriented",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.orient.search",
+    "kind": "难点",
+    "stem": "为什么阶段 2 不写「遇到这种情形就这样转」的分支，而用最短路搜索？",
+    "choices": [
+      "分支表这种多路跳转结构在本课程用的语言里根本写不出来",
+      "最短路搜索占用的内存一定比手写分支表更小，所以必须搜",
+      "状态不多，按总步数搜最短组合即可；手写分支表容易漏情形，也更难验证",
+      "整个阶段从头到尾只用得到一个固定公式，搜索只是多余包装"
+    ],
+    "answer": 2,
+    "explanation": "可达状态只有几千。搜索通吃一切情形；测试确认随机打乱能做完即可。不是语言写不出分支，也不是内存必然更小，更不是「只用一个公式」。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 4 章 · 宏的最短路",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.orient.cases",
+    "kind": "考点",
+    "stem": "顶层朝向还没完成的情形一共 7 种（转 U 算同一种）。其中恰好有 1 个黄色朝上的有几种？",
+    "choices": [
+      "1 种",
+      "3 种",
+      "4 种",
+      "2 种"
+    ],
+    "answer": 3,
+    "explanation": "0 黄 2 种、1 黄 2 种（Sune/反 Sune 各一）、2 黄 3 种，共 7。其余数字是把某一档情形数记串了。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 4 章 · 七种情形",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.orient.predict-sune",
+    "kind": "重点",
+    "stem": "从复原态做一次 Sune（R U R' U R U2 R'）后，U 面有几格黄色？layer_done 是否仍为真？",
+    "choices": [
+      "1 格黄，且 layer_done 为真",
+      "0 格黄，且 layer_done 为假",
+      "2 格黄，且 layer_done 为真",
+      "4 格黄，且 layer_done 为真"
+    ],
+    "answer": 0,
+    "explanation": "实算 U 面只剩 1 黄；Sune 不动第一层，故 layer_done 仍真。0/2/4 黄是把七种情形里的其它档记到了这次操作上。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 4 章 · Sune",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ],
+    "figure": {
+      "kind": "cube",
+      "title": "起点",
+      "caption": "复原态",
+      "setup": ""
+    },
+    "reveal": {
+      "kind": "cube",
+      "title": "走一遍",
+      "caption": "一次 Sune",
+      "setup": "",
+      "moves": "R U R' U R U2 R'",
+      "expect": "layer"
+    }
+  },
+  {
+    "id": "cube.orient.disc-sune-antisune",
+    "kind": "难点",
+    "stem": "Sune 与反 Sune 最容易混在哪一点？",
+    "choices": [
+      "二者转法序列完全相同，只是中文名字不同而已",
+      "二者互为逆：一个拧朝向，另一个沿反方向拧回去",
+      "二者都会拆掉第一层，差别只在拆开底层的方向相反",
+      "二者只交换顶层角的位置，完全不碰任何角的朝向"
+    ],
+    "answer": 1,
+    "explanation": "反 Sune 是 Sune 的逆。讲解用「Sune 再反 Sune」回到复原来验证。同序列异名、拆第一层、只换位，都是把二者关系记错了。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 4 章 · Sune 与反 Sune",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.orient.recall-layer-done",
+    "kind": "要点",
+    "stem": "要用「对复原态做一次 Sune 后断言第一层仍完成」来验收公式，需要先掌握前面哪一章的概念？",
+    "choices": [
+      "第 7 章距离表里的一列字段：专门用来标记第一层是否已经完成",
+      "第 2 章的动画队列机制：finish 回调里会自动把底层四角恢复",
+      "第 3 章的 layer_done：它定义了「第一层完成」到底检查哪些角",
+      "第 5 章的换位公式性质：换位之后 layer_done 会顺带被重新置位"
+    ],
+    "answer": 2,
+    "explanation": "完成条件来自第 3 章 layer_done；测试直接复用该谓词，不靠口诀。距离表、动画队列、换位公式都不是这条断言所依赖的前置概念。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 3 章 · layer_done；第 4 章测试",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  }
+]

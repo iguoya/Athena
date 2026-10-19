@@ -1,0 +1,162 @@
+[
+  {
+    "id": "cube.layer.done",
+    "kind": "重点",
+    "stem": "layer_done 判定第一层完成，检查的是哪些角块位置？",
+    "choices": [
+      "只检查 DFR、DLF、DRB 三个会被 U/R/F 碰到的活动角块位置",
+      "DFR、DLF、DRB 加上永远不动的 DBL，一共检查 4 个底层角块位置",
+      "只检查顶层四个角块是不是已经全部回到各自原来的位置",
+      "一次把全部八个角块的位置是否都已经完全复原检查完毕"
+    ],
+    "answer": 1,
+    "explanation": "底层四角。DBL 不被 U/R/F 碰到，实际装另外三块，判定时四个一起看。漏掉 DBL、改看顶层、或要求整立方复原，都把完成条件记宽或记偏了。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 3 章 · layer_done",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.layer.keep",
+    "kind": "重点",
+    "stem": "装第 2 块时，为什么第 1 块也算搜索的目标？",
+    "choices": [
+      "只是为了让搜索树分叉更少、整体跑得更快一些而已",
+      "因为两块在几何上必须在同一时刻被同一转法带动",
+      "否则搜索可能为了装第 2 块把已经装好的第 1 块拆掉",
+      "因为评分函数里第 1 块的权重被设得比第 2 块更高一些"
+    ],
+    "answer": 2,
+    "explanation": "目标是「前 k 块都在原位」。装好的块被保护，后面不会被碰坏。加速、共转、权重都不是把第 1 块写进目标的理由。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 3 章 · search 的 placed 参数",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.layer.iddfs",
+    "kind": "难点",
+    "stem": "迭代加深为什么能保证第一次成功的就是最短装法？",
+    "choices": [
+      "因为它在每一层内部都优先扩展看起来更短的那条转法",
+      "因为它直接查了预先算好的全局距离表来裁剪分支",
+      "因为它靠随机抽样，而抽样命中的路径统计上就是最短",
+      "因为它从浅到深一层一层试，更浅的层已经全部失败过了"
+    ],
+    "answer": 3,
+    "explanation": "先穷尽 1 步再试 2 步。首次成功时更浅深度皆无解，故不会更短。层内启发式、距离表、随机抽样都不是本章迭代加深的保证来源。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 3 章 · 迭代加深",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.layer.prune",
+    "kind": "考点",
+    "stem": "搜索时为什么可以不让同一个面连着转两次？",
+    "choices": [
+      "U U 可并成 U2，U U' 会抵消，都不会更短，不必单独搜",
+      "因为同一面若连着转两次会把整个机构卡死，物理上根本就再也转不动了",
+      "因为 R、U、F 三面在任何合法序列里根本不允许相邻出现",
+      "因为连转同一面会把参照角块 DBL 从底层固定位置上弄走"
+    ],
+    "answer": 0,
+    "explanation": "同面连续转动总能合并或抵消。剪掉后每层分叉 9→6。不是机构卡死，也不是三面不能相邻，更不会弄走 DBL。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 3 章 · 剪枝",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.layer.predict-rprime",
+    "kind": "重点",
+    "stem": "从复原态只做一步 R'，此时 layer_done 与 is_solved 分别是什么？",
+    "choices": [
+      "layer_done 为真，is_solved 也为真",
+      "layer_done 为假，is_solved 也为假",
+      "layer_done 为真，is_solved 仍为假",
+      "layer_done 为假，is_solved 反为真"
+    ],
+    "answer": 1,
+    "explanation": "R' 动到底层角块，第一层不再完整，整立方也不复原，故两个谓词都为假。其余三项把两个谓词的真假组合记错了。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 3 章 · layer_done",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ],
+    "figure": {
+      "kind": "cube",
+      "title": "起点",
+      "caption": "复原态",
+      "setup": ""
+    },
+    "reveal": {
+      "kind": "cube",
+      "title": "走一遍",
+      "caption": "只做 R'",
+      "setup": "",
+      "moves": "R'"
+    }
+  },
+  {
+    "id": "cube.layer.disc-done-vs-solved",
+    "kind": "难点",
+    "stem": "layer_done 为真、is_solved 为假，说明魔方处于哪种阶段？",
+    "choices": [
+      "第一层尚未完成，顶层四个角也完全没有被动过",
+      "整立方其实已经复原，只是两个判定函数碰巧写反了",
+      "第一层已完成，但顶层角块尚未全部归位复原",
+      "只有顶面朝向完成，底层四角反而已经被拆散了"
+    ],
+    "answer": 2,
+    "explanation": "layer_done 只看底层四角；is_solved 要求 24 格全对。底层好而整体未复原，正是进入阶段 2/3 的典型状态。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 3 章 · layer_done；复原判定",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.layer.recall-dbl",
+    "kind": "要点",
+    "stem": "层先法只转 U、R、F 就能装好第一层——要理解这一点，需要先掌握第 2 章的哪条结论？",
+    "choices": [
+      "程序把 D 面写成了禁止转动的非法操作，所以解题时只能用三面",
+      "第一层角块在几何上从不出现在 D 面附近，所以完全不必转 D",
+      "layer_done 故意跳过所有 D 面贴纸，因此转不转 D 都无所谓",
+      "无中心块时转 D/L/B 等价换姿势再转 U/R/F，因而可固定 DBL"
+    ],
+    "answer": 3,
+    "explanation": "第 2 章结论：固定 DBL、只用三面，后面各阶段完成条件才站得住。不是禁操作、不是角块不到 D、也不是判定故意漏检。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 2 章 · 只用三面；第 3 章第一层",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  }
+]

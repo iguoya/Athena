@@ -1,0 +1,20 @@
+$ meson compile -C build
+exit=0
+ninja: Entering directory `C:/Users/tiger/AppData/Local/Temp/pcs-t002-experiments/05-permute/build'
+[1/4] Compiling C++ object cube-test.exe.p/solver.cc.obj
+[2/4] Linking target cube-test.exe
+[3/4] Compiling C++ object cube-05.exe.p/solver.cc.obj
+[4/4] Linking target cube-05.exe
+INFO: autodetecting backend as ninja
+INFO: calculating backend command to run: C:\msys64\mingw64\bin\ninja.exe -C C:/Users/tiger/AppData/Local/Temp/pcs-t002-experiments/05-permute/build
+
+
+
+$ cube-test.exe
+exit=1
+层先法：2000 个随机状态全部复原，最长 113 步，平均 80.0765 步
+
+FAIL line 158
+FAIL line 159
+FAIL line 160
+3 项失败

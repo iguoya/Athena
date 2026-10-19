@@ -1,0 +1,186 @@
+[
+  {
+    "id": "cube.turns.notation",
+    "kind": "重点",
+    "stem": "记号 R' 表示什么？",
+    "choices": [
+      "右面顺时针转 90°",
+      "右面逆时针转 90°",
+      "右面转 180°",
+      "把整个魔方向右翻转"
+    ],
+    "answer": 1,
+    "explanation": "单独字母顺时针，加撇逆时针，加 2 半圈；顺逆都从该面外面看。顺时针是漏了撇；180° 是 R2；整体翻转不是单面转动。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 2 章 · 记号",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.turns.three",
+    "kind": "重点",
+    "stem": "为什么只用 U、R、F 三个面就够了？",
+    "choices": [
+      "因为机构限制导致 D、L、B 三个面在物理上根本转不动",
+      "因为 U、R、F 碰到的角块更多，覆盖面比另外三面更广",
+      "因为 2 阶魔方没有中心块，转 D、L、B 等于整体换姿势再转 U、R、F",
+      "因为解题手册规定禁止写下 D、L、B，与几何是否等价无关"
+    ],
+    "answer": 2,
+    "explanation": "无中心块就无固定朝向参照。转 D 等价换姿势再转 U；DBL 可当不动参照。不是机构转不动，也不是覆盖面更大，更不是手册禁写。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "wikipedia-pocket-cube",
+        "locator": "结构与位置数",
+        "note": "条目只给出结构/位置数要点；本题按本课程讲解自拟，没有现成中文题。"
+      }
+    ]
+  },
+  {
+    "id": "cube.turns.order",
+    "kind": "要点",
+    "stem": "从复原态起，R U R' U' 要重复几遍才回到复原？",
+    "choices": [
+      "4 遍",
+      "8 遍",
+      "12 遍",
+      "6 遍"
+    ],
+    "answer": 3,
+    "explanation": "测试逐遍检查：前 5 遍未复原，第 6 遍复原；回放共 24 步即六遍。4/8/12 是把交换群阶数或总步数误当成了重复遍数。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 2 章 · 转动的性质",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.turns.derived",
+    "kind": "难点",
+    "stem": "转动的置换表为什么从坐标算出来，不直接手写？",
+    "choices": [
+      "手写 18 张表很容易抄错，错了还看不出来；几何算出的方向和手性不会错",
+      "手写常量在编译期就会被类型系统拦住，所以抄错也不必担心",
+      "坐标推导只服务调试版本，发布版仍应改回十八张手写表",
+      "查表启动太慢，运行期现算坐标反而比预存置换更省事"
+    ],
+    "answer": 0,
+    "explanation": "表错一格会悄悄变成另一个魔方。几何结果还能用 U⁴=1 交叉验证。类型系统拦不住「写进错误的下标」；发布版同样用推导表；现算坐标也不是为了启动速度，而是为了正确性。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 2 章 · 转动是算出来的",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.turns.animation",
+    "kind": "考点",
+    "stem": "一步转动的动画放到一半时，Session 里存的魔方状态是什么？",
+    "choices": [
+      "已经是转完之后写进 Session 的最终状态",
+      "转之前的状态，转完 finish 才换",
+      "一个按中间角度插值出来的半合法状态",
+      "被清空之后暂时不持有任何贴纸颜色的空状态"
+    ],
+    "answer": 1,
+    "explanation": "动画只是画面。finish 里才 perform 换状态。「已经是终态」把画面当成了提交；「半状态」把插值角当成合法态；空状态更无依据。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 2 章 · 动画不是状态",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.turns.predict-ru",
+    "kind": "重点",
+    "stem": "从复原态做 R U，F 面右上那一格（展开图 F 面第 1 行右格）前面是什么颜色？",
+    "choices": [
+      "黄色",
+      "绿色",
+      "橙色",
+      "白色"
+    ],
+    "answer": 2,
+    "explanation": "R 先把橙面贴纸转到 F 右上；U 不改变该 F 面格颜色。实算 slot 9 为橙。黄/绿/白是复原态邻格常见色，容易在心理模拟时串面。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 2 章 · 记号与转动",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ],
+    "figure": {
+      "kind": "cube",
+      "title": "起点",
+      "caption": "复原态",
+      "setup": ""
+    },
+    "reveal": {
+      "kind": "cube",
+      "title": "走一遍",
+      "caption": "R 然后 U",
+      "setup": "",
+      "moves": "R U",
+      "marks": [
+        9
+      ]
+    }
+  },
+  {
+    "id": "cube.turns.disc-anim-state",
+    "kind": "难点",
+    "stem": "下面哪一句把「画面上的转动」和「Session 里的状态」分清楚了？",
+    "choices": [
+      "动画放到一半时，Session 里保存的状态其实已经是转完后的最终结果",
+      "动画中插值出来的中间角度本身就是一个合法魔方状态",
+      "点撤销会立刻改写状态，完全不必等待当前动画播放结束",
+      "动画只改画面；状态要等 finish 才 perform 更换"
+    ],
+    "answer": 3,
+    "explanation": "画面可插值，状态只有转完才换。把半动画当已提交、当合法态，或以为撤销可插队改状态，都会弄错队列与撤销。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 2 章 · 动画不是状态",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.turns.recall-net-slot",
+    "kind": "要点",
+    "stem": "要判断「展开图第 9 号贴纸属于哪一面、转完 U/R/F 后编号是否仍属该面」，需要先掌握第 1 章的哪条约定？",
+    "choices": [
+      "编号标的是格子位置；转动只换颜色，面属不变",
+      "编号跟着色块走，转到哪一面编号就改属哪一面",
+      "编号只在复原态有效，一旦打乱就必须重新编号",
+      "编号按角块编号排列，与面序 U R F D L B 无关"
+    ],
+    "answer": 0,
+    "explanation": "9÷4=2 余 1，面序第三是 F。第 1 章规定编号标格子，颜色搬家、面属不变。「跟着色块走」「打乱重编号」「按角块排」都是把编号语义记反了。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 1 章 · 贴纸编号；第 2 章转动",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  }
+]

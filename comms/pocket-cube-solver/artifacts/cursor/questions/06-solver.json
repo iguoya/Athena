@@ -1,0 +1,168 @@
+[
+  {
+    "id": "cube.solver.legal",
+    "kind": "重点",
+    "stem": "下面哪一种涂色，是真魔方永远转不出来的？",
+    "choices": [
+      "把已经复原的魔方整个翻过来，换一个姿势重新放下",
+      "从复原态出发连续打乱 20 步之后得到的任意一个状态",
+      "每种颜色仍是 4 格，但有一个角块被原地拧了一下，其余格子都对",
+      "只把右手那一面相对于复原态转了 90°，其它面都还没动"
+    ],
+    "answer": 2,
+    "explanation": "拧一角会让朝向之和不是 3 的倍数；真魔方每次转动都保持该不变量。整体换姿势、合法打乱、单面转 90° 都是可到达状态。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "wikipedia-pocket-cube",
+        "locator": "结构与位置数",
+        "note": "条目只给出结构/位置数要点；本题按本课程讲解自拟，没有现成中文题。"
+      }
+    ]
+  },
+  {
+    "id": "cube.solver.count",
+    "kind": "要点",
+    "stem": "固定 DBL 不动后，2 阶魔方有多少种可到达的状态？",
+    "choices": [
+      "5 040 种，只算了 7 个角的排列",
+      "40 320 种，那是 8! 全排列",
+      "88 179 840 种，未固定 DBL 时的量级",
+      "3 674 160 种，即 7!×3⁶"
+    ],
+    "answer": 3,
+    "explanation": "7! = 5040，朝向 3⁶ = 729，5040×729 = 3 674 160。5040 只是排列；40320 是 8!；八千多万则未固定 DBL 时的量级。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "wikipedia-pocket-cube",
+        "locator": "结构与位置数",
+        "note": "条目只给出结构/位置数要点；本题按本课程讲解自拟，没有现成中文题。"
+      }
+    ]
+  },
+  {
+    "id": "cube.solver.normalize",
+    "kind": "难点",
+    "stem": "为什么求解之前要先摆正？",
+    "choices": [
+      "因为前三章解法以 DBL 在左下后为前提，而输入姿势里它可能在任意位",
+      "因为摆正之后展开图在屏幕上的观感会整齐许多，便于人工核对",
+      "因为涂色输入控件在实现上只肯接受白下绿前这一种固定姿势",
+      "因为摆正这一步本身就能把后续求解所需的步数明显缩短"
+    ],
+    "answer": 0,
+    "explanation": "U/R/F 不碰 DBL 才成立。输入姿势下 DBL 可能在任意位，故先整体转正。观感、控件限制、缩短步数都不是摆正的真正理由。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 6 章 · normalize",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.solver.frame",
+    "kind": "考点",
+    "stem": "摆正姿势下要转 U 面，在你手里（输入姿势）的魔方上，转的是哪个面？",
+    "choices": [
+      "一定还是原来的 U 面，不会因为摆正而换面",
+      "输入姿势里，和摆正后 U 位置对应的那个面",
+      "一定变成 D 面，因为摆正总是把原来的上翻到下",
+      "随机选一个面，只要转向与摆正序列里的 U 相同即可"
+    ],
+    "answer": 1,
+    "explanation": "摆正是整体旋转。to_input_frame 查面对应表换面，转向不变。「永远仍是 U」「永远变 D」「随机选面」都不对。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 6 章 · to_input_frame",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.solver.predict-f",
+    "kind": "重点",
+    "stem": "从复原态做一步 F 之后，R 面展开图四格的颜色（左上→右上→左下→右下）是？",
+    "choices": [
+      "橙、橙、橙、橙",
+      "绿、绿、绿、绿",
+      "黄、橙、黄、橙",
+      "白、橙、白、橙"
+    ],
+    "answer": 2,
+    "explanation": "F 把 U 前排黄贴纸转到 R 上排两侧方位。实算 R 面为黄橙黄橙。全橙是复原 R；全绿是把 F 面看成了 R；白橙则把 D 面贴纸误迁过来。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 2 章转动；第 6 章状态",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ],
+    "figure": {
+      "kind": "cube",
+      "title": "起点",
+      "caption": "复原态",
+      "setup": ""
+    },
+    "reveal": {
+      "kind": "cube",
+      "title": "走一遍",
+      "caption": "只做 F",
+      "setup": "",
+      "moves": "F",
+      "marks": [
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  },
+  {
+    "id": "cube.solver.disc-diagnose-normalize",
+    "kind": "难点",
+    "stem": "diagnose 和 normalize 各自挡住哪类问题？",
+    "choices": [
+      "diagnose 负责把姿势摆正；normalize 负责检查每种颜色是否恰好四格",
+      "二者完成的是同一件事，只是历史原因留下了两个不同函数名",
+      "diagnose 用来生成均匀随机状态；normalize 负责最短步数求解",
+      "diagnose 拒绝非法涂色；normalize 把任意姿势转到 DBL 参照"
+    ],
+    "answer": 3,
+    "explanation": "先合法性（含朝向模 3），再整体旋转到白下绿前且 DBL 就位。职责对调、当成同义函数、或塞进随机/最短解，都是接口记混。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 6 章 · diagnose 与 normalize",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  },
+  {
+    "id": "cube.solver.recall-pipeline",
+    "kind": "要点",
+    "stem": "摆正之后调用的层先法流水线，三个阶段的完成条件依次是什么？",
+    "choices": [
+      "layer_done → top_oriented → is_solved",
+      "is_solved → top_oriented → layer_done",
+      "top_oriented → layer_done → is_solved",
+      "layer_done → is_solved → top_oriented"
+    ],
+    "answer": 0,
+    "explanation": "第 3–5 章：先第一层，再翻顶面，最后换位到整体复原。其它排列都是把阶段次序记反了。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "source_id": "self-authored",
+        "locator": "第 3–5 章阶段；第 6 章求解入口",
+        "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+      }
+    ]
+  }
+]

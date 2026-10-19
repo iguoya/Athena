@@ -1,0 +1,182 @@
+[
+  {
+    "id": "cpp.TypeSemantics.initialization#0",
+    "choices": [
+      "int x = 3.14;",
+      "int x{3.14};",
+      "int x(3.14);",
+      "int x = int(3.14);"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "cpp.TypeSemantics.initialization#1",
+    "choices": [
+      "Tracer a{1};",
+      "Tracer c = 1;",
+      "Tracer b(1);",
+      "Tracer d = Tracer{1};"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "cpp.TypeSemantics.object_lifetime#0",
+    "choices": [
+      "等到整个进程退出时再把局部对象一并析构",
+      "return 执行完、离开作用域时，按构造的逆序析构",
+      "下一次在堆上执行 new 的时候顺带析构",
+      "只有程序员显式调用 delete 才会析构"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "cpp.TypeSemantics.object_lifetime#1",
+    "choices": [
+      "为它分配了存储的那一刻",
+      "第一次被读取的那一刻",
+      "初始化完成的那一刻",
+      "构造函数被调用之前"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "cpp.TypeSemantics.value_category#0",
+    "choices": [
+      "立刻把 x 的资源搬进另一个新对象里",
+      "把 x 清空，恢复成类型的默认状态",
+      "把左值表达式变成将亡值，好让重载选中移动",
+      "从此禁止编译器再对 x 做任何拷贝"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "cpp.TypeSemantics.value_category#1",
+    "choices": [
+      "纯右值一定是字面量；将亡值一定是函数返回值",
+      "纯右值可以取地址；将亡值表达式不能取地址",
+      "纯右值没有对象身份；将亡值指向即将结束的对象",
+      "两者只是拼写习惯不同，值类别其实一样"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "cpp.Reference.reference_basics#0",
+    "choices": [
+      "引用声明时必须绑到对象，之后也不能改绑",
+      "引用可以先声明成空的，稍后再完成绑定",
+      "引用和指针一样，允许处于空的未绑定状态",
+      "给引用赋值就会让它改去绑定另一个对象"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "cpp.Reference.reference_basics#1",
+    "choices": [
+      "r 改去绑定对象 b，不再是 a 的别名",
+      "a 被赋成 b 的值，r 仍然只是 a 的名字",
+      "语句会再造出一个新的引用对象出来",
+      "编译失败，因为已绑定的引用不能出现在赋值左边"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "cpp.ValueSemantics.copy_control#0",
+    "choices": [
+      "每个对象都会得到一份彼此独立的资源副本",
+      "编译器发现自定义析构后会拒绝生成拷贝构造",
+      "两对象共享同一指针，析构时会重复释放",
+      "默认拷贝会被静默改写成深拷贝移动构造"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "cpp.ValueSemantics.copy_control#1",
+    "choices": [
+      "构造、析构、赋值",
+      "移动构造、移动赋值、交换",
+      "析构、拷贝构造、拷贝赋值",
+      "默认构造、拷贝构造、移动构造"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "cpp.ValueSemantics.rvalue#0",
+    "choices": [
+      "一个普通的具名左值变量",
+      "只有整型字面量 0 这一种实参",
+      "任意带 const 限定的对象",
+      "临时对象，或经 std::move 得到的将亡值"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "cpp.ValueSemantics.rvalue#1",
+    "choices": [
+      "好让函数去改写调用方传来的 const 对象",
+      "用来彻底取代形参里的所有 const 引用",
+      "用来禁止编译器再做返回值优化",
+      "好让重载区分「还要用」和「可以被掏空」"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "cpp.ValueSemantics.move_semantics#0",
+    "choices": [
+      "对象已经结束生命周期，再碰就是未定义行为",
+      "与移动之前相比，可观察状态完全不变",
+      "自动变成空指针常量，等价于赋了 nullptr",
+      "有效但未指定：可析构、可再赋值，勿读旧值"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "cpp.ValueSemantics.move_semantics#1",
+    "choices": [
+      "编译器可以跳过元素类型的全部构造函数",
+      "扩容之后容器里的元素个数不再增加",
+      "被移走的旧元素再也用不着调用析构",
+      "少了一次对元素内部缓冲区的深拷贝"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "cpp.RAII.basic#0",
+    "choices": [
+      "放在类的析构函数里",
+      "调用者手写的 finally 清理段",
+      "进程退出时注册的全局钩子",
+      "下一次构造同类对象时的构造函数"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "cpp.RAII.basic#1",
+    "choices": [
+      "栈展开时照常析构，资源仍然被释放掉",
+      "析构被跳过，于是资源顺着异常路径泄漏",
+      "必须在 catch 子句里手动再调用一次析构",
+      "对象泄漏，但操作系统会立刻收回底层资源"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "cpp.RAII.unique#0",
+    "choices": [
+      "拷贝会让两个指针都以为自己拥有同一资源",
+      "标准库这一版还没来得及实现拷贝构造",
+      "拷贝路径太慢，所以接口上直接删掉了",
+      "unique_ptr 被规定只能放在全局命名空间"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "cpp.RAII.unique#1",
+    "choices": [
+      "q 负责释放，p 在移动后不再拥有资源",
+      "p 与 q 析构时都会去释放那块资源",
+      "两边都不释放，必须再手动调用一次 reset",
+      "仍由 p 释放，q 只是只读观察那块资源"
+    ],
+    "answer": 0
+  }
+]
