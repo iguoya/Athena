@@ -52,12 +52,12 @@
       "kind": "重点",
       "stem": "window.blp 写好了 ApplicationWindow 之后，程序还要做什么才能看见这扇窗？",
       "choices": [
-        "什么都不用做，编译 blp 时窗口会自己弹出来",
-        "C++ 仍要创建 Application，用 Builder 取出窗口并 present",
-        "把 blp 里的控件再在 C++ 里 append 一遍",
-        "只要写 style.css，窗口就会出现"
+        "编译 blp 时窗口会自己创建并弹出来，C++ 不必再写启动代码",
+        "把 blp 里的控件再在 C++ 里 append 一遍才算数",
+        "只要写好 style.css，进程启动后窗口就会出现",
+        "C++ 仍要建 Application，用 Builder 取出窗口并 present"
       ],
-      "answer": 1,
+      "answer": 3,
       "explanation": "界面文件描述控件树。进程、Application 和把窗口显示出来，仍在 ui/main.cc。",
       "source_refs": [
         {
@@ -74,11 +74,11 @@
       "stem": "应用 id 写成 cn.athena.chinese-chess.ch01ui，窗口标题写成「中国象棋」。哪一句对？",
       "choices": [
         "两边必须是同一个字符串，否则窗口开不出来",
-        "id 不能含连字符，所以用下划线；标题可以是中文",
         "id 必须用中文，否则输入法进不了窗口",
-        "标题栏的 Label 会覆盖 id，id 写什么都行"
+        "标题栏的 Label 会覆盖 id，id 写什么都行",
+        "id 不能含连字符，所以用下划线；标题可以是中文"
       ],
-      "answer": 1,
+      "answer": 3,
       "explanation": "id 给会话总线用，连字符不合法。标题是给人看的，两套字各写各的。",
       "source_refs": [
         {
@@ -94,12 +94,12 @@
       "kind": "难点",
       "stem": "HeaderBar 放进 titlebar 之后，窗口上方看见的「中国象棋」是哪一个？",
       "choices": [
-        "Application 的 id",
-        "窗口的 title 属性本身画在标题栏中间",
-        "HeaderBar 的 title-widget，一个 Label",
-        "style.css 里写的文字"
+        "Application 的 id 字符串会被直接画在标题栏正中间当作标题",
+        "窗口 title 属性本身就会画在标题栏正中，不必再挂 title-widget",
+        "style.css 里用 content 属性写进去的文字会覆盖标题栏原有内容",
+        "HeaderBar 的 title-widget，也就是那个 Label"
       ],
-      "answer": 2,
+      "answer": 3,
       "explanation": "title 是任务栏名字。标题栏中间那几个字是 Label。CSS 只负责颜色，不负责写标题。",
       "source_refs": [
         {
@@ -115,12 +115,12 @@
       "kind": "考点",
       "stem": "为什么界面文件版和代码版可以同时开着？",
       "choices": [
-        "因为两份用了同一个应用 id",
-        "因为都标了 NON_UNIQUE，再启动一次就再开一扇",
-        "因为 blp 和 C++ 会自动合并成一个进程",
-        "因为这一章还没有棋盘，窗口不受单实例限制"
+        "两份程序复用了完全相同的应用 id，所以第二次启动必然再开一扇",
+        "blp 与 C++ 会在运行时自动合并成一个进程，单实例限制因此失效",
+        "还没有棋盘，所以单实例限制暂时不生效，两扇窗口可以并存",
+        "都标了 NON_UNIQUE，再启动一次就再开一扇"
       ],
-      "answer": 1,
+      "answer": 3,
       "explanation": "两份 id 不同，并且都标 NON_UNIQUE。默认的单实例会把第二次启动交回已经开着的那份。",
       "source_refs": [
         {

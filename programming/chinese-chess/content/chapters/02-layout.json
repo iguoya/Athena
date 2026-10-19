@@ -67,10 +67,10 @@
       "kind": "重点",
       "stem": "棋盘占满左边、侧栏保持 260 像素宽，这两件事写在哪里？",
       "choices": [
-        "写在 window.blp：board_slot 设 hexpand，侧栏设 width-request 260",
-        "写在 style.css 的窗口宽度里",
-        "只能在 C++ 里 set_size_request，blp 排不了横向盒子",
-        "由 Wood 的涂色决定，盒子不参与"
+        "写在 window.blp：棋盘 hexpand，侧栏 width-request 260",
+        "写在 style.css 的窗口最小宽度规则里，跟 blp 无关",
+        "只能在 C++ 里 set_size_request，blp 排不了横盒",
+        "由 Wood 涂色逻辑顺便决定，盒子本身不参与"
       ],
       "answer": 0,
       "explanation": "横向盒子、撑开和侧栏宽度都是控件树的事，写在 blp。代码版用等价的 append 和 set_size_request 做同一件事。",
@@ -88,10 +88,10 @@
       "kind": "重点",
       "stem": "侧栏的浅纸色和「黑方 / 红方」的粗体写在哪里？",
       "choices": [
-        "写在每个 Label 的构造函数里",
-        "写在 style.css 的 .side 和 .player 上",
-        "写在 window.blp 的 label 文字旁边，用十六进制颜色",
-        "由 Wood 的木色自动带出来"
+        "写在每个 Label 构造时传入的内联属性里",
+        "写在 style.css 的 .side 与 .player 选择器上",
+        "写在 window.blp 标签旁，直接填十六进制颜色",
+        "由 Wood 组件的木色自动传导到侧栏文字"
       ],
       "answer": 1,
       "explanation": "控件只挂样式类。颜色和字号在 style.css。代码版用同一套类名，样式放在 C++ 字符串里。",
@@ -109,10 +109,10 @@
       "kind": "难点",
       "stem": "为什么木色棋盘不写进 window.blp？",
       "choices": [
-        "因为 blp 不能放盒子",
-        "因为 DrawingArea 的绘制要在 C++ 里，界面文件只留出 board_slot",
-        "因为木色必须用 CSS 画，不能用控件",
-        "因为这一章还没有侧栏"
+        "因为 Blueprint 语法不允许在窗口里放置任何盒子或占位控件，所以只能空着",
+        "DrawingArea 绘制在 C++，界面文件只留 board_slot",
+        "木色只能靠 CSS 背景图铺出来，控件树本身画不出可供挂载的棋盘区域",
+        "这一章还没有侧栏，所以棋盘无处可挂，只能先空着那个 board_slot 占位"
       ],
       "answer": 1,
       "explanation": "界面文件排位置。Wood 怎么涂色是绘制，ui/main.cc 把它放进 board_slot。两个窗口用同一份 wood.hh。",
@@ -130,10 +130,10 @@
       "kind": "考点",
       "stem": "这一章的「新局」和「悔棋」为什么按不了？",
       "choices": [
-        "因为窗口还没有标题栏",
-        "因为按钮标了 sensitive: false，只占位置",
-        "因为侧栏宽 260 像素，按钮被挤出窗口",
-        "因为 Wood 挡住了点击"
+        "窗口还缺少 HeaderBar，按钮事件到不了",
+        "按钮标了 sensitive: false，这一章只占位置",
+        "侧栏固定 260 像素，把按钮挤出了可见区",
+        "Wood 绘制层盖住了按钮，点击被吃掉"
       ],
       "answer": 1,
       "explanation": "界面文件版在 blp 里写 sensitive: false。代码版调用 set_sensitive(false)。走子留到第 5 章。",
