@@ -102,6 +102,10 @@ def check_content() -> None:
     sources = json.loads((PROJECT_ROOT / "content" / "sources.json").read_text(encoding="utf-8"))
     source_ids = {item["id"] for item in sources.get("sources", [])}
     rust = (PROJECT_ROOT / "src-tauri" / "src" / "lib.rs").read_text(encoding="utf-8")
+    # 防猜题捷径：全课答案位置不能扎堆，正确项也不能总是最长的那个（2026-10-19 审查时
+    # 29 题里 20 题答案在第 2 位、26 题正确项最长，不看题干也能蒙对）
+    answer_counts: dict[int, int] = {}
+    longest_hits = longest_total = 0
     for section, chapter in zip(sections, CHAPTERS, strict=True):
         sid = section.get("id", "")
         if not sid.startswith(PREFIX):
@@ -120,8 +124,10 @@ def check_content() -> None:
         if not any(item.get("role") == "focus" for item in parts):
             raise SystemExit(f"{path.name} 缺少重点讲解")
         for item in parts:
-            if item.get("role") not in ("focus", "advanced"):
-                raise SystemExit(f"{path.name} 的讲解节 role 只能是 focus 或 advanced")
+            if item.get("role") not in ("focus", "advanced", "experiment"):
+                raise SystemExit(f"{path.name} 的讲解节 role 只能是 focus、advanced 或 experiment")
+            if item.get("role") == "experiment" and not all(item.get(k) for k in ("heading", "body", "predict", "observe")):
+                raise SystemExit(f"{path.name} 的试一试要写全做什么（body）、先猜什么（predict）、实测结果（observe）")
             figure = item.get("figure")
             if figure is not None and figure.get("kind") not in ("cube", "bars"):
                 raise SystemExit(f"{path.name} 的讲解图种类只能是 cube 或 bars")
@@ -151,6 +157,12 @@ def check_content() -> None:
             raise SystemExit(f"{path.name} 没有题目")
         seen: set[str] = set()
         for question in questions:
+            for slot in ("figure", "reveal"):
+                visual = question.get(slot)
+                if visual is not None and (visual.get("kind") != "cube" or not (visual.get("title") and visual.get("caption"))):
+                    raise SystemExit(f"{path.name} 题 {question.get('id')} 的 {slot} 只能是带标题和说明的魔方图")
+                if slot == "figure" and visual is not None and visual.get("moves"):
+                    raise SystemExit(f"{path.name} 题 {question.get('id')} 的题干图不能带 moves（会把答案摆在题干里），回放放进 reveal")
             qid = question.get("id", "")
             if not qid.startswith(PREFIX) or qid in seen:
                 raise SystemExit(f"{path.name} 的题目 id 不合法：{qid!r}")
@@ -162,6 +174,12 @@ def check_content() -> None:
                 raise SystemExit(f"{qid} 的 answer 不是有效的选项序号")
             if not question.get("explanation"):
                 raise SystemExit(f"{qid} 缺解析")
+            for choice in choices:
+                if "（" in choice or "(" in choice:
+                    raise SystemExit(f"{qid} 的选项里有括号注释：{choice!r}。常见错误写进解析，不写进选项")
+            answer_counts[question["answer"]] = answer_counts.get(question["answer"], 0) + 1
+            longest_total += 1
+            longest_hits += all(len(choices[question["answer"]]) > len(c) for i, c in enumerate(choices) if i != question["answer"])
             refs = question.get("source_refs") or []
             if not refs:
                 raise SystemExit(f"{qid} 缺 source_refs")
@@ -181,6 +199,16 @@ def check_content() -> None:
         for rel in files:
             if not (PROJECT_ROOT / rel).is_file():
                 raise SystemExit(f"{path.name} 列出的文件不存在：{rel}")
+    _guess_shortcuts(answer_counts, longest_hits, longest_total)
+
+
+def _guess_shortcuts(answer_counts: dict[int, int], longest_hits: int, longest_total: int) -> None:
+    total = sum(answer_counts.values())
+    for position, count in sorted(answer_counts.items()):
+        if total >= 20 and count / total > 0.4:
+            raise SystemExit(f"全课 {total} 题里有 {count} 题答案在第 {position + 1} 个选项，位置太集中，重排选项")
+    if total >= 20 and longest_hits / longest_total > 0.5:
+        raise SystemExit(f"全课 {longest_total} 题里有 {longest_hits} 题的正确项独占最长（并列不算），补长干扰项或缩短正确项")
 
 
 def check_exercises() -> None:

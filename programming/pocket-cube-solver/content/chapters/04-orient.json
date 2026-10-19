@@ -60,6 +60,20 @@
       "body": "人看一眼就知道「这种情形该转几下 U，再用哪个公式」。程序不写这张分支表：〔重点〕把 U、U'、U2、Sune、反 Sune 都包成「宏」，每个宏的代价是它的转动数，用最短路搜索找到总步数最少的组合。〔〕\n\n〔难点〕搜索的状态是整个魔方，但能到达的只有几千种，一眨眼就搜完。2 万个随机打乱里，阶段 2 平均 12.5 步，最长 16 步，最多用 2 次公式。〔〕"
     },
     {
+      "role": "experiment",
+      "heading": "试一试：把 Sune 的第四步多加一个撇",
+      "body": "在 workspace/04-orient/solver.cc 的 sune() 里，把 parse(\"R U R' U R U2 R'\") 改成 parse(\"R U R' U' R U2 R'\")（第四步 U 改成 U'）。保存后点本章的运行按钮编译一次，再在 workspace/04-orient/ 下运行 「meson test -C build -v」，看哪一条检查红了。",
+      "predict": "先猜：改坏的「Sune」还对第一层手下留情吗？反 Sune 还能不能把它抵消？",
+      "observe": "实测：随机状态的两阶段统计仍然打印，但公式性质的断言失败：第一层被碰坏、Sune 与反 Sune 不再互逆、朝向计数也不对。一个撇之差，就不再是只翻顶面朝向的宏。"
+    },
+    {
+      "role": "experiment",
+      "heading": "试一试：把顶面完成条件改成看底面",
+      "body": "在 workspace/04-orient/solver.cc 的 top_oriented 里，把比较的 Face::U 改成 Face::D（注释也可改成「故意改成看底面白」）。保存后点本章的运行按钮编译一次，再在 workspace/04-orient/ 下运行 「meson test -C build -v」，看哪一条检查红了。",
+      "predict": "先猜：宏搜索还会不会宣告「翻顶面完成」？会卡在什么错误上？",
+      "observe": "实测：cube-test 中止，抛出「宏步骤找不到解：状态不在这个阶段的范围里」。目标改成看底面，顶面全黄永远满足不了它，搜索只会走投无路。"
+    },
+    {
       "role": "advanced",
       "heading": "为什么公式不动第一层",
       "body": "没有简单的一句话解释：R U R' 这样的一小段会动到底层，整串合在一起才恰好抵消。公式是魔方圈里流传的，程序不依赖这个解释，依赖的是测试：cube_test.cc 对复原态做一次 Sune，断言 layer_done 仍然成立；再用反 Sune 做回去，断言复原。\n\n公式的可靠来自验证，不来自记忆。后面两个换位公式同样如此。"
@@ -71,19 +85,19 @@
       "kind": "重点",
       "stem": "公式 Sune 对魔方做了什么？",
       "choices": [
-        "把整个魔方复原",
-        "不动第一层，只改变顶层角块的朝向（顺带挪动位置）",
-        "只交换顶层两个角块的位置，不改朝向",
-        "只转顶层，其余都不变"
+        "不动第一层，只改变顶层角块的朝向，并顺带挪动它们的位置",
+        "把当前打乱的整个魔方一次性全部恢复到复原态",
+        "只交换顶层两个角的位置，完全不改任何角的朝向",
+        "只空转顶层一圈，其它所有贴纸的颜色都保持不动"
       ],
-      "answer": 1,
-      "explanation": "作用的结果是顶层朝向变了，第一层不受影响。这一点由 cube_test.cc 对复原态做一次 Sune 来断言。",
+      "answer": 0,
+      "explanation": "顶层朝向变、第一层不动；位置会顺带变。cube_test 对复原态做一次即断言此事。「整立方复原」「只换位」「只空转 U」都不是 Sune 的作用。",
       "source_refs": [
         {
           "relation": "authored",
           "source_id": "self-authored",
           "locator": "第 4 章 · Sune",
-          "note": "公式的性质由 cube_test.cc 断言验证，没有现成题，自拟。"
+          "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
         }
       ]
     },
@@ -95,16 +109,16 @@
         "顶层 4 个角块都在原位",
         "U 面的 4 格都是黄色",
         "第一层和顶层都复原",
-        "顶层 4 个角块的朝向之和为 0"
+        "顶层 4 个角块朝向之和为 0"
       ],
       "answer": 1,
-      "explanation": "阶段 2 只要求黄色朝上，不管角块在什么位置。U 面 4 格都是黄，就说明 4 个角块的黄色都朝上了。",
+      "explanation": "阶段 2 只要求黄色朝上，不管位置。U 面四格皆黄即四角黄色都朝上。「都在原位」是阶段 3；「都复原」是最终；「朝向和为 0」不是本章谓词。",
       "source_refs": [
         {
           "relation": "authored",
           "source_id": "self-authored",
           "locator": "第 4 章 · top_oriented",
-          "note": "对应 solver.cc 的 top_oriented，没有现成题，自拟。"
+          "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
         }
       ]
     },
@@ -113,19 +127,19 @@
       "kind": "难点",
       "stem": "为什么阶段 2 不写「遇到这种情形就这样转」的分支，而用最短路搜索？",
       "choices": [
-        "分支表在 C++ 里写不出来",
-        "状态不多，机器按总步数找最短组合就行；手写分支表容易漏情形，也更难验证",
-        "最短路比分支表占内存更少",
-        "因为公式只有两个"
+        "分支表这种多路跳转结构在本课程用的语言里根本写不出来",
+        "最短路搜索占用的内存一定比手写分支表更小，所以必须搜",
+        "状态不多，按总步数搜最短组合即可；手写分支表容易漏情形，也更难验证",
+        "整个阶段从头到尾只用得到一个固定公式，搜索只是多余包装"
       ],
-      "answer": 1,
-      "explanation": "能到达的状态只有几千种。搜索对任何情形都有效，测试只要确认「随机打乱都能做完」，不用逐个情形核对。",
+      "answer": 2,
+      "explanation": "可达状态只有几千。搜索通吃一切情形；测试确认随机打乱能做完即可。不是语言写不出分支，也不是内存必然更小，更不是「只用一个公式」。",
       "source_refs": [
         {
           "relation": "authored",
           "source_id": "self-authored",
           "locator": "第 4 章 · 宏的最短路",
-          "note": "对应 solver.cc 的 shortest，没有现成题，自拟。"
+          "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
         }
       ]
     },
@@ -133,15 +147,92 @@
       "id": "cube.orient.cases",
       "kind": "考点",
       "stem": "顶层朝向还没完成的情形一共 7 种（转 U 算同一种）。其中恰好有 1 个黄色朝上的有几种？",
-      "choices": ["1 种", "2 种", "3 种", "4 种"],
-      "answer": 1,
-      "explanation": "0 个朝上的 2 种、1 个朝上的 2 种（Sune 和反 Sune 各一种）、2 个朝上的 3 种，合计 7 种。",
+      "choices": ["1 种", "3 种", "4 种", "2 种"],
+      "answer": 3,
+      "explanation": "0 黄 2 种、1 黄 2 种（Sune/反 Sune 各一）、2 黄 3 种，共 7。其余数字是把某一档情形数记串了。",
       "source_refs": [
         {
           "relation": "authored",
           "source_id": "self-authored",
           "locator": "第 4 章 · 七种情形",
-          "note": "数量由枚举顶层 27 种合法朝向并按 U 转动归类得到，没有现成题，自拟。"
+          "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.orient.predict-sune",
+      "kind": "重点",
+      "stem": "从复原态做一次 Sune（R U R' U R U2 R'）后，U 面有几格黄色？layer_done 是否仍为真？",
+      "choices": [
+        "1 格黄，且 layer_done 为真",
+        "0 格黄，且 layer_done 为假",
+        "2 格黄，且 layer_done 为真",
+        "4 格黄，且 layer_done 为真"
+      ],
+      "answer": 0,
+      "explanation": "实算 U 面只剩 1 黄；Sune 不动第一层，故 layer_done 仍真。0/2/4 黄是把七种情形里的其它档记到了这次操作上。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 4 章 · Sune",
+          "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+        }
+      ],
+      "figure": {
+        "kind": "cube",
+        "title": "起点",
+        "caption": "复原态",
+        "setup": ""
+      },
+      "reveal": {
+        "kind": "cube",
+        "title": "走一遍",
+        "caption": "一次 Sune",
+        "setup": "",
+        "moves": "R U R' U R U2 R'",
+        "expect": "layer"
+      }
+    },
+    {
+      "id": "cube.orient.disc-sune-antisune",
+      "kind": "难点",
+      "stem": "Sune 与反 Sune 最容易混在哪一点？",
+      "choices": [
+        "二者转法序列完全相同，只是中文名字不同而已",
+        "二者互为逆：一个拧朝向，另一个沿反方向拧回去",
+        "二者都会拆掉第一层，差别只在拆开底层的方向相反",
+        "二者只交换顶层角的位置，完全不碰任何角的朝向"
+      ],
+      "answer": 1,
+      "explanation": "反 Sune 是 Sune 的逆。讲解用「Sune 再反 Sune」回到复原来验证。同序列异名、拆第一层、只换位，都是把二者关系记错了。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 4 章 · Sune 与反 Sune",
+          "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+        }
+      ]
+    },
+    {
+      "id": "cube.orient.recall-layer-done",
+      "kind": "要点",
+      "stem": "要用「对复原态做一次 Sune 后断言第一层仍完成」来验收公式，需要先掌握前面哪一章的概念？",
+      "choices": [
+        "第 7 章距离表里的一列字段：专门用来标记第一层是否已经完成",
+        "第 2 章的动画队列机制：finish 回调里会自动把底层四角恢复",
+        "第 3 章的 layer_done：它定义了「第一层完成」到底检查哪些角",
+        "第 5 章的换位公式性质：换位之后 layer_done 会顺带被重新置位"
+      ],
+      "answer": 2,
+      "explanation": "完成条件来自第 3 章 layer_done；测试直接复用该谓词，不靠口诀。距离表、动画队列、换位公式都不是这条断言所依赖的前置概念。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · layer_done；第 4 章测试",
+          "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
         }
       ]
     }

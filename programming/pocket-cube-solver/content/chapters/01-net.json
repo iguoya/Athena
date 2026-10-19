@@ -72,16 +72,16 @@
         "24 张；8 个角块，每个角块上 3 张",
         "24 张；6 个角块，每个角块上 4 张",
         "48 张；8 个角块，每个角块上 6 张",
-        "12 张；每个面只有 2 张"
+        "12 张；4 个角块，每个角块上 3 张"
       ],
       "answer": 0,
-      "explanation": "6 个面 × 每面 4 格 = 24；同样的 24 张也可以按角块数：8 × 3。每张贴纸既属于一个面，也属于一个角块。",
+      "explanation": "6 面 × 每面 4 格 = 24；也可按角块：8 × 3。「6 个角块」把角块数记成了面数；「48 张」是把每面当成了 3×3；「12 张 / 4 角」则少算了半个立方。",
       "source_refs": [
         {
           "relation": "authored",
           "source_id": "wikipedia-pocket-cube",
-          "locator": "结构：8 个角块，没有中心块",
-          "note": "条目只给出 8 个角块、没有中心块；24 张贴纸是本章按 2×2×6 数出来的，没有现成中文题，自拟。"
+          "locator": "结构与位置数",
+          "note": "条目只给出结构/位置数要点；本题按本课程讲解自拟，没有现成中文题。"
         }
       ]
     },
@@ -89,15 +89,15 @@
       "id": "cube.net.index",
       "kind": "重点",
       "stem": "展开图里第 13 号贴纸（从 0 数）属于哪个面？",
-      "choices": ["U 面", "R 面", "F 面", "D 面"],
-      "answer": 3,
-      "explanation": "13 ÷ 4 = 3，余数 1。面的顺序是 U R F D L B，3 号是 D。",
+      "choices": ["U 面", "D 面", "R 面", "F 面"],
+      "answer": 1,
+      "explanation": "13 ÷ 4 = 3 余 1。面序 U R F D L B，下标 3 是 D。选 U/R/F 多半是把余数或面序起点记错了。",
       "source_refs": [
         {
           "relation": "authored",
           "source_id": "self-authored",
           "locator": "第 1 章 · 贴纸编号",
-          "note": "编号规则是本课程自己定的（cube.hh 的注释），没有现成题，按它自拟。"
+          "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
         }
       ]
     },
@@ -107,13 +107,13 @@
       "stem": "复原态下，哪一种颜色组合不可能出现在同一个角块上？",
       "choices": ["黄、绿、橙", "白、蓝、红", "黄、白、绿", "白、绿、橙"],
       "answer": 2,
-      "explanation": "黄和白是对面，一个角块只碰到三个两两相邻的面，不会同时碰到相对的两个面，所以黄和白不会同在一个角块上。",
+      "explanation": "黄白是对面，角块碰不到一对相对面。其余三项都是三个两两相邻的面，可以同角。",
       "source_refs": [
         {
           "relation": "authored",
           "source_id": "wikipedia-rubiks-cube",
-          "locator": "标准配色：白对黄、蓝对绿、橙对红",
-          "note": "对面配对来自条目；「角块碰不到相对的面」是几何事实，题目自拟。"
+          "locator": "标准配色",
+          "note": "对面配对来自条目；题目按本课程姿势自拟。"
         }
       ]
     },
@@ -122,21 +122,50 @@
       "kind": "考点",
       "stem": "NetView 为什么不自己判断「点的这格属于哪个角块」？",
       "choices": [
-        "因为 Cairo 做不了这种计算",
-        "因为角块的含义属于魔方本身，放在 cube 里；视图只负责画和报告点了哪一格",
-        "因为信号不能带参数",
-        "因为角块表太长，放不进视图"
+        "角块对照表应由视图缓存，点格时直接在 NetView 里查完",
+        "信号机制一次只能传像素坐标，没法再把角块编号带回去",
+        "Session 只做接线，所有角块语义都必须压进自绘控件内部",
+        "角块含义属于魔方本身，放在 cube；视图只负责画和报告点了哪一格"
       ],
-      "answer": 1,
-      "explanation": "数据在 cube，画在 NetView，接线在 Session。以后魔方的表示再变，视图不用改。",
+      "answer": 3,
+      "explanation": "数据在 cube，画在 NetView，接线在 Session。把对照表塞进视图、或以为信号带不了 slot、或把语义全塞进控件，都会把职责划乱。",
       "source_refs": [
         {
           "relation": "authored",
           "source_id": "self-authored",
           "locator": "第 1 章 · 职责划分",
-          "note": "对应本章职责表和时序图，没有现成题，自拟。"
+          "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
         }
       ]
+    },
+    {
+      "id": "cube.net.predict-ruprime",
+      "kind": "重点",
+      "stem": "从复原态做 R U' R'，U 面左上那一格（展开图 U 面第 0 格）是什么颜色？",
+      "choices": ["绿色", "黄色", "橙色", "白色"],
+      "answer": 0,
+      "explanation": "R 把 UFR 的绿转到 U，U' 再把它转到 U 面左上（slot 0）。实算为绿。黄是复原态原色；橙/白是把别的面贴纸误当成了终点。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 1 章展开图；第 2 章转动",
+          "note": "对应本章讲解与程序中的真实函数/性质，没有现成题，自拟。"
+        }
+      ],
+      "figure": {
+        "kind": "cube",
+        "title": "起点",
+        "caption": "复原态",
+        "setup": ""
+      },
+      "reveal": {
+        "kind": "cube",
+        "title": "走一遍",
+        "caption": "R 然后 U' 然后 R'",
+        "setup": "",
+        "moves": "R U' R'"
+      }
     }
   ],
   "runs": [{ "id": "01-net", "label": "打开本章程序", "primary": true }],
