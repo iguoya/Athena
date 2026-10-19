@@ -25,6 +25,7 @@ import os
 import re
 import shutil
 import subprocess
+import tempfile
 import sys
 from pathlib import Path
 
@@ -530,10 +531,13 @@ def check_po_gnu() -> None:
         path = PROJECT_ROOT / name
         if not path.is_file():
             continue
-        result = subprocess.run(
-            [msgfmt, "-c", "--statistics", "-o", os.devnull, str(path)],
-            capture_output=True, text=True,
-        )
+        # 输出写进临时目录：Windows 的 MSYS msgfmt 不认 os.devnull（"nul"），会在当前目录
+        # 真建一个叫 nul 的文件（2026-10-19 在 guide/gtkmm 下留了一份 .mo 二进制）。
+        with tempfile.TemporaryDirectory() as scratch:
+            result = subprocess.run(
+                [msgfmt, "-c", "--statistics", "-o", str(Path(scratch) / "check.mo"), str(path)],
+                capture_output=True, text=True,
+            )
         output = (result.stderr or result.stdout or "").strip().splitlines()
         stats = output[-1] if output else ""
         if result.returncode != 0:
