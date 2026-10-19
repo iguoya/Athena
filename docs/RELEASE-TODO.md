@@ -9,7 +9,7 @@
 - [x] （2026-10-19）`pocket-cube-solver` 已加进 `release.yml` 的 Tauri 矩阵，下一版首发；本机 `--full` 与 `--native` 都绿，CI 的三平台检查也绿（run 39186902938）；安装包作业要等下一次打 tag 才会跑。
 - [x] （2026-10-19，ADR 0170）启动器 `launcher/webui` 与旧版 `practice/pocket_cube` 不进发布矩阵：前者依赖仓库与开发工具链、不是可独立安装的应用，后者已定为供参考、不再做。
 - [ ] `programming/machine`：等 ADR 0008 的 Tauri 迁移完成后走 `tauri-apps` 矩阵，不给 Qt 壳补作业（ADR 0170 第 3 条；Qt 三平台打包草稿已存档，未上 CI）。
-- [ ] `practice/c-gui-lab`：只做 Windows 一档。前置两件事：`third_party/` 可复现（现被 gitignore，CI 拉不到）、`launcher/main.js` 适配安装布局；然后接 `comms/release-next/artifacts/cursor/c-gui-lab-release.yml`（ADR 0170 第 4 条）。
+- [ ] `practice/c-gui-lab`：只做 Windows 一档。`third_party/` 可复现已完成（`scripts/fetch-third-party.py` + `third_party.lock.json` + `patches/`，CI 的 `c-gui-lab-native` 首跑全绿，run 39224040285，七个原生程序都编得出来）。还剩：`launcher/main.js` 适配安装布局（现在写死 `build/apps/*.exe` 与 `C:/msys64/ucrt64/bin`）、运行时 DLL 收集，然后接 `comms/release-next/artifacts/cursor/c-gui-lab-release.yml`，把里面的「Require vendored third_party」步骤换成 fetch 脚本。release.yml 只在打 tag 时跑、没法单独触发，建议先把安装包这一步搬进 ci.yml 验证能出，再进 release.yml（ADR 0170 第 4 条）。
 - [ ] `edge-ai` 和所有 `lifecycle: archived` 的空壳，等有真实内容再按同一标准加入。不要单独开名单。
 
 ## 驾考
