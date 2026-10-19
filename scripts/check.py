@@ -683,6 +683,36 @@ def run_structure_check() -> None:
                             "同步拉回的旧记录 id 更大，改按 answered_at（同秒再按 id）"
                         )
 
+    # 12. ci.yml 作业的选择条件自洽：每个按 inputs.app 过滤的作业，`if` 的名单必须含
+    #     "all"，且和它矩阵里 all 展开的名单一致。10.0.0 的 tauri 作业 `if` 缺 "all"，
+    #     全量跑时 36 个应用整组被跳过，一直没人发现；矩阵加了应用而 `if` 没加，
+    #     单跑那个应用也会被跳过。这两种只在 CI 上暴露，所以在这里静态对账。
+    job_blocks = re.split(r"^  ([A-Za-z0-9_-]+):\s*$", ci_text.split("\njobs:\n", 1)[-1], flags=re.MULTILINE)
+    for job, body in zip(job_blocks[1::2], job_blocks[2::2]):
+        gate = re.search(r"contains\(fromJSON\('(\[[^']*\])'\),\s*inputs\.app \|\| 'all'\)", body)
+        if not gate:
+            continue
+        gate_names = set(_json.loads(gate.group(1)))
+        if "all" not in gate_names:
+            problems.append(f'  ci.yml 作业 {job} 的 if 名单缺 "all"——全量跑时整个作业会被跳过')
+        matrix = re.search(r"== 'all' && '(\[[^']*\])' \|\|", body)
+        if matrix:
+            matrix_names = set(_json.loads(matrix.group(1)))
+            if gate_names - {"all"} != matrix_names:
+                diff = sorted((gate_names - {"all"}) ^ matrix_names)
+                problems.append(f"  ci.yml 作业 {job} 的 if 名单与矩阵 all 展开不一致：{'、'.join(diff)}")
+
+    # 13. Tauri 构建钩子必须走 pnpm：工作区统一用 pnpm（ADR 0135、0140），写成
+    #     npm run 的应用在装不上 npm 依赖的 CI 上才会失败（地球应用就是这样漏到发版）。
+    for conf in sorted(REPO_ROOT.glob("*/*/src-tauri/tauri.conf.json")):
+        if "node_modules" in conf.parts or "archive" in conf.parts:
+            continue
+        build = _json.loads(conf.read_text(encoding="utf-8")).get("build", {})
+        for hook in ("beforeDevCommand", "beforeBuildCommand"):
+            command = build.get(hook)
+            if isinstance(command, str) and command.split()[:1] in (["npm"], ["yarn"], ["npx"]):
+                problems.append(f"  {conf.relative_to(REPO_ROOT)} 的 {hook} 是 {command!r}，改用 pnpm")
+
     if problems:
         print("\n".join(problems), flush=True)
         raise SystemExit(f"结构卫生没通过（{len(problems)} 处），见上方。")
