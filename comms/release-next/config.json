@@ -2,11 +2,13 @@
   "leader": "claude-code",
   "agents": [
     "claude-code",
-    "cursor"
+    "cursor",
+    "zcode"
   ],
   "bands": {
     "claude-code": 9,
-    "cursor": 0
+    "cursor": 0,
+    "zcode": 1
   },
   "owned": {
     "cursor": [
@@ -20,6 +22,12 @@
       "comms/release-next/artifacts/claude-code",
       ".github/workflows",
       "docs/RELEASE-TODO.md"
+    ],
+    "zcode": [
+      "comms/release-next/artifacts/zcode",
+      "practice/c-gui-lab/launcher",
+      "practice/c-gui-lab/package.json",
+      "practice/c-gui-lab/electron-builder.yml"
     ]
   }
 }
