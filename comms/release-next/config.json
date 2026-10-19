@@ -1,9 +1,25 @@
 {
   "leader": "claude-code",
-  "agents": ["claude-code", "cursor"],
-  "bands": {"claude-code": 9, "cursor": 0},
+  "agents": [
+    "claude-code",
+    "cursor"
+  ],
+  "bands": {
+    "claude-code": 9,
+    "cursor": 0
+  },
   "owned": {
-    "cursor": ["comms/release-next/artifacts/cursor"],
-    "claude-code": ["comms/release-next/tasks", "comms/release-next/artifacts/claude-code", ".github/workflows", "docs/RELEASE-TODO.md"]
+    "cursor": [
+      "comms/release-next/artifacts/cursor",
+      "practice/c-gui-lab/scripts",
+      "practice/c-gui-lab/patches",
+      "practice/c-gui-lab/third_party.lock.json"
+    ],
+    "claude-code": [
+      "comms/release-next/tasks",
+      "comms/release-next/artifacts/claude-code",
+      ".github/workflows",
+      "docs/RELEASE-TODO.md"
+    ]
   }
 }
