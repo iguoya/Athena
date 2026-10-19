@@ -1,5 +1,5 @@
 /**
- * T-010：构建期打包 packages/maps/geo/academic/，按年份筛政区面。
+ * T-010 / T-031：学术政区按需加载（勿 eager 全量），按年份筛面。
  * 字段容错：name / fromYear|beg_yr|beg|from / toYear|end_yr|end|to
  * T-028：点任意一点跨切片 PIP，列历代归属。
  */
@@ -38,17 +38,45 @@ type Fc = {
   }>;
 };
 
-const modules = import.meta.glob(
+/** T-031：懒加载；启动时不解析全部学术 JSON */
+const loaders = import.meta.glob(
   "../../../packages/maps/geo/academic/*.json",
-  { eager: true, import: "default" },
-) as Record<string, Fc>;
+  { import: "default" },
+) as Record<string, () => Promise<Fc>>;
 
 const byFile = new Map<string, Fc>();
-for (const [path, fc] of Object.entries(modules)) {
-  const file = path.replace(/\\/g, "/").split("/").pop();
-  if (!file || file === "index.json") continue;
-  if (fc?.type !== "FeatureCollection") continue;
-  byFile.set(file, fc);
+const inflight = new Map<string, Promise<Fc | null>>();
+
+function loaderKeyForFile(file: string): string | null {
+  for (const path of Object.keys(loaders)) {
+    const base = path.replace(/\\/g, "/").split("/").pop();
+    if (base === file) return path;
+  }
+  return null;
+}
+
+async function loadSliceFile(file: string): Promise<Fc | null> {
+  if (file === "index.json") return null;
+  const hit = byFile.get(file);
+  if (hit) return hit;
+  const pending = inflight.get(file);
+  if (pending) return pending;
+  const key = loaderKeyForFile(file);
+  const loader = key ? loaders[key] : undefined;
+  if (!loader) return null;
+  const p = loader()
+    .then((fc) => {
+      if (fc?.type === "FeatureCollection") {
+        byFile.set(file, fc);
+        return fc;
+      }
+      return null;
+    })
+    .finally(() => {
+      inflight.delete(file);
+    });
+  inflight.set(file, p);
+  return p;
 }
 
 export const academicIndex = indexJson as {
@@ -84,8 +112,7 @@ function featureYears(
   return { from, to };
 }
 
-/** 当前年命中的学术政区（切片级 + 要素级起止年） */
-export function academicAtYear(year: number): Fc {
+function collectAtYear(year: number): Fc {
   const y = Math.round(year);
   const features: Fc["features"] = [];
   for (const slice of academicIndex.slices) {
@@ -120,6 +147,21 @@ export function academicAtYear(year: number): Fc {
   return { type: "FeatureCollection", features };
 }
 
+/** 仅用已缓存切片（可能为空）；优先走 academicAtYearAsync */
+export function academicAtYear(year: number): Fc {
+  return collectAtYear(year);
+}
+
+/** T-031：只拉当前年命中的切片 */
+export async function academicAtYearAsync(year: number): Promise<Fc> {
+  const y = Math.round(year);
+  const needed = academicIndex.slices.filter(
+    (s) => y >= s.fromYear && y <= s.toYear,
+  );
+  await Promise.all(needed.map((s) => loadSliceFile(s.file)));
+  return collectAtYear(y);
+}
+
 /** T-028：历代归属一行（命中或该切片无覆盖） */
 export type BelongingHit = {
   sliceId: string;
@@ -149,8 +191,7 @@ export type BelongingResult = {
   rows: BelongingRow[];
 };
 
-/** 对全部学术切片做点在面内；每切片至多一条命中，无命中写 empty。 */
-export function academicBelongingAt(lon: number, lat: number): BelongingResult {
+function belongingFromCache(lon: number, lat: number): BelongingResult {
   const rows: BelongingRow[] = [];
   for (const slice of academicIndex.slices) {
     const approximate = slice.lineage === "hartwell-v5";
@@ -199,6 +240,22 @@ export function academicBelongingAt(lon: number, lat: number): BelongingResult {
     return ay - by;
   });
   return { lon, lat, rows };
+}
+
+/** 同步：仅已加载切片；未加载的切片会显示 empty */
+export function academicBelongingAt(lon: number, lat: number): BelongingResult {
+  return belongingFromCache(lon, lat);
+}
+
+/** T-028 / T-031：先拉齐全部切片再 PIP */
+export async function academicBelongingAtAsync(
+  lon: number,
+  lat: number,
+): Promise<BelongingResult> {
+  await Promise.all(
+    academicIndex.slices.map((s) => loadSliceFile(s.file)),
+  );
+  return belongingFromCache(lon, lat);
 }
 
 /** 当前年对应的切片行是否应加粗 */

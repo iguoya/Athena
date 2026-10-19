@@ -34,8 +34,8 @@ import landmarksJson from "@content/landmarks.json";
 import { featuresCollection, routesCollection } from "@/content/layer-geo";
 import { CompareMaps } from "@/CompareMaps";
 import {
-  academicAtYear,
-  academicBelongingAt,
+  academicAtYearAsync,
+  academicBelongingAtAsync,
   belongingRowActiveAt,
   type AcademicProps,
   type BelongingResult,
@@ -345,7 +345,58 @@ function arcLineCoords(
   return out;
 }
 
+/** T-025：按进度截取折线（生长动画） */
+function clipLineCoords(
+  coords: [number, number][],
+  t: number,
+): [number, number][] {
+  if (coords.length < 2) return coords;
+  const u = Math.max(0, Math.min(1, t));
+  if (u >= 1) return coords;
+  if (u <= 0) return [coords[0]!];
+  let total = 0;
+  const seg: number[] = [0];
+  for (let i = 1; i < coords.length; i++) {
+    const a = coords[i - 1]!;
+    const b = coords[i]!;
+    total += Math.hypot(b[0] - a[0], b[1] - a[1]);
+    seg.push(total);
+  }
+  if (total <= 0) return [coords[0]!];
+  const target = total * u;
+  const out: [number, number][] = [coords[0]!];
+  for (let i = 1; i < coords.length; i++) {
+    if (seg[i]! < target) {
+      out.push(coords[i]!);
+      continue;
+    }
+    const a = coords[i - 1]!;
+    const b = coords[i]!;
+    const span = seg[i]! - seg[i - 1]!;
+    const f = span > 0 ? (target - seg[i - 1]!) / span : 1;
+    out.push([a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f]);
+    break;
+  }
+  return out;
+}
+
+function usePrefersReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      : false,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = () => setReduced(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return reduced;
+}
+
 export default function App() {
+  const reduceMotion = usePrefersReducedMotion();
   const timelineAll = useMemo(() => chronologicalEvents(atlas.events), []);
   const yearMin = timelineAll[0]?.year ?? -2000;
   const yearMax = timelineAll[timelineAll.length - 1]?.year ?? 2000;
@@ -388,6 +439,13 @@ export default function App() {
   const [academicOpacity, setAcademicOpacity] = useState(1);
   /** T-030：仅在选事件/切轴/故事时取景，纯拖年不抢镜头 */
   const frameKeyRef = useRef<string | null>(null);
+  /** T-031：首绘完成前骨架 */
+  const [mapPaintReady, setMapPaintReady] = useState(false);
+  const mapPaintReadyRef = useRef(false);
+  const bootMsRef = useRef(
+    typeof performance !== "undefined" ? performance.now() : 0,
+  );
+  const firstPaintMsRef = useRef(-1);
   /** 势力名标签随缩放淡出 */
   const [mapZoom, setMapZoom] = useState(CHINA_VIEW.zoom);
   /** T-020：点击疆域 / 学术面卡片 */
@@ -469,10 +527,24 @@ export default function App() {
       : (selected?.year ?? Math.round(year));
 
   /** T-010：包内学术层按年筛选 */
-  const academicData = useMemo(
-    () => academicAtYear(displayYear),
-    [displayYear],
-  );
+  /** T-031：按年按需拉学术切片 */
+  const [academicData, setAcademicData] = useState<{
+    type: "FeatureCollection";
+    features: Array<{
+      type: "Feature";
+      properties?: Record<string, unknown>;
+      geometry: object;
+    }>;
+  }>({ type: "FeatureCollection", features: [] });
+  useEffect(() => {
+    let cancelled = false;
+    void academicAtYearAsync(displayYear).then((fc) => {
+      if (!cancelled) setAcademicData(fc);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [displayYear]);
 
   const era =
     atlas.eras.find((e) => e.id === selected?.eraId) ??
@@ -1235,11 +1307,12 @@ export default function App() {
           title: string;
           travel?: TravelEstimate;
         }>,
+        fullFeatures: [] as Fc["features"],
       };
     }
     const from = placeById(selected.placeId);
     if (!from) {
-      return { lines: null, labels: [] };
+      return { lines: null, labels: [], fullFeatures: [] };
     }
     const features: Fc["features"] = [];
     const labels: Array<{
@@ -1287,8 +1360,100 @@ export default function App() {
         ? { type: "FeatureCollection" as const, features }
         : null,
       labels,
+      fullFeatures: features,
     };
   }, [selected]);
+
+  /** T-025：影响链生长 0→1 */
+  const [leadsGrow, setLeadsGrow] = useState(1);
+  useEffect(() => {
+    if (reduceMotion || !leadsToArcs.fullFeatures?.length) {
+      setLeadsGrow(1);
+      return;
+    }
+    setLeadsGrow(0);
+    let raf = 0;
+    const t0 = performance.now();
+    const dur = 900;
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - t0) / dur);
+      setLeadsGrow(p);
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [selected?.id, reduceMotion, leadsToArcs.fullFeatures?.length]);
+
+  const leadsFlowData = useMemo(() => {
+    if (!leadsToArcs.fullFeatures?.length) return null;
+    const features = leadsToArcs.fullFeatures.map((f) => {
+      const geom = f.geometry as {
+        type: string;
+        coordinates: [number, number][];
+      };
+      const coords = geom.coordinates;
+      return {
+        ...f,
+        geometry: {
+          type: "LineString" as const,
+          coordinates: clipLineCoords(coords, leadsGrow),
+        },
+      };
+    });
+    return { type: "FeatureCollection" as const, features };
+  }, [leadsToArcs.fullFeatures, leadsGrow]);
+
+  /** T-025：运河 / 路线 / 弧线虚线流动 */
+  useEffect(() => {
+    if (reduceMotion || !mapPaintReady) return;
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+    let raf = 0;
+    let last = performance.now();
+    let phase = 0;
+    const layers = [
+      "hydro-canal",
+      "march-route-line",
+      "leads-arc-line",
+      "legacy-route-line",
+    ];
+    const tick = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      /** 播放时稍快，静止浏览也缓缓流 */
+      phase = (phase + dt * (playing ? 2.2 : 0.9)) % 3;
+      const dash = 1.6;
+      const gap = 1.4;
+      const a = Math.max(0.15, (phase % (dash + gap)) );
+      for (const id of layers) {
+        if (!map.getLayer(id)) continue;
+        try {
+          map.setPaintProperty(id, "line-dasharray", [
+            a,
+            gap,
+            dash,
+            gap,
+          ]);
+        } catch {
+          /* 图层表达式冲突时跳过 */
+        }
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      if (reduceMotion) return;
+      for (const id of layers) {
+        if (!map.getLayer(id)) continue;
+        try {
+          map.setPaintProperty(id, "line-dasharray", [1.6, 1.4]);
+        } catch {
+          /* ignore */
+        }
+      }
+    };
+  }, [reduceMotion, mapPaintReady, playing]);
 
   /** T-029：当前事件绑定的行军线通行估算 */
   const selectedRouteCosts = useMemo(() => {
@@ -1387,7 +1552,10 @@ export default function App() {
       queryBelonging: (
         lon: number,
         lat: number,
-      ) => { hits: number; empty: number };
+      ) => { hits: number; empty: number; pending?: boolean };
+      /** T-031：首绘是否完成 */
+      mapPaintReady: () => boolean;
+      bootMs: () => number;
       /** T-029 */
       estimateTravel: (
         lon1: number,
@@ -1491,17 +1659,17 @@ export default function App() {
         if (i >= 0) setIndex(i);
         return true;
       },
-      /** T-028 */
+      /** T-028 / T-031：异步拉齐切片 */
       queryBelonging: (lon: number, lat: number) => {
-        const r = academicBelongingAt(lon, lat);
-        setBelonging(r);
         setFocusPlaceId(null);
         setDrawerRight(true);
-        return {
-          hits: r.rows.filter((x) => x.kind === "hit").length,
-          empty: r.rows.filter((x) => x.kind === "empty").length,
-        };
+        void academicBelongingAtAsync(lon, lat).then((r) => {
+          setBelonging(r);
+        });
+        return { hits: -1, empty: -1, pending: true };
       },
+      mapPaintReady: () => mapPaintReadyRef.current,
+      bootMs: () => firstPaintMsRef.current,
       /** T-029 */
       estimateTravel: (lon1, lat1, lon2, lat2) =>
         estimateTravel(haversineKm(lon1, lat1, lon2, lat2)),
@@ -1713,7 +1881,7 @@ export default function App() {
   function flyPlace(place: Place) {
     setStoryId(null);
     setFocusPlaceId(place.id);
-    setBelonging(academicBelongingAt(place.lon, place.lat));
+    void academicBelongingAtAsync(place.lon, place.lat).then(setBelonging);
     setDrawerRight(true);
     setQuery("");
     mapRef.current?.flyTo({
@@ -1734,10 +1902,21 @@ export default function App() {
 
   const focusPlace = focusPlaceId ? placeById(focusPlaceId) : null;
   const panelPlace = selected ? placeById(selected.placeId) : focusPlace;
-  /** T-028：地点剖面的历代归属（同坐标） */
-  const placeBelonging = useMemo(() => {
-    if (!focusPlace) return null;
-    return academicBelongingAt(focusPlace.lon, focusPlace.lat);
+  /** T-028 / T-031：地点剖面历代归属（异步拉切片） */
+  const [placeBelonging, setPlaceBelonging] =
+    useState<BelongingResult | null>(null);
+  useEffect(() => {
+    if (!focusPlace) {
+      setPlaceBelonging(null);
+      return;
+    }
+    let cancelled = false;
+    void academicBelongingAtAsync(focusPlace.lon, focusPlace.lat).then((r) => {
+      if (!cancelled) setPlaceBelonging(r);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [focusPlace]);
 
   return (
@@ -2313,6 +2492,19 @@ export default function App() {
             />
           )}
           <div ref={mapBoxRef} className="absolute inset-0">
+          {!mapPaintReady && (
+            <div
+              className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-[color-mix(in_srgb,var(--color-page,#f3ead8)_88%,transparent)] transition-opacity duration-500"
+              aria-busy
+              aria-label="地图载入中"
+            >
+              <div className="h-px w-40 bg-line/80" />
+              <p className="text-xs tracking-[0.35em] text-muted">
+                铺陈海陆与疆域…
+              </p>
+              <div className="h-px w-24 bg-line/60" />
+            </div>
+          )}
           <MapGl
             ref={mapRef}
             initialViewState={CHINA_VIEW}
@@ -2329,7 +2521,36 @@ export default function App() {
             onLoad={() => {
               const m = mapRef.current?.getMap();
               m?.resize();
-              if (m) setMapZoom(m.getZoom());
+              if (!m) return;
+              setMapZoom(m.getZoom());
+              /** T-031：idle 且陆地已绘再揭骨架 */
+              const markReady = () => {
+                if (mapPaintReadyRef.current) return;
+                if (typeof document !== "undefined" && document.hidden) return;
+                try {
+                  const ids = ["land-fill"].filter((id) => m.getLayer(id));
+                  if (!ids.length) return;
+                  const n = m.queryRenderedFeatures({ layers: ids }).length;
+                  if (n <= 0) return;
+                } catch {
+                  return;
+                }
+                mapPaintReadyRef.current = true;
+                firstPaintMsRef.current = Math.round(
+                  performance.now() - bootMsRef.current,
+                );
+                setMapPaintReady(true);
+                m.off("idle", markReady);
+              };
+              m.on("idle", markReady);
+              window.setTimeout(() => {
+                if (mapPaintReadyRef.current) return;
+                mapPaintReadyRef.current = true;
+                firstPaintMsRef.current = Math.round(
+                  performance.now() - bootMsRef.current,
+                );
+                setMapPaintReady(true);
+              }, 8000);
             }}
             onMove={(e) => setMapZoom(e.viewState.zoom)}
             onMouseMove={(e) => {
@@ -2435,7 +2656,7 @@ export default function App() {
               setPowerBrowse(null);
               setFocusPlaceId(null);
               const { lng, lat } = e.lngLat;
-              setBelonging(academicBelongingAt(lng, lat));
+              void academicBelongingAtAsync(lng, lat).then(setBelonging);
               setDrawerRight(true);
             }}
           >
@@ -2870,6 +3091,7 @@ export default function App() {
                       2.4,
                     ],
                     "line-opacity": 0.88,
+                    "line-dasharray": reduceMotion ? [1, 0] : [1.6, 1.4],
                   }}
                 />
               </Source>
@@ -2921,8 +3143,8 @@ export default function App() {
                 </button>
               </Marker>
             ))}
-            {leadsToArcs.lines && (
-              <Source id="leads-arc" type="geojson" data={leadsToArcs.lines}>
+            {leadsFlowData && (
+              <Source id="leads-arc" type="geojson" data={leadsFlowData}>
                 <Layer
                   id="leads-arc-line"
                   type="line"
@@ -2930,12 +3152,13 @@ export default function App() {
                     "line-color": MAP_TOKENS.era,
                     "line-width": 2.4,
                     "line-opacity": 0.85,
-                    "line-dasharray": [1.2, 1.4],
+                    "line-dasharray": reduceMotion ? [1, 0] : [1.2, 1.4],
                   }}
                 />
               </Source>
             )}
-            {leadsToArcs.labels.map((lb) => (
+            {leadsGrow >= 0.55 &&
+              leadsToArcs.labels.map((lb) => (
               <Marker
                 key={`lead-${lb.eventId}-${lb.year}`}
                 longitude={lb.lon}
