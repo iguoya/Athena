@@ -45,5 +45,5 @@
 ## 2026-10-19 加的防再发措施
 
 - `scripts/check.py` 结构卫生新增两条：ci.yml 各作业的 `if` 名单必须含 `all` 且与矩阵一致；Tauri 构建钩子必须 `pnpm`（顺手修了启动器 webui 的 `npm run`）。这两类以前只有 CI 全量跑才暴露。
-- `scripts/question_bias.py`：AI 起草的选择题常见「答案几乎都在第 2 位、正确项最长」的毛病，只报告不阻断。体检结果：snake、中国象棋、C++ 教程、魔方四个应用都中招，魔方已整改并加了门禁，其余三个已修（T-003，中国象棋、C++ 教程全部，贪吃蛇第 3~11 章）。**贪吃蛇第 1、2 章还没套**：那两个文件当时有别人的未提交改动，补丁在 `comms/pocket-cube-solver/artifacts/cursor/bias-fix/snake.json`（`snake.window.*`、`snake.grid.*` 八题），等对方提交后重套。
+- `scripts/question_bias.py`：AI 起草的选择题常见「答案几乎都在第 2 位、正确项最长」的毛病，只报告不阻断。体检结果：snake、中国象棋、C++ 教程、魔方四个应用都中招，魔方已整改并加了门禁，其余三个已全部修完（T-003：中国象棋、C++ 教程、贪吃蛇）。
 - `gh` 认不出 `git@github.com:` 这种 SSH 别名的 remote，手动触发要加 `--repo iguoya/Athena`；同一分支的两次 dispatch 共用 concurrency 组，后一个会取消前一个，要一个一个来。
