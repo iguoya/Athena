@@ -60,4 +60,7 @@ private:
     int screens_between(Cell from, Cell target) const;
     bool own_king_safe_after(Cell from, Cell to) const;
     bool attacks(Cell from, Cell target) const;
+
+    // rules_test 要摆一个对局里走不到的局面（将帅已经照面）。窗口不调用。
+    friend void check_facing_generals(int& failures);
 };

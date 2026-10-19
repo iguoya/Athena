@@ -25,6 +25,28 @@ Move find_move(const Position& position, Cell from, Cell to) {
 
 }  // namespace
 
+void check_facing_generals(int& failures) {
+    Position position;
+    position.turn_ = Side::Red;
+    position.board_[0][4] = Piece{Side::Black, Kind::General};
+    position.board_[9][4] = Piece{Side::Red, Kind::General};
+    auto expect_here = [&](bool condition, int line) {
+        if (!condition) {
+            std::cerr << "FAIL line " << line << "\n";
+            ++failures;
+        }
+    };
+    expect_here(position.in_check(Side::Red), __LINE__);
+    expect_here(position.in_check(Side::Black), __LINE__);
+    // 照面是攻击，不是着法。帅不能沿空线飞到将的格子上。
+    expect_here(!position.is_legal(Cell{4, 9}, Cell{4, 0}), __LINE__);
+    // 同一条竖线上再走一步，照面还在，也不能走。
+    expect_here(!position.is_legal(Cell{4, 9}, Cell{4, 8}), __LINE__);
+    // 横移离开这条竖线，照面解除。
+    expect_here(position.is_legal(Cell{4, 9}, Cell{3, 9}), __LINE__);
+    expect_here(position.is_legal(Cell{4, 9}, Cell{5, 9}), __LINE__);
+}
+
 int main() {
     {
         const auto position = Position::initial();
@@ -68,6 +90,7 @@ int main() {
             std::cerr << "  notation was: " << advisor.notation << "\n";
         }
     }
+    check_facing_generals(failures);
     if (failures != 0) {
         std::cerr << failures << " failed\n";
         return 1;

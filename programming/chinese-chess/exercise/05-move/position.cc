@@ -242,8 +242,15 @@ std::vector<Move> Position::pseudo_from(Cell from) const {
             return;
         }
         bool ok = false;
-        // 车、炮走到空位要中间没有子。吃子（炮还要恰好一个炮架）交给 attacks。
-        if (piece->kind == Kind::Cannon && !occupant) {
+        // 将帅照面在 attacks 里算攻击，用来判将军；那不是一步能走过去的着法。
+        // 九宫不相接，所以帅永远不能走到将的那一格。
+        if (piece->kind == Kind::General) {
+            const int dx = x - from.x;
+            const int dy = y - from.y;
+            ok = std::abs(dx) + std::abs(dy) == 1 && in_palace(piece->side, from) &&
+                 in_palace(piece->side, target);
+        } else if (piece->kind == Kind::Cannon && !occupant) {
+            // 车、炮走到空位要中间没有子。吃子（炮还要恰好一个炮架）交给 attacks。
             ok = screens_between(from, target) == 0;
         } else if (piece->kind == Kind::Rook && !occupant) {
             ok = screens_between(from, target) == 0;

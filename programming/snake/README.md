@@ -70,7 +70,7 @@ launcher open snake
 只看教程页、不编蛇：`pnpm run dev`，浏览器开 http://localhost:1514 。
 
 单独编某一章（需要 CMake 和一个 C++ 编译器：Windows 装 Visual Studio 的 C++ 工作负载
-或 MSYS2 都可以；**raylib 不用预装**，首次配置会自动联网拉源码编译，八章共享
+或 MSYS2 都可以；**raylib 不用预装**，首次配置会自动联网拉源码编译，十章共享
 `.cache/fetchcontent` 缓存）：
 
 ```sh

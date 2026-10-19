@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """贪吃蛇应用的验证入口。
 
-默认只做结构校验：app.json、端口、课表、出处契约、五章程序文件齐备。
+默认只做结构校验：app.json、端口、课表、出处契约、十章程序文件齐备。
 CI 没有 raylib，不能把 cmake 编进默认检查。本机要连蛇一起编，加 --native。
 --full 追加教程壳的前端构建和 cargo check，仍然不编 raylib。
 
