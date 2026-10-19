@@ -1,0 +1,631 @@
+name: CI
+
+# 什么时候跑：**显式触发**（ADR 0064，取代 ADR 0050 的「推送即跑」）。
+#
+# - 手动：`gh workflow run ci.yml`（全量）或 `gh workflow run ci.yml -f app=driver`
+#   （只跑一个应用），也可以在 Actions 页面点 Run workflow 选。
+# - 打版本 tag：发布前全量验一遍，tag 本身就是显式动作。
+#
+# 日常提交不触发：提交前该走的是本地 `python3 scripts/check.py`（ADR 0007），
+# 远程矩阵留给「要确认跨平台」的时候——改了平台相关代码、动了依赖、准备发布。
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      app:
+        description: 只跑哪个应用（all 为全量，sources 只跑跨应用检查）
+        type: choice
+        default: all
+        options: [all, sources, comms-console, c-plus-plus, chinese-chess, snake, pocket-cube-solver, pocket_cube, cpp, machine, polaris, data-structures, algorithms, mathematics, ascent, math-tools, gtkmm, driver, software, nas_admin, launcher, c-gui-lab, embedded, database, design-patterns, os, network, firmware, microcontroller, rtos, linux, organization, cs408, python, machine-learning, deep-learning, llm-app, llm-finetune, competitions, earth, edge-ai, jiuzhou, octave-manual, selinger-linear-algebra, siefken-linear-algebra, sympy-tutorial]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Windows 上 Actions 的 Python 管道默认 cp1252，打印中文会 UnicodeEncodeError
+# （2026-10-07 的 gtkmm、math-tools 就是这样失败的）。只改 stdio，不动文件路径。
+env:
+  PYTHONIOENCODING: utf-8
+
+jobs:
+  # 跨应用检查：内容出处（ADR 0043）、skill 两处一致、GitHub 工作流。纯文本规则，
+  # 和平台无关，跑一个就够。
+  sources:
+    name: 跨应用检查
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      # 版本与本地 winget 装的一致；官方脚本把可执行文件下到当前目录
+      - name: Install actionlint and shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          bash <(curl -sSfL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash) 1.7.12 "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+      - name: Verify
+        run: python3 scripts/check.py --sources-only
+
+  # GTK4 + gtkmm + Meson：魔方（pocket_cube）与拆出的旧 C++ 窗口（cpp，ADR 0141）。
+  # C++ 教程走下面的 tauri 矩阵。三个平台各装各的依赖，跑的是同一条 Python 入口。
+  cpp-macos:
+    name: ${{ matrix.app }}（macOS）
+    if: contains(fromJSON('["all","pocket_cube","cpp"]'), inputs.app || 'all')
+    runs-on: macos-15
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["pocket_cube","cpp"]' || format('["{0}"]', inputs.app)) }}
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Install dependencies
+        run: >-
+          brew install
+          meson ninja pkg-config
+          gtkmm4 gtksourceview5 md4c nlohmann-json googletest
+          blueprint-compiler librsvg
+
+      - name: Verify
+        run: python3 scripts/check.py ${{ matrix.app }} --build-dir build --buildtype debugoptimized
+
+  # 声明支持就要验证（ADR 0047）。pocket_cube 三个平台都跑，不把 Ubuntu 降级。
+  cpp-ubuntu:
+    name: ${{ matrix.app }}（Ubuntu）
+    if: contains(fromJSON('["all","pocket_cube","cpp"]'), inputs.app || 'all')
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["pocket_cube","cpp"]' || format('["{0}"]', inputs.app)) }}
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            meson ninja-build pkg-config \
+            libgtkmm-4.0-dev libgtksourceview-5-dev \
+            libmd4c-dev nlohmann-json3-dev libsqlite3-dev \
+            libgtest-dev blueprint-compiler \
+            librsvg2-common xvfb
+
+      - name: Verify
+        # GTK 资源测试要构造控件，需要一个显示后端；无头 CI 用 xvfb 提供。
+        run: xvfb-run -a python3 scripts/check.py ${{ matrix.app }} --build-dir build --buildtype debugoptimized
+
+  # 2026-09-15 打通并转正。曾经卡住的那三个 conflicting declaration 是 glib 2.90
+  # 与 MSYS2 现有 glibmm 2.86 的名字冲突，由 compat/glib_final_type_shim.h 绕开；
+  # 同批修掉的还有我们自己的两处 POSIX 专有写法（LC_MESSAGES、M_PI）和缺失的
+  # .gitattributes（CRLF 让按字节匹配的测试挂了）。详见 ADR 0049。
+  cpp-windows:
+    name: ${{ matrix.app }}（Windows）
+    if: contains(fromJSON('["all","pocket_cube","cpp"]'), inputs.app || 'all')
+    runs-on: windows-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["pocket_cube","cpp"]' || format('["{0}"]', inputs.app)) }}
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-meson
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-gtkmm-4.0
+            mingw-w64-ucrt-x86_64-gtksourceview5
+            mingw-w64-ucrt-x86_64-md4c
+            mingw-w64-ucrt-x86_64-nlohmann-json
+            mingw-w64-ucrt-x86_64-gtest
+            mingw-w64-ucrt-x86_64-sqlite3
+            mingw-w64-ucrt-x86_64-librsvg
+            mingw-w64-ucrt-x86_64-blueprint-compiler
+            mingw-w64-ucrt-x86_64-python
+
+      - name: Verify
+        run: python scripts/check.py ${{ matrix.app }} --build-dir build --buildtype debugoptimized
+
+  # Qt Quick / CMake 应用：各自跑自己的 scripts/check.py。
+  # （polaris 已随 ADR 0015 迁到 Tauri 2，见下面的 tauri 矩阵。）
+  qt-quick:
+    name: ${{ matrix.app }}（${{ matrix.os }}）
+    if: contains(fromJSON('["all","machine"]'), inputs.app || 'all')
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, ubuntu-26.04]
+        # 手动只选一个应用时矩阵只留它；tag 触发时 inputs 为空，按全量。
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["machine"]' || format('["{0}"]', inputs.app)) }}
+    # Linux 降级（ADR 0051）。macOS 这一档仍是正式门槛，Windows 见下一个 job。
+    continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Install Qt (macOS)
+        if: runner.os == 'macOS'
+        run: brew install qt@6 cmake ninja
+
+      - name: Install Qt (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            cmake ninja-build \
+            qt6-base-dev qt6-declarative-dev libgl1-mesa-dev
+
+      - name: Verify
+        # Homebrew 的 Qt 是 keg-only，不在默认搜索路径里；CMAKE_PREFIX_PATH
+        # 指过去即可，不必把 Qt 灌进全局 PATH。
+        run: python3 scripts/check.py ${{ matrix.app }}
+        env:
+          CMAKE_PREFIX_PATH: ${{ runner.os == 'macOS' && '/opt/homebrew/opt/qt@6' || '' }}
+
+  # Windows 上的 Qt Quick 应用走 aqtinstall：官方安装器是交互式的，CI 里用不了，而
+  # aqtinstall 是个 pip 包，不必引第三方 action。
+  #
+  # 这个 job 起初是 continue-on-error 的探测位，2026-09-15 修掉两处问题后转正：
+  # 一是给 aqt 传了 -m qtdeclarative（Qt 6 里 Quick 属于基础包，不是可选 module），
+  # 二是 runner 的 PATH 里有 MinGW，CMake 挑中 g++ 去链 MSVC 构建的 Qt。
+  # Windows 是优先平台（ADR 0051），它的 job 就该是正式门槛。
+  qt-quick-windows:
+    name: ${{ matrix.app }}（Windows）
+    if: contains(fromJSON('["all","machine"]'), inputs.app || 'all')
+    runs-on: windows-latest
+    timeout-minutes: 45
+    env:
+      QT_VERSION: "6.8.1"
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["machine"]' || format('["{0}"]', inputs.app)) }}
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up MSVC
+        # 装的是 MSVC 构建的 Qt（win64_msvc2022_64），但 runner 的 PATH 里还有
+        # MinGW，CMake 会挑中 g++，链接时撞上符号修饰不兼容：
+        # `undefined reference to __imp__Z9qt_assertPKcS0_i`。把 MSVC 的环境
+        # 导进来，CMake 才会选 cl.exe。
+        #
+        # 原先用 ilammy/msvc-dev-cmd，但它至今只有 node20 版本，Node 20 已被
+        # GitHub 弃用。它做的事本身很简单：vswhere 找到 VS，跑 vcvars64.bat，
+        # 把前后有变化的环境变量写进 GITHUB_ENV。这里照原样手写，不再依赖它。
+        shell: pwsh
+        run: |
+          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+            -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+            -property installationPath
+          if (-not $vs) { throw "vswhere 没找到带 VC 工具集的 Visual Studio" }
+          $before = @{}
+          Get-ChildItem env: | ForEach-Object { $before[$_.Name] = $_.Value }
+          $lines = cmd /c "`"$vs\VC\Auxiliary\Build\vcvars64.bat`" >nul && set"
+          if ($LASTEXITCODE -ne 0) { throw "vcvars64.bat 失败（退出码 $LASTEXITCODE）" }
+          foreach ($line in $lines) {
+            $name, $value = $line -split '=', 2
+            if ($name -and $before[$name] -ne $value) {
+              "$name=$value" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+            }
+          }
+
+      - name: Install Qt and Ninja
+        # Ninja 是单配置生成器：产物落在 build/ 而不是 build/Debug/，和另外
+        # 两个平台、和 app.json 的 dev.run 保持同一个位置。
+        #
+        # 不传 -m qtdeclarative：Qt 6 里 Quick/Qml 属于基础包，不是可选 module，
+        # 传了 aqt 会报「packages not found while parsing XML」直接失败。
+        run: |
+          python -m pip install --quiet aqtinstall ninja
+          python -m aqt install-qt windows desktop $env:QT_VERSION win64_msvc2022_64 -O ${{ github.workspace }}\Qt
+
+      - name: Verify
+        run: python scripts/check.py ${{ matrix.app }}
+        env:
+          CMAKE_PREFIX_PATH: ${{ github.workspace }}\Qt\6.8.1\msvc2022_64
+
+  # Tauri 应用：前端 + Rust 壳。每个应用跑自己的 scripts/check.py，
+  # 和本地是同一条命令（ADR 0007）。polaris 随 ADR 0015 从 Qt 矩阵迁入。
+  # 应用间的差异按 matrix.app 写成表达式，不用 include：app 列表会被 inputs.app
+  # 过滤，合并不进去的 include 条目会被当成新组合追加，单跑一个应用时冒出别的。
+  # 拾阶用 pnpm（它的 lock 依赖 pnpm 的版本约束）；gtkmm 的原生演示要 gtkmm C++
+  # 工具链，交给下面的 gtkmm-native，这里跳过。
+  tauri:
+    name: ${{ matrix.app }}（${{ matrix.os }}）
+    if: >-
+      contains(fromJSON('["all","algorithms","ascent","c-plus-plus","chinese-chess","competitions","cs408","database",
+      "data-structures","deep-learning","design-patterns","earth","edge-ai","embedded","firmware",
+      "comms-console","gtkmm","jiuzhou","linux","llm-app","llm-finetune","math-tools","mathematics",
+      "machine-learning","microcontroller","network","organization","os","polaris",
+      "pocket-cube-solver","python","rtos","snake","software","octave-manual","selinger-linear-algebra","siefken-linear-algebra","sympy-tutorial"]'), inputs.app || 'all')
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        app: >-
+          ${{ fromJSON((inputs.app || 'all') == 'all' && '["algorithms","ascent","c-plus-plus","chinese-chess","competitions","cs408","database",
+          "data-structures","deep-learning","design-patterns","earth","edge-ai","embedded","firmware",
+          "comms-console","gtkmm","jiuzhou","linux","llm-app","llm-finetune","math-tools","mathematics",
+          "machine-learning","microcontroller","network","organization","os","polaris",
+          "pocket-cube-solver","python","rtos","snake","software","octave-manual","selinger-linear-algebra","siefken-linear-algebra","sympy-tutorial"]' || format('["{0}"]', inputs.app)) }}
+        os: [macos-15, windows-latest, ubuntu-26.04]
+    # Linux 降级：回归了报出来，但不阻塞整体结论（ADR 0051）
+    continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: pnpm
+          # 同栈应用共用仓库根这一份锁（ADR 0140）。
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install Tauri system dependencies (Ubuntu)
+        # Linux 上 Tauri 的 WebView 是系统 WebKitGTK，得先装；macOS 与 Windows
+        # 用系统自带的 WKWebView / WebView2，不需要这一步。
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libwebkit2gtk-4.1-dev libsoup-3.0-dev \
+            libjavascriptcoregtk-4.1-dev librsvg2-dev \
+            libgtk-3-dev libayatana-appindicator3-dev patchelf \
+            libspeechd-dev
+
+      - name: Cache cargo
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            .cache/cargo-target
+          key: tauri-shared-${{ matrix.os }}-${{ hashFiles('Cargo.lock') }}
+
+      - name: Fetch gtkmm upstream docs
+        # 结构核对要官方 DocBook（gitignore 的 upstream/），按 upstream.json 的钉点拉取
+        if: matrix.app == 'gtkmm'
+        run: python3 guide/gtkmm/scripts/fetch_upstream.py
+
+      - name: Verify
+        run: python3 scripts/check.py ${{ matrix.app }} ${{ matrix.app == 'gtkmm' && '--skip-native' || '' }}
+
+  # gtkmm 的演示与实验是 gtkmm-4.0 的 C++ CMake 工程，check.py 编译后跑 --self-check
+  # （构造控件树即退出，不弹窗）。Linux 一档在这里，Windows 一档（MSYS2
+  # MINGW64）在下面的 gtkmm-native-windows；macOS 走 Homebrew 的验证留待补上。
+  gtkmm-native:
+    name: gtkmm 原生演示（ubuntu-26.04）
+    if: contains(fromJSON('["all","gtkmm"]'), inputs.app || 'all')
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      # 教程壳在仓库根 pnpm 工作区里（ADR 0140），check.py 要用 pnpm 跑前端检查。
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends             cmake ninja-build pkg-config g++ libgtkmm-4.0-dev xvfb gettext
+          pnpm install --frozen-lockfile
+
+      - name: Fetch gtkmm upstream docs
+        run: python3 guide/gtkmm/scripts/fetch_upstream.py
+
+      - name: Verify
+        run: xvfb-run -a python3 scripts/check.py gtkmm --skip-rust
+
+  # Windows 一档：MSYS2 MINGW64 的 gtkmm-4.0 + CMake/Ninja，check.py 照旧在宿主 pwsh 里
+  # 跑（pnpm、Python 用 runner 自带的），只是把 MINGW64 的 bin 排在 PATH 前面，让
+  # CMake 找到 g++、pkg-config 找到 gtkmm 的 .pc。本机同样的 PATH 已验证全绿（2026-10-19）。
+  # 系统 PATH 里的 pkg-config 可能来自别的软件，所以 PKG_CONFIG_PATH 显式指过去。
+  gtkmm-native-windows:
+    name: gtkmm 原生演示（windows-latest）
+    if: contains(fromJSON('["all","gtkmm"]'), inputs.app || 'all')
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Set up MSYS2 MINGW64
+        id: msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: false
+          install: >-
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-pkgconf
+            mingw-w64-x86_64-gtkmm-4.0
+            mingw-w64-x86_64-gettext-tools
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch gtkmm upstream docs
+        run: python guide/gtkmm/scripts/fetch_upstream.py
+
+      - name: Verify
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          $mingw = Join-Path $env:MSYS2_ROOT "mingw64"
+          $env:PATH = "$mingw\bin;$env:PATH"
+          $env:PKG_CONFIG_PATH = "$mingw\lib\pkgconfig"
+          python scripts/check.py gtkmm --skip-rust
+
+  # macOS 一档：Homebrew 的 gtkmm4 + CMake/Ninja。步骤与 Windows 一档对齐
+  # （checkout → pnpm/Node → 装依赖 → fetch_upstream → check.py --skip-rust）。
+  # gettext 的 msgfmt 给 check_po_gnu 用；bin 经 brew --prefix 显式入 PATH。
+  gtkmm-native-macos:
+    name: gtkmm 原生演示（macos-15）
+    if: contains(fromJSON('["all","gtkmm"]'), inputs.app || 'all')
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install Homebrew dependencies
+        run: |
+          # 包名来源：https://formulae.brew.sh/formula/{gtkmm4,cmake,ninja,pkgconf,gettext}
+          # pkgconf 即官方 pkg-config 继任公式（brew 别名仍认 pkg-config）。
+          brew install gtkmm4 cmake ninja pkgconf gettext
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch gtkmm upstream docs
+        run: python3 guide/gtkmm/scripts/fetch_upstream.py
+
+      - name: Verify
+        run: |
+          # gettext 若仍 keg-only，msgfmt 不在默认 PATH；用 opt 前缀兼容已 link 的情况。
+          # 拆开赋值，避免 SC2155（declare+assign 合一会掩盖 brew --prefix 失败码）。
+          gettext_bin="$(brew --prefix gettext)/bin"
+          export PATH="${gettext_bin}:${PATH}"
+          # 无 xvfb：macOS runner 无 X11。无头 Quartz 风险见本文件头注释。
+          python3 scripts/check.py gtkmm --skip-rust
+
+  # 驾考学习：Flutter 桌面。三个平台各编各的桌面目标，入口仍是应用自己的
+  # scripts/check.py（ADR 0007）。
+  driver:
+    name: 驾考学习（${{ matrix.os }}）
+    if: contains(fromJSON('["all","driver"]'), inputs.app || 'all')
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, ubuntu-26.04, windows-latest]
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Linux desktop dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+
+      - name: Enable desktop targets
+        run: flutter config --no-analytics --enable-macos-desktop --enable-linux-desktop --enable-windows-desktop
+
+      # 数据层是客户端本地 SQLite（ADR 0069）：测试各开临时库文件，
+      # 不再需要任何外部数据库服务（撤销 ADR 0068 时代为测试装的 PostgreSQL）。
+      - name: Verify
+        run: python3 scripts/check.py driver
+
+  # 启动器：纯 Rust，三平台同一套源码。
+  launcher:
+    name: 启动器（${{ matrix.os }}）
+    if: contains(fromJSON('["all","launcher"]'), inputs.app || 'all')
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, windows-latest, ubuntu-26.04]
+    # Linux 降级：回归了报出来，但不阻塞整体结论（ADR 0051）
+    continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      # webui（Tauri 2 + React）的页面资产要先构建，cargo 编译时内嵌（ADR 0125）。
+      # Linux 不编 webui：Tauri 2 需要 webkit2gtk 全套，Linux 支持未承诺（ADR 0051），
+      # 只编 core 纯逻辑兜底。
+      - name: Set up pnpm
+        if: runner.os != 'Linux'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Set up Node
+        if: runner.os != 'Linux'
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Build webui frontend
+        if: runner.os != 'Linux'
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm --dir launcher/webui run build
+
+      - name: Cache cargo
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            .cache/cargo-target
+          key: launcher-${{ matrix.os }}-${{ hashFiles('launcher/Cargo.lock', 'Cargo.lock') }}
+
+      # Linux 只编 core：工作区里的 webui 是 Tauri，需要 webkit2gtk 与 glib 全套。
+      - name: Build
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            cargo build --manifest-path launcher/Cargo.toml -p launcher-core --all-targets
+          else
+            cargo build --manifest-path launcher/Cargo.toml --all-targets
+          fi
+
+  # 驾考后台：Flask 服务，check.py 自建 .venv 装依赖后用 test_client 打健康检查、登录页
+  # 与仪表盘壳。应用启动就 create_all，必须连上 PostgreSQL：CI 起一个与生产同大版本
+  # （17）的空库，账号只在这台 runner 上存在。服务容器只有 Linux runner 支持；生产本来
+  # 就在软路由（Linux）上，Windows 开发机走本地 check.py。
+  nas-admin:
+    name: 驾考后台（ubuntu-26.04）
+    if: contains(fromJSON('["all","nas_admin"]'), inputs.app || 'all')
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: nas_admin
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U ci" --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      NAS_ADMIN_DATABASE_URL: postgresql://ci:ci@localhost:5432/nas_admin
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Verify
+        run: python scripts/check.py nas_admin
+
+  # C GUI Lab 的原生程序是 Windows 专用（ucrt64 预设、GDI 演示），CI 不编译它们；
+  # 这里只验证跨平台成立的部分：目录结构完整与 Electron 主进程语法。名字写明，
+  # 不冒充完整验证。
+  c-gui-lab:
+    name: C GUI Lab（结构与 Electron 语法，不含原生编译）
+    if: contains(fromJSON('["all","c-gui-lab"]'), inputs.app || 'all')
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Verify
+        run: python3 scripts/check.py c-gui-lab --skip-build

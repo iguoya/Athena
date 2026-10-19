@@ -1,0 +1,259 @@
+  # machine（Qt Quick）三平台安装包（ADR 0168）。草稿：comms/release-next/artifacts/cursor/
+  # 装 Qt 跟 ci.yml 的 qt-quick / qt-quick-windows，不另引 jurplel/install-qt-action。
+  # 课程树靠运行时 ATHENA_MACHINE_ROOT；勿依赖编译期 ATHENA_C_SOURCE_ROOT。
+  # 本机无法验证：windeployqt/macdeployqt 闭包、NSIS 安装后冒烟、deb Depends 包名。
+  # CI 首跑最可能红：① windeployqt 漏 QML ② 未 export ATHENA_MACHINE_ROOT ③ Linux Depends。
+  # 集成时把 publish.needs 加上 machine；macos-x86_64 首版不做（见 machine-notes.md）。
+  machine:
+    name: Build machine (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows-x64
+            qt_prefix: Qt/6.8.1/msvc2022_64
+          - os: macos-15
+            platform: macos-arm64
+            qt_prefix: /opt/homebrew/opt/qt@6
+          - os: ubuntu-26.04
+            platform: linux-x86_64
+            qt_prefix: ""
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    env:
+      QT_VERSION: "6.8.1"
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v7
+
+      - name: Read version from tag
+        id: version
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::tag 不是 vMAJOR.MINOR.PATCH：$GITHUB_REF_NAME"
+            exit 1
+          fi
+          # CMake project VERSION 目前仍是 0.1.0，不与 tag 硬校验（见 machine-notes.md）。
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Set up MSVC (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+            -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+            -property installationPath
+          if (-not $vs) { throw "vswhere 没找到带 VC 工具集的 Visual Studio" }
+          $before = @{}
+          Get-ChildItem env: | ForEach-Object { $before[$_.Name] = $_.Value }
+          $lines = cmd /c "`"$vs\VC\Auxiliary\Build\vcvars64.bat`" >nul && set"
+          if ($LASTEXITCODE -ne 0) { throw "vcvars64.bat 失败（退出码 $LASTEXITCODE）" }
+          foreach ($line in $lines) {
+            $name, $value = $line -split '=', 2
+            if ($name -and $before[$name] -ne $value) {
+              "$name=$value" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+            }
+          }
+
+      - name: Install Qt and Ninja (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          python -m pip install --quiet aqtinstall ninja
+          python -m aqt install-qt windows desktop %QT_VERSION% win64_msvc2022_64 -O %GITHUB_WORKSPACE%\Qt
+
+      - name: Install NSIS (Windows)
+        if: runner.os == 'Windows'
+        run: choco install nsis -y --no-progress
+
+      - name: Install Qt (macOS)
+        if: runner.os == 'macOS'
+        run: brew install qt@6 cmake ninja
+
+      - name: Install Qt (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            cmake ninja-build \
+            qt6-base-dev qt6-declarative-dev qt6-svg-dev \
+            libgl1-mesa-dev \
+            dpkg-dev fakeroot
+
+      - name: Configure and build
+        working-directory: programming/machine
+        shell: bash
+        run: |
+          set -euo pipefail
+          # macOS：matrix.qt_prefix 绝对路径；Windows：aqt 安装前缀；Linux：系统包，不设
+          if [ "${{ runner.os }}" = "macOS" ]; then
+            export CMAKE_PREFIX_PATH="${{ matrix.qt_prefix }}"
+          elif [ "${{ runner.os }}" = "Windows" ]; then
+            export CMAKE_PREFIX_PATH="${GITHUB_WORKSPACE}/Qt/${QT_VERSION}/msvc2022_64"
+          else
+            unset CMAKE_PREFIX_PATH || true
+          fi
+          cmake -S . -B build-release -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-release
+          if [ -f build-release/athena-machine.exe ]; then
+            echo "built athena-machine.exe"
+          elif [ -x build-release/athena-machine ]; then
+            echo "built athena-machine"
+          else
+            echo "::error::找不到 athena-machine 产物"
+            ls -la build-release
+            exit 1
+          fi
+
+      - name: Stage course tree
+        working-directory: programming/machine
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf stage-root
+          mkdir -p stage-root/content/sources
+          cp -R qml stage-root/qml
+          cp content/curriculum.json content/exercises.json stage-root/content/
+          if [ -f content/sources/catalog.json ]; then
+            cp content/sources/catalog.json stage-root/content/sources/
+          fi
+          cp icon.svg stage-root/
+
+      - name: Package Windows NSIS
+        if: runner.os == 'Windows'
+        working-directory: programming/machine
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          set -euo pipefail
+          version="$VERSION"
+          platform="$PLATFORM"
+          mkdir -p dist
+          qt_prefix="${GITHUB_WORKSPACE}/Qt/${QT_VERSION}/msvc2022_64"
+          stage="$(pwd)/stage-root"
+          cp build-release/athena-machine.exe "$stage/"
+          "${qt_prefix}/bin/windeployqt.exe" --release --qmldir "$stage/qml" "$stage/athena-machine.exe"
+          cat > "$stage/athena-machine-launch.cmd" <<'CMD'
+          @echo off
+          set "ATHENA_MACHINE_ROOT=%~dp0"
+          start "" "%~dp0athena-machine.exe"
+          CMD
+          # NSIS：把 stage-root 整树打进安装目录；快捷方式走 launch.cmd 设 ATHENA_MACHINE_ROOT
+          stage_win="$(cygpath -w "$stage")"
+          out_win="$(cygpath -w "$(pwd)/dist/athena-machine-${version}-${platform}-setup.exe")"
+          nsi="$(pwd)/athena-machine.nsi"
+          cat > "$nsi" <<EOF
+          Unicode true
+          Name "Athena C and Machine"
+          OutFile "$out_win"
+          InstallDir "\$PROGRAMFILES64\\Athena\\machine"
+          RequestExecutionLevel admin
+          Page directory
+          Page instfiles
+          Section
+            SetOutPath "\$INSTDIR"
+            File /r "${stage_win}\\*.*"
+            CreateDirectory "\$SMPROGRAMS\\Athena"
+            CreateShortCut "\$SMPROGRAMS\\Athena\\C and Machine.lnk" "\$INSTDIR\\athena-machine-launch.cmd"
+            CreateShortCut "\$DESKTOP\\C and Machine.lnk" "\$INSTDIR\\athena-machine-launch.cmd"
+          SectionEnd
+          EOF
+          makensis "$nsi"
+          test -f "dist/athena-machine-${version}-${platform}-setup.exe"
+
+      - name: Package macOS DMG
+        if: runner.os == 'macOS'
+        working-directory: programming/machine
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          set -euo pipefail
+          version="$VERSION"
+          platform="$PLATFORM"
+          mkdir -p dist
+          app="dist/athena-machine.app"
+          rm -rf "$app"
+          mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
+          cp -R stage-root/qml stage-root/content stage-root/icon.svg "$app/Contents/Resources/"
+          cp build-release/athena-machine "$app/Contents/MacOS/athena-machine.bin"
+          cat > "$app/Contents/MacOS/athena-machine" <<'WRAP'
+          #!/bin/bash
+          ROOT="$(cd "$(dirname "$0")/../Resources" && pwd)"
+          export ATHENA_MACHINE_ROOT="$ROOT"
+          exec "$(dirname "$0")/athena-machine.bin" "$@"
+          WRAP
+          chmod +x "$app/Contents/MacOS/athena-machine" "$app/Contents/MacOS/athena-machine.bin"
+          cat > "$app/Contents/Info.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>CFBundleExecutable</key><string>athena-machine</string>
+            <key>CFBundleIdentifier</key><string>app.athena.machine</string>
+            <key>CFBundleName</key><string>athena-machine</string>
+            <key>CFBundlePackageType</key><string>APPL</string>
+            <key>CFBundleShortVersionString</key><string>${version}</string>
+          </dict></plist>
+          PLIST
+          /opt/homebrew/opt/qt@6/bin/macdeployqt "$app" -qmldir="$app/Contents/Resources/qml"
+          dmg="dist/athena-machine-${version}-${platform}.dmg"
+          rm -f "$dmg"
+          hdiutil create -volname "athena-machine" -srcfolder "$app" -ov -format UDZO "$dmg"
+          hdiutil verify "$dmg"
+
+      - name: Package Linux DEB
+        if: runner.os == 'Linux'
+        working-directory: programming/machine
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          set -euo pipefail
+          version="$VERSION"
+          mkdir -p dist
+          libdir="usr/lib/athena-machine"
+          rm -rf deb-root
+          mkdir -p "deb-root/${libdir}" deb-root/usr/bin deb-root/DEBIAN
+          cp build-release/athena-machine "deb-root/${libdir}/"
+          cp -R stage-root/qml stage-root/content stage-root/icon.svg "deb-root/${libdir}/"
+          cat > deb-root/usr/bin/athena-machine <<'WRAP'
+          #!/bin/sh
+          export ATHENA_MACHINE_ROOT=/usr/lib/athena-machine
+          exec /usr/lib/athena-machine/athena-machine "$@"
+          WRAP
+          chmod 755 deb-root/usr/bin/athena-machine "deb-root/${libdir}/athena-machine"
+          cat > deb-root/DEBIAN/control <<EOF
+          Package: athena-machine
+          Version: ${version}
+          Section: education
+          Priority: optional
+          Architecture: amd64
+          Maintainer: Athena <athena@local>
+          Depends: libqt6core6, libqt6gui6, libqt6qml6, libqt6quick6, libqt6svg6, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-layouts, qml6-module-qtquick-window, qml6-module-qtqml-workerscript
+          Description: Athena C and Machine (Qt Quick)
+           Course shell for C and assembly tracks.
+          EOF
+          deb="dist/athena-machine_${version}_amd64.deb"
+          fakeroot dpkg-deb --build deb-root "$deb"
+          dpkg-deb --info "$deb"
+          listing=$(dpkg-deb --contents "$deb")
+          echo "$listing" | grep -q 'usr/bin/athena-machine'
+          echo "$listing" | grep -q 'usr/lib/athena-machine/qml'
+
+      - name: Upload release assets
+        uses: actions/upload-artifact@v7
+        with:
+          name: athena-machine-${{ matrix.platform }}
+          path: |
+            programming/machine/dist/athena-machine-*
+            programming/machine/dist/athena-machine_*
+          if-no-files-found: error
+          retention-days: 7

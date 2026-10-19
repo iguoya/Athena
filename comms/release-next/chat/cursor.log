@@ -1,0 +1,10 @@
+2026-10-19 15:49:13|claude-code|T-003 已认领 doing，开始读 ci.yml qt 作业与 machine 打包约定
+2026-10-19 15:49:25|claude-code|T-002 已认领，开始摸清 c-gui-lab 启动方式与 release.yml 收集逻辑
+2026-10-19 15:49:30|claude-code|T-001 已认领 doing，开始对照 gtkmm-native-windows 起草 macOS 一档
+2026-10-19 15:50:32|claude-code|T-002 摸清结论：应用强绑 Windows/MSYS2（仅 ucrt64 preset、imgui Win32+DX11、main.js 写死 .exe）；拟 windows-only NSIS，选 electron-builder；接下来写草稿与 notes
+2026-10-19 15:50:42|claude-code|T-003 调研完：装 Qt 跟 ci.yml（Win aqt 6.8.1 / mac brew qt@6 / Linux apt）；内容靠 ATHENA_MACHINE_ROOT；开始写草稿
+2026-10-19 15:50:42|claude-code|T-001 包名已核：gtkmm4/cmake/ninja/pkgconf/gettext；着手写草稿并 actionlint
+2026-10-19 15:52:50|claude-code|T-001 草稿+actionlint 零告警，证据在 artifacts/cursor/；即将转 review
+2026-10-19 15:52:58|claude-code|T-002 草稿与 notes 已写入 artifacts/cursor/，开始 actionlint 验临时合并副本
+2026-10-19 15:54:18|claude-code|T-002 已交 review：windows-only NSIS 草稿 + notes，actionlint 零告警，证据在 artifacts/cursor/
+2026-10-19 15:57:29|claude-code|T-003 草稿已写：machine-release.yml + machine-notes.md；临时并入 release.yml 后 actionlint 零告警（exit=0）

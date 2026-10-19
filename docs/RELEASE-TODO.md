@@ -8,7 +8,8 @@
 - [x] 把本地超前 `origin/main` 的提交推上去。`prepare` 要求两边一致。
 - [x] （2026-10-19）`pocket-cube-solver` 已加进 `release.yml` 的 Tauri 矩阵，下一版首发；本机 `--full` 与 `--native` 都绿，CI 的三平台检查也绿（run 39186902938）；安装包作业要等下一次打 tag 才会跑。
 - [x] （2026-10-19，ADR 0170）启动器 `launcher/webui` 与旧版 `practice/pocket_cube` 不进发布矩阵：前者依赖仓库与开发工具链、不是可独立安装的应用，后者已定为供参考、不再做。
-- [ ] `programming/machine`（Qt，已有 `packaging/windows/`）与 `practice/c-gui-lab`（Electron）补安装包作业，按 ADR 0168 进同一次 Release。每一项先在 CI 上跑通一次才算数。草稿在 `comms/release-next` 舱（T-002、T-003）。
+- [ ] `programming/machine`：等 ADR 0008 的 Tauri 迁移完成后走 `tauri-apps` 矩阵，不给 Qt 壳补作业（ADR 0170 第 3 条；Qt 三平台打包草稿已存档，未上 CI）。
+- [ ] `practice/c-gui-lab`：只做 Windows 一档。前置两件事：`third_party/` 可复现（现被 gitignore，CI 拉不到）、`launcher/main.js` 适配安装布局；然后接 `comms/release-next/artifacts/cursor/c-gui-lab-release.yml`（ADR 0170 第 4 条）。
 - [ ] `edge-ai` 和所有 `lifecycle: archived` 的空壳，等有真实内容再按同一标准加入。不要单独开名单。
 
 ## 驾考
@@ -30,7 +31,7 @@
 
 ## gtkmm
 
-- [ ] 原生演示的 macOS 检查仍没有（`ci.yml` 只有 Linux 的 `gtkmm-native` 与新加的 `gtkmm-native-windows`）。Windows 一档 2026-10-19 写好，CI 首跑即全绿（run 39187469455，3 分钟）。安装包打的是教程壳。
+- [x] （2026-10-19）原生演示的 Windows（MSYS2）与 macOS（Homebrew）两档补上，首跑都全绿（Windows run 39187469455，macOS run 39219054141）；Linux 本来就有。安装包打的是教程壳。
 
 ## 10.0.0 发版中顺手修掉的 CI 问题（已完成，留档）
 

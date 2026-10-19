@@ -1,0 +1,184 @@
+# T-002 草稿：可整段粘进 .github/workflows/release.yml 的 job。
+# 粘贴后务必把 publish.needs 补上 c-gui-lab（见同目录 c-gui-lab-notes.md）。
+# 本版只打 Windows NSIS；macOS / Linux 排除理由见 notes（ADR 0049）。
+
+  c-gui-lab:
+    name: Build c-gui-lab (windows-x64)
+    runs-on: windows-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: practice/c-gui-lab
+
+    steps:
+      - name: Resolve version
+        id: version
+        shell: bash
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          if ! echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::版本号 '$v' 不是 x.y.z 形式"; exit 1
+          fi
+          echo "value=$v" >> "$GITHUB_OUTPUT"
+
+      - name: Check out tagged source
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: practice/c-gui-lab/package-lock.json
+
+      - name: Set up MSYS2 UCRT64
+        id: msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-gtk4
+            mingw-w64-ucrt-x86_64-libadwaita
+            mingw-w64-ucrt-x86_64-SDL2
+            mingw-w64-ucrt-x86_64-raylib
+            mingw-w64-ucrt-x86_64-lld
+            mingw-w64-ucrt-x86_64-ntldd
+
+      # third_party/ 被应用 .gitignore，CI 默认没有源码。
+      # 集成前必须换成真实来源（vendor 快照 / fetch+patch / 缓存 tarball）。
+      # 缺目录时直接失败，避免打出空壳安装包。
+      - name: Require vendored third_party
+        shell: bash
+        run: |
+          if [ ! -d third_party/imgui ] || [ ! -d third_party/lvgl-9.2.2 ]; then
+            echo "::error::practice/c-gui-lab/third_party 未就绪（gitignore）。见 comms/release-next/artifacts/cursor/c-gui-lab-notes.md §6"
+            exit 1
+          fi
+
+      - name: Set package version from tag
+        shell: bash
+        run: |
+          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));p.version=process.env.VERSION;fs.writeFileSync('package.json',JSON.stringify(p,null,2)+'\n')"
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+
+      - name: Install Electron dependencies
+        shell: bash
+        run: |
+          npm ci
+          npm install --no-save --no-package-lock electron-builder@^26.0.0
+
+      - name: Configure and build native apps
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        shell: pwsh
+        run: |
+          $ucrt = Join-Path $env:MSYS2_ROOT "ucrt64"
+          $env:PATH = "$ucrt\bin;$env:PATH"
+          $env:PKG_CONFIG_PATH = "$ucrt\lib\pkgconfig;$ucrt\share\pkgconfig"
+          # CMakePresets 写死 C:/msys64/...；runner 上 MSYS2 可能不在该路径，
+          # 用 -D 覆盖编译器，仍复用 binaryDir=build。
+          cmake -S . -B build -G Ninja `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_C_COMPILER="$ucrt\bin\gcc.exe" `
+            -DCMAKE_CXX_COMPILER="$ucrt\bin\g++.exe"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cmake --build build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $required = @(
+            "build\apps\gtk-style\gtk-style.exe",
+            "build\apps\imgui-style\imgui-style.exe",
+            "build\apps\lvgl-style\lvgl-style.exe",
+            "build\apps\raygui-demo\raygui-demo.exe",
+            "build\apps\nuklear-demo\nuklear-demo.exe",
+            "build\apps\nuklear-gdi-demo\nuklear-gdi-demo.exe",
+            "build\apps\microui-demo\microui-demo.exe"
+          )
+          foreach ($f in $required) {
+            if (-not (Test-Path $f)) { throw "missing $f" }
+          }
+
+      # 把 UCRT64 运行时 DLL 拷到各 exe 旁，安装机不必装 MSYS2。
+      # 用 ntldd 递归收集；漏 DLL 是最可能红的点之一（见 notes §6）。
+      - name: Bundle MinGW runtime DLLs beside native exes
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCRT="${MSYS2_ROOT}/ucrt64"
+          export PATH="${UCRT}/bin:${PATH}"
+          collect() {
+            local exe="$1"
+            local dir
+            dir="$(dirname "$exe")"
+            ntldd -R "$exe" | awk '/=>/ {print $3}' | while read -r dll; do
+              case "$dll" in
+                ${UCRT}/*|*/ucrt64/bin/*)
+                  cp -n "$dll" "$dir/" 2>/dev/null || cp "$dll" "$dir/"
+                  ;;
+              esac
+            done
+          }
+          shopt -s nullglob
+          for exe in build/apps/*/*.exe; do
+            collect "$exe"
+          done
+
+      - name: Write electron-builder config
+        shell: bash
+        run: |
+          cat > electron-builder.yml <<'EOF'
+          appId: app.athena.c-gui-lab
+          productName: C GUI Lab
+          executableName: athena-c-gui-lab
+          directories:
+            output: dist
+            buildResources: build-resources
+          files:
+            - package.json
+            - launcher/**/*
+            - build/apps/**/*
+            - "!build/apps/**/*.obj"
+            - "!build/apps/**/*.a"
+            - "!build/apps/**/CMakeFiles/**"
+            - "!build/apps/**/imgui.ini"
+          asar: true
+          asarUnpack:
+            - build/apps/**/*
+          win:
+            target:
+              - target: nsis
+                arch:
+                  - x64
+            artifactName: athena-c-gui-lab-${version}-windows-x64-setup.${ext}
+          nsis:
+            oneClick: false
+            allowToChangeInstallationDirectory: true
+            artifactName: athena-c-gui-lab-${version}-windows-x64-setup.${ext}
+          EOF
+
+      - name: Build NSIS installer
+        shell: bash
+        run: npx electron-builder --win nsis --publish never
+
+      - name: Verify package
+        shell: bash
+        run: |
+          version="${{ steps.version.outputs.value }}"
+          dest="dist/athena-c-gui-lab-${version}-windows-x64-setup.exe"
+          test -f "$dest"
+          ls -l dist
+
+      - name: Upload release assets
+        uses: actions/upload-artifact@v7
+        with:
+          name: athena-c-gui-lab-windows-x64
+          path: practice/c-gui-lab/dist/athena-c-gui-lab-*-windows-x64-setup.exe
+          if-no-files-found: error
+          retention-days: 7

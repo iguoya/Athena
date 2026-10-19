@@ -1,0 +1,65 @@
+# 草稿：粘进 .github/workflows/ci.yml，放在 gtkmm-native-windows 之后、driver 之前。
+# 缩进与 ci.yml 的 jobs 一致（两空格起）。
+#
+# —— 本机无法验证 / CI 首跑风险（2026-10-19 cursor 起草）——
+# 1. 本机是 Windows，没有 Homebrew，无法实跑 brew install / 编译 / --self-check。
+# 2. 包名已按 formulae.brew.sh 核对（非本机 brew info）：gtkmm4、cmake、ninja、
+#    pkgconf（also-known-as: pkg-config）、gettext。gettext 公式源码 2026-10 已无
+#    keg_only 字段，但任务书与多份文档仍按 keg-only 处理；用
+#    `$(brew --prefix gettext)/bin` 预置 PATH 两头都安全。
+# 3. macOS 不需要 xvfb（Linux 专用）。本档与 Windows 一档对齐：直接跑
+#    `python3 scripts/check.py gtkmm --skip-rust`，不包虚拟显示。
+# 4. CI 首跑最可能红在 Verify 的原生 --self-check：演示构造 Gtk::Application /
+#    窗口会走到 gtk_init。GitHub-hosted macOS runner 无登录 WindowServer 会话时，
+#    GTK4 Quartz 后端已知会在无头环境出问题（同类项目如 makoni/swift-adwaita
+#    因此把 macOS CI 收成 build-only）。编译与 msgfmt 步骤相对稳；若红，先看
+#    Verify 日志里是否 SIGABRT / 「cannot open display」/ Quartz / NSApplication
+#    相关栈，再决定要不要降级为「只编不跑」或另找虚拟显示方案。GDK_BACKEND=
+#    offscreen 是 Linux 套路，不解决 macOS Quartz。
+# 5. brew install gtkmm4 依赖树大，首跑可能耗在装瓶；超时对齐 Windows 的 45 分钟。
+
+  # macOS 一档：Homebrew 的 gtkmm4 + CMake/Ninja。步骤与 Windows 一档对齐
+  # （checkout → pnpm/Node → 装依赖 → fetch_upstream → check.py --skip-rust）。
+  # gettext 的 msgfmt 给 check_po_gnu 用；bin 经 brew --prefix 显式入 PATH。
+  gtkmm-native-macos:
+    name: gtkmm 原生演示（macos-15）
+    if: contains(fromJSON('["all","gtkmm"]'), inputs.app || 'all')
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install Homebrew dependencies
+        run: |
+          # 包名来源：https://formulae.brew.sh/formula/{gtkmm4,cmake,ninja,pkgconf,gettext}
+          # pkgconf 即官方 pkg-config 继任公式（brew 别名仍认 pkg-config）。
+          brew install gtkmm4 cmake ninja pkgconf gettext
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch gtkmm upstream docs
+        run: python3 guide/gtkmm/scripts/fetch_upstream.py
+
+      - name: Verify
+        run: |
+          # gettext 若仍 keg-only，msgfmt 不在默认 PATH；用 opt 前缀兼容已 link 的情况。
+          # 拆开赋值，避免 SC2155（declare+assign 合一会掩盖 brew --prefix 失败码）。
+          gettext_bin="$(brew --prefix gettext)/bin"
+          export PATH="${gettext_bin}:${PATH}"
+          # 无 xvfb：macOS runner 无 X11。无头 Quartz 风险见本文件头注释。
+          python3 scripts/check.py gtkmm --skip-rust
