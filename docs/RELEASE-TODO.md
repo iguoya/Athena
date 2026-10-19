@@ -7,7 +7,8 @@
 - [x] （2026-10-18 已发 v10.0.0）写 `CHANGELOG.md` 的 `[10.0.0]` 节（v9.0.0 以来的主线，不兼容项标 ⚠️），再 `python scripts/release.py prepare 10.0.0` 与 `push`。工作区还有未提交改动时 `prepare` 会拒绝。
 - [x] 把本地超前 `origin/main` 的提交推上去。`prepare` 要求两边一致。
 - [x] （2026-10-19）`pocket-cube-solver` 已加进 `release.yml` 的 Tauri 矩阵，下一版首发；本机 `--full` 与 `--native` 都绿，CI 的三平台检查也绿（run 39186902938）；安装包作业要等下一次打 tag 才会跑。
-- [ ] Qt / Electron / 纯 Meson 的成熟应用补安装包作业后，按 ADR 0168 加进同一次 Release：`programming/machine`（Qt，已有 `packaging/windows/`）、`practice/pocket_cube`（Meson）、`practice/c-gui-lab`（Electron）、启动器 `launcher/webui`（Tauri，但它是启动器的界面，没有 `app.json`，进不了应用矩阵，要单独写作业）。每一项都得先在 CI 上跑通一次才算数，本版没动。
+- [x] （2026-10-19，ADR 0170）启动器 `launcher/webui` 与旧版 `practice/pocket_cube` 不进发布矩阵：前者依赖仓库与开发工具链、不是可独立安装的应用，后者已定为供参考、不再做。
+- [ ] `programming/machine`（Qt，已有 `packaging/windows/`）与 `practice/c-gui-lab`（Electron）补安装包作业，按 ADR 0168 进同一次 Release。每一项先在 CI 上跑通一次才算数。草稿在 `comms/release-next` 舱（T-002、T-003）。
 - [ ] `edge-ai` 和所有 `lifecycle: archived` 的空壳，等有真实内容再按同一标准加入。不要单独开名单。
 
 ## 驾考
