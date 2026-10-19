@@ -187,10 +187,29 @@ def build_command(agent: str, prompt: str) -> tuple[list[str], dict[str, str]] |
     die(f"不认识的代理 {agent!r}：spawn.py 只会开 zcode / cursor / claude-code")
 
 
-def launch_detached(cmd: list[str], env: dict[str, str], log: Path) -> int:
+def child_env(agent: str, extra: dict[str, str]) -> dict[str, str]:
+    """新会话继承调用者的环境，但不能把调用者（常是 Claude Code）的宿主标记带过去。
+
+    Cursor 看到 CLAUDE* 就会按 Claude Code 的约定加载 ``.claude/settings.json`` 里的钩子，
+    再看到 ``SHELL=bash`` 就拿 bash 去 eval 钩子的 PowerShell 包装，结果每条 Shell 命令
+    都起不来（2026-10-19 pocket-cube-solver 舱 T-001 实测）。非 claude-code 的代理一律去掉。
+    """
+    env = dict(os.environ)
+    if agent != "claude-code":
+        for key in list(env):
+            if key.startswith(("CLAUDE", "ANTHROPIC_")) or key in ("SHELL", "MSYSTEM"):
+                del env[key]
+        # Cursor 兼容 Claude 钩子时用它拼 ``$CLAUDE_PROJECT_DIR/.claude/hooks/...``；
+        # 不显式给，实测会落成 ``C:\``，钩子找不到脚本、挡住全部 Shell
+        env["CLAUDE_PROJECT_DIR"] = str(ROOT)
+    env.update(extra)
+    return env
+
+
+def launch_detached(cmd: list[str], env: dict[str, str], log: Path, agent: str) -> int:
     log.parent.mkdir(parents=True, exist_ok=True)
     out = open(log, "wb")
-    kw: dict = {"cwd": str(ROOT), "env": {**os.environ, **env}, "stdin": subprocess.DEVNULL, "stdout": out, "stderr": subprocess.STDOUT}
+    kw: dict = {"cwd": str(ROOT), "env": child_env(agent, env), "stdin": subprocess.DEVNULL, "stdout": out, "stderr": subprocess.STDOUT}
     if sys.platform == "win32":
         # 脱离当前终端，关掉调用它的会话也不会带走它
         kw["creationflags"] = (
@@ -268,7 +287,7 @@ def main() -> int:
         print("\n提示词：\n" + prompt)
         return 0
     log = COMMS / a.project / "runs" / f"{datetime.now():%Y%m%d-%H%M%S}-{a.agent}-{a.task or 'free'}.log"
-    pid = launch_detached(cmd, env, log)
+    pid = launch_detached(cmd, env, log, a.agent)
     print(f"已为 {a.agent} 单开会话（pid {pid}）。输出：{log.relative_to(ROOT)}")
     print(f"看进展：python comms/comms.py board --project {a.project}")
     return 0

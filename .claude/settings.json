@@ -11,7 +11,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/block_bulk_git_add.py\"",
+            "command": "python3 -c \"import os,runpy;p=os.path.join(os.environ.get('CLAUDE_PROJECT_DIR') or os.getcwd(),'.claude','hooks','block_bulk_git_add.py');os.path.isfile(p) and runpy.run_path(p,run_name='__main__')\"",
             "timeout": 10
           }
         ]
