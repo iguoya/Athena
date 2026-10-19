@@ -340,8 +340,8 @@ jobs:
         run: python3 scripts/check.py ${{ matrix.app }} ${{ matrix.app == 'gtkmm' && '--skip-native' || '' }}
 
   # gtkmm 的演示与实验是 gtkmm-4.0 的 C++ CMake 工程，check.py 编译后跑 --self-check
-  # （构造控件树即退出，不弹窗）。Linux 一档先验证可编译可加载；Windows 走 MSYS2
-  # MINGW64、macOS 走 Homebrew 的验证留待补上。
+  # （构造控件树即退出，不弹窗）。Linux 一档在这里，Windows 一档（MSYS2
+  # MINGW64）在下面的 gtkmm-native-windows；macOS 走 Homebrew 的验证留待补上。
   gtkmm-native:
     name: gtkmm 原生演示（ubuntu-26.04）
     if: contains(fromJSON('["all","gtkmm"]'), inputs.app || 'all')
@@ -376,6 +376,61 @@ jobs:
 
       - name: Verify
         run: xvfb-run -a python3 scripts/check.py gtkmm --skip-rust
+
+  # Windows 一档：MSYS2 MINGW64 的 gtkmm-4.0 + CMake/Ninja，check.py 照旧在宿主 pwsh 里
+  # 跑（pnpm、Python 用 runner 自带的），只是把 MINGW64 的 bin 排在 PATH 前面，让
+  # CMake 找到 g++、pkg-config 找到 gtkmm 的 .pc。本机同样的 PATH 已验证全绿（2026-10-19）。
+  # 系统 PATH 里的 pkg-config 可能来自别的软件，所以 PKG_CONFIG_PATH 显式指过去。
+  gtkmm-native-windows:
+    name: gtkmm 原生演示（windows-latest）
+    if: contains(fromJSON('["all","gtkmm"]'), inputs.app || 'all')
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Set up MSYS2 MINGW64
+        id: msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: false
+          install: >-
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-pkgconf
+            mingw-w64-x86_64-gtkmm-4.0
+            mingw-w64-x86_64-gettext-tools
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch gtkmm upstream docs
+        run: python guide/gtkmm/scripts/fetch_upstream.py
+
+      - name: Verify
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          $mingw = Join-Path $env:MSYS2_ROOT "mingw64"
+          $env:PATH = "$mingw\bin;$env:PATH"
+          $env:PKG_CONFIG_PATH = "$mingw\lib\pkgconfig"
+          python scripts/check.py gtkmm --skip-rust
 
   # 驾考学习：Flutter 桌面。三个平台各编各的桌面目标，入口仍是应用自己的
   # scripts/check.py（ADR 0007）。
