@@ -629,3 +629,55 @@ jobs:
 
       - name: Verify
         run: python3 scripts/check.py c-gui-lab --skip-build
+
+  # Windows 原生编译一档：把 third_party 从锁文件取回（scripts/fetch-third-party.py，
+  # 校验 sha256、打补丁），再用 MSYS2 UCRT64 编出七个原生程序。这是安装包作业的前置，
+  # 先在这里验证「CI 上拉得到源码、编得出来」。macOS / Linux 按 ADR 0049 排除（Win32 / DX11 / GDI 目标）。
+  # CMakePresets 写死 C:/msys64，runner 上 MSYS2 的位置不同，所以用 -D 覆盖编译器。
+  c-gui-lab-native:
+    name: C GUI Lab 原生编译（windows-latest）
+    if: contains(fromJSON('["all","c-gui-lab"]'), inputs.app || 'all')
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up MSYS2 UCRT64
+        id: msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: false
+          install: >-
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-gtk4
+            mingw-w64-ucrt-x86_64-libadwaita
+            mingw-w64-ucrt-x86_64-SDL2
+            mingw-w64-ucrt-x86_64-raylib
+            mingw-w64-ucrt-x86_64-lld
+
+      - name: Fetch third_party
+        working-directory: practice/c-gui-lab
+        run: python scripts/fetch-third-party.py
+
+      - name: Configure and build
+        working-directory: practice/c-gui-lab
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          $ucrt = Join-Path $env:MSYS2_ROOT "ucrt64"
+          $env:PATH = "$ucrt\bin;$env:PATH"
+          $env:PKG_CONFIG_PATH = "$ucrt\lib\pkgconfig;$ucrt\share\pkgconfig"
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_C_COMPILER="$ucrt\bin\gcc.exe" -DCMAKE_CXX_COMPILER="$ucrt\bin\g++.exe"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cmake --build build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          foreach ($app in "gtk-style", "imgui-style", "lvgl-style", "raygui-demo", "nuklear-demo", "nuklear-gdi-demo", "microui-demo") {
+            if (-not (Test-Path "build\apps\$app\$app.exe")) { throw "missing $app.exe" }
+          }

@@ -8,3 +8,5 @@
 2026-10-19 15:52:58|claude-code|T-002 草稿与 notes 已写入 artifacts/cursor/，开始 actionlint 验临时合并副本
 2026-10-19 15:54:18|claude-code|T-002 已交 review：windows-only NSIS 草稿 + notes，actionlint 零告警，证据在 artifacts/cursor/
 2026-10-19 15:57:29|claude-code|T-003 草稿已写：machine-release.yml + machine-notes.md；临时并入 release.yml 后 actionlint 零告警（exit=0）
+2026-10-19 16:20:14|claude-code|T-004 评估完：值得做。本机 third_party≈292MB，构建必需≈67MB（imgui v1.92.9 / lvgl v9.2.2 / microui@0850aba / nuklear v4.13.3 / raygui≈master 5.1-dev）；死重含 lvgl 9.3≈150MB、cimgui、tarball。就地改动几乎都是 include 平铺+窗口标题/F 键，imgui 与 lvgl 内容零 diff。建议首选 B-slim（≈67MB 入库，需你改 .gitignore），次选 A（脚本+patches+lock）。详表 artifacts/cursor/c-gui-lab-thirdparty-plan.md；等你回「做」再实施。
+2026-10-19 16:36:14|claude-code|T-004 已交 review。实施走 A，证据在 artifacts/cursor/c-gui-lab-thirdparty-evidence.md。补充：本机 nuklear 实际对齐 master tip（钉 9f775029），不是评估稿里的 v4.13.3；raygui 钉 ca17a68。

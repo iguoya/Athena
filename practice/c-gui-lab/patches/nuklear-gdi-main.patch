@@ -1,0 +1,20 @@
+--- a/nuklear_gdi/main.c
++++ b/nuklear_gdi/main.c
+@@ -13,7 +13,7 @@
+ #define NK_INCLUDE_DEFAULT_ALLOCATOR
+ #define NK_IMPLEMENTATION
+ #define NK_GDI_IMPLEMENTATION
+-#include "../../nuklear.h"
++#include "nuklear.h"
+ #include "nuklear_gdi.h"
+ 
+ /* Include the window framework (the new fancy code of this demo) */
+@@ -113,7 +113,7 @@
+     w2.allow_move = 1;
+     w2.has_titlebar = 1;
+     w2.cb_on_draw = &drawCallback;
+-    nkgdi_window_create(&w2, 500, 500, "F2", 520, 10);
++    nkgdi_window_create(&w2, 500, 500, "Nuklear GDI Demo", 520, 10);
+     
+     /* As long as both windows are valid (nkgdi_window_update returning 1) */
+     while (nkgdi_window_update(&w1) && nkgdi_window_update(&w2)) Sleep(20);

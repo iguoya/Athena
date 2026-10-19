@@ -1,0 +1,106 @@
+{
+  "description": "c-gui-lab third_party 取回清单（A 路线）。scripts/fetch-third-party.py 按此下载并校验 sha256。",
+  "packages": [
+    {
+      "id": "imgui",
+      "url": "https://github.com/ocornut/imgui/archive/refs/tags/v1.92.9.zip",
+      "version": "v1.92.9",
+      "sha256": "bbdcee6a1d56e38ccddaa58383182b348cfb4f2fc59f47a9ed9ef31f8f966351",
+      "strip_prefix": "imgui-1.92.9",
+      "dest": "imgui",
+      "files": [
+        "imconfig.h",
+        "imgui.cpp",
+        "imgui.h",
+        "imgui_demo.cpp",
+        "imgui_draw.cpp",
+        "imgui_internal.h",
+        "imgui_tables.cpp",
+        "imgui_widgets.cpp",
+        "imstb_rectpack.h",
+        "imstb_textedit.h",
+        "imstb_truetype.h",
+        "LICENSE.txt",
+        "backends/imgui_impl_dx11.cpp",
+        "backends/imgui_impl_dx11.h",
+        "backends/imgui_impl_win32.cpp",
+        "backends/imgui_impl_win32.h"
+      ]
+    },
+    {
+      "id": "lvgl",
+      "url": "https://github.com/lvgl/lvgl/archive/refs/tags/v9.2.2.zip",
+      "version": "v9.2.2",
+      "sha256": "b3d33f7aad1360f588762208d0f563574392debbc28d9187bda86012909f2203",
+      "strip_prefix": "lvgl-9.2.2",
+      "dest": "lvgl-9.2.2",
+      "trees": ["src", "demos"],
+      "files": ["lvgl.h", "lv_version.h"],
+      "alias": {
+        "lvgl": "lvgl-9.2.2"
+      }
+    },
+    {
+      "id": "microui",
+      "url": "https://github.com/rxi/microui/archive/0850aba860959c3e75fb3e97120ca92957f9d057.zip",
+      "version": "0850aba860959c3e75fb3e97120ca92957f9d057",
+      "sha256": "b4e6a42fb2daeb4f0d4b7cf1e37f26572ab0e08d1ad851858963d5356b26c19e",
+      "strip_prefix": "microui-0850aba860959c3e75fb3e97120ca92957f9d057",
+      "dest": "microui",
+      "files": [
+        "src/microui.c",
+        "src/microui.h",
+        "demo/atlas.inl",
+        "demo/main.c",
+        "demo/renderer.c",
+        "demo/renderer.h"
+      ]
+    },
+    {
+      "id": "nuklear",
+      "url": "https://github.com/Immediate-Mode-UI/Nuklear/archive/9f7750296f176e506c2b24ff55bc24495e2db750.zip",
+      "version": "9f7750296f176e506c2b24ff55bc24495e2db750",
+      "sha256": "8771b6572ce0a78bf2e3bc097fbd810876e475ca5dc81c0ae3b70c505986dd32",
+      "strip_prefix": "Nuklear-9f7750296f176e506c2b24ff55bc24495e2db750",
+      "dest": ".",
+      "map": [
+        {"from": "nuklear.h", "to": "nuklear.h"},
+        {"from": "demo/sdl_opengl2/main.c", "to": "nuklear_sdl2.c"},
+        {"from": "demo/sdl_opengl2/nuklear_sdl_gl2.h", "to": "nuklear_sdl_gl2.h"},
+        {"from": "demo/common/overview.c", "to": "demo/common/overview.c"},
+        {"from": "demo/gdi_native_nuklear/main.c", "to": "nuklear_gdi/main.c"},
+        {"from": "demo/gdi_native_nuklear/nuklear_gdi.h", "to": "nuklear_gdi/nuklear_gdi.h"},
+        {"from": "demo/gdi_native_nuklear/window.h", "to": "nuklear_gdi/window.h"}
+      ]
+    },
+    {
+      "id": "raygui",
+      "url": "https://github.com/raysan5/raygui/archive/ca17a68d1a32abede1155c9826427482aa72d43f.zip",
+      "version": "ca17a68d1a32abede1155c9826427482aa72d43f",
+      "sha256": "8e0cf61ee64ae014c5086d6c72cfb8f359b37df55016c8e0b7b21e6a3e62a8a7",
+      "strip_prefix": "raygui-ca17a68d1a32abede1155c9826427482aa72d43f",
+      "dest": ".",
+      "map": [
+        {"from": "src/raygui.h", "to": "raygui.h"},
+        {
+          "from": "examples/controls_test_suite/controls_test_suite.c",
+          "to": "raygui_controls_test.c"
+        }
+      ],
+      "glob_map": [
+        {
+          "from_glob": "examples/styles/style_*.h",
+          "to_dir": "."
+        }
+      ]
+    }
+  ],
+  "patches": [
+    "patches/microui-demo-main.patch",
+    "patches/microui-demo-renderer.patch",
+    "patches/nuklear-sdl2-main.patch",
+    "patches/nuklear-sdl-gl2-h.patch",
+    "patches/nuklear-gdi-main.patch",
+    "patches/raygui-controls-test.patch"
+  ]
+}
