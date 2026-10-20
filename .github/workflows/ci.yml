@@ -761,7 +761,8 @@ jobs:
           UCRT="$(cygpath -m "$MSYS2_ROOT")/ucrt64"
           # Git Bash 的 PATH 要 unix 风格（/d/a/...），带盘符的 D:/... 里的冒号会被拆开；
           # 而 awk 里按 root 前缀过滤 ntldd 的输出要 mixed 风格（D:/...），两种写法各用各的。
-          export PATH="$(cygpath -u "$UCRT")/bin:$PATH"
+          ucrt_unix="$(cygpath -u "$UCRT")"
+          export PATH="${ucrt_unix}/bin:$PATH"
           for exe in build/apps/*/*.exe; do
             dir="$(dirname "$exe")"
             ntldd -R "$exe" \
