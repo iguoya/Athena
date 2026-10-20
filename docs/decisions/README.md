@@ -95,7 +95,7 @@
 | [0049](0049-portability-is-a-cost-benefit-call.md) | 跨平台是成本收益判断，成本过高的整体排除 | 已接受；限定 0047 的边界 |
 | [0050](0050-ci-runs-on-release-not-every-push.md) | 跨平台稳定之前，CI 推送即跑 | 已被 0064 取代 |
 | [0064](0064-ci-explicit-trigger.md) | CI 改为显式触发，不再推送即跑 | 已接受；取代 0050 |
-| [0081](0081-unified-release.md) | 统一发版：一个 v* tag 全量构建 cpp、driver、拾阶，发一个 Athena Release | 已接受；修订 ascent 应用级 0018 的发版入口描述；回退 `c115dd4` 的 driver 独立发版；北极星、磨砚、数学工具随后加入同台矩阵（v9.0.0 起） |
+| [0081](0081-unified-release.md) | 统一发版：一个 v* tag 全量构建 cpp、driver、拾阶，发一个 Athena Release | 已接受；修订 ascent 应用级 0018 的发版入口描述；回退 `c115dd4` 的 driver 独立发版；北极星、磨砚、数学工具随后加入同台矩阵（v9.0.0 起）；决策 1~3 的全量构建与统一版本号由 0171 修订 |
 | [0083](0083-launcher-mind-map.md) | 启动器的学习应用面板改为放射状思维导图，关系由 app.json 的 group / related 声明 | 已接受 |
 | [0084](0084-math-tools-joins-subjects.md) | math-tools 从 practice/ 迁入 subjects/，作为数学学习的配套工具 | 已接受；修订 0060 对 math-tools 的归类 |
 | [0085](0085-reinforce-draws-from-all-wrong.md) | 强化练习从历史上全部错题里按权重抽取，每轮重抽并可「换一批」 | 已接受；修订 0076 第 7 条的选题规则；决策 2 由 0086 修订 |
@@ -164,3 +164,4 @@
 | [0168](0168-release-mature-apps-uniformly.md) | 相对成熟的应用按同一标准进入发布：取消 0151、0153 对贪吃蛇和中国象棋的发版排除；archived 空壳与仍是 planned 占位的应用不进 | 已接受 |
 | [0169](0169-pocket-cube-solver-app.md) | 新增 `programming/pocket-cube-solver`：象棋同款壳 + 七章独立 gtkmm 程序，按初学者层先法的阶段切章，终点是能解任意状态的程序；旧版 `practice/pocket_cube` 原地保留作参考 | 已接受 |
 | [0170](0170-release-exclusions-launcher-and-legacy-pocket-cube.md) | 启动器（依赖仓库与开发工具链，不是可独立安装的应用）与旧版 pocket_cube（已定为供参考、不再做）不进发布矩阵，理由写明；machine 等迁到 Tauri 后再进，c-gui-lab 先解决 third_party 可复现 | 已接受 |
+| [0171](0171-incremental-release-per-app-versions.md) | 增量发版：应用各有自己的真实版本号（写在各栈清单），只构建有改动的应用；Release 页只放本次构建的；不做逐应用 tag | 已接受；修订 0081 决策 1~3，落地后第一次发版是 10.1.0 |
