@@ -201,7 +201,8 @@ def check_workspace(git: GitRunner) -> Finding:
             "红",
             "工作区",
             detail,
-            "prepare 在已跟踪文件未提交时会拒绝；先提交、stash，或确认未跟踪文件可忽略后再发版",
+            "prepare 开头的体检有红即拒；先提交、stash，或确认未跟踪可清后再发版"
+            "（紧急热修可 --skip-readiness）",
         )
     return Finding("绿", "工作区", detail, "")
 
@@ -214,7 +215,7 @@ def check_remote(git: GitRunner) -> Finding:
             "黄",
             "与远端",
             "没有 origin/main 引用",
-            "先 git fetch，再重跑 readiness；prepare 要求与远端同步",
+            "先 git fetch，再重跑 readiness；落后会挡 prepare",
         )
     behind, ahead = parse_ahead_behind(git("rev-list", "--left-right", "--count", "origin/main...main"))
     detail = f"main 相对 origin/main：超前 {ahead}、落后 {behind}（未 fetch，数字以本地引用为准）"
@@ -223,7 +224,7 @@ def check_remote(git: GitRunner) -> Finding:
             "红",
             "与远端",
             detail,
-            "prepare 要求同步；先 git pull --rebase（需要的话先 git fetch）",
+            "落后会挡 prepare；先 git pull --rebase（需要的话先 git fetch）",
         )
     if ahead:
         return Finding(
@@ -506,17 +507,15 @@ def render(findings: list[Finding], out: TextIO) -> int:
     return 0
 
 
-def run_readiness(
+def collect_findings(
     *,
     with_checks: bool = False,
-    out: TextIO | None = None,
     git: GitRunner | None = None,
     gh: GhRunner | None = None,
-) -> int:
-    out = out or sys.stdout
+) -> list[Finding]:
+    """与 readiness 子命令同一套检查。prepare 只看这里的红黄，不再另判工作区与远端。"""
     git_fn: GitRunner = git or (lambda *a, check=True: run_git(list(a), check=check))
     gh_fn: GhRunner = gh or run_gh
-
     findings = [
         check_workspace(git_fn),
         check_remote(git_fn),
@@ -526,7 +525,18 @@ def run_readiness(
     ]
     if with_checks:
         findings.append(check_structure())
-    return render(findings, out)
+    return findings
+
+
+def run_readiness(
+    *,
+    with_checks: bool = False,
+    out: TextIO | None = None,
+    git: GitRunner | None = None,
+    gh: GhRunner | None = None,
+) -> int:
+    out = out or sys.stdout
+    return render(collect_findings(with_checks=with_checks, git=git, gh=gh), out)
 
 
 def main(argv: list[str] | None = None) -> int:

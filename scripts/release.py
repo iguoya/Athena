@@ -11,16 +11,20 @@ CI（.github/workflows/release.yml）已经包揽构建、打包、发布和拾�
   python3 scripts/release.py prepare --major              # 8.0.0 → 9.0.0
   python3 scripts/release.py prepare 8.2.0                # 显式给版本号
   python3 scripts/release.py prepare --patch --dry-run    # 只预览，不动任何文件
+  python3 scripts/release.py prepare --patch --skip-readiness  # 紧急热修，跳过体检
   python3 scripts/release.py push                         # 第二阶段：推送并触发 CI
   python3 scripts/release.py push 8.2.0                   # push 时显式指定版本
   python3 scripts/release.py readiness                    # 发版前只读体检（见 release_readiness.py）
   python3 scripts/release.py readiness --with-checks      # 顺带跑 check.py --sources-only
 
 两阶段，中间不需要人工：
-  1. prepare：校验前提（main、干净、与远端同步、版本只增、tag 未占用）→
+  1. prepare：开头跑发版体检（release_readiness；有红即拒，黄只打印；
+     --dry-run 下红只提示不拒；紧急热修可 --skip-readiness）→
+     再校验 readiness 未覆盖的前提（只能在 main、版本只增、tag 未占用）→
      bump practice/cpp/meson.build → CHANGELOG 缺节时先按提交生成机械底稿，
      再交给 GLM 对照上一版的手写风格总结润色（不是提交标题堆砌）→
      提交「chore(release): x.y.z」→ 打 tag v x.y.z。
+     工作区干净、与远端同步的口径只在 readiness 里判一次，不在这里重复。
   2. push：确认 tag 指向 HEAD → `git push origin main v x.y.z` →
      打印查看 CI 的命令。此后构建与发布全部由 CI 接手。
 
@@ -103,16 +107,57 @@ def parse_target(args: argparse.Namespace) -> str:
     return target
 
 
+def gate_on_readiness(
+    *,
+    dry_run: bool,
+    skip: bool,
+    readiness_runner=None,
+    git=None,
+    gh=None,
+) -> None:
+    """prepare 开头的发版体检门禁。
+
+    工作区干净、与远端同步等口径只在 release_readiness 里判；这里只决定
+    红/黄/dry-run/skip 怎么影响 prepare。readiness_runner 供自测注入桩。
+    """
+    if skip:
+        # 醒目警告：逃生口必须显式写出，避免习惯性跳过
+        print("⚠ 已跳过发版体检（--skip-readiness）", flush=True)
+        return
+    runner = readiness_runner
+    if runner is None:
+        from release_readiness import force_utf8_output, run_readiness
+
+        force_utf8_output()
+
+        def runner() -> int:
+            return run_readiness(with_checks=False, git=git, gh=gh)
+
+    code = runner()
+    if code == 0:
+        return
+    # code != 0：体检已打印红项表。dry-run 要预览改动，只提示不拒。
+    if dry_run:
+        print(
+            "⚠ dry-run：发版体检有红项，仅提示、不拒绝（要预览改动）。"
+            "真正 prepare 前请先处理红项。",
+            flush=True,
+        )
+        return
+    die(
+        "发版体检有红项，已拒绝 prepare。"
+        "按上表「怎么处理」修好后重跑；紧急热修可显式加 --skip-readiness"
+    )
+
+
 def check_prerequisites(target: str) -> None:
+    """readiness 未覆盖的前提：分支、版本单调、tag 未占用。
+
+    工作区干净、与远端同步已改由 gate_on_readiness → release_readiness 判，
+    这里不再重复，避免两处口径各说各话。
+    """
     if git("branch", "--show-current") != "main":
         die("不在 main 分支上；发版从 main 出")
-    # 未跟踪文件不挡发版：提交只 add 指定的两个文件，另一条工作线的草稿不受影响
-    if git("status", "--porcelain", "--untracked-files=no"):
-        die("有已跟踪文件未提交；先提交或 stash")
-    if git("rev-list", "--count", "origin/main..main") != "0" or git(
-        "rev-list", "--count", "main..origin/main"
-    ) != "0":
-        die("main 与 origin/main 不同步；先 git pull --rebase / git push")
     current = current_meson_version()
     if tuple(int(p) for p in target.split(".")) <= tuple(int(p) for p in current.split(".")):
         die(f"目标版本 {target} 不大于当前 meson 版本 {current}；版本只增不减")
@@ -287,8 +332,20 @@ def check_version_level(target: str) -> None:
         )
 
 
-def prepare(target: str, model: str, dry_run: bool) -> None:
+def prepare(
+    target: str,
+    model: str,
+    dry_run: bool,
+    *,
+    skip_readiness: bool = False,
+    readiness_runner=None,
+) -> None:
     print(f"发版准备 {target}：", flush=True)
+    gate_on_readiness(
+        dry_run=dry_run,
+        skip=skip_readiness,
+        readiness_runner=readiness_runner,
+    )
     check_prerequisites(target)
     bump_meson(target, dry_run)
     ensure_changelog(target, model, dry_run)
@@ -344,6 +401,11 @@ def main() -> int:
     target.add_argument("version", nargs="?", help="显式版本号 x.y.z")
     p_prepare.add_argument("--dry-run", action="store_true", help="只预览要做的改动")
     p_prepare.add_argument(
+        "--skip-readiness",
+        action="store_true",
+        help="跳过发版体检（紧急热修逃生口；会打印醒目警告）",
+    )
+    p_prepare.add_argument(
         "--model",
         default=os.environ.get("ATHENA_RELEASE_MODEL", DEFAULT_MODEL),
         help=f"CHANGELOG 润色用的模型（默认 {DEFAULT_MODEL}，可用环境变量 ATHENA_RELEASE_MODEL 覆盖）",
@@ -377,7 +439,12 @@ def main() -> int:
         p_prepare.error("显式版本号与 --major/--minor/--patch 别同时给")
     if not args.version and not (args.major or args.minor or args.patch):
         p_prepare.error("给一个版本号，或 --major/--minor/--patch 之一")
-    prepare(parse_target(args), args.model, args.dry_run)
+    prepare(
+        parse_target(args),
+        args.model,
+        args.dry_run,
+        skip_readiness=args.skip_readiness,
+    )
     return 0
 
 
