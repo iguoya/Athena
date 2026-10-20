@@ -417,7 +417,7 @@ _GROUP_RE = re.compile(r"^(" + _ROOTS_RE + r")/")
 _ROOT_ALLOW = {
     "AGENTS.md", "CLAUDE.md", "README.md", "CHANGELOG.md", "LICENSE",
     ".git", ".gitignore", ".gitattributes", ".zcodeignore",
-    ".agents", ".claude", ".cursor", ".gemini", ".vscode", ".github",
+    ".agents", ".claude", ".cursor", ".gemini", ".vscode", ".github", ".zcode",
     ".cargo", "Cargo.toml", "Cargo.lock",
     "package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml",
     *APP_ROOTS, "launcher", "docs", "scripts", "archive",
