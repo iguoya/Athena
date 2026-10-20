@@ -1094,9 +1094,177 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+  # c-gui-lab 安装包（ADR 0170 第 4 条）。同一套步骤已在 ci.yml 的 c-gui-lab-package 一档验证过
+  # （run 39349483787：静默安装后七个原生程序都起得来）；这里只多了从 tag 写版本号、
+  # 产物名对齐 publish 的 athena-* 通配。只有 Windows 一档，macOS / Linux 按 ADR 0049 排除。
+  c-gui-lab:
+    name: Build c-gui-lab (windows-x64)
+    runs-on: windows-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: practice/c-gui-lab
+
+    steps:
+      - name: Resolve version
+        id: version
+        shell: bash
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          if ! echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::版本号 '$v' 不是 x.y.z 形式"; exit 1
+          fi
+          echo "value=$v" >> "$GITHUB_OUTPUT"
+
+      - name: Check out tagged source
+        uses: actions/checkout@v7
+
+      - name: Set package version from tag
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));p.version=process.env.VERSION;fs.writeFileSync('package.json',JSON.stringify(p,null,2)+String.fromCharCode(10))"
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: practice/c-gui-lab/package-lock.json
+
+      - name: Set up MSYS2 UCRT64
+        id: msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: false
+          install: >-
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-gtk4
+            mingw-w64-ucrt-x86_64-libadwaita
+            mingw-w64-ucrt-x86_64-SDL2
+            mingw-w64-ucrt-x86_64-raylib
+            mingw-w64-ucrt-x86_64-lld
+            mingw-w64-ucrt-x86_64-ntldd
+
+      - name: Fetch third_party
+        run: python scripts/fetch-third-party.py
+
+      - name: Install Electron dependencies
+        run: npm ci
+
+      - name: Configure and build native apps
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        shell: pwsh
+        run: |
+          $ucrt = Join-Path $env:MSYS2_ROOT "ucrt64"
+          $env:PATH = "$ucrt\bin;$env:PATH"
+          $env:PKG_CONFIG_PATH = "$ucrt\lib\pkgconfig;$ucrt\share\pkgconfig"
+          # CMakePresets 写死 C:/msys64，runner 上 MSYS2 位置不同，用 -D 覆盖编译器
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_C_COMPILER="$ucrt\bin\gcc.exe" -DCMAKE_CXX_COMPILER="$ucrt\bin\g++.exe"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cmake --build build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          foreach ($app in "gtk-style", "imgui-style", "lvgl-style", "raygui-demo", "nuklear-demo", "nuklear-gdi-demo", "microui-demo") {
+            if (-not (Test-Path "build\apps\$app\$app.exe")) { throw "missing $app.exe" }
+          }
+
+      # 把 UCRT64 运行库 DLL 收到各 exe 旁（Windows 加载 DLL 先查应用程序目录，
+      # 旁路即可生效），然后复查无缺失。runner 的 MSYS2 位置不定，所以按
+      # setup-msys2 输出的实际路径过滤，不写死 C:\msys64。
+      - name: Bundle and verify MinGW runtime DLLs
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          UCRT="$(cygpath -m "$MSYS2_ROOT")/ucrt64"
+          # Git Bash 的 PATH 要 unix 风格（/d/a/...），带盘符的 D:/... 里的冒号会被拆开；
+          # 而 awk 里按 root 前缀过滤 ntldd 的输出要 mixed 风格（D:/...），两种写法各用各的。
+          ucrt_unix="$(cygpath -u "$UCRT")"
+          export PATH="${ucrt_unix}/bin:$PATH"
+          for exe in build/apps/*/*.exe; do
+            dir="$(dirname "$exe")"
+            ntldd -R "$exe" \
+              | awk -v root="$UCRT" '{gsub(/\\/, "/")} /=>/ && index($3, root) == 1 {print $3}' \
+              | while read -r dll; do cp -n "$dll" "$dir/"; done
+          done
+          missing=0
+          for exe in build/apps/*/*.exe; do
+            while read -r name; do
+              case "$name" in
+                ext-ms-*|api-ms-*) ;;
+                *)
+                  # 只有 UCRT64 的 bin 里确有这个 DLL 却没收到，才是真缺口；
+                  # 其余（AzureAttestManager、wpaxholder 等）是 Windows 自带组件的延迟加载项，
+                  # runner 上没有也不影响，安装机由系统提供。
+                  if [ -f "${ucrt_unix}/bin/${name}" ]; then
+                    echo "::error::$exe 依赖的 $name 在 UCRT64 里有，但没收集到"; missing=1
+                  else
+                    echo "notice: $exe 的 $name 不在 UCRT64，按系统组件处理"
+                  fi ;;
+              esac
+            done < <(ntldd -R "$exe" | awk '/=> not found/ {print $1}')
+          done
+          exit "$missing"
+
+      # 应用 JS 进 asar；原生 exe 与 DLL 按 electron-builder.yml 的 extraResources
+      # 放 resources/native（launcher 打包态从这里找，见 launcher/main.js 的
+      # NATIVE_ROOT 与 electron-builder.yml 头注）。
+      - name: Build NSIS installer
+        run: npx electron-builder --win nsis --publish never
+
+      - name: Verify installer exists
+        shell: bash
+        run: ls -l dist/athena-c-gui-lab-*-windows-x64-setup.exe
+
+      # NSIS 静默参数：/S 静默；/D= 指定目录且必须是最后一个参数、不能加引号，
+      # 路径含空格时解析失败。RUNNER_TEMP（D:\a\_temp）无空格，不要换含空格的目录。
+      - name: Silent-install to temp dir
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem "dist/athena-c-gui-lab-*-windows-x64-setup.exe" | Select-Object -First 1
+          if (-not $installer) { throw "安装包未生成" }
+          $dest = Join-Path $env:RUNNER_TEMP "c-gui-lab-installed"
+          $p = Start-Process -FilePath $installer.FullName -ArgumentList "/S", "/D=$dest" -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw "静默安装退出码 $($p.ExitCode)" }
+          if (-not (Test-Path (Join-Path $dest "athena-c-gui-lab.exe"))) { throw "安装目录未找到主程序" }
+          "INSTALLED=$dest" >> $env:GITHUB_ENV
+
+      # 安装布局的真验证：selftest 逐个 spawn 七个 exe 并确认 4 秒后仍存活。
+      - name: Run packaged selftest
+        shell: pwsh
+        run: |
+          # Electron 是 GUI 子系统程序，pwsh 里直接 & 调用不会等它退出，$LASTEXITCODE 也是空的
+          # （首跑就栽在这）。改成 Start-Process -Wait 等它结束，输出重定向到文件，
+          # 成败以退出码与 SELFTEST-OK 标记两者同时成立为准。
+          $exe = Join-Path $env:INSTALLED "athena-c-gui-lab.exe"
+          $out = Join-Path $env:RUNNER_TEMP "selftest.out.txt"
+          $err = Join-Path $env:RUNNER_TEMP "selftest.err.txt"
+          $p = Start-Process -FilePath $exe -ArgumentList "--selftest" -Wait -PassThru `
+            -RedirectStandardOutput $out -RedirectStandardError $err
+          Get-Content $out, $err -ErrorAction SilentlyContinue
+          if ($p.ExitCode -ne 0) { throw "安装布局 selftest 失败（exit $($p.ExitCode)）" }
+          if (-not (Select-String -Path $out -Pattern "SELFTEST-OK" -Quiet)) { throw "selftest 输出里没有 SELFTEST-OK" }
+
+      - name: Upload installer for inspection
+        uses: actions/upload-artifact@v7
+        with:
+          name: athena-c-gui-lab-windows-x64
+          path: practice/c-gui-lab/dist/athena-c-gui-lab-*-windows-x64-setup.exe
+          if-no-files-found: error
+          retention-days: 7
+
   publish:
     name: Publish GitHub Release
-    needs: [macos, linux, windows, driver, ascent, tauri-apps]
+    needs: [macos, linux, windows, driver, ascent, tauri-apps, c-gui-lab]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
