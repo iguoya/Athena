@@ -1,5 +1,8 @@
 name: Release
 
+# 增量发版（ADR 0171，修订 ADR 0081）：一个 tag 仍是一次发版，但只构建有改动的应用。
+# 应用各有自己的版本号（写在各栈清单里），安装包按应用自己的版本命名；plan 作业按
+# 「清单版本与上一个 tag 不同」算出要构建的应用，各构建作业只校验、不改写版本。
 on:
   push:
     tags:
@@ -13,8 +16,76 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # 算出这次要构建谁：只比较各应用清单里的版本（依赖图在 prepare 时已经算过并写进了清单，
+  # 这里不重复算，重发 tag 时结果稳定）。发版号必须等于 VERSION。
+  plan:
+    name: Plan release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      tauri_any: ${{ steps.plan.outputs.tauri_any }}
+      tauri_matrix: ${{ steps.plan.outputs.tauri_matrix }}
+      cpp: ${{ steps.plan.outputs.cpp }}
+      driver: ${{ steps.plan.outputs.driver }}
+      ascent: ${{ steps.plan.outputs.ascent }}
+      c_gui_lab: ${{ steps.plan.outputs.c_gui_lab }}
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v7
+        with:
+          # 要读上一个 tag 的各应用清单
+          fetch-depth: 0
+
+      - name: Verify tag matches VERSION
+        shell: bash
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          file="$(tr -d '[:space:]' < VERSION)"
+          if [[ "$v" != "$file" ]]; then
+            echo "::error::tag 版本 $v 与仓库根 VERSION（$file）不一致"
+            exit 1
+          fi
+
+      - name: Compute build plan
+        id: plan
+        shell: bash
+        run: |
+          prev_tag="$(git describe --tags --abbrev=0 --match 'v*.*.*' "${GITHUB_REF_NAME}^" 2>/dev/null || true)"
+          if [[ -z "$prev_tag" ]]; then
+            echo "::error::找不到上一个 v*.*.* tag，无法比较各应用版本"
+            exit 1
+          fi
+          echo "对比基线：$prev_tag"
+          python3 scripts/release_plan.py matrix --base "$prev_tag" --head "$GITHUB_SHA" > plan.json
+          cat plan.json
+          python3 - <<'PY'
+          import json, os
+          plan = json.load(open("plan.json", encoding="utf-8"))
+          include = plan["tauri"]["include"]
+          any_tauri = bool(include)
+          if not include:
+              # 空矩阵会让工作流语法检查失败；放一个占位项，作业靠 tauri_any 跳过
+              include = [{"app": "none", "root": "none", "os": "ubuntu-24.04",
+                          "platform": "none", "bundles": "none"}]
+          out = {
+              "tauri_any": str(any_tauri).lower(),
+              "tauri_matrix": json.dumps({"include": include}, separators=(",", ":")),
+              "cpp": str(bool(plan["cpp"])).lower(),
+              "driver": str(bool(plan["driver"])).lower(),
+              "ascent": str(bool(plan["ascent"])).lower(),
+              "c_gui_lab": str(bool(plan["c-gui-lab"])).lower(),
+          }
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              for k, v in out.items():
+                  f.write(f"{k}={v}\n")
+          if not any(out[k] == "true" for k in ("tauri_any", "cpp", "driver", "ascent", "c_gui_lab")):
+              raise SystemExit("::error::没有任何应用的版本相对上一个 tag 发生变化，没有可发布的内容")
+          PY
+
   macos:
     name: Build ${{ matrix.architecture }}
+    needs: plan
+    if: needs.plan.outputs.cpp == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -43,19 +114,14 @@ jobs:
           blueprint-compiler librsvg
           adwaita-icon-theme hicolor-icon-theme
 
-      - name: Read and verify version
+      - name: Read version from Meson
         id: version
         shell: bash
         run: |
-          version="${GITHUB_REF_NAME#v}"
           meson setup build-release --buildtype=release -Dstrip=true
           project_version=$(meson introspect build-release --projectinfo \
             | python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])')
-          if [[ "$version" != "$project_version" ]]; then
-            echo "Tag version $version does not match Meson version $project_version" >&2
-            exit 1
-          fi
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "version=$project_version" >> "$GITHUB_OUTPUT"
 
       - name: Build
         run: meson compile -C build-release
@@ -90,6 +156,8 @@ jobs:
 
   linux:
     name: Build Linux packages
+    needs: plan
+    if: needs.plan.outputs.cpp == 'true'
     runs-on: ubuntu-26.04
     timeout-minutes: 45
     defaults:
@@ -110,19 +178,14 @@ jobs:
             libgtest-dev blueprint-compiler librsvg2-common xvfb \
             squashfs-tools curl ca-certificates
 
-      - name: Read and verify version
+      - name: Read version from Meson
         id: version
         shell: bash
         run: |
-          version="${GITHUB_REF_NAME#v}"
           meson setup build-linux-release --buildtype=release -Dstrip=true --prefix /usr
           project_version=$(meson introspect build-linux-release --projectinfo \
             | python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])')
-          if [[ "$version" != "$project_version" ]]; then
-            echo "Tag version $version does not match Meson version $project_version" >&2
-            exit 1
-          fi
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "version=$project_version" >> "$GITHUB_OUTPUT"
 
       - name: Build and test
         run: |
@@ -174,6 +237,8 @@ jobs:
 
   windows:
     name: Build Windows packages
+    needs: plan
+    if: needs.plan.outputs.cpp == 'true'
     runs-on: windows-latest
     timeout-minutes: 75
     defaults:
@@ -207,18 +272,13 @@ jobs:
             mingw-w64-ucrt-x86_64-hicolor-icon-theme
             mingw-w64-ucrt-x86_64-python
 
-      - name: Read and verify version
+      - name: Read version from Meson
         id: version
         run: |
-          version="${GITHUB_REF_NAME#v}"
           meson setup build-windows-release --buildtype=release -Dstrip=true
           project_version=$(meson introspect build-windows-release --projectinfo \
             | python -c 'import json,sys; print(json.load(sys.stdin)["version"])')
-          if [[ "$version" != "$project_version" ]]; then
-            echo "Tag version $version does not match Meson version $project_version" >&2
-            exit 1
-          fi
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "version=$project_version" >> "$GITHUB_OUTPUT"
 
       - name: Build and test
         run: |
@@ -273,6 +333,8 @@ jobs:
   # ascent-updates 固定标签）。签名 key 未配置时拾阶整体跳过，不阻塞其余应用发布。
   driver:
     name: Build driver (${{ matrix.platform }})
+    needs: plan
+    if: needs.plan.outputs.driver == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -288,18 +350,20 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     steps:
-      - name: Resolve version
-        id: version
-        shell: bash
-        run: |
-          v="${GITHUB_REF_NAME#v}"
-          if ! echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "::error::版本号 '$v' 不是 x.y.z 形式"; exit 1
-          fi
-          echo "value=$v" >> "$GITHUB_OUTPUT"
-
       - name: Check out tagged source
         uses: actions/checkout@v7
+
+      # 版本取自 pubspec（应用自己的版本，ADR 0171）；+构建号不进文件名
+      - name: Read app version
+        id: version
+        working-directory: certification/driver
+        shell: bash
+        run: |
+          v="$(sed -nE 's/^version: *([0-9]+\.[0-9]+\.[0-9]+).*/\1/p' pubspec.yaml)"
+          if ! echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::pubspec.yaml 里没有 x.y.z 形式的版本：'$v'"; exit 1
+          fi
+          echo "value=$v" >> "$GITHUB_OUTPUT"
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -312,14 +376,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
-
-      # 版本号由 tag 决定写入 pubspec，发版不需要预先改版本提交（ADR 0081 决策 3）
-      - name: Set version
-        working-directory: certification/driver
-        shell: bash
-        run: |
-          sed -i.bak -E "s/^version: .+/version: ${{ steps.version.outputs.value }}+1/" pubspec.yaml
-          rm pubspec.yaml.bak
 
       - name: Enable desktop targets
         working-directory: certification/driver
@@ -384,6 +440,8 @@ jobs:
 
   ascent:
     name: Build ascent (windows-x64)
+    needs: plan
+    if: needs.plan.outputs.ascent == 'true'
     runs-on: windows-latest
     timeout-minutes: 45
     # tauri-action 要以 draft 形态创建统一 Release，需要写权限
@@ -395,15 +453,6 @@ jobs:
     env:
       APP_DIR: postgraduate/ascent
     steps:
-      - name: Resolve version
-        id: version
-        run: |
-          v="${GITHUB_REF_NAME#v}"
-          if ! echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "::error::版本号 '$v' 不是 x.y.z 形式"; exit 1
-          fi
-          echo "value=$v" >> "$GITHUB_OUTPUT"
-
       - name: Check signing key
         id: key
         env:
@@ -444,14 +493,6 @@ jobs:
         if: steps.key.outputs.ready == 'true'
         run: pnpm install --frozen-lockfile
 
-      - name: Set version
-        if: steps.key.outputs.ready == 'true'
-        working-directory: postgraduate/ascent
-        env:
-          VERSION: ${{ steps.version.outputs.value }}
-        run: |
-          node -e "const f='src-tauri/tauri.conf.json';const c=require('./'+f);c.version=process.env.VERSION;require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
-
       # 上一次失败的 run 会留下同 tag 的 draft，指向旧提交、带着旧资产；移 tag 重跑时
       # tauri-action 可能复用它也可能另建一个，publish 按 tag 找到哪个就不确定了。
       # 只删 draft，已发布的 Release 不碰。
@@ -460,7 +501,7 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: v${{ steps.version.outputs.value }}
+          TAG: ${{ github.ref_name }}
         run: |
           for id in $(gh api "repos/$GITHUB_REPOSITORY/releases" --paginate \
               --jq ".[] | select(.draft and .tag_name == \"$TAG\") | .id"); do
@@ -477,8 +518,9 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           projectPath: postgraduate/ascent
-          tagName: v__VERSION__
-          releaseName: Athena v__VERSION__
+          # Release 属于发版 tag，不属于拾阶自己的版本（ADR 0171）
+          tagName: ${{ github.ref_name }}
+          releaseName: Athena ${{ github.ref_name }}
           releaseBody: 自动构建，提交 ${{ github.sha }}
           releaseDraft: true
           prerelease: false
@@ -489,7 +531,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p postgraduate/ascent/dist
-          gh release download "v${{ steps.version.outputs.value }}" --pattern latest.json --dir postgraduate/ascent/dist
+          gh release download "${{ github.ref_name }}" --pattern latest.json --dir postgraduate/ascent/dist
 
       - name: Upload release assets
         if: steps.key.outputs.ready == 'true'
@@ -510,464 +552,16 @@ jobs:
   # 把二进制收成 athena-<id>，窗口标题仍用中文。
   tauri-apps:
     name: Build ${{ matrix.app }} (${{ matrix.platform }})
+    needs: plan
+    if: needs.plan.outputs.tauri_any == 'true'
     strategy:
       fail-fast: false
       matrix:
-        include:
-          # 每项都写 root（应用所在的顶层目录）。名单见 ADR 0168。
-          - app: algorithms
-            root: postgraduate
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: algorithms
-            root: postgraduate
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: algorithms
-            root: postgraduate
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: algorithms
-            root: postgraduate
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: c-plus-plus
-            root: programming
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: c-plus-plus
-            root: programming
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: c-plus-plus
-            root: programming
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: c-plus-plus
-            root: programming
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: chinese-chess
-            root: programming
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: chinese-chess
-            root: programming
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: chinese-chess
-            root: programming
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: chinese-chess
-            root: programming
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: comms-console
-            root: tools
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: comms-console
-            root: tools
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: comms-console
-            root: tools
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: comms-console
-            root: tools
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: competitions
-            root: mentor
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: competitions
-            root: mentor
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: competitions
-            root: mentor
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: competitions
-            root: mentor
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: cs408
-            root: postgraduate
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: cs408
-            root: postgraduate
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: cs408
-            root: postgraduate
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: cs408
-            root: postgraduate
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: data-structures
-            root: postgraduate
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: data-structures
-            root: postgraduate
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: data-structures
-            root: postgraduate
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: data-structures
-            root: postgraduate
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: design-patterns
-            root: programming
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: design-patterns
-            root: programming
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: design-patterns
-            root: programming
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: design-patterns
-            root: programming
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: earth
-            root: practice
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: earth
-            root: practice
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: earth
-            root: practice
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: earth
-            root: practice
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: embedded
-            root: certification
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: embedded
-            root: certification
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: embedded
-            root: certification
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: embedded
-            root: certification
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: gtkmm
-            root: guide
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: gtkmm
-            root: guide
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: gtkmm
-            root: guide
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: gtkmm
-            root: guide
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: jiuzhou
-            root: mentor
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: jiuzhou
-            root: mentor
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: jiuzhou
-            root: mentor
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: jiuzhou
-            root: mentor
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: math-tools
-            root: tools
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: math-tools
-            root: tools
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: math-tools
-            root: tools
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: math-tools
-            root: tools
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: mathematics
-            root: postgraduate
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: mathematics
-            root: postgraduate
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: mathematics
-            root: postgraduate
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: mathematics
-            root: postgraduate
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: octave-manual
-            root: guide
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: octave-manual
-            root: guide
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: octave-manual
-            root: guide
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: octave-manual
-            root: guide
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: pocket-cube-solver
-            root: programming
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: pocket-cube-solver
-            root: programming
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: pocket-cube-solver
-            root: programming
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: pocket-cube-solver
-            root: programming
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: polaris
-            root: mentor
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: polaris
-            root: mentor
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: polaris
-            root: mentor
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: polaris
-            root: mentor
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: selinger-linear-algebra
-            root: guide
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: selinger-linear-algebra
-            root: guide
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: selinger-linear-algebra
-            root: guide
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: selinger-linear-algebra
-            root: guide
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: siefken-linear-algebra
-            root: guide
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: siefken-linear-algebra
-            root: guide
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: siefken-linear-algebra
-            root: guide
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: siefken-linear-algebra
-            root: guide
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: snake
-            root: programming
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: snake
-            root: programming
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: snake
-            root: programming
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: snake
-            root: programming
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: software
-            root: certification
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: software
-            root: certification
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: software
-            root: certification
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: software
-            root: certification
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
-          - app: sympy-tutorial
-            root: guide
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: sympy-tutorial
-            root: guide
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: sympy-tutorial
-            root: guide
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: sympy-tutorial
-            root: guide
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
+        # 由 plan 作业算出（scripts/release_plan.py matrix，名单在 scripts/release_apps.json）
+        include: ${{ fromJSON(needs.plan.outputs.tauri_matrix).include }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     steps:
-      - name: Resolve version
-        id: version
-        shell: bash
-        run: |
-          v="${GITHUB_REF_NAME#v}"
-          if ! echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "::error::版本号 '$v' 不是 x.y.z 形式"; exit 1
-          fi
-          echo "value=$v" >> "$GITHUB_OUTPUT"
-
       - name: Check out tagged source
         uses: actions/checkout@v7
 
@@ -1004,14 +598,17 @@ jobs:
             libjavascriptcoregtk-4.1-dev librsvg2-dev \
             libgtk-3-dev libayatana-appindicator3-dev patchelf             libspeechd-dev
 
-      # 版本号由 tag 决定写入 tauri.conf.json（ADR 0081 决策 3，与 driver 同法）
-      - name: Set version
+      # 版本取自应用自己的 tauri.conf.json（ADR 0171）；plan 作业已保证它与上一个 tag 不同
+      - name: Read app version
+        id: version
         working-directory: ${{ matrix.root }}/${{ matrix.app }}
-        env:
-          VERSION: ${{ steps.version.outputs.value }}
         shell: bash
         run: |
-          node -e "const f='src-tauri/tauri.conf.json';const c=require('./'+f);c.version=process.env.VERSION;require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
+          v="$(node -p "require('./src-tauri/tauri.conf.json').version")"
+          if ! echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::tauri.conf.json 里没有 x.y.z 形式的版本：'$v'"; exit 1
+          fi
+          echo "value=$v" >> "$GITHUB_OUTPUT"
 
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile
@@ -1099,6 +696,8 @@ jobs:
   # 产物名对齐 publish 的 athena-* 通配。只有 Windows 一档，macOS / Linux 按 ADR 0049 排除。
   c-gui-lab:
     name: Build c-gui-lab (windows-x64)
+    needs: plan
+    if: needs.plan.outputs.c_gui_lab == 'true'
     runs-on: windows-latest
     timeout-minutes: 90
     defaults:
@@ -1106,25 +705,19 @@ jobs:
         working-directory: practice/c-gui-lab
 
     steps:
-      - name: Resolve version
-        id: version
-        shell: bash
-        run: |
-          v="${GITHUB_REF_NAME#v}"
-          if ! echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "::error::版本号 '$v' 不是 x.y.z 形式"; exit 1
-          fi
-          echo "value=$v" >> "$GITHUB_OUTPUT"
-
       - name: Check out tagged source
         uses: actions/checkout@v7
 
-      - name: Set package version from tag
+      # 版本取自 package.json（应用自己的版本，ADR 0171）；electron-builder 的产物名由它决定
+      - name: Read app version
+        id: version
         shell: bash
-        env:
-          VERSION: ${{ steps.version.outputs.value }}
         run: |
-          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));p.version=process.env.VERSION;fs.writeFileSync('package.json',JSON.stringify(p,null,2)+String.fromCharCode(10))"
+          v="$(node -p "require('./package.json').version")"
+          if ! echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::package.json 里没有 x.y.z 形式的版本：'$v'"; exit 1
+          fi
+          echo "value=$v" >> "$GITHUB_OUTPUT"
 
       - name: Set up Node
         uses: actions/setup-node@v6
@@ -1264,7 +857,10 @@ jobs:
 
   publish:
     name: Publish GitHub Release
-    needs: [macos, linux, windows, driver, ascent, tauri-apps, c-gui-lab]
+    needs: [plan, macos, linux, windows, driver, ascent, tauri-apps, c-gui-lab]
+    # 没被 plan 选中的作业是 skipped；默认 success() 会连带跳过 publish，所以显式写：
+    # 只要 plan 成功、没有作业失败或被取消，就发布（ADR 0171）。
+    if: ${{ !cancelled() && needs.plan.result == 'success' && !contains(needs.*.result, 'failure') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -1311,6 +907,13 @@ jobs:
           # 自动生成的 Full Changelog 同格式，首个版本没有上一标签就省掉。
           repo_url="https://github.com/${GITHUB_REPOSITORY}"
           prev_tag="$(git describe --tags --abbrev=0 --match 'v*.*.*' "${GITHUB_REF_NAME}^" 2>/dev/null || true)"
+          # 应用各有版本（ADR 0171）：说明里附「本次发布的应用」与「未变化的应用」两张表
+          if [ -n "$prev_tag" ]; then
+            {
+              echo
+              python3 "${GITHUB_WORKSPACE}/scripts/release_plan.py" notes --base "$prev_tag" --head "$GITHUB_SHA"
+            } >> "${GITHUB_WORKSPACE}/release-notes.md"
+          fi
           {
             echo
             echo "---"

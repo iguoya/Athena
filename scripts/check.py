@@ -415,7 +415,7 @@ _GROUP_RE = re.compile(r"^(" + _ROOTS_RE + r")/")
 # 要么登记进来，要么进 .gitignore，要么删——launcher_list_out.txt、
 # __pycache__、dist-driver 三次杂物全都堆在根，不是巧合，根是随手一放的地方。
 _ROOT_ALLOW = {
-    "AGENTS.md", "CLAUDE.md", "README.md", "CHANGELOG.md", "LICENSE",
+    "AGENTS.md", "CLAUDE.md", "README.md", "CHANGELOG.md", "LICENSE", "VERSION",
     ".git", ".gitignore", ".gitattributes", ".zcodeignore",
     ".agents", ".claude", ".cursor", ".gemini", ".vscode", ".github", ".zcode",
     ".cargo", "Cargo.toml", "Cargo.lock",
@@ -563,10 +563,21 @@ def run_structure_check() -> None:
     ci_text = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     options = re.search(r"options:\s*\[([^\]]+)\]", ci_text)
     ci_apps = {name.strip() for name in options.group(1).split(",")} if options else set()
-    released = set(re.findall(r"^\s+- app: (\S+)$", release_text, re.MULTILINE))
-    released |= set(re.findall(r"^  (driver|ascent):$", release_text, re.MULTILINE))
+    # 发布名单在 scripts/release_apps.json（ADR 0171：release.yml 的矩阵由 plan 作业按它展开）
+    release_apps = _json.loads((REPO_ROOT / "scripts" / "release_apps.json").read_text(encoding="utf-8"))
+    released = {app["id"] for app in release_apps}
     for name in sorted(released - ci_apps):
-        problems.append(f"  release.yml 构建应用 {name}，但 ci.yml 的 choices 里没有它——发布必须先有验证")
+        problems.append(f"  release_apps.json 发布应用 {name}，但 ci.yml 的 choices 里没有它——发布必须先有验证")
+    # 每个发布应用的清单必须在，且带 x.y.z 形式的版本：CI 靠它决定构建谁、给安装包命名
+    version_re = re.compile(r"(?:\"version\"\s*:\s*\"|version:\s*'?)(\d+\.\d+\.\d+)")
+    for app in release_apps:
+        manifest = REPO_ROOT / app["manifest"]
+        if not manifest.is_file():
+            problems.append(f"  release_apps.json 里 {app['id']} 的清单 {app['manifest']} 不存在")
+        elif not version_re.search(manifest.read_text(encoding="utf-8")):
+            problems.append(f"  {app['manifest']} 里没有 x.y.z 形式的版本（{app['id']}）")
+    if "needs.plan.outputs.tauri_matrix" not in release_text:
+        problems.append("  release.yml 的 tauri-apps 没有读 plan 作业的矩阵（ADR 0171）——不要把静态矩阵加回去")
 
     # 7. 应用清单三处对账：根 README 的应用表、REPOSITORY.md 的名字表、ci.yml 的
     #    手动选择项，逐一与实际目录核对。「新增一个应用时动哪些地方」（REPOSITORY.md
