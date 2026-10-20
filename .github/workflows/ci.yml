@@ -774,7 +774,15 @@ jobs:
             while read -r name; do
               case "$name" in
                 ext-ms-*|api-ms-*) ;;
-                *) echo "::error::$exe 依赖的 $name 未收集到"; missing=1 ;;
+                *)
+                  # 只有 UCRT64 的 bin 里确有这个 DLL 却没收到，才是真缺口；
+                  # 其余（AzureAttestManager、wpaxholder 等）是 Windows 自带组件的延迟加载项，
+                  # runner 上没有也不影响，安装机由系统提供。
+                  if [ -f "${ucrt_unix}/bin/${name}" ]; then
+                    echo "::error::$exe 依赖的 $name 在 UCRT64 里有，但没收集到"; missing=1
+                  else
+                    echo "notice: $exe 的 $name 不在 UCRT64，按系统组件处理"
+                  fi ;;
               esac
             done < <(ntldd -R "$exe" | awk '/=> not found/ {print $1}')
           done
