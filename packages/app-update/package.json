@@ -1,0 +1,20 @@
+{
+  "name": "@athena/app-update",
+  "private": true,
+  "packageManager": "pnpm@10.15.1",
+  "version": "0.1.0",
+  "description": "Tauri 应用的应用内自动更新组件（ADR 0172）：启动即静默检查下载安装，进度条提示，失败静默；配合 tauri-plugin-updater 与 tauri-plugin-process 使用",
+  "type": "module",
+  "exports": {
+    ".": "./src/AppUpdate.tsx"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "catalog:",
+    "@tauri-apps/plugin-process": "catalog:",
+    "@tauri-apps/plugin-updater": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:"
+  }
+}

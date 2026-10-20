@@ -4,7 +4,8 @@
 build/
 builddir/
 dist/
-/node_modules/
+# node_modules 任何层级都不入库（packages/* 共用件也有自己的 node_modules）
+node_modules/
 /target/
 
 # Meson internal files

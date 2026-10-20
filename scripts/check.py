@@ -213,6 +213,8 @@ STACK_VERSIONS = {
     "tailwindcss": "^4.3.3", "@tailwindcss/vite": "^4.3.3",
     "@tauri-apps/api": "^2.12.0", "@tauri-apps/cli": "^2.12.0",
     "@tauri-apps/plugin-opener": "^2.7.0",
+    "@tauri-apps/plugin-updater": "^2.13.0",
+    "@tauri-apps/plugin-process": "^2.4.0",
     "@fontsource/noto-sans-sc": "^5.3.0",
     "lucide-react": "^1.52.0", "motion": "^14.0.0",
     "three": "^0.182.0", "@types/three": "^0.182.0",
