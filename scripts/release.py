@@ -1,16 +1,22 @@
 #!/usr/bin/env python3
-"""一键发版（ADR 0081）：统一 tag、全量构建、单个 Athena Release。
+"""一键发版（ADR 0081、0171）：一个 tag 一次发版，只构建有改动的应用，应用各有自己的版本号。
 
 CI（.github/workflows/release.yml）已经包揽构建、打包、发布和拾阶更新通道的
-同步；剩下的手工活只有三样——定版本号、升 meson 版本、写 CHANGELOG 节。这个
-脚本把它们收进两条命令，machine 汇编线之类的内容工作照旧不受发版影响。
+同步；剩下的手工活只有三样——定发版号、升有改动应用的版本、写 CHANGELOG 节。
+这个脚本把它们收进两条命令，machine 汇编线之类的内容工作照旧不受发版影响。
+
+发版号写在仓库根 VERSION；每个应用的真实版本写在各自的清单里（tauri.conf.json、
+pubspec.yaml、meson.build、package.json）。哪些应用有改动、该升到几，由
+scripts/release_plan.py 算（依赖图只在这里算，CI 只比较清单里的版本）。
 
 用法：
   python3 scripts/release.py prepare --patch              # 8.0.0 → 8.0.1
   python3 scripts/release.py prepare --minor              # 8.0.0 → 8.1.0
   python3 scripts/release.py prepare --major              # 8.0.0 → 9.0.0
   python3 scripts/release.py prepare 8.2.0                # 显式给版本号
-  python3 scripts/release.py prepare --patch --dry-run    # 只预览，不动任何文件
+  python3 scripts/release.py prepare --patch --dry-run    # 只预览（含各应用升版本的计划表），不动任何文件
+  python3 scripts/release.py prepare --minor --bump snake=minor --bump driver=10.2.0
+                                                          # 手动覆盖某个应用建议的升级档或版本
   python3 scripts/release.py prepare --patch --skip-readiness  # 紧急热修，跳过体检
   python3 scripts/release.py push                         # 第二阶段：推送并触发 CI
   python3 scripts/release.py push 8.2.0                   # push 时显式指定版本
@@ -21,7 +27,7 @@ CI（.github/workflows/release.yml）已经包揽构建、打包、发布和拾�
   1. prepare：开头跑发版体检（release_readiness；有红即拒，黄只打印；
      --dry-run 下红只提示不拒；紧急热修可 --skip-readiness）→
      再校验 readiness 未覆盖的前提（只能在 main、版本只增、tag 未占用）→
-     bump practice/cpp/meson.build → CHANGELOG 缺节时先按提交生成机械底稿，
+     按计划升有改动应用的清单版本、写 VERSION → CHANGELOG 缺节时先按提交生成机械底稿，
      再交给 GLM 对照上一版的手写风格总结润色（不是提交标题堆砌）→
      提交「chore(release): x.y.z」→ 打 tag v x.y.z。
      工作区干净、与远端同步的口径只在 readiness 里判一次，不在这里重复。
@@ -34,9 +40,8 @@ AI 润色的降级链（任何一步失败都保留机械底稿，不阻塞发�
 模型用 --model 或环境变量 ATHENA_RELEASE_MODEL 覆盖，默认 glm-4.7-flash。
 在 agent 会话里发版时也可以不让脚本润色，由 agent 直接改写后再提交。
 
-meson 版本必须预提交：release.yml 三个 cpp job 都用 tag 校验 meson 版本，
-这是既有的防呆（tag 与构建物必须一致）。driver、拾阶的版本由 CI 从 tag
-写入各自的清单文件，不需要（也不应该）在仓库里追着 tag 改。
+各应用的版本必须预提交：CI 的 plan 作业按「清单版本与上一个 tag 不同」决定构建谁，
+构建作业再读清单版本给安装包命名，不再用 tag 覆盖（ADR 0171）。
 """
 
 from __future__ import annotations
@@ -52,11 +57,10 @@ import urllib.request
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-MESON_BUILD = REPO_ROOT / "practice/cpp/meson.build"
+VERSION_FILE = REPO_ROOT / "VERSION"
 CHANGELOG = REPO_ROOT / "CHANGELOG.md"
 CHANGELOG_NOTES = REPO_ROOT / "practice/cpp/scripts/changelog_notes.py"
 VERSION_RE = re.compile(r"^\d+\.\d+\.\d+$")
-MESON_VERSION_RE = re.compile(r"(^  version: ')(\d+\.\d+\.\d+)(')", re.MULTILINE)
 CHANGELOG_SECTION_RE = re.compile(r"^## \[(\d+\.\d+\.\d+)\]", re.MULTILINE)
 SECTION_BLOCK_RE = re.compile(
     r"^## \[(\d+\.\d+\.\d+)\][^\n]*\n(.*?)(?=^## |\Z)", re.MULTILINE | re.DOTALL
@@ -83,18 +87,21 @@ def die(message: str) -> None:
     sys.exit(f"✗ {message}")
 
 
-def current_meson_version() -> str:
-    match = MESON_VERSION_RE.search(MESON_BUILD.read_text(encoding="utf-8"))
-    if not match:
-        die(f"{MESON_BUILD.relative_to(REPO_ROOT)} 里找不到 project() 的 version 行")
-    return match.group(2)
+def current_release_version() -> str:
+    """上一次发布的发版号，写在仓库根 VERSION（一行 x.y.z）。"""
+    if not VERSION_FILE.is_file():
+        die("仓库根没有 VERSION；先建它，内容写上一个发布的版本号（例如 10.0.0）")
+    value = VERSION_FILE.read_text(encoding="utf-8").strip()
+    if not VERSION_RE.match(value):
+        die(f"VERSION 里的 '{value}' 不是 x.y.z 形式")
+    return value
 
 
 def parse_target(args: argparse.Namespace) -> str:
     if args.version:
         target = args.version
     else:
-        major, minor, patch = (int(part) for part in current_meson_version().split("."))
+        major, minor, patch = (int(part) for part in current_release_version().split("."))
         if args.major:
             major += 1
         elif args.minor:
@@ -114,6 +121,7 @@ def gate_on_readiness(
     readiness_runner=None,
     git=None,
     gh=None,
+    plan=None,
 ) -> None:
     """prepare 开头的发版体检门禁。
 
@@ -131,7 +139,7 @@ def gate_on_readiness(
         force_utf8_output()
 
         def runner() -> int:
-            return run_readiness(with_checks=False, git=git, gh=gh)
+            return run_readiness(with_checks=False, git=git, gh=gh, plan=plan)
 
     code = runner()
     if code == 0:
@@ -158,9 +166,9 @@ def check_prerequisites(target: str) -> None:
     """
     if git("branch", "--show-current") != "main":
         die("不在 main 分支上；发版从 main 出")
-    current = current_meson_version()
+    current = current_release_version()
     if tuple(int(p) for p in target.split(".")) <= tuple(int(p) for p in current.split(".")):
-        die(f"目标版本 {target} 不大于当前 meson 版本 {current}；版本只增不减")
+        die(f"目标版本 {target} 不大于当前 VERSION {current}；版本只增不减")
     if git("rev-parse", "-q", "--verify", f"refs/tags/v{target}", check=False):
         die(f"tag v{target} 已存在")
     remote = run(["git", "ls-remote", "--exit-code", "origin", f"refs/tags/v{target}"])
@@ -170,16 +178,110 @@ def check_prerequisites(target: str) -> None:
         print("⚠ 查不到远端（离线？）；远端是否已有同名 tag 留给 push 兜底", flush=True)
 
 
-def bump_meson(target: str, dry_run: bool) -> None:
-    text = MESON_BUILD.read_text(encoding="utf-8")
-    new_text, count = MESON_VERSION_RE.subn(rf"\g<1>{target}\g<3>", text, count=1)
-    if count != 1:
-        die("meson.build 的 version 行替换失败")
+def write_release_version(target: str, dry_run: bool) -> None:
     if dry_run:
-        print(f"  [dry] {MESON_BUILD.relative_to(REPO_ROOT)}：version → {target}")
+        print(f"  [dry] VERSION：{current_release_version()} → {target}")
         return
-    MESON_BUILD.write_text(new_text, encoding="utf-8")
-    print(f"  {MESON_BUILD.relative_to(REPO_ROOT)}：version → {target}", flush=True)
+    VERSION_FILE.write_text(target + chr(10), encoding="utf-8", newline="")
+    print(f"  VERSION：→ {target}", flush=True)
+
+
+def parse_bump_overrides(items: list[str]) -> dict[str, str]:
+    """--bump 应用=major|minor|patch|x.y.z，可重复；重复指定同一应用以后一次为准。"""
+    overrides: dict[str, str] = {}
+    for item in items:
+        app, sep, value = item.partition("=")
+        if not sep or not app or not value:
+            die(f"--bump 要写成 应用=档位或版本（例：snake=minor、driver=10.2.0），收到 '{item}'")
+        overrides[app] = value
+    return overrides
+
+
+def plan_release(overrides: dict[str, str]) -> tuple[list[dict], list[dict], str]:
+    """按 release_plan 算本次发版：返回（要写进清单的版本变更，新应用，base tag）。
+
+    只在 prepare 里写文件；这里只算。已经升过版本的应用不再升（重跑 prepare 要幂等）。
+    """
+    import release_plan
+
+    base = release_plan.latest_version_tag(REPO_ROOT)
+    apps = release_plan.load_apps()
+    by_id = {app["id"]: app for app in apps}
+    decisions = release_plan.compute_decisions(REPO_ROOT, apps, base, "HEAD")
+    changes: list[dict] = []
+    fresh: list[dict] = []
+    pending = dict(overrides)
+    for decision in decisions:
+        if not decision["changed"]:
+            continue
+        if decision["new"]:
+            fresh.append(decision)
+            continue
+        if decision["bump"] == "none":
+            continue
+        app = by_id[decision["id"]]
+        current = decision["current"]
+        target_version = decision["suggested"]
+        level = decision["bump"]
+        override = pending.pop(decision["id"], None)
+        if override is not None:
+            if override in ("major", "minor", "patch"):
+                target_version = release_plan.apply_bump(current, override)
+                level = override
+            elif release_plan.SEMVER_RE.match(override):
+                target_version = override
+                level = "手动指定"
+            else:
+                die(f"--bump {decision['id']}={override}：不是 major/minor/patch，也不是 x.y.z")
+            if release_plan.core_version(target_version) == release_plan.core_version(current):
+                die(f"--bump {decision['id']}={override}：结果 {target_version} 没有高于当前 {current}")
+        changes.append(
+            {
+                "id": decision["id"],
+                "manifest": app["manifest"],
+                "format": app["manifest_format"],
+                "old": current,
+                "new": target_version,
+                "level": level,
+                "reasons": decision["reasons"],
+            }
+        )
+    if pending:
+        names = "、".join(sorted(pending))
+        die(
+            f"--bump 指定了 {names}，但它们不在待升版本的名单里"
+            "（没有改动、是新应用，或清单版本已经升过）；用 prepare --dry-run 看计划表"
+        )
+    if not changes and not fresh:
+        die(f"相对 {base} 没有任何应用有改动，没有可发布的内容")
+    return changes, fresh, base
+
+
+def print_release_plan(changes: list[dict], fresh: list[dict], base: str) -> None:
+    print(f"  相对 {base} 的应用版本计划：", flush=True)
+    for change in changes:
+        print(f"    {change['id']}: {change['old']} → {change['new']}（{change['level']}）", flush=True)
+    for decision in fresh:
+        print(f"    {decision['id']}: {decision['current']}（新应用，首发，不升）", flush=True)
+
+
+def apply_release_plan(changes: list[dict], dry_run: bool) -> list[str]:
+    """把新版本写进各应用清单，只改版本那一处。返回改动的清单路径（相对仓库根）。"""
+    import release_plan
+
+    written: list[str] = []
+    for change in changes:
+        path = REPO_ROOT / change["manifest"]
+        data = path.read_bytes()
+        updated = release_plan.write_version(data, change["format"], change["new"])
+        if dry_run:
+            print(f"  [dry] {change['manifest']}：{change['old']} → {change['new']}")
+            continue
+        path.write_bytes(updated)
+        written.append(change["manifest"])
+    if not dry_run:
+        print(f"  已把 {len(written)} 个应用的清单版本升到新值", flush=True)
+    return written
 
 
 def extract_section(target: str) -> str:
@@ -339,6 +441,7 @@ def prepare(
     *,
     skip_readiness: bool = False,
     readiness_runner=None,
+    bump_overrides: dict[str, str] | None = None,
 ) -> None:
     print(f"发版准备 {target}：", flush=True)
     gate_on_readiness(
@@ -347,14 +450,17 @@ def prepare(
         readiness_runner=readiness_runner,
     )
     check_prerequisites(target)
-    bump_meson(target, dry_run)
+    changes, fresh, base = plan_release(bump_overrides or {})
+    print_release_plan(changes, fresh, base)
+    write_release_version(target, dry_run)
+    manifests = apply_release_plan(changes, dry_run)
     ensure_changelog(target, model, dry_run)
     tidy_changelog(target, dry_run)
     check_version_level(target)
     if dry_run:
         print("dry-run 结束，未做任何改动。")
         return
-    git("add", str(MESON_BUILD), str(CHANGELOG))
+    git("add", "--", str(VERSION_FILE), str(CHANGELOG), *[str(REPO_ROOT / path) for path in manifests])
     git("commit", "-m", f"chore(release): {target}")
     git("tag", f"v{target}")
     print(
@@ -382,7 +488,7 @@ def push(target: str | None) -> None:
         else "完成后 Release 见仓库的 Releases 页"
     )
     print(
-        f"已推送 {tag}。CI 全量构建中，查看进度：\n"
+        f"已推送 {tag}。CI 按计划构建有改动的应用，查看进度：\n"
         "  gh run watch --exit-status $(gh run list --workflow=release.yml --limit 1 "
         "--json databaseId --jq '.[0].databaseId')\n" + where,
         flush=True,
@@ -390,7 +496,7 @@ def push(target: str | None) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="一键发版（ADR 0081），详见文件头 docstring")
+    parser = argparse.ArgumentParser(description="一键发版（ADR 0081、0171），详见文件头 docstring")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p_prepare = sub.add_parser("prepare", help="第一阶段：bump 版本、AI 润色 CHANGELOG、打 tag")
@@ -400,6 +506,13 @@ def main() -> int:
     target.add_argument("--patch", action="store_true", help="修订号 +1")
     target.add_argument("version", nargs="?", help="显式版本号 x.y.z")
     p_prepare.add_argument("--dry-run", action="store_true", help="只预览要做的改动")
+    p_prepare.add_argument(
+        "--bump",
+        action="append",
+        default=[],
+        metavar="应用=档位或版本",
+        help="覆盖某个应用建议的版本（major/minor/patch 或 x.y.z），可重复；先用 --dry-run 看计划表",
+    )
     p_prepare.add_argument(
         "--skip-readiness",
         action="store_true",
@@ -444,6 +557,7 @@ def main() -> int:
         args.model,
         args.dry_run,
         skip_readiness=args.skip_readiness,
+        bump_overrides=parse_bump_overrides(args.bump),
     )
     return 0
 

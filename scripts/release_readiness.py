@@ -19,9 +19,8 @@ from typing import Callable, TextIO
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CHANGELOG = REPO_ROOT / "CHANGELOG.md"
 RELEASE_TODO = REPO_ROOT / "docs/RELEASE-TODO.md"
-MESON_BUILD = REPO_ROOT / "practice/cpp/meson.build"
+VERSION_FILE = REPO_ROOT / "VERSION"
 
-MESON_VERSION_RE = re.compile(r"(^  version: ')(\d+\.\d+\.\d+)(')", re.MULTILINE)
 CHANGELOG_SECTION_RE = re.compile(r"^## \[(\d+\.\d+\.\d+)\]", re.MULTILINE)
 # SSH：git@github.com:owner/repo.git；HTTPS：https://github.com/owner/repo.git
 GITHUB_SLUG_RE = re.compile(r"github\.com[/:](.+?)(?:\.git)?/?$")
@@ -160,11 +159,12 @@ def next_patch_version(current: str) -> str:
     return f"{major}.{minor}.{patch + 1}"
 
 
-def meson_version(text: str) -> str:
-    match = MESON_VERSION_RE.search(text)
-    if not match:
-        raise ValueError("meson.build 里找不到 version")
-    return match.group(2)
+def release_version(text: str) -> str:
+    """仓库根 VERSION 是上一次发布的发版号（ADR 0171）。"""
+    value = text.strip()
+    if not re.fullmatch(r"\d+\.\d+\.\d+", value):
+        raise ValueError(f"VERSION 里的 '{value}' 不是 x.y.z 形式")
+    return value
 
 
 def changelog_has_version(text: str, version: str) -> bool:
@@ -456,17 +456,61 @@ def check_release_todo() -> Finding:
 
 
 def check_changelog() -> Finding:
-    current = meson_version(MESON_BUILD.read_text(encoding="utf-8"))
+    if not VERSION_FILE.is_file():
+        return Finding("红", "CHANGELOG", "仓库根没有 VERSION，不知道上一次发布的是哪一版", "建 VERSION，内容写上一个发布的版本号")
+    current = release_version(VERSION_FILE.read_text(encoding="utf-8"))
     nxt = next_patch_version(current)
     text = CHANGELOG.read_text(encoding="utf-8")
     if changelog_has_version(text, nxt):
-        return Finding("绿", "CHANGELOG", f"已有下一版 [{nxt}] 节（相对 meson {current} 的 patch+1）", "")
+        return Finding("绿", "CHANGELOG", f"已有下一版 [{nxt}] 节（相对 VERSION {current} 的 patch+1）", "")
     return Finding(
         "黄",
         "CHANGELOG",
-        f"还没有 [{nxt}] 节（相对 meson {current} 的 patch+1；若打算升 minor/major 另说）",
+        f"还没有 [{nxt}] 节（相对 VERSION {current} 的 patch+1；若打算升 minor/major 另说）",
         "prepare 会按提交补机械底稿；也可先手写该节",
     )
+
+
+PlanRunner = Callable[[], tuple[list[dict], str]]
+
+
+def _default_plan() -> tuple[list[dict], str]:
+    import release_plan
+
+    base = release_plan.latest_version_tag(REPO_ROOT)
+    decisions = release_plan.compute_decisions(REPO_ROOT, release_plan.load_apps(), base, "HEAD")
+    return decisions, base
+
+
+def check_plan(git: GitRunner, plan: PlanRunner | None = None) -> Finding:
+    """应用版本计划（ADR 0171）：哪些应用有改动、版本升过没有。
+
+    prepare 之前有改动是正常的，prepare 会自动升，所以只是黄；已经打了发版 tag（prepare 之后）
+    却还有应用「有改动没升版本」才是红——手改清单、移 tag 或漏提交时会出现。
+    """
+    try:
+        decisions, base = (plan or _default_plan)()
+    except (SystemExit, Exception) as error:  # noqa: BLE001 - 算不出计划时降级，不拦体检
+        return Finding("黄", "应用版本计划", f"算不出（{error}）", "先单独跑 python scripts/release_plan.py plan 看原因")
+    pending = [d for d in decisions if d["changed"] and not d["new"] and d["bump"] != "none"]
+    fresh = [d for d in decisions if d["new"]]
+    tagged = [t for t in git("tag", "--points-at", "HEAD", check=False).split() if t.startswith("v")]
+    names = "、".join(d["id"] for d in pending)
+    if tagged and pending:
+        return Finding(
+            "红",
+            "应用版本计划",
+            f"HEAD 已打发版 tag {tagged[0]}，但 {len(pending)} 个有改动的应用清单版本没升：{names}",
+            "不要 push；重跑 prepare 补升（或手改清单后 git commit --amend --no-edit 再移 tag）",
+        )
+    if not pending and not fresh:
+        return Finding("黄", "应用版本计划", f"相对 {base} 没有应用有改动（或都已升过版本）", "没有可发布的内容时 prepare 会拒绝")
+    parts = []
+    if pending:
+        parts.append(f"{len(pending)} 个应用有改动、待升版本：{names}")
+    if fresh:
+        parts.append(f"{len(fresh)} 个新应用首发：" + "、".join(d["id"] for d in fresh))
+    return Finding("黄", "应用版本计划", f"相对 {base}：" + "；".join(parts), "prepare 会按计划升版本；先用 prepare --dry-run 核对，必要时 --bump 覆盖")
 
 
 def check_structure() -> Finding:
@@ -512,6 +556,7 @@ def collect_findings(
     with_checks: bool = False,
     git: GitRunner | None = None,
     gh: GhRunner | None = None,
+    plan: PlanRunner | None = None,
 ) -> list[Finding]:
     """与 readiness 子命令同一套检查。prepare 只看这里的红黄，不再另判工作区与远端。"""
     git_fn: GitRunner = git or (lambda *a, check=True: run_git(list(a), check=check))
@@ -520,6 +565,7 @@ def collect_findings(
         check_workspace(git_fn),
         check_remote(git_fn),
         check_ci(git_fn, gh_fn),
+        check_plan(git_fn, plan),
         check_release_todo(),
         check_changelog(),
     ]
@@ -534,9 +580,10 @@ def run_readiness(
     out: TextIO | None = None,
     git: GitRunner | None = None,
     gh: GhRunner | None = None,
+    plan: PlanRunner | None = None,
 ) -> int:
     out = out or sys.stdout
-    return render(collect_findings(with_checks=with_checks, git=git, gh=gh), out)
+    return render(collect_findings(with_checks=with_checks, git=git, gh=gh, plan=plan), out)
 
 
 def main(argv: list[str] | None = None) -> int:

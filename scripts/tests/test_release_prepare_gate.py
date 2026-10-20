@@ -113,9 +113,16 @@ def _git_stub(porcelain: str, left_right: str = "0\t0"):
             return "git@github.com:iguoya/Athena.git\n"
         if cmd[:2] == ["rev-list", "--count"]:
             return "0\n"
+        if cmd[:1] == ["tag"]:
+            return ""
         raise RuntimeError(f"未桩的 git：{cmd}")
 
     return fake
+
+
+def _plan_stub() -> tuple[list[dict], str]:
+    """不真算应用版本计划（要 cargo、要读真实仓库）：给一个「有一个应用待升」的桩。"""
+    return [{"id": "snake", "changed": True, "new": False, "bump": "patch"}], "v10.0.0"
 
 
 def _gh_down(_args: list[str]) -> tuple[int, str, str]:
@@ -132,6 +139,7 @@ def test_red_with_git_gh_stubs() -> None:
                 skip=False,
                 git=_git_stub(" M comms/a.md\n"),
                 gh=_gh_down,
+                plan=_plan_stub,
             )
         except SystemExit as exc:
             text = buf.getvalue()
@@ -150,6 +158,7 @@ def test_yellow_with_git_gh_stubs() -> None:
             skip=False,
             git=_git_stub("", "0\t2"),
             gh=_gh_down,
+            plan=_plan_stub,
         )
     text = buf.getvalue()
     expect("黄" in text, text)
