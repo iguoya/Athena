@@ -165,3 +165,4 @@
 | [0169](0169-pocket-cube-solver-app.md) | 新增 `programming/pocket-cube-solver`：象棋同款壳 + 七章独立 gtkmm 程序，按初学者层先法的阶段切章，终点是能解任意状态的程序；旧版 `practice/pocket_cube` 原地保留作参考 | 已接受 |
 | [0170](0170-release-exclusions-launcher-and-legacy-pocket-cube.md) | 启动器（依赖仓库与开发工具链，不是可独立安装的应用）与旧版 pocket_cube（已定为供参考、不再做）不进发布矩阵，理由写明；machine 等迁到 Tauri 后再进，c-gui-lab 先解决 third_party 可复现 | 已接受 |
 | [0171](0171-incremental-release-per-app-versions.md) | 增量发版：应用各有自己的真实版本号（写在各栈清单），只构建有改动的应用；Release 页只放本次构建的；不做逐应用 tag | 已接受；修订 0081 决策 1~3，落地后第一次发版是 10.1.0 |
+| [0172](0172-app-updater-for-all-tauri-apps.md) | 应用内自动更新器推广到全部 Tauri 发布应用：官方 updater 全矩阵接入，启动即静默更、失败静默、无手动入口；集中 `app-updates` 标签每应用一个 json；c-gui-lab、driver、practice/cpp 排除；启动器统一更新中心不做 | 已接受；延伸 0081 决策 4 与 0171 |
