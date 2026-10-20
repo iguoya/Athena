@@ -12,19 +12,16 @@
 - [x] （2026-10-20，ADR 0170 第 4 条）`practice/c-gui-lab` Windows 安装包：third_party 可复现、启动器适配安装布局、electron-builder 配置都已落地；ci.yml 的 `c-gui-lab-package` 一档首次完整通过（run 39349483787：编译、收 DLL、出 NSIS、静默安装到临时目录、安装态 selftest 七个原生程序都起得来）。已按同一套步骤加进 `release.yml`（job `c-gui-lab`，版本号从 tag 写入，`publish.needs` 已补），**release.yml 只在打 tag 时跑，这一档在 release 里还没跑过**，下一次发版先看它。
 - [ ] `edge-ai` 和所有 `lifecycle: archived` 的空壳，等有真实内容再按同一标准加入。不要单独开名单。
 
-## 增量发版落地（ADR 0171）——下一版（10.1.0）要等它做完再发
+## 增量发版落地（ADR 0171）——机制已做完，下一版（10.1.0）走增量
 
-机制没做完之前 0081 原样有效，不在旧机制上凑数。分工与证据见 `comms/release-next/` 舱。
+机制没做完之前 0081 原样有效。分工与证据见 `comms/release-next/` 舱。
 
-- [ ] T-007（cursor）`scripts/release_plan.py`：应用清单 `scripts/release_apps.json`、版本读写、`plan`（改动集与建议版本）、`matrix`（CI 用）。
-- [ ] T-102（zcode）各应用版本清单回填基线：已发布的 `10.0.0`，`pocket-cube-solver` 与 `c-gui-lab` 首发 `1.0.0`（c-gui-lab 是 leader 推定，使用者未单独确认）。
-- [ ] T-008（cursor，依赖 T-007）`prepare` 接入计划、写仓库根 `VERSION`，`readiness` 增加「有改动但没升版本」，`notes` 出发布说明两张表。
-- [ ] `release.yml`（leader）：plan 作业、各作业按计划门控、版本改读应用清单、publish 条件。已改好，等 T-007 的脚本到位再提交（现在提交，打 tag 会因缺 `release_plan.py` 与 `VERSION` 失败）。
-- [ ] `ci.yml`（leader）：`sources` 作业加「发布计划演练」，对最近一个 tag 演练 `matrix`。已改好，同上。
-- [ ] `scripts/check.py`（leader）：结构卫生第 6 条改读 `scripts/release_apps.json`（原来读 `release.yml` 的静态矩阵）；根白名单加 `VERSION`。
-- [ ] `CHANGELOG.md` 头部约定改成「应用各有版本、只构建有改动的」（已改好，随上面一并提交）。
-- [ ] publish 作业把 `release_plan.py notes` 的两张表拼进发布说明（等 T-008）。
-- [ ] 第一次增量发版：`prepare --dry-run` 对照 `git diff --stat v10.0.0..HEAD` 核对计划表，确认后再 `prepare`、`push`。
+- [x] （2bd69134）`scripts/release_plan.py` 与 `scripts/release_apps.json`：版本读写、`plan`、`matrix`、`notes`。cursor 起草（T-007），leader 返工三处：版本行单独改动不算改动、v10.0.0 及更早 tag 的有效版本取 tag 版本（`first_release`）、新应用不升版本。
+- [x] （088a9052）各应用版本清单回填：已发布的 `10.0.0`，`pocket-cube-solver` 与 `c-gui-lab` 首发 `1.0.0`（c-gui-lab 是 leader 推定，使用者未单独确认）。
+- [x] （629cdaac）`prepare` 按计划升有改动应用的版本、写仓库根 `VERSION`、`--bump` 覆盖、`--dry-run` 出计划表；`readiness` 加「应用版本计划」检查。
+- [x] （25ca3d26）`release.yml`：plan 作业、动态矩阵、各作业读应用自己的版本、publish 条件与发布说明两张表；`ci.yml` 加「发布计划演练」；`scripts/check.py` 改读 `release_apps.json`；`CHANGELOG.md` 头部约定。
+- [ ] 推送后跑一次 `ci.yml` 的 `app=sources`，确认「发布计划演练」与 actionlint 在 CI 上通过（`release.yml` 只在打 tag 时才跑，plan 作业的 YAML 与脚本在本机已逐步模拟过，但没在 Actions 上真跑过）。
+- [ ] 第一次增量发版：`python scripts/release.py prepare --minor --dry-run` 核对计划表（当前预期：8 个应用升 patch、`pocket-cube-solver` 与 `c-gui-lab` 首发），确认后再 `prepare`、`push`。10.1.0 的 `[10.1.0]` 说明要写 pocket-cube-solver 与 c-gui-lab 首发、题库整改、驾考倒库素材。
 
 ## 驾考
 
