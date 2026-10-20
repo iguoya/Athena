@@ -815,8 +815,17 @@ jobs:
       - name: Run packaged selftest
         shell: pwsh
         run: |
-          & (Join-Path $env:INSTALLED "athena-c-gui-lab.exe") --selftest
-          if ($LASTEXITCODE -ne 0) { throw "安装布局 selftest 失败（exit $LASTEXITCODE）" }
+          # Electron 是 GUI 子系统程序，pwsh 里直接 & 调用不会等它退出，$LASTEXITCODE 也是空的
+          # （首跑就栽在这）。改成 Start-Process -Wait 等它结束，输出重定向到文件，
+          # 成败以退出码与 SELFTEST-OK 标记两者同时成立为准。
+          $exe = Join-Path $env:INSTALLED "athena-c-gui-lab.exe"
+          $out = Join-Path $env:RUNNER_TEMP "selftest.out.txt"
+          $err = Join-Path $env:RUNNER_TEMP "selftest.err.txt"
+          $p = Start-Process -FilePath $exe -ArgumentList "--selftest" -Wait -PassThru `
+            -RedirectStandardOutput $out -RedirectStandardError $err
+          Get-Content $out, $err -ErrorAction SilentlyContinue
+          if ($p.ExitCode -ne 0) { throw "安装布局 selftest 失败（exit $($p.ExitCode)）" }
+          if (-not (Select-String -Path $out -Pattern "SELFTEST-OK" -Quiet)) { throw "selftest 输出里没有 SELFTEST-OK" }
 
       - name: Upload installer for inspection
         uses: actions/upload-artifact@v7
