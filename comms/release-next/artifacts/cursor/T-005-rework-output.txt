@@ -1,0 +1,28 @@
+# T-005 返工证据（2026-10-20）
+
+自测：`python scripts/tests/test_release_readiness.py` → exit 0
+（覆盖：进行中为黄、进行中且已有失败作业为黄并点名、已完成成功为绿、已完成失败为红）
+
+实机：`python scripts/release.py readiness` → exit 1
+CI 全量已从红改为黄（run 39344238323 顶层仍 queued，作业 96/133 已完成，当时没有 conclusion=failure 的作业）。
+唯一的红是工作区未提交，与这次返工无关。
+
+```
+[红] 工作区：已修改：comms 11、practice 3、scripts 1；未跟踪：comms 13、mentor 1、practice 1、scripts 2
+       怎么处理：prepare 在已跟踪文件未提交时会拒绝；先提交、stash，或确认未跟踪文件可忽略后再发版
+[绿] 与远端：main 相对 origin/main：超前 0、落后 0（未 fetch，数字以本地引用为准）
+[黄] CI 全量验证：进行中：已完成 96 / 共 133 个作业 · run 39344238323 · status=queued conclusion=— · 完成/更新 2026-10-19T23:52:32Z · commit e5dbd8185c23 · HEAD 比该 run 新 1 个提交（未动工作流/锁文件/应用目录） · https://github.com/iguoya/Athena/actions/runs/39344238323
+       怎么处理：全量还在跑；等整次 run 结束再决定能不能发版
+[黄] 遗留清单：6 条未勾选（只列出，不判断该不该挡发版）：
+    - `programming/machine`：等 ADR 0008 的 Tauri 迁移完成后走 `tauri-apps` 矩阵，不给 Qt 壳补作业（ADR 0170 第 3 条；Qt 三平台打包草稿已存档，未上 CI）。
+    - `practice/c-gui-lab`：只做 Windows 一档。`third_party/` 可复现已完成（`scripts/fetch-third-party.py` + `third_party.lock.json` + `patches/`，CI 的 `c-gui-lab-native` 首跑全绿，run 39224040285，七个原生程序都编得出来）。还剩：`launcher/main.js` 适配安装布局（现在写死 `build/apps/*.exe` 与 `C:/msys64/ucrt64/bin`）、运行时 DLL 收集，然后接 `comms/release-next/artifacts/cursor/c-gui-lab-release.yml`，把里面的「Require vendored third_party」步骤换成 fetch 脚本。release.yml 只在打 tag 时跑、没法单独触发，建议先把安装包这一步搬进 ci.yml 验证能出，再进 release.yml（ADR 0170 第 4 条）。
+    - `edge-ai` 和所有 `lifecycle: archived` 的空壳，等有真实内容再按同一标准加入。不要单独开名单。
+    - T-008、T-011 停在 review，等验收后标 done。
+    - T-005 仍是 blocked（手册阅读页的决策点四行）。
+    - T-012 练车用时、T-013 场地余量写进步骤、T-104 真实图素材。依赖关系见 `comms/driver/BOARD.md`。
+       怎么处理：发版说明里别写成已完成；该收口的收口，其余留在下一版
+[黄] CHANGELOG：还没有 [10.0.1] 节（相对 meson 10.0.0 的 patch+1；若打算升 minor/major 另说）
+       怎么处理：prepare 会按提交补机械底稿；也可先手写该节
+
+结论：有 1 项红 / 有 3 项黄
+```

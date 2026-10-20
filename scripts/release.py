@@ -13,6 +13,8 @@ CI（.github/workflows/release.yml）已经包揽构建、打包、发布和拾�
   python3 scripts/release.py prepare --patch --dry-run    # 只预览，不动任何文件
   python3 scripts/release.py push                         # 第二阶段：推送并触发 CI
   python3 scripts/release.py push 8.2.0                   # push 时显式指定版本
+  python3 scripts/release.py readiness                    # 发版前只读体检（见 release_readiness.py）
+  python3 scripts/release.py readiness --with-checks      # 顺带跑 check.py --sources-only
 
 两阶段，中间不需要人工：
   1. prepare：校验前提（main、干净、与远端同步、版本只增、tag 未占用）→
@@ -350,15 +352,32 @@ def main() -> int:
     p_push = sub.add_parser("push", help="第二阶段：推送 main 与发版 tag，触发 CI")
     p_push.add_argument("version", nargs="?", help="显式版本号（默认取最近的发版 tag）")
 
+    p_ready = sub.add_parser(
+        "readiness",
+        help="发版前只读体检：工作区、远端、CI 全量、遗留清单、CHANGELOG",
+    )
+    p_ready.add_argument(
+        "--with-checks",
+        action="store_true",
+        help="顺带跑 python scripts/check.py --sources-only（默认不跑，较慢）",
+    )
+
     args = parser.parse_args()
     if args.command == "push":
         push(args.version)
-    else:
-        if args.version and (args.major or args.minor or args.patch):
-            p_prepare.error("显式版本号与 --major/--minor/--patch 别同时给")
-        if not args.version and not (args.major or args.minor or args.patch):
-            p_prepare.error("给一个版本号，或 --major/--minor/--patch 之一")
-        prepare(parse_target(args), args.model, args.dry_run)
+        return 0
+    if args.command == "readiness":
+        # 逻辑单独放 release_readiness.py，这里只转调，避免动到 prepare/push。
+        # utf-8 放在这个子命令入口：中文 Windows 默认编码会把体检输出打成乱码。
+        from release_readiness import force_utf8_output, run_readiness
+
+        force_utf8_output()
+        return run_readiness(with_checks=args.with_checks)
+    if args.version and (args.major or args.minor or args.patch):
+        p_prepare.error("显式版本号与 --major/--minor/--patch 别同时给")
+    if not args.version and not (args.major or args.minor or args.patch):
+        p_prepare.error("给一个版本号，或 --major/--minor/--patch 之一")
+    prepare(parse_target(args), args.model, args.dry_run)
     return 0
 
 

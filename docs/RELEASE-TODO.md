@@ -47,3 +47,4 @@
 - `scripts/check.py` 结构卫生新增两条：ci.yml 各作业的 `if` 名单必须含 `all` 且与矩阵一致；Tauri 构建钩子必须 `pnpm`（顺手修了启动器 webui 的 `npm run`）。这两类以前只有 CI 全量跑才暴露。
 - `scripts/question_bias.py`：AI 起草的选择题常见「答案几乎都在第 2 位、正确项最长」的毛病，只报告不阻断。体检结果：snake、中国象棋、C++ 教程、魔方四个应用都中招，魔方已整改并加了门禁，其余三个已全部修完（T-003：中国象棋、C++ 教程、贪吃蛇）。
 - `gh` 认不出 `git@github.com:` 这种 SSH 别名的 remote，手动触发要加 `--repo iguoya/Athena`；同一分支的两次 dispatch 共用 concurrency 组，后一个会取消前一个，要一个一个来。
+- `python scripts/release.py readiness`（只读）：发版前体检，汇总工作区、与远端、最近一次全量 CI（进行中算黄，作业失败点名）、本文件的未勾条目、CHANGELOG；红的挡 `prepare`。发版前先跑它，再 `prepare`。
