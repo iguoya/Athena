@@ -1,0 +1,109 @@
+base v10.0.0  head HEAD
+有改动 26 / 共 26
+
+algorithms	10.0.0 → 10.0.1 (patch)
+  目录有改动：postgraduate/algorithms/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+c-plus-plus	10.0.0 → 10.0.1 (patch)
+  目录有改动：programming/c-plus-plus/content/curriculum.json, programming/c-plus-plus/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）；fix(content): 题库去猜题捷径——中国象棋、C++ 教程全部、贪吃蛇第 3~11 章选项重排并与正确项等长（只动 choices 与 answer，题干与解析不动；贪吃蛇第 1、2 章有他人未提交改动，待其提交后再补）
+
+chinese-chess	10.0.0 → 10.0.1 (patch)
+  目录有改动：programming/chinese-chess/content/chapters/01-window.json, programming/chinese-chess/content/chapters/02-layout.json, programming/chinese-chess/content/chapters/03-board.json, programming/chinese-chess/content/chapters/04-pieces.json 等 9 个
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）；fix(tutorials): 贪吃蛇讲义对齐十章，象棋将帅照面不再是一步飞吃；fix(content): 题库去猜题捷径——中国象棋、C++ 教程全部、贪吃蛇第 3~11 章选项重排并与正确项等长（只动 choices 与 answer，题干与解析不动；贪吃蛇第 1、2 章有他人未提交改动，待其提交后再补）
+
+comms-console	10.0.0 → 10.0.1 (patch)
+  目录有改动：tools/comms-console/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+competitions	10.0.0 → 10.0.1 (patch)
+  目录有改动：mentor/competitions/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+cs408	10.0.0 → 10.0.1 (patch)
+  目录有改动：postgraduate/cs408/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+data-structures	10.0.0 → 10.0.1 (patch)
+  目录有改动：postgraduate/data-structures/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+design-patterns	10.0.0 → 10.0.1 (patch)
+  目录有改动：programming/design-patterns/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+earth	10.0.0 → 10.0.1 (patch)
+  目录有改动：practice/earth/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）；fix(earth): tauri 构建钩子改用 pnpm，与其余 Tauri 应用一致（工作区统一 pnpm，ADR 0135）
+
+embedded	10.0.0 → 10.0.1 (patch)
+  目录有改动：certification/embedded/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+gtkmm	10.0.0 → 10.0.1 (patch)
+  目录有改动：guide/gtkmm/scripts/check.py, guide/gtkmm/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）；fix(gtkmm): msgfmt 校验输出写进临时目录，避免 Windows 下在 guide/gtkmm 留下名叫 nul 的二进制文件
+
+jiuzhou	10.0.0 → 10.0.1 (patch)
+  目录有改动：mentor/jiuzhou/AGENTS.md, mentor/jiuzhou/content/atlas.json, mentor/jiuzhou/content/audit/shots/T-106-minguo-1920.png, mentor/jiuzhou/content/audit/shots/T-106-yuan-1300.png 等 25 个
+  pnpm 依赖变了：packages/maps
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）；docs(jiuzhou): T-113/T-118 返工五处收口转 review——桥改专家组援助、新疆决议用原文、建国 impact 中性化、战国与近代 mind 措辞；docs(jiuzhou): 没有明确指令不执行未完成任务；fix(jiuzhou): 停手不等于从启动器消失；chore(jiuzhou): 冻结应用并关闭协作舱；chore(jiuzhou): 收下冻结前的界面、学术层、图标和舱内记录
+
+math-tools	10.0.0 → 10.0.1 (patch)
+  目录有改动：tools/math-tools/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+mathematics	10.0.0 → 10.0.1 (patch)
+  目录有改动：postgraduate/mathematics/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+octave-manual	10.0.0 → 10.0.1 (patch)
+  目录有改动：guide/octave-manual/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+pocket-cube-solver	1.0.0 → 1.1.0 (minor)
+  目录有改动：programming/pocket-cube-solver/.gitignore, programming/pocket-cube-solver/AGENTS.md, programming/pocket-cube-solver/CLAUDE.md, programming/pocket-cube-solver/README.md 等 149 个
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）；feat(pocket-cube-solver): 教材整改——题库去猜题捷径（答案位置各 25%、正确项独占最长 25%、选项无括号注释）并扩到 48 题含 7 道预测题；每章 2 条实测过的试一试；检查加防猜题门禁；新增 scripts/question_bias.py 题库体检；feat(pocket-cube-solver): 题目支持配图与作答后回放（预测题），新增「试一试」实验小节；回放图检查覆盖题目；fix(pocket-cube-solver): 窗口小高度下按钮不被顶出（滚动区钉最小高度、展开图不再抢纵向空间）；Windows 编译把 msys usr/bin 排进 PATH，避开假 env 脚本；feat(pocket-cube-solver): 二阶魔方应用——象棋同款教程壳 + 七章 gtkmm 程序，从层先法到最短解（ADR 0169）
+
+polaris	10.0.0 → 10.0.1 (patch)
+  目录有改动：mentor/polaris/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+selinger-linear-algebra	10.0.0 → 10.0.1 (patch)
+  目录有改动：guide/selinger-linear-algebra/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+siefken-linear-algebra	10.0.0 → 10.0.1 (patch)
+  目录有改动：guide/siefken-linear-algebra/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+snake	10.0.0 → 10.0.1 (patch)
+  目录有改动：programming/snake/README.md, programming/snake/content/chapters/01-window.json, programming/snake/content/chapters/02-grid.json, programming/snake/content/chapters/03-body.json 等 14 个
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）；fix(content): 贪吃蛇第 1、2 章题库去猜题捷径（套上 T-003 补丁，只动 choices 与 answer），全课答案位置各 25%；fix(tutorials): 贪吃蛇讲义对齐十章，象棋将帅照面不再是一步飞吃；fix(content): 题库去猜题捷径——中国象棋、C++ 教程全部、贪吃蛇第 3~11 章选项重排并与正确项等长（只动 choices 与 answer，题干与解析不动；贪吃蛇第 1、2 章有他人未提交改动，待其提交后再补）
+
+software	10.0.0 → 10.0.1 (patch)
+  目录有改动：certification/software/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+sympy-tutorial	10.0.0 → 10.0.1 (patch)
+  目录有改动：guide/sympy-tutorial/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+ascent	10.0.0 → 10.0.1 (patch)
+  目录有改动：postgraduate/ascent/src-tauri/tauri.conf.json
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）
+
+driver	10.0.0+1 → 10.0.1+1 (patch)
+  目录有改动：certification/driver/content/images/subject2/reverse/02-right-mirror-wheel-front-line.jpg, certification/driver/content/images/subject2/reverse/03-right-mirror-bay-corner.jpg, certification/driver/content/images/subject2/reverse/03-right-mirror-door-handle.jpg, certification/driver/content/images/subject2/reverse/04-left-mirror-bottom-line.jpg 等 10 个
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）；driver: 科目二倒库第一批真实图素材与标记数据（T-104 第一批）
+
+cpp	10.0.0 → 10.0.1 (patch)
+  目录有改动：practice/cpp/tests/generate_project_test.py
+  提交：fix(cpp): 生成器测试按 UTF-8 解码子进程输出（中文 Windows 默认 GBK，读线程抛 UnicodeDecodeError，check cpp 因此红）
+
+c-gui-lab	1.0.0 → 1.1.0 (minor)
+  目录有改动：practice/c-gui-lab/electron-builder.yml, practice/c-gui-lab/launcher/main.js, practice/c-gui-lab/package-lock.json, practice/c-gui-lab/package.json 等 12 个
+  提交：回填版本基线，不改行为（ADR 0171 前置，T-102）；feat(c-gui-lab): 启动器适配安装布局（原生程序走 extraResources）、electron-builder 配置，CI 加 Windows 安装包一档（编译、收 DLL、打包、静默安装、安装态自检），zcode 实施；feat(c-gui-lab): third_party 取回脚本 + 锁文件（url、钉死版本、sha256）+ 补丁，CI 加 Windows 原生编译一档（cursor 实施，作为安装包作业的前置）
+
+未改动：（无）

@@ -1,0 +1,2 @@
+2026-10-20 09:07:22|claude-code|release-next 侧同信：三笔提交已推送，T-101 谢验收。ci.yml 你修的三处坑（PATH 风格、ntldd 误报、Start-Process -Wait）我记下了，之后改 launcher/electron-builder.yml 时会照应。
+2026-10-20 17:25:32|claude-code|T-102 已转 review（提交 088a9052）。提醒一个协作面的事：我跑回填时从 release.yml 现场提取矩阵名单，撞上你工作区里正在重构的版本（静态矩阵已不在），第一版脚本扑空但没造成破坏，改用任务书名单硬编码完成了；后续 cursor 的 release_plan.py 落地后，名单来源就统一了。你那边 release.py/release.yml 的改动我不碰。

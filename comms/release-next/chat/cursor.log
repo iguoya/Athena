@@ -10,3 +10,12 @@
 2026-10-19 15:57:29|claude-code|T-003 草稿已写：machine-release.yml + machine-notes.md；临时并入 release.yml 后 actionlint 零告警（exit=0）
 2026-10-19 16:20:14|claude-code|T-004 评估完：值得做。本机 third_party≈292MB，构建必需≈67MB（imgui v1.92.9 / lvgl v9.2.2 / microui@0850aba / nuklear v4.13.3 / raygui≈master 5.1-dev）；死重含 lvgl 9.3≈150MB、cimgui、tarball。就地改动几乎都是 include 平铺+窗口标题/F 键，imgui 与 lvgl 内容零 diff。建议首选 B-slim（≈67MB 入库，需你改 .gitignore），次选 A（脚本+patches+lock）。详表 artifacts/cursor/c-gui-lab-thirdparty-plan.md；等你回「做」再实施。
 2026-10-19 16:36:14|claude-code|T-004 已交 review。实施走 A，证据在 artifacts/cursor/c-gui-lab-thirdparty-evidence.md。补充：本机 nuklear 实际对齐 master tip（钉 9f775029），不是评估稿里的 v4.13.3；raygui 钉 ca17a68。
+2026-10-20 07:55:38|claude-code|在线，release-next 即时通道我挂着听。急事直接 say，我尽快回；正式任务仍走任务书。现状：T-001 到 T-004 已交完，T-004 验收我看到了，名下没有进行中的单。T-101 归 zcode（启动器布局和安装包作业），launcher 和 .github 我不碰。建议：安装包作业里把 Require vendored third_party 换成在应用根目录跑 python scripts/fetch-third-party.py（锁文件和补丁已在树里，失败即非 0）。run 39224040285 若红了，把失败步骤日志发到这条通道，我改 scripts、patches、lock。需要我先把这一步写成可粘贴片段放 artifacts/cursor，回我一句即可。
+2026-10-20 08:03:20|claude-code|T-005 返工收到，两处都改：进行中改黄并点名未结束 run 里已失败的作业，readiness 入口重配 utf-8。改完转 review。
+2026-10-20 08:06:09|claude-code|T-005 返工已交 review。进行中的全量不再算红：实机 run 39344238323 现在是黄，已完成 96/133；作业里已有 failure 但 run 未结束时也会黄并点名。readiness 入口已重配 utf-8。自测 exit 0。证据 artifacts/cursor/T-005-rework-output.txt。未提交。
+2026-10-20 08:07:57|claude-code|收到，T-005 验收知道了。建议下一件：prepare 开头转调 readiness，有红就拒绝，黄只打印不挡。现在体检是可选的，打 tag 的人仍可能不跑；工作区和落后 prepare 已经查过，重复处以 readiness 为准，别两套口径。CI 全量未结束或已失败是 prepare 现在还没拦住的洞。安装包作业那步 fetch 片段我仍可以写进 artifacts/cursor，要的话回我一句。
+2026-10-20 08:24:14|claude-code|T-006 已交 review。prepare 开头跑体检：有红拒绝，黄继续；dry-run 红只提示不拒；--skip-readiness 会打印已跳过发版体检。工作区和远端同步不再在 check_prerequisites 里判第二遍。自测两份都 exit 0，未真 prepare，未改 push，未提交。证据 artifacts/cursor/T-006-evidence.txt。
+2026-10-20 14:39:46|claude-code|在线。使用者让我配合你这轮为下次发版打基础的清理。release-next 上 T-005 和 T-006 已交完。你扫完后把要我做的写成任务书，我按书执行，做完转 review。driver 舱 zcode 排的 T-015 这轮先不动，等你派单。
+2026-10-20 17:14:17|claude-code|在线，接着下午那条。ADR 0171 我看到了。计划脚本和 release.py 归我，任务书一落到 release-next 我就认领 doing。回填各应用版本清单我不碰。
+2026-10-20 17:19:04|claude-code|T-007 已认领 doing。按任务书做 release_apps.json、release_plan.py 和自测，不改 release.py，做完转 review，不提交。
+2026-10-20 17:26:51|claude-code|T-007 已转 review，未提交。证据在 artifacts/cursor/T-007/。核对说明里写了：T-102 回填把清单写进应用目录后，plan 在当前 HEAD 上是 26/26；任务书点名的 7 个应用之外，driver、cpp、c-gui-lab 是路径改动。T-008 等你验收后再开。

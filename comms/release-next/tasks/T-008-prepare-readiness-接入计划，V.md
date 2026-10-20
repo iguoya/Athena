@@ -2,11 +2,11 @@
 id: T-008
 title: prepare/readiness 接入计划，VERSION 与发布说明两张表（ADR 0171）
 owner: cursor
-status: todo
+status: done
 priority: P1
 depends: T-007
 created: 2026-10-20 17:14
-updated: 2026-10-20 17:14
+updated: 2026-10-20 17:44
 ---
 ## 背景
 ADR 0171（必读）。T-007 交付了 `scripts/release_plan.py`（`plan`、`matrix`、版本读写）。本任务把它接进发版流程：`prepare` 按计划升各应用版本、写发版号；`readiness` 多一条红灯；`notes` 产出发布说明里的两张表。名下路径：`scripts/release.py`、`scripts/release_readiness.py`、`scripts/release_plan.py`（可追加 `notes` 子命令）、`scripts/tests/`、仓库根 `VERSION` 文件。**不动** `.github/workflows`（leader 做）、各应用清单的回填（zcode 的 T-102）。
@@ -28,3 +28,6 @@ ADR 0171（必读）。T-007 交付了 `scripts/release_plan.py`（`plan`、`mat
 `status T-008 review`，`--note` 附验证输出与证据路径（`comms/release-next/artifacts/cursor/T-008/`）。不提交 git。
 
 ## 进展记录
+- [2026-10-20 17:43] claude-code：todo → doing · leader 接手：cursor 会话已结束
+- [2026-10-20 17:44] claude-code：doing → review · 已提交 629cdaac：prepare 按计划升版本、VERSION、--bump、dry-run 计划表；readiness 加应用版本计划检查；notes 子命令已在 2bd69134；4 份自测全 exit 0；prepare --minor --dry-run 实机输出核对
+- [2026-10-20 17:44] claude-code：review → done · leader 自验：dry-run 计划表与 plan 一致（8 个升 patch、2 个新应用不升）

@@ -1,0 +1,49 @@
+=== selftest release_readiness ===
+ok — release_readiness 自测通过
+exit=0
+
+=== selftest release_prepare_gate ===
+ok — release prepare 门禁自测通过
+exit=0
+
+=== prepare --patch --dry-run（有红应提示后继续预览，exit 0）===
+发版准备 10.0.1：
+[红] 工作区：已修改：comms 13、scripts 2；未跟踪：comms 16、scripts 1
+       怎么处理：prepare 开头的体检有红即拒；先提交、stash，或确认未跟踪可清后再发版（紧急热修可 --skip-readiness）
+[绿] 与远端：main 相对 origin/main：超前 0、落后 0（未 fetch，数字以本地引用为准）
+[黄] CI 全量验证：run 39344238323 · status=completed conclusion=success · 完成/更新 2026-10-20T00:13:04Z · commit e5dbd8185c23 · HEAD 比该 run 新 4 个提交（其中动过 .github/ 或锁文件；动过应用目录：practice） · https://github.com/iguoya/Athena/actions/runs/39344238323
+       怎么处理：全量绿之后又改了工作流或锁文件；发版前建议再跑一次全量 CI
+[黄] 遗留清单：6 条未勾选（只列出，不判断该不该挡发版）：
+    - `programming/machine`：等 ADR 0008 的 Tauri 迁移完成后走 `tauri-apps` 矩阵，不给 Qt 壳补作业（ADR 0170 第 3 条；Qt 三平台打包草稿已存档，未上 CI）。
+    - `practice/c-gui-lab`：只做 Windows 一档。`third_party/` 可复现已完成（`scripts/fetch-third-party.py` + `third_party.lock.json` + `patches/`，CI 的 `c-gui-lab-native` 首跑全绿，run 39224040285，七个原生程序都编得出来）。还剩：`launcher/main.js` 适配安装布局（现在写死 `build/apps/*.exe` 与 `C:/msys64/ucrt64/bin`）、运行时 DLL 收集，然后接 `comms/release-next/artifacts/cursor/c-gui-lab-release.yml`，把里面的「Require vendored third_party」步骤换成 fetch 脚本。release.yml 只在打 tag 时跑、没法单独触发，建议先把安装包这一步搬进 ci.yml 验证能出，再进 release.yml（ADR 0170 第 4 条）。
+    - `edge-ai` 和所有 `lifecycle: archived` 的空壳，等有真实内容再按同一标准加入。不要单独开名单。
+    - T-008、T-011 停在 review，等验收后标 done。
+    - T-005 仍是 blocked（手册阅读页的决策点四行）。
+    - T-012 练车用时、T-013 场地余量写进步骤、T-104 真实图素材。依赖关系见 `comms/driver/BOARD.md`。
+       怎么处理：发版说明里别写成已完成；该收口的收口，其余留在下一版
+[黄] CHANGELOG：还没有 [10.0.1] 节（相对 meson 10.0.0 的 patch+1；若打算升 minor/major 另说）
+       怎么处理：prepare 会按提交补机械底稿；也可先手写该节
+
+结论：有 1 项红 / 有 3 项黄
+⚠ dry-run：发版体检有红项，仅提示、不拒绝（要预览改动）。真正 prepare 前请先处理红项。
+⚠ 查不到远端（离线？）；远端是否已有同名 tag 留给 push 兜底
+  [dry] practice\cpp\meson.build：version → 10.0.1
+  [dry] CHANGELOG 生成 [10.0.1] 节：changelog_notes.py 底稿 + 机械底稿（未设 ZAI_API_KEY）
+  [dry] CHANGELOG 规整 [10.0.1] 的标题写法与对比链接
+dry-run 结束，未做任何改动。
+exit=0
+
+=== gate 无 dry-run/skip（应拒绝）===
+[红] 工作区：已修改：comms 13、scripts 2；未跟踪：comms 16、scripts 1
+结论：有 1 项红 / 有 3 项黄
+--- SystemExit ---
+✗ 发版体检有红项，已拒绝 prepare。按上表「怎么处理」修好后重跑；紧急热修可显式加 --skip-readiness
+
+=== --skip-readiness 警告 ===
+⚠ 已跳过发版体检（--skip-readiness）
+
+变更摘要：
+- prepare 开头 gate_on_readiness；有红拒、黄放、dry-run 红只提示、--skip-readiness 逃生口
+- check_prerequisites 去掉工作区/远端同步（归 readiness）；保留 main、版本只增、tag 未占用
+- release_readiness.collect_findings 抽出共用检查链；howto 文案对齐新口径
+- 自测 scripts/tests/test_release_prepare_gate.py；未提交；未碰 practice/c-gui-lab / push

@@ -2,11 +2,11 @@
 id: T-007
 title: scripts/release_plan.py：应用清单、版本读写、plan 与 matrix（ADR 0171）
 owner: cursor
-status: todo
+status: done
 priority: P1
 depends: 
 created: 2026-10-20 17:14
-updated: 2026-10-20 17:14
+updated: 2026-10-20 17:38
 ---
 ## 背景
 ADR 0171（docs/decisions/0171-incremental-release-per-app-versions.md，必读）把发版改成：应用各有自己的真实版本号，只构建有改动的应用。本任务做**计划脚本**，是后面 prepare、readiness、CI 的共同底座。名下新文件：`scripts/release_plan.py`、`scripts/release_apps.json`、`scripts/tests/test_release_plan.py`。不改 `release.py` / `release_readiness.py`（那是 T-008，等本任务 review 后再做）。
@@ -41,3 +41,8 @@ ADR 0171（docs/decisions/0171-incremental-release-per-app-versions.md，必读�
 `status T-007 review`，`--note` 附输出摘要与证据路径（放 `comms/release-next/artifacts/cursor/T-007/`）。不提交 git。
 
 ## 进展记录
+- [2026-10-20 17:15] cursor：todo → doing
+- [2026-10-20 17:26] cursor：doing → review · plan 对照 v10.0.0..HEAD：任务书点名的 7 个应用都在；另有 driver、cpp、c-gui-lab 按路径算有改动。T-102 回填后清单落在应用目录里，当前 HEAD 上 26/26 都有改动，matrix 除 cpp 外都进构建。自测 exit 0。证据 comms/release-next/artifacts/cursor/T-007/。未提交。
+- [2026-10-20 17:32] claude-code：review → doing · 返工：版本行单独改动不算有改动；v10.0.0 及更早 tag 的 base 版本按 tag 版本算（first_release 字段）；从未发布的应用不升版本。详见消息
+- [2026-10-20 17:38] claude-code：doing → review · leader 接手返工（cursor 会话已结束，release_plan.py 17:23 后无改动）：版本行豁免推广到所有清单、legacy 基线（first_release）、新应用不升版本、已升不再建议；自测 exit 0；plan --base v10.0.0 现为 10 个有改动应用
+- [2026-10-20 17:38] claude-code：review → done · leader 验收：plan --base v10.0.0 有改动 10/26（c-plus-plus、chinese-chess、earth、gtkmm、jiuzhou、snake、driver、cpp，新应用 pocket-cube-solver、c-gui-lab 不升版本）；matrix 在 legacy 基线下只含版本变了的与新应用

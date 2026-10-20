@@ -1,0 +1,10 @@
+# T-006 证据（2026-10-20）
+
+prepare 开头接入 readiness。有红拒绝，黄只打印后继续。--dry-run 有红只提示不拒绝。--skip-readiness 打印「已跳过发版体检」且不跑体检。
+工作区干净、与远端同步已从 check_prerequisites 去掉，只留 main、版本只增、tag 未占用。push 未改。未真的 prepare，未提交。
+
+自测：
+- python scripts/tests/test_release_prepare_gate.py → exit 0
+  覆盖：红拒绝、黄放行、dry-run 红放行、skip 生效；另用 git/gh 桩走真检查（工作区脏拒绝、超前+gh 不可用放行）。
+- python scripts/tests/test_release_readiness.py → exit 0
+- python scripts/release.py prepare --help → 能解析 --skip-readiness
