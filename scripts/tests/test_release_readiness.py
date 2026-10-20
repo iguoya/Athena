@@ -245,6 +245,7 @@ def test_remote_behind_red_ahead_yellow() -> None:
 
 
 def main() -> int:
+    mod.force_utf8_output()
     test_group_porcelain()
     test_ahead_behind()
     test_github_slug()
