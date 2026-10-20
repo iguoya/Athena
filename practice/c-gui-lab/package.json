@@ -4,9 +4,12 @@
   "version": "0.1.0",
   "main": "launcher/main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder --win nsis --publish never",
+    "dist:dir": "electron-builder --dir --publish never"
   },
   "devDependencies": {
-    "electron": "^37.2.0"
+    "electron": "^37.2.0",
+    "electron-builder": "^26.0.0"
   }
 }
