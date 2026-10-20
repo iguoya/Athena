@@ -64,14 +64,23 @@ def main() -> int:
                 parts.append(text)
 
     out: dict = {}
-    if "submit" in event.lower() or event == "beforeSubmitPrompt":
-        out["continue"] = True
     if parts:
-        out["additional_context"] = (
+        text = (
             "【Athena 协作通讯·未读提醒】正式收件箱与即时 chat 并行；"
             "手头告一段落再处理，标题带「紧急」的才打断。\n" + "\n".join(parts) + "\n"
             f"查看：python comms/comms.py inbox {args.agent} --project <舱名>"
         )
+    # 注意：Claude / ZCode 的 UserPromptSubmit 小写后同样含 submit，不能拿子串判断；
+    # Cursor 的事件名就是 beforeSubmitPrompt，精确比对。
+    cursor_submit = event == "beforeSubmitPrompt"
+    if cursor_submit:
+        out["continue"] = True
+        if parts:
+            out["additional_context"] = text  # Cursor 协议（下划线键）
+    elif parts:
+        # Claude Code / ZCode（UserPromptSubmit、SessionStart）：驼峰键注入上下文。
+        # 两家的输出 schema 都很严（多余键会丢掉整个输出），所以这个分支不带 continue。
+        out["additionalContext"] = text
     sys.stdout.write(json.dumps(out, ensure_ascii=False))
     return 0
 
