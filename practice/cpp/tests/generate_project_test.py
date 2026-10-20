@@ -34,7 +34,11 @@ def run(
         ],
         check=check,
         capture_output=True,
+        # 生成器的错误信息是 UTF-8 中文；text=True 单用会按系统区域解码，
+        # 中文 Windows 上是 GBK，读线程直接抛 UnicodeDecodeError。
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
 
 
