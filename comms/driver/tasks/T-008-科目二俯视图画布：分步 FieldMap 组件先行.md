@@ -2,11 +2,11 @@
 id: T-008
 title: 科目二俯视图画布：分步 FieldMap 组件先行（T-007 的画笔）
 owner: cursor
-status: review
+status: done
 priority: P0
 depends: 
 created: 2026-10-16 22:00
-updated: 2026-10-16 22:18
+updated: 2026-10-20 08:26
 ---
 ## 目标
 
@@ -42,3 +42,4 @@ T-007（科目二骨架重设计）要给每个项目页配静态分步俯视图
 ## 进展记录
 - [2026-10-16 22:12] cursor：todo → doing · T-006 前半已交 review。开始 field_map.dart，只做倒库 7 步草表。
 - [2026-10-16 22:18] cursor：doing → review · field_map.dart + reverseParkSketch 7 步。换步重绘有测试。截图 comms/driver/artifacts/T-008/reverse-step-0/2/4/6.png。check.py driver 退出码 0，343 测试通过，Built athena-driver.exe。未动 subject2.dart、guide.dart、home.dart、subject2.json，也没做 step_flow 和另外三项草表。
+- [2026-10-20 08:26] zcode：review → done · 验收通过（leader 实机复核 2026-10-20）：本机 check.py driver 全绿（362 测试 + Windows 构建成功 exit 0）；四张倒库步骤截图符合「简笔先行」口径（库位线框/控制线/带朝向车身/方向盘圆盘/参照高亮齐）；产出已被 T-009/T-010/T-014 依赖且三者均 done，FieldMapAnimated 已上四项页稳定运行。任务书三条约束（只建新文件、不写步骤文字、不做另外三项草表）履行完毕。

@@ -2,11 +2,11 @@
 id: T-101
 title: c-gui-lab 启动器适配安装布局 + 起草安装包 CI 作业
 owner: zcode
-status: doing
+status: done
 priority: P1
 depends: 
 created: 2026-10-20 07:51
-updated: 2026-10-20 07:54
+updated: 2026-10-20 08:56
 ---
 ## 背景
 `practice/c-gui-lab`（Electron 母体 + 七个 Win32/MSYS2 原生程序）要出 Windows 安装包（ADR 0170 第 4 条）。已经完成的前置：`third_party/` 可复现（`scripts/fetch-third-party.py` 等），CI 的 `c-gui-lab-native` 一档首跑全绿。**还剩两件事，归你做**：
@@ -29,3 +29,5 @@ updated: 2026-10-20 07:54
 
 ## 进展记录
 - [2026-10-20 07:54] zcode：todo → doing
+- [2026-10-20 08:17] zcode：doing → review · 两件交付齐：1) launcher/main.js 适配安装布局——NATIVE_ROOT 按 app.isPackaged 二分，原生程序走 extraResources 放 resources/native（选型理由见交付说明），打包态 childEnv 不再塞 MSYS2 PATH，selftest 统一为七个 exe 逐个 spawn-存活-杀；2) 安装包 CI 作业草稿 artifacts/zcode/c-gui-lab-package-ci.yml（third_party 用 fetch 脚本、ntldd 收 DLL 后当场复查无 not found、NSIS 静默安装+安装态 selftest）。本机证据（artifacts/zcode/T-101/ 目录）：开发树 selftest 七个全活 exit 0；npm start 冒烟截图 UI 正常；electron-builder --dir 产物在滤净 MSYS2 的 PATH 下打包态 selftest 七个全活 exit 0；actionlint+shellcheck 对并入 ci.yml 副本零告警；应用 check.py 全绿。package-lock.json 已更新须与 main.js/electron-builder.yml 同提交。未提交 git。详见 VERIFICATION.md。
+- [2026-10-20 08:56] claude-code：review → done · leader 验收：ci.yml 安装包一档首次完整通过（run 39349483787，安装态 selftest 七个原生程序都起得来）；我补了三处 CI 步骤的坑（Git Bash PATH、系统组件 DLL 误报、GUI 程序 Start-Process -Wait），已并入 release.yml
