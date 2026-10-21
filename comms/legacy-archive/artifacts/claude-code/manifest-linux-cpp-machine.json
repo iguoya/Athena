@@ -1,0 +1,2248 @@
+[
+  {
+    "unit": "linux-c",
+    "title": "C",
+    "target": "programming/machine",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/C"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-11-05",
+    "files": 1,
+    "junk_files": 1,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "C 语言练习",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "linux-c-clanguage",
+    "title": "CLanguage",
+    "target": "programming/machine",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/C/CLanguage"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 8,
+    "junk_files": 6,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "C 语言栈溢出、指针",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "linux-c-language",
+    "title": "Language",
+    "target": "programming/machine",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/C/Language"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-11-05",
+    "files": 7,
+    "junk_files": 3,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "C 语言基础练习（含 glade 界面）",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus",
+    "title": "CPlusPlus",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-12-18",
+    "files": 6,
+    "junk_files": 13,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-0-assembly",
+    "title": "0-assembly",
+    "target": "programming/machine",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/0-assembly"
+    ],
+    "duplicates": [
+      "Practice/Assembly"
+    ],
+    "first_commit": "2023-02-06",
+    "files": 8,
+    "junk_files": 2,
+    "run": "toolchain",
+    "build": "需要汇编器（as/nasm）",
+    "build_checked": false,
+    "topic_hint": "汇编入门（与 Practice/Assembly 比对）",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-1-assign",
+    "title": "11-basic/1-assign",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/1-assign"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: (无输出)",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-const",
+    "title": "11-basic/const",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/const"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 1",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-define",
+    "title": "11-basic/define",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/define"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Value of __LINE__ : 8",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-extern",
+    "title": "11-basic/extern",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/extern"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 3,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: begin: count  :5",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-getline",
+    "title": "11-basic/getline",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/getline"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译失败: C:\\Users\\tiger\\Athena\\.cache\\legacy-src\\Linux\\CPlusPlus\\11-basic\\getline\\main.cpp:1:10: fatal error: boost/algorithm/string.hpp: No such file or directory",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-limits",
+    "title": "11-basic/limits",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/limits"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译失败: C:\\Users\\tiger\\Athena\\.cache\\legacy-src\\Linux\\CPlusPlus\\11-basic\\limits\\main.cpp: In function 'int main()':",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-new-three-dimensional-array",
+    "title": "11-basic/new_three-dimensional_array",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/new_three-dimensional_array"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 调用构造函数！",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "裸 new 嵌套三层指针数组，释放要手写三层循环，任何一层漏掉就泄漏；应改用 std::vector 或一维数组加索引换算。Box 示例同文件混了两个主题。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-nullptr",
+    "title": "11-basic/nullptr",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/nullptr"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: this is the ptr function...",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-point",
+    "title": "11-basic/point",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/point"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: var1 变量的地址： 0x6c49dffc10",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-random",
+    "title": "11-basic/random",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/random"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 7541",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-random-better",
+    "title": "11-basic/random_better",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/random_better"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 1\t132\t756\t459\t533\t219\t48\t679\t680\t935\t384\t520\t831\t35\t54\t530\t672\t8\t384\t67\t418\t687\t",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-string",
+    "title": "11-basic/string",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/string"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Greeting message: Hello",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-struct",
+    "title": "11-basic/struct",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/struct"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 第一本书标题 : C++ 教程",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-tiger-limit",
+    "title": "11-basic/tiger_limit",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/tiger_limit"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Tiger's Project !",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-time",
+    "title": "11-basic/time",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/time"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 本地日期和时间：Wed Oct 21 15:46:06 2026",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-11-basic-using",
+    "title": "11-basic/using",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/11-basic/using"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Hello World!",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "每个目录演示一个语法点，命名混用（tiger_limit、1-assign）；多个示例用 using namespace std；部分依赖 boost（getline）本机缺失而无法编译。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-13-class-10-4copy-constructor",
+    "title": "13-class/10-4copy-constructor",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/13-class/10-4copy-constructor"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 4,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Hello World!",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "示例照搬教程的 Box 类：成员/友元演示没有不变式可守，友元函数直接读成员；缺少为什么要用友元的取舍说明；.user 文件被提交进仓库。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-13-class-11-2-visit-control",
+    "title": "13-class/11-2-visit-control",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/13-class/11-2-visit-control"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 6,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Hello World!",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "示例照搬教程的 Box 类：成员/友元演示没有不变式可守，友元函数直接读成员；缺少为什么要用友元的取舍说明；.user 文件被提交进仓库。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-13-class-2-copy-constructor",
+    "title": "13-class/2-copy_constructor",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/13-class/2-copy_constructor"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 调用构造函数",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "示例照搬教程的 Box 类：成员/友元演示没有不变式可守，友元函数直接读成员；缺少为什么要用友元的取舍说明；.user 文件被提交进仓库。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-13-class-3-friend",
+    "title": "13-class/3-friend",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/13-class/3-friend"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Width of box : 10",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "示例照搬教程的 Box 类：成员/友元演示没有不变式可守，友元函数直接读成员；缺少为什么要用友元的取舍说明；.user 文件被提交进仓库。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-13-class-5-cycle-inherit",
+    "title": "13-class/5-cycle-inherit",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/13-class/5-cycle-inherit"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Hello World!",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "示例照搬教程的 Box 类：成员/友元演示没有不变式可守，友元函数直接读成员；缺少为什么要用友元的取舍说明；.user 文件被提交进仓库。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-13-class-constructor",
+    "title": "13-class/constructor",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/13-class/constructor"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Object is being created",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "示例照搬教程的 Box 类：成员/友元演示没有不变式可守，友元函数直接读成员；缺少为什么要用友元的取舍说明；.user 文件被提交进仓库。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-13-class-static",
+    "title": "13-class/static",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/13-class/static"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Constructor called.",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "示例照搬教程的 Box 类：成员/友元演示没有不变式可守，友元函数直接读成员；缺少为什么要用友元的取舍说明；.user 文件被提交进仓库。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-16-polymorphism-113-human-evolved",
+    "title": "16-polymorphism/113-human-evolved",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/16-polymorphism/113-human-evolved"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 8,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Hello World!",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "main 里 new teacher()/new doctor() 后不 delete（泄漏），officer 基类是否有虚析构需核对；应用 unique_ptr 持有多态对象。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-16-polymorphism-114-salary",
+    "title": "16-polymorphism/114-salary",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/16-polymorphism/114-salary"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 8,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Hello World!",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "main 里 new teacher()/new doctor() 后不 delete（泄漏），officer 基类是否有虚析构需核对；应用 unique_ptr 持有多态对象。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-21-sequential-container-list",
+    "title": "21-sequential_container/list",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/21-sequential_container/list"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: listOne.begin()--- listOne.end():",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-21-sequential-container-stack",
+    "title": "21-sequential_container/stack",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/21-sequential_container/stack"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 4294967295，首行: 7",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-21-sequential-container-vector",
+    "title": "21-sequential_container/vector",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/21-sequential_container/vector"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Before calling remove",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-24-io-file-operation",
+    "title": "24-io/file_operation",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/24-io/file_operation"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Writing to the file",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-26-lamada",
+    "title": "26-lamada",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/26-lamada"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Hello World!",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-27-share-ptr",
+    "title": "27-share_ptr",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/27-share_ptr"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Hello World!",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-31-signal",
+    "title": "31-signal",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/31-signal"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "linux-only",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过，运行超时 5s（可能等待输入或常驻）",
+    "build_checked": true,
+    "topic_hint": "信号",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-32-thread-pthread-args",
+    "title": "32-thread/pthread_args",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/32-thread/pthread_args"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "linux-only",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: main() : creating thread, 0",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "pthread 与 std::thread 混用在同一批示例；detach 的线程在 main 返回时可能还在跑；pthread_join 示例用了 wait 这个与 POSIX wait() 同名的函数名。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-32-thread-pthread-create",
+    "title": "32-thread/pthread_create",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/32-thread/pthread_create"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "linux-only",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 3221225477，首行: Hello Runoob！0",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "pthread 与 std::thread 混用在同一批示例；detach 的线程在 main 返回时可能还在跑；pthread_join 示例用了 wait 这个与 POSIX wait() 同名的函数名。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-32-thread-pthread-join",
+    "title": "32-thread/pthread_join",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/32-thread/pthread_join"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "linux-only",
+    "build": "g++ -std=c++20 *.cpp  # 编译失败: C:\\Users\\tiger\\Athena\\.cache\\legacy-src\\Linux\\CPlusPlus\\32-thread\\pthread_join\\main.cpp: In function 'void* wait(void*)':（Windows 上预期失败，需 WSL/Linux）",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "pthread 与 std::thread 混用在同一批示例；detach 的线程在 main 返回时可能还在跑；pthread_join 示例用了 wait 这个与 POSIX wait() 同名的函数名。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-32-thread-thread",
+    "title": "32-thread/thread",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/32-thread/thread"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-06",
+    "files": 2,
+    "junk_files": 1,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过，运行超时 5s（可能等待输入或常驻）",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程",
+    "quality_notes": "pthread 与 std::thread 混用在同一批示例；detach 的线程在 main 返回时可能还在跑；pthread_join 示例用了 wait 这个与 POSIX wait() 同名的函数名。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-33-cgi",
+    "title": "33-cgi",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/33-cgi"
+    ],
+    "duplicates": [
+      "Practice/CGI"
+    ],
+    "first_commit": "2023-02-06",
+    "files": 8,
+    "junk_files": 0,
+    "run": "linux-only",
+    "build": "g++ -std=c++20 *.cpp  # 编译失败: C:\\Users\\tiger\\Athena\\.cache\\legacy-src\\Linux\\CPlusPlus\\33-cgi\\get.cpp:7:10: fatal error: cgicc/CgiDefs.h: No such file or directory（Windows 上预期失败，需 WSL/Linux）",
+    "build_checked": true,
+    "topic_hint": "CGI 程序",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-basic",
+    "title": "Basic",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/CPlusPlus/Basic"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-03-16",
+    "files": 4,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译失败: In file included from C:\\Users\\tiger\\Athena\\.cache\\legacy-src\\Linux\\CPlusPlus\\Basic\\datatype.cpp:1:",
+    "build_checked": true,
+    "topic_hint": "C++ 综合工程（Basic/Class/Derive/Feature/FrameWork 与根 main.cpp、Qt 主窗口）",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-cplusplus-class",
+    "title": "Class",
+    "target": "programming/c-plus-plus",
+    "verdict": "merge-into:linux-cplusplus",
+    "canonical": [
+      "Linux/CPlusPlus/Class"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-07",
+    "files": 10,
+    "junk_files": 0,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "新增",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": "与根 main.cpp 同属一个 CMake 工程，整体归入"
+  },
+  {
+    "unit": "linux-cplusplus-derive",
+    "title": "Derive",
+    "target": "programming/c-plus-plus",
+    "verdict": "merge-into:linux-cplusplus",
+    "canonical": [
+      "Linux/CPlusPlus/Derive"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-07",
+    "files": 4,
+    "junk_files": 0,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "新增",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": "同上"
+  },
+  {
+    "unit": "linux-cplusplus-feature",
+    "title": "Feature",
+    "target": "programming/c-plus-plus",
+    "verdict": "merge-into:linux-cplusplus",
+    "canonical": [
+      "Linux/CPlusPlus/Feature"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-28",
+    "files": 8,
+    "junk_files": 0,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "新增",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": "同上"
+  },
+  {
+    "unit": "linux-cplusplus-framework",
+    "title": "FrameWork",
+    "target": "programming/c-plus-plus",
+    "verdict": "merge-into:linux-cplusplus",
+    "canonical": [
+      "Linux/CPlusPlus/FrameWork"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-02-28",
+    "files": 6,
+    "junk_files": 0,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "新增",
+    "quality_notes": "根 CMake 工程同时挂 Basic/Class/Derive/Feature/FrameWork 与 Qt 主窗口（mainwindow.*、glade），把语法练习和 GUI 壳混在一起；auto/const/函数指针/工厂/单例等主题各只有几行，缺说明。",
+    "reason": "同上；其中工厂/单例另在设计模式清单对照，是否重复交 T-001 的 dp 清单核对"
+  },
+  {
+    "unit": "linux-driver",
+    "title": "Driver",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Driver"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-11-30",
+    "files": 0,
+    "junk_files": 5,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "内核模块 Hello World",
+    "quality_notes": "内核模块 Hello World，只能在 Linux 配内核头文件构建；缺 Makefile（obj-m）与加载/卸载说明，Windows 上无法验证。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-driver-01-helloworld",
+    "title": "01-HelloWorld",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Driver/01-HelloWorld"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-11-30",
+    "files": 1,
+    "junk_files": 3,
+    "run": "linux-only",
+    "build": "gcc *.c  # 编译失败: C:\\Users\\tiger\\Athena\\.cache\\legacy-src\\Linux\\Driver\\01-HelloWorld\\hello.c:1:10: fatal error: linux/init.h: No such file or directory（Windows 上预期失败，需 WSL/Linux）",
+    "build_checked": true,
+    "topic_hint": "内核模块 Hello World",
+    "quality_notes": "内核模块 Hello World，只能在 Linux 配内核头文件构建；缺 Makefile（obj-m）与加载/卸载说明，Windows 上无法验证。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-driver-b1-hello-kern-src",
+    "title": "B1_Hello/KERN_SRC",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Driver/B1_Hello/KERN_SRC"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-11-30",
+    "files": 2,
+    "junk_files": 0,
+    "run": "linux-only",
+    "build": "gcc *.c  # 编译失败: In file included from C:\\Users\\tiger\\Athena\\.cache\\legacy-src\\Linux\\Driver\\B1_Hello\\KERN_SRC\\B1_Hello.c:10:（Windows 上预期失败，需 WSL/Linux）",
+    "build_checked": true,
+    "topic_hint": "内核模块 Hello World",
+    "quality_notes": "内核模块 Hello World，只能在 Linux 配内核头文件构建；缺 Makefile（obj-m）与加载/卸载说明，Windows 上无法验证。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-process",
+    "title": "Process",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Process"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-10-15",
+    "files": 0,
+    "junk_files": 1,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "防止僵尸进程",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "linux-process-g02-preventzombie",
+    "title": "G02-PreventZombie",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Process/G02-PreventZombie"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 1,
+    "junk_files": 1,
+    "run": "linux-only",
+    "build": "gcc *.c  # 编译失败: C:\\Users\\tiger\\Athena\\.cache\\legacy-src\\Linux\\Process\\G02-PreventZombie\\main.c:5:10: fatal error: sys/wait.h: No such file or directory（Windows 上预期失败，需 WSL/Linux）",
+    "build_checked": true,
+    "topic_hint": "防止僵尸进程",
+    "quality_notes": "在 SIGCHLD 处理函数里调用 printf（非异步信号安全）；signal() 每次循环重复注册；声明 void signal_terminated(); 与定义 (int) 不一致；waitpid 只回收一个子进程，多个同时退出会漏；应改 sigaction + while(waitpid(-1, WNOHANG)>0)。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-thread",
+    "title": "Thread",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Thread"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-10-15",
+    "files": 0,
+    "junk_files": 1,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "pthread 创建、join、互斥",
+    "quality_notes": "同一个主题（创建/join/互斥）在 01-Thread、01-ThreadCreate、T01-Create 等目录重复出现了三代，需要选规范版；多数没有检查 pthread_create 的返回值。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-thread-01-thread",
+    "title": "01-Thread",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Thread/01-Thread"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 1,
+    "junk_files": 2,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "pthread 创建、join、互斥",
+    "quality_notes": "同一个主题（创建/join/互斥）在 01-Thread、01-ThreadCreate、T01-Create 等目录重复出现了三代，需要选规范版；多数没有检查 pthread_create 的返回值。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-thread-01-threadcreate",
+    "title": "01-ThreadCreate",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Thread/01-ThreadCreate"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-11-26",
+    "files": 1,
+    "junk_files": 2,
+    "run": "linux-only",
+    "build": "gcc *.c  # 编译通过，运行超时 5s（可能等待输入或常驻）",
+    "build_checked": true,
+    "topic_hint": "pthread 创建、join、互斥",
+    "quality_notes": "同一个主题（创建/join/互斥）在 01-Thread、01-ThreadCreate、T01-Create 等目录重复出现了三代，需要选规范版；多数没有检查 pthread_create 的返回值。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-thread-02-threadjoin",
+    "title": "02-ThreadJoin",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Thread/02-ThreadJoin"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-11-26",
+    "files": 2,
+    "junk_files": 1,
+    "run": "linux-only",
+    "build": "gcc *.c  # 编译通过，运行超时 5s（可能等待输入或常驻）",
+    "build_checked": true,
+    "topic_hint": "pthread 创建、join、互斥",
+    "quality_notes": "同一个主题（创建/join/互斥）在 01-Thread、01-ThreadCreate、T01-Create 等目录重复出现了三代，需要选规范版；多数没有检查 pthread_create 的返回值。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-thread-03-thread",
+    "title": "03-Thread",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Thread/03-Thread"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 1,
+    "junk_files": 2,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "pthread 创建、join、互斥",
+    "quality_notes": "同一个主题（创建/join/互斥）在 01-Thread、01-ThreadCreate、T01-Create 等目录重复出现了三代，需要选规范版；多数没有检查 pthread_create 的返回值。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-thread-03-threadmutex",
+    "title": "03-ThreadMutex",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Thread/03-ThreadMutex"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-11-26",
+    "files": 1,
+    "junk_files": 2,
+    "run": "linux-only",
+    "build": "gcc *.c  # 编译通过并运行，退出码 3221225477，首行: (无输出)",
+    "build_checked": true,
+    "topic_hint": "pthread 创建、join、互斥",
+    "quality_notes": "目录叫 Mutex，实际代码没有任何互斥量：两个线程读-睡-写同一个全局 counter，演示的是数据竞争而非互斥；(void*)1 直接把整数塞进 void* 当参数；用 %x 打印 pthread_t 不可移植；应补 pthread_mutex_t 并对比有无锁的结果。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-thread-t01-create",
+    "title": "T01-Create",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Thread/T01-Create"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 1,
+    "junk_files": 1,
+    "run": "linux-only",
+    "build": "gcc *.c  # 编译通过并运行，退出码 0，首行: Hello World!",
+    "build_checked": true,
+    "topic_hint": "pthread 创建、join、互斥",
+    "quality_notes": "同一个主题（创建/join/互斥）在 01-Thread、01-ThreadCreate、T01-Create 等目录重复出现了三代，需要选规范版；多数没有检查 pthread_create 的返回值。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-thread-t02-join",
+    "title": "T02-Join",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Thread/T02-Join"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 1,
+    "junk_files": 1,
+    "run": "linux-only",
+    "build": "gcc *.c  # 编译通过，运行超时 5s（可能等待输入或常驻）",
+    "build_checked": true,
+    "topic_hint": "pthread 创建、join、互斥",
+    "quality_notes": "同一个主题（创建/join/互斥）在 01-Thread、01-ThreadCreate、T01-Create 等目录重复出现了三代，需要选规范版；多数没有检查 pthread_create 的返回值。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-thread-t03-mutex",
+    "title": "T03-Mutex",
+    "target": "programming/linux",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/Thread/T03-Mutex"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 2,
+    "junk_files": 2,
+    "run": "linux-only",
+    "build": "gcc *.c  # 编译通过并运行，退出码 3221225477，首行: (无输出)",
+    "build_checked": true,
+    "topic_hint": "pthread 创建、join、互斥",
+    "quality_notes": "同一个主题（创建/join/互斥）在 01-Thread、01-ThreadCreate、T01-Create 等目录重复出现了三代，需要选规范版；多数没有检查 pthread_create 的返回值。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-unittest",
+    "title": "UnitTest",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/UnitTest"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-02-25",
+    "files": 0,
+    "junk_files": 2,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "单元测试入门（googletest）",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "linux-unittest-1-primer",
+    "title": "1-Primer",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/UnitTest/1-Primer"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-03-08",
+    "files": 4,
+    "junk_files": 2,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "单元测试入门（googletest）",
+    "quality_notes": "Qt Creator 生成的 googletest 工程模板，tst_*.h 只有模板里的占位测试；gtest_dependency.pri 依赖本机 googletest 源码路径。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-unittest-app",
+    "title": "App",
+    "target": "programming/c-plus-plus",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Linux/UnitTest/App"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-02-25",
+    "files": 21,
+    "junk_files": 1,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "新增",
+    "quality_notes": "googletest 官方 samples 原样拷贝，不是原创。",
+    "reason": "googletest 自带的 sample1–sample10 样例原样拷贝（上游 google/googletest 的 googletest/samples），非原创"
+  },
+  {
+    "unit": "linux-unittest-demotest",
+    "title": "DemoTest",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/UnitTest/DemoTest"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-02-25",
+    "files": 2,
+    "junk_files": 2,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "单元测试入门（googletest）",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "linux-unittest-testapp",
+    "title": "TestApp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/UnitTest/TestApp"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-02-25",
+    "files": 2,
+    "junk_files": 2,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "单元测试入门（googletest）",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "linux-unittest-testapp2",
+    "title": "TestApp2",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/UnitTest/TestApp2"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-02-25",
+    "files": 3,
+    "junk_files": 2,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "单元测试入门（googletest）",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "linux-sdl",
+    "title": "SDL",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/SDL"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-12",
+    "files": 1,
+    "junk_files": 10,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "SDL 1.2 入门（背景、线）",
+    "quality_notes": "SDL 1.2 时代写法（SDL_SetVideoMode 一类）已过时，现行为 SDL2/SDL3；CodeLite/Code::Blocks 工程文件混入；.bmp 是示例资源。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-sdl-1-backgound",
+    "title": "1-backgound",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/SDL/1-backgound"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-12",
+    "files": 1,
+    "junk_files": 6,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "SDL 1.2 入门（背景、线）",
+    "quality_notes": "SDL 1.2 时代写法（SDL_SetVideoMode 一类）已过时，现行为 SDL2/SDL3；CodeLite/Code::Blocks 工程文件混入；.bmp 是示例资源。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-sdl-2-beginning",
+    "title": "2-beginning",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/SDL/2-beginning"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-12",
+    "files": 3,
+    "junk_files": 5,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "SDL 1.2 入门（背景、线）",
+    "quality_notes": "SDL 1.2 时代写法（SDL_SetVideoMode 一类）已过时，现行为 SDL2/SDL3；CodeLite/Code::Blocks 工程文件混入；.bmp 是示例资源。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-sdl-3-line",
+    "title": "3-line",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/SDL/3-line"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-12",
+    "files": 2,
+    "junk_files": 40,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "新增",
+    "quality_notes": "SDL 1.2 时代写法（SDL_SetVideoMode 一类）已过时，现行为 SDL2/SDL3；CodeLite/Code::Blocks 工程文件混入；.bmp 是示例资源。",
+    "reason": "Anjuta 生成的 autotools 工程样板（configure、Makefile.in、ltmain.sh、intltool 等），源码仅 main.c 一类"
+  },
+  {
+    "unit": "linux-sdl-4-line",
+    "title": "4-line",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/SDL/4-line"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-12",
+    "files": 2,
+    "junk_files": 2,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "SDL 1.2 入门（背景、线）",
+    "quality_notes": "SDL 1.2 时代写法（SDL_SetVideoMode 一类）已过时，现行为 SDL2/SDL3；CodeLite/Code::Blocks 工程文件混入；.bmp 是示例资源。",
+    "reason": ""
+  },
+  {
+    "unit": "linux-sdl-5-image",
+    "title": "5-image",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/SDL/5-image"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-12",
+    "files": 2,
+    "junk_files": 4,
+    "run": "toolchain",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "SDL 1.2 入门（背景、线）",
+    "quality_notes": "SDL 1.2 时代写法（SDL_SetVideoMode 一类）已过时，现行为 SDL2/SDL3；CodeLite/Code::Blocks 工程文件混入；.bmp 是示例资源。",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp",
+    "title": "CPP",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 4,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-class-cpp",
+    "title": "class.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/class.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Box1 的体积：210",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-class-constructor-cpp",
+    "title": "class_constructor.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/class_constructor.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Object is being created",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-class-contructor-copy-cpp",
+    "title": "class_contructor_copy.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/class_contructor_copy.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 调用构造函数",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-class-friend-cpp",
+    "title": "class_friend.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/class_friend.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Width of box : 10",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-class-inherit-private-cpp",
+    "title": "class_inherit_private.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/class_inherit_private.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 10",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-class-inherit-protected-cpp",
+    "title": "class_inherit_protected.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/class_inherit_protected.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 10",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-class-inherit-public-cpp",
+    "title": "class_inherit_public.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/class_inherit_public.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 10",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-class-protect-cpp",
+    "title": "class_protect.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/class_protect.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Width of box : 5",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-class-static-cpp",
+    "title": "class_static.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/class_static.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Constructor called.",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-const-cpp",
+    "title": "const.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/const.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 1",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-cycle-inherit-cpp",
+    "title": "cycle_inherit.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/cycle_inherit.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Hello World!",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-define-cpp",
+    "title": "define.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/define.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Value of __LINE__ : 8",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-define-new-cpp",
+    "title": "define_new.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/define_new.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译失败: In file included from /usr/include/c++/8/bits/exception_ptr.h:40,",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-exception-cpp",
+    "title": "exception.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/exception.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: (无输出)",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-extern-cpp",
+    "title": "extern.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/extern.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译失败: C:/Users/tiger/AppData/Local/Programs/GNU Octave/Octave-11.3.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\\Us",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-extern-other-cpp",
+    "title": "extern_other.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/extern_other.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译失败: C:/Users/tiger/AppData/Local/Programs/GNU Octave/Octave-11.3.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\\Us",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-file-cpp",
+    "title": "file.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/file.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Writing to the file",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-getline-cpp",
+    "title": "getline.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/getline.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译失败: C:\\Users\\tiger\\Athena\\.cache\\legacy-src\\Practice\\CPP\\getline.cpp:1:10: fatal error: boost/algorithm/string.hpp: No such file or directory",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-inherit-cpp",
+    "title": "inherit.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/inherit.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: I have height and weight ~~",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-io-cpp",
+    "title": "io.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/io.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Value of str is : Hello C++",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-main-cpp",
+    "title": "main.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/main.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: (无输出)",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-multi-inherit-cpp",
+    "title": "multi_inherit.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/multi_inherit.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Total area: 35",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-new-cpp",
+    "title": "new.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/new.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 0\t0\t0\t0\t0\t0\t0\t0\t",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-new2-cpp",
+    "title": "new2.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/new2.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 0 1 2 ",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-new3-cpp",
+    "title": "new3.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/new3.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 调用构造函数！",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-nullptr-cpp",
+    "title": "nullptr.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/nullptr.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: this is the ptr function...",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-point-cpp",
+    "title": "point.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/point.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: var1 变量的地址： 0x41c95ffc10",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-polymorphism-cpp",
+    "title": "polymorphism.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/polymorphism.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: I am Rectangle",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-random-cpp",
+    "title": "random.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/random.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 1",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-stack-cpp",
+    "title": "stack.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/stack.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 4294967295，首行: 7",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-std-list-cpp",
+    "title": "std_list.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/std_list.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: listOne.begin()--- listOne.end():",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-std-vector-cpp",
+    "title": "std_vector.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/std_vector.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Before calling remove",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-string-cpp",
+    "title": "string.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/string.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Greeting message: Hello",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-struct-cpp",
+    "title": "struct.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/struct.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 第一本书标题 : C++ 教程",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-thread-cpp",
+    "title": "thread.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/thread.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "linux-only",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过，运行超时 5s（可能等待输入或常驻）",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-thread2-cpp",
+    "title": "thread2.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/thread2.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过，运行超时 5s（可能等待输入或常驻）",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-time-cpp",
+    "title": "time.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/time.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: 本地日期和时间：Wed Oct 21 15:47:40 2026",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-variable-cpp",
+    "title": "variable.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/variable.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译通过并运行，退出码 0，首行: Tiger's Project !",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cpp-variable-limit-cpp",
+    "title": "variable_limit.cpp",
+    "target": "programming/c-plus-plus",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/CPP/variable_limit.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "junk_files": 0,
+    "run": "cli",
+    "build": "g++ -std=c++20 *.cpp  # 编译失败: C:\\Users\\tiger\\Athena\\.cache\\legacy-src\\Practice\\CPP\\variable_limit.cpp: In function 'int main()':",
+    "build_checked": true,
+    "topic_hint": "C++ 语法逐点小例子",
+    "quality_notes": "",
+    "reason": ""
+  },
+  {
+    "unit": "practice-assembly",
+    "title": "Assembly",
+    "target": "programming/machine",
+    "verdict": "drop-duplicate",
+    "canonical": [
+      "Practice/Assembly"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 6,
+    "junk_files": 0,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "x86 汇编入门",
+    "quality_notes": "x86 汇编入门，目录里同时提交了 a.out、exit.o、app 等构建产物；只有 mov eax,5 / ret 一类最小程序，缺少平台说明（nasm 还是 gas、32 还是 64 位）。",
+    "reason": "文件内容均已包含在 Linux/CPlusPlus/0-assembly 中"
+  },
+  {
+    "unit": "practice-assembly-1exit",
+    "title": "1exit",
+    "target": "programming/machine",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/Assembly/1exit"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 3,
+    "junk_files": 5,
+    "run": "toolchain",
+    "build": "需要汇编器（as/nasm）",
+    "build_checked": false,
+    "topic_hint": "x86 汇编入门",
+    "quality_notes": "x86 汇编入门，目录里同时提交了 a.out、exit.o、app 等构建产物；只有 mov eax,5 / ret 一类最小程序，缺少平台说明（nasm 还是 gas、32 还是 64 位）。",
+    "reason": ""
+  },
+  {
+    "unit": "practice-cgi",
+    "title": "CGI",
+    "target": "programming/linux",
+    "verdict": "drop-duplicate",
+    "canonical": [
+      "Practice/CGI"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 8,
+    "junk_files": 0,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "CGI 程序",
+    "quality_notes": "",
+    "reason": "源码内容与 Linux/CPlusPlus/33-cgi 完全相同"
+  },
+  {
+    "unit": "practice-vue",
+    "title": "Vue",
+    "target": "-",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Practice/Vue"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 0,
+    "junk_files": 3,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "新增",
+    "quality_notes": "",
+    "reason": "3 个文件：LICENSE 与两个空壳页面，无内容"
+  },
+  {
+    "unit": "linux-root-misc",
+    "title": "Linux、Practice 仓库根散件",
+    "target": "-",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux+Practice/(root)"
+    ],
+    "duplicates": [],
+    "first_commit": "",
+    "files": 0,
+    "junk_files": 9,
+    "run": "read-only",
+    "build": "",
+    "build_checked": false,
+    "topic_hint": "-",
+    "quality_notes": "",
+    "reason": "仓库根目录的说明、许可证、构建残留"
+  }
+]
