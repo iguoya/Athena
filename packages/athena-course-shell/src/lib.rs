@@ -429,6 +429,8 @@ pub fn run(config: ShellConfig, context: tauri::Context) {
 
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .manage(Mutex::new(state))
         .invoke_handler(tauri::generate_handler![
             get_app_info,
