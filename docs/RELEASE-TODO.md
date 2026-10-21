@@ -20,8 +20,14 @@
 - [x] （088a9052）各应用版本清单回填 `10.0.0`；随后使用者决定 `pocket-cube-solver`、`c-gui-lab` 也并入 `10.0.0` 基线，不留特殊起点（原回填的 `1.0.0` 已改回）。
 - [x] （629cdaac）`prepare` 按计划升有改动应用的版本、写仓库根 `VERSION`、`--bump` 覆盖、`--dry-run` 出计划表；`readiness` 加「应用版本计划」检查。
 - [x] （25ca3d26）`release.yml`：plan 作业、动态矩阵、各作业读应用自己的版本、publish 条件与发布说明两张表；`ci.yml` 加「发布计划演练」；`scripts/check.py` 改读 `release_apps.json`；`CHANGELOG.md` 头部约定。
-- [ ] 推送后跑一次 `ci.yml` 的 `app=sources`，确认「发布计划演练」与 actionlint 在 CI 上通过（`release.yml` 只在打 tag 时才跑，plan 作业的 YAML 与脚本在本机已逐步模拟过，但没在 Actions 上真跑过）。
-- [ ] 第一次增量发版：`python scripts/release.py prepare --minor --dry-run` 核对计划表（当前预期：十个应用按提交类型升版本，含 `pocket-cube-solver`、`c-gui-lab`），确认后再 `prepare`、`push`。10.1.0 的 `[10.1.0]` 说明要写 pocket-cube-solver 与 c-gui-lab 首次进入发布、题库整改、驾考倒库素材。
+- [x] （a933fc76、95bbc510）`release.yml` 更新通道：构建期带签名密钥（缺失降级）、收集 `.sig` 与 macOS `.app.tar.gz`、publish 推 `app-updates` 并双写拾阶；`release_updater.py`；`release_apps.json` 支持 `dir`/`watch`，启动器入清单。
+- [x] （run 39403297384）推送后 `ci.yml` 的 `app=sources` 发布计划演练在 CI 上通过。
+- [ ] **10.1.0 的前置（打 tag 之前必须全部 done）**——更新器要装进已装副本，所以先于发版：
+  - T-103（zcode）更新器批量接入剩余 20 个 Tauri 应用并迁移拾阶；
+  - T-104（zcode）启动器安装模式与 `catalog.json`（ADR 0173）；
+  - T-105（zcode）启动器 webui 适配、打开打包（`bundle.active`）、接入更新器。**T-105 没做完不能发版**：启动器已在发布清单里，`bundle.active: false` 下 tauri 作业会因「期望恰好 1 个安装包」失败。
+- [ ] 前置做完后：本机再跑一遍全量 `check.py`（见上面的环境坑）、`ci.yml` 全量 CI，然后 `python scripts/release.py prepare --minor --dry-run` 核对计划表（预期：几乎所有 Tauri 应用都因加更新器依赖而有改动，按 `feat` 升 minor）。确认后再 `prepare`、`push`。`[10.1.0]` 说明要写：增量发版机制与应用各有版本号、应用内自动更新、启动器可安装、pocket-cube-solver 与 c-gui-lab 首次进入发布、题库整改、驾考倒库素材。
+- [ ] 第一次真实 tag 之后：观察 `plan` / `publish` 作业（这两段只在打 tag 时才跑过）、`app-updates` 标签下各应用 json 是否齐；确认后拾阶旧通道 `ascent-updates` 的停写时机（ADR 0172 决策 7，无硬时限）。
 
 ## 驾考
 
