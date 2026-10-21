@@ -601,7 +601,7 @@ jobs:
       # 版本取自应用自己的 tauri.conf.json（ADR 0171）；plan 作业已保证它与上一个 tag 不同
       - name: Read app version
         id: version
-        working-directory: ${{ matrix.root }}/${{ matrix.app }}
+        working-directory: ${{ matrix.dir || format('{0}/{1}', matrix.root, matrix.app) }}
         shell: bash
         run: |
           v="$(node -p "require('./src-tauri/tauri.conf.json').version")"
@@ -619,13 +619,24 @@ jobs:
         shell: bash
         run: rm -rf .cache/cargo-target/release/bundle
 
+      # 更新器工件需要签名（ADR 0172）。密钥没配置时降级为不出更新工件，安装包照常发，
+      # 与拾阶「密钥缺失不阻塞发版」（ADR 0081 决策 4）同一做法。
       - name: Build and bundle
-        working-directory: ${{ matrix.root }}/${{ matrix.app }}
+        working-directory: ${{ matrix.dir || format('{0}/{1}', matrix.root, matrix.app) }}
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         shell: bash
-        run: npx tauri build --bundles "${{ matrix.bundles }}"
+        run: |
+          extra=()
+          if [ -z "$TAURI_SIGNING_PRIVATE_KEY" ]; then
+            echo "::notice::TAURI_SIGNING_PRIVATE_KEY 没设置，本次不生成更新器工件（安装包照常）。"
+            extra=(--config '{"bundle":{"createUpdaterArtifacts":false}}')
+          fi
+          npx tauri build --bundles "${{ matrix.bundles }}" "${extra[@]}"
 
       - name: Collect and rename artifacts
-        working-directory: ${{ matrix.root }}/${{ matrix.app }}
+        working-directory: ${{ matrix.dir || format('{0}/{1}', matrix.root, matrix.app) }}
         shell: bash
         run: |
           version="${{ steps.version.outputs.value }}"
@@ -661,10 +672,24 @@ jobs:
             exit 1
           fi
           cp "${files[0]}" "$dest"
+          # 更新器工件（ADR 0172）：Windows 的 NSIS 安装包自己就是更新工件，旁边有 .sig；
+          # macOS 是 .app.tar.gz 加 .sig；Linux 不出（决策 5）。文件名对齐
+          # scripts/release_updater.py 的约定，publish 据此生成各应用的通道 json。
+          case "$RUNNER_OS" in
+            Windows)
+              sigs=("$bundle"/nsis/*-setup.exe.sig)
+              if [ "${#sigs[@]}" -eq 1 ]; then cp "${sigs[0]}" "$dest.sig"; fi ;;
+            macOS)
+              tars=("$bundle"/macos/*.app.tar.gz)
+              if [ "${#tars[@]}" -eq 1 ] && [ -f "${tars[0]}.sig" ]; then
+                cp "${tars[0]}" "dist/athena-${app}-${version}-${platform}.app.tar.gz"
+                cp "${tars[0]}.sig" "dist/athena-${app}-${version}-${platform}.app.tar.gz.sig"
+              fi ;;
+          esac
           ls -l dist
 
       - name: Verify package
-        working-directory: ${{ matrix.root }}/${{ matrix.app }}
+        working-directory: ${{ matrix.dir || format('{0}/{1}', matrix.root, matrix.app) }}
         shell: bash
         run: |
           version="${{ steps.version.outputs.value }}"
@@ -686,8 +711,8 @@ jobs:
           name: athena-${{ matrix.app }}-${{ matrix.platform }}
           # deb 按 Debian 惯例用下划线（athena-<app>_<版本>_amd64.deb），只写 -* 会漏掉它
           path: |
-            ${{ matrix.root }}/${{ matrix.app }}/dist/athena-${{ matrix.app }}-*
-            ${{ matrix.root }}/${{ matrix.app }}/dist/athena-${{ matrix.app }}_*
+            ${{ matrix.dir || format('{0}/{1}', matrix.root, matrix.app) }}/dist/athena-${{ matrix.app }}-*
+            ${{ matrix.dir || format('{0}/{1}', matrix.root, matrix.app) }}/dist/athena-${{ matrix.app }}_*
           if-no-files-found: error
           retention-days: 7
 
@@ -969,3 +994,30 @@ jobs:
           else
             echo "::notice::本版无拾阶资产，ascent-updates 保持上一版 latest.json。"
           fi
+
+      # 更新通道（ADR 0172）：每个应用一个 <id>.json，放在固定标签 app-updates 下。
+      # 只推本次构建出了更新工件的应用；没动的应用通道保持上一版，不会被覆盖。
+      - name: Publish app update channels
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          mkdir -p channels
+          python3 scripts/release_updater.py channels --dist dist --tag "$GITHUB_REF_NAME" \
+            --out channels --repo "$GITHUB_REPOSITORY" --notes-file release-notes.md
+          # 拾阶的 latest.json 由 tauri-action 产出，双写一份到新通道（决策 7 的过渡期）
+          if [ -f "$RUNNER_TEMP/latest.json" ]; then
+            cp "$RUNNER_TEMP/latest.json" channels/ascent.json
+          fi
+          shopt -s nullglob
+          files=(channels/*.json)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "::notice::本版没有出更新工件的应用，app-updates 保持原样。"
+            exit 0
+          fi
+          if ! gh release view app-updates --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release create app-updates --repo "$GITHUB_REPOSITORY" \
+              --title "应用更新通道" \
+              --notes "每个应用一个 <id>.json，供应用内更新器读取，请勿删除。" --latest=false
+          fi
+          gh release upload app-updates "${files[@]}" --clobber --repo "$GITHUB_REPOSITORY"
