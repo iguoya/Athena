@@ -12,8 +12,536 @@
       "title": "历史归档 · 早年练习的整理与批注",
       "track": "archive",
       "layer": "archive",
-      "summary": "从 2020–2023 年散落在多个 GitHub 旧仓库里的设计模式练习中去重整理而来（ADR 0176）：代码原样保留、能运行的可以直接跑，另有行级批注指出写法与程序组织上的不足。本章不属于主线，不计入进度，留待人工审视后决定并入、保留或删除。",
+      "summary": "从 2020–2023 年散落在多个 GitHub 旧仓库里的设计模式练习去重整理而来（ADR 0176）：代码原样保留、能运行的可以直接运行，另有行级批注指出写法与程序组织上的不足。本章不属于主线，不计入进度，留待人工审视后决定并入、保留或删除。",
       "topics": [
+        {
+          "id": "dp.arc.simple_factory",
+          "title": "简单工厂（早期练习）",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.simple-factory"
+          ],
+          "track": "archive",
+          "guide_line": "[创建型模式] Factory::CreateProduct(name) 按 \"A\"/\"B\"/\"C\" 返回不同的具体产品，main 里各创建一个。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂简单工厂的结构，并找出这份实现里的返回值缺失与所有权问题。",
+            "pain": "只要 new 的类型和个数不是写死的，就想把创建集中起来；集中之后调用方是否还知道谁该释放？",
+            "model": "一个 Factory 类按字符串参数 new 不同的具体产品，产品共用基类 Product。",
+            "scope": "只读历史代码并批注；与工厂方法、抽象工厂的辨析见现行章节。",
+            "judgment": "看工厂函数的每条分支是否都有返回；看新增产品要改哪里。",
+            "landing": "能给出 unique_ptr 返回值加未知名字处理的改法。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "一个按名字返回产品的简单工厂，能编译运行。注意它在**两个地方是错的**：未知名字时函数没有返回值，`main` 里 new 出来的东西一个都没释放；更值得想的是，三个产品的行为完全一样，看不出工厂到底“造”出了什么区别。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_dp_simple_factory",
+                "run": "cli",
+                "summary": "Factory::CreateProduct(name) 按 \"A\"/\"B\"/\"C\" 返回不同的具体产品，main 里各创建一个。",
+                "origin": {
+                  "repo": "DesignPattern",
+                  "path": "SimpleFactory",
+                  "first_commit": "2022-05-02",
+                  "duplicates": [
+                    "DesignPatterns/workspace/SimpleFactory",
+                    "Practice/DesignPatterns/SimpleFactory",
+                    "Linux/DesignPattern/SimpleFactory"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "Factory.h",
+                    "line": 53,
+                    "kind": "design",
+                    "text": "⚠ 名字不是 A/B/C 时三个 `if` 都不成立，函数走到末尾没有 `return`：未定义行为（`-Wall` 实测：`control reaches end of non-void function`，Factory.h:69）。应返回 `nullptr` 或抛异常，调用方再据此处理。"
+                  },
+                  {
+                    "file": "Factory.h",
+                    "line": 55,
+                    "kind": "design",
+                    "text": "每新增一个产品都要回来改这个 `if` 链：这正是简单工厂和工厂方法的分界——前者集中创建但不开放扩展，后者把“造什么”留给子类（见 factory_method 条目）。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 9,
+                    "kind": "ownership",
+                    "text": "`fc`、`pa`、`pb`、`pc` 全是 `new` 出来的裸指针，一个也没 `delete`；`pa/pb/pc` 甚至没被使用（`-Wunused-variable`）。工厂返回的裸指针没有说明所有权，调用方不知道该不该释放；返回 `std::unique_ptr<Product>` 才能把约定写进类型。",
+                    "end": 12
+                  },
+                  {
+                    "file": "ConcreteProductA.h",
+                    "line": 49,
+                    "kind": "design",
+                    "text": "三个具体产品的 `new_operation()` 都是空函数体，A/B/C 之间没有任何可观察的差别；工厂里唯一能看出“造了谁”的是 `Factory.h` 里的 `cout`——创建逻辑被迫兼职打印。产品应该有各自可验证的行为（哪怕返回一个名字），否则这个示例证明不了任何东西。"
+                  },
+                  {
+                    "file": "ConcreteProductA.h",
+                    "line": 13,
+                    "kind": "design",
+                    "text": "`virtual public` 是为菱形继承准备的，这里只有一层单继承，白白增加对象布局与构造顺序的复杂度；应写普通的 `public Product`。"
+                  },
+                  {
+                    "file": "Factory.h",
+                    "line": 7,
+                    "kind": "style",
+                    "text": "`#include` 行末多了分号（第 7–9 行）：`-Wall` 报 `extra tokens at end of '#include' directive`。头文件里还写了 `using namespace std;`（第 6 行）。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp",
+                  "Factory.cpp",
+                  "ConcreteProductA.cpp",
+                  "ConcreteProductB.cpp",
+                  "ConcreteProductC.cpp",
+                  "Product.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线对应的知识点：dp.simple-factory。先读主线讲解，再回来对照这份旧代码的做法。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.arc.factory_method",
+          "title": "工厂方法（早期练习）",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.factory-method"
+          ],
+          "track": "archive",
+          "guide_line": "[创建型模式] 抽象 Factory/Product 各一个，具体类各一个，main 里通过基类指针创建。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂工厂方法的最小骨架，说清纯虚析构为什么要提供定义。",
+            "pain": "例子越小越容易漏掉模式真正的变化点。",
+            "model": "Factory 声明虚函数 CreateProduct，ConcreteFactory 重写并返回 ConcreteProduct。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "看“变化的是什么”：这里什么也没变。",
+            "landing": "能补出第二个具体工厂与产品，并改成返回 unique_ptr。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "最小的工厂方法：抽象 Factory 声明 `CreateProduct`，ConcreteFactory 返回 ConcreteProduct。能运行。它的纯虚析构写对了；但整个例子里只有**一种**产品，“由子类决定造什么”这件事并没有被演示。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_dp_factory_method",
+                "run": "cli",
+                "summary": "抽象 Factory/Product 各一个，具体类各一个，main 里通过基类指针创建。",
+                "origin": {
+                  "repo": "DesignPattern",
+                  "path": "Factory",
+                  "first_commit": "2022-05-02",
+                  "duplicates": [
+                    "DesignPatterns/workspace/Factory",
+                    "Practice/DesignPatterns/Factory",
+                    "Linux/DesignPattern/Factory"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "factory.h",
+                    "line": 8,
+                    "kind": "design",
+                    "text": "纯虚析构：它让 `Factory` 成为抽象类，同时 **必须**在 .cpp 里给出定义（factory.cpp 第 7 行的空函数体），否则链接失败——这个细节写对了。`product.h` 里的 `Product` 同理。"
+                  },
+                  {
+                    "file": "factory.h",
+                    "line": 14,
+                    "kind": "design",
+                    "text": "整个例子只有一个 `ConcreteFactory` 和一个 `ConcreteProduct`：工厂方法的价值在于“同一个调用点，换一个子类就换一种产品”，这里没有第二个子类，读者看不到变化点在哪。对比抽象工厂条目里的 `ConcreteFactory1/2`。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 6,
+                    "kind": "ownership",
+                    "text": "`fac` 与 `p` 都是 `new` 出来的裸指针且从不 `delete`；`p` 还没被使用（`-Wunused-variable`）。`CreateProduct()` 返回裸指针，没人说清归谁释放。",
+                    "end": 7
+                  },
+                  {
+                    "file": "factory.cpp",
+                    "line": 10,
+                    "kind": "testing",
+                    "text": "构造函数里往 `cout` 打印是唯一的“验证”：运行后靠肉眼看到字符串才算通过。没有断言，也没有办法在不看终端的情况下确认创建的类型是对的（可以用返回对象的虚函数返回名字，再比较）。"
+                  },
+                  {
+                    "file": "factory.h",
+                    "line": 1,
+                    "kind": "naming",
+                    "text": "包含守卫 `FACTORY_H`、`PRODUCT_H` 与 SimpleFactory 目录里的头文件同名：两个目录的头文件如果被放进同一个工程，后包含的会被静默跳过。守卫名最好带上项目或路径前缀。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp",
+                  "factory.cpp",
+                  "product.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线对应的知识点：dp.factory-method。先读主线讲解，再回来对照这份旧代码的做法。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.arc.abstract_factory",
+          "title": "抽象工厂（早期练习）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.abstract-factory"
+          ],
+          "track": "archive",
+          "guide_line": "[创建型模式] AbstractFactory 声明 CreateProductA/B，ConcreteFactory1/2 各返回自己那一族的产品。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂抽象工厂的两族两产品结构，并说出它与工厂方法的区别。",
+            "pain": "产品族要一起换，单个工厂方法管不住“配套”。",
+            "model": "两个抽象产品 A、B，各两个具体产品；抽象工厂声明两个创建函数，两个具体工厂各造一族。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "看调用方是否只依赖抽象；看不同族的产品能否被误配。",
+            "landing": "能写出一个使用产品族的客户函数。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两个产品族（A1/B1 与 A2/B2）、两个具体工厂，能运行。结构对，命名也清楚——但 `main` 把工厂造出来的 4 个产品全丢掉了，“同一家工厂的产品配套使用”这个抽象工厂的要点没有被演示。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_dp_abstract_factory",
+                "run": "cli",
+                "summary": "AbstractFactory 声明 CreateProductA/B，ConcreteFactory1/2 各返回自己那一族的产品。",
+                "origin": {
+                  "repo": "DesignPattern",
+                  "path": "AbstractFactory",
+                  "first_commit": "2022-05-02",
+                  "duplicates": [
+                    "DesignPatterns/workspace/AbstractFactory",
+                    "Practice/DesignPatterns/AbstractFactory",
+                    "Linux/DesignPattern/AbstractFactory"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 5,
+                    "kind": "ownership",
+                    "text": "两个工厂 `new` 后没有释放，`CreateProductA()`/`CreateProductB()` 返回的 4 个产品指针被直接丢弃——既泄漏，又让产品永远没被使用。",
+                    "end": 10
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 6,
+                    "kind": "design",
+                    "text": "抽象工厂的要点是“同一个工厂造出来的 A 与 B 能配套工作”，这里 A、B 之间没有任何交互，换成两个互不相干的工厂方法结果一样。应让一个客户函数接收 `AbstractFactory&`，用造出的 A、B 完成一件事。"
+                  },
+                  {
+                    "file": "abstractfactory.h",
+                    "line": 7,
+                    "kind": "design",
+                    "text": "客户端代码依赖的是抽象工厂与抽象产品（头里前置声明了 `AbstractProductA/B`），这一点结构是对的；但 `main.cpp` 里仍写死了 `new ConcreteFactory1()`，选择族的那一行没有被隔离出来。"
+                  },
+                  {
+                    "file": "product.cpp",
+                    "line": 14,
+                    "kind": "testing",
+                    "text": "产品类只在构造时打印自己的名字，没有任何成员函数可调用，所以没法写出“用 A1 与 B1 配套”的测试。给抽象产品加一个虚函数（例如返回风格名）即可验证族内一致。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp",
+                  "abstractfactory.cpp",
+                  "product.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线对应的知识点：dp.abstract-factory。先读主线讲解，再回来对照这份旧代码的做法。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.arc.singleton",
+          "title": "单例（早期练习）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.singleton"
+          ],
+          "track": "archive",
+          "guide_line": "[创建型模式] Singleton::Instance() 首次调用时 new 出唯一对象并缓存在静态指针里。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出这份单例实现的四处缺陷，并写出 C++11 以后的惯用写法。",
+            "pain": "“只能有一个”靠约定而不是类型保证，就有人绕过。",
+            "model": "私有静态指针保存实例，Instance() 懒创建，构造函数受保护。",
+            "scope": "只读历史代码并批注；现代写法见现行章节。",
+            "judgment": "一问线程，二问拷贝，三问销毁，四问构造函数能否被继承者调用。",
+            "landing": "能改成函数内静态局部变量并 delete 拷贝操作。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "教科书式的懒汉单例：静态指针、受保护的构造函数、`Instance()` 里判空创建。能运行，也正好是所有“单例的常见错误”的集合：线程不安全、可以被拷贝出第二个对象、永不释放。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_dp_singleton",
+                "run": "cli",
+                "summary": "Singleton::Instance() 首次调用时 new 出唯一对象并缓存在静态指针里。",
+                "origin": {
+                  "repo": "DesignPattern",
+                  "path": "Singleton",
+                  "first_commit": "2022-05-02",
+                  "duplicates": [
+                    "DesignPatterns/workspace/Singleton",
+                    "Practice/DesignPatterns/Singleton",
+                    "Linux/DesignPattern/Singleton"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "singleton.cpp",
+                    "line": 10,
+                    "kind": "design",
+                    "text": "⚠ 懒创建没有同步：两个线程同时第一次调用 `Instance()`，可能都看到 `_instance == 0` 而各 `new` 一个，单例就不单了。C++11 起函数内静态局部变量的初始化是线程安全的：`static Singleton inst; return inst;`。"
+                  },
+                  {
+                    "file": "singleton.h",
+                    "line": 10,
+                    "kind": "design",
+                    "text": "构造函数是 `protected` 而不是 `private`，子类可以直接构造；更要紧的是拷贝构造与赋值没有被 `delete`。本机实测：`Singleton copy(*Singleton::Instance());` 能编译，得到的 `copy` 和 `Instance()` 返回的是**两个不同的对象**。应写 `Singleton(const Singleton&) = delete;` 并把构造函数设为 `private`。"
+                  },
+                  {
+                    "file": "singleton.cpp",
+                    "line": 11,
+                    "kind": "ownership",
+                    "text": "实例用 `new` 创建却永远不释放，程序退出时由操作系统回收；用 Valgrind/ASan 的泄漏检查会报告它。函数内静态局部变量版本由运行时负责析构，同时避免了“谁来 delete”的问题。"
+                  },
+                  {
+                    "file": "singleton.cpp",
+                    "line": 5,
+                    "kind": "style",
+                    "text": "用 `0` 初始化指针是 C++98 习惯，现在应写 `nullptr`；头文件里还写了 `using namespace std;`（singleton.h:5），会把整个 std 灌进每个包含者。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 7,
+                    "kind": "testing",
+                    "text": "`main` 只取了一次实例就返回，没有验证“两次调用得到同一个对象”这个单例唯一的承诺（`-Wunused-variable` 也指出 `sgn` 没被使用）。一行 `assert(Singleton::Instance() == Singleton::Instance())` 就够。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp",
+                  "singleton.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线对应的知识点：dp.singleton。先读主线讲解，再回来对照这份旧代码的做法。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.arc.adapter",
+          "title": "适配器（反面教材：从未编译通过）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.adapter"
+          ],
+          "track": "archive",
+          "guide_line": "[结构型模式] Target/Adapter/Adaptee 与 Product 系共 21 个文件，全是类图生成的空壳。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出“UML 工具生成但没写完”的代码长什么样，并能指出适配器真正该有的三个要素。",
+            "pain": "画出类图不等于理解了模式：生成的骨架连编译都过不了，却仍被复制到了多个仓库。",
+            "model": "Target 声明客户期望的接口，Adaptee 是已有接口，Adapter 持有 Adaptee 并实现 Target。",
+            "scope": "只读历史代码并批注，不修复。",
+            "judgment": "先让它编译；再问 Adapter 到底把谁转换成谁。",
+            "landing": "能写出一个对象适配器的最小可运行版本。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "这份适配器**从来没有编译通过过**：头文件里有语法错误、两个类互相继承、`main` 只打印了一句 Hello World。它是 UML 工具按类图生成的骨架，适配逻辑一行也没写。保留它是作为“只画图不写代码会怎样”的对照。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_dp_adapter",
+                "run": "read-only",
+                "summary": "Target/Adapter/Adaptee 与 Product 系共 21 个文件，全是类图生成的空壳。",
+                "origin": {
+                  "repo": "DesignPattern",
+                  "path": "Adapter",
+                  "first_commit": "2022-05-02",
+                  "duplicates": [
+                    "DesignPatterns/workspace/Adapter",
+                    "Practice/DesignPatterns/Adapter",
+                    "Linux/DesignPattern/Adapter"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "Adaptee.h",
+                    "line": 6,
+                    "kind": "style",
+                    "text": "⚠ `#include vector` 缺了尖括号，是语法错误，任何编译器都会在这一行停下（`'#include' expects \"FILENAME\" or <FILENAME>`）。整个 Adapter 目录因此从来没有编译通过；这份代码被复制进了五个旧仓库，却没人编译过它。"
+                  },
+                  {
+                    "file": "Target.h",
+                    "line": 13,
+                    "kind": "design",
+                    "text": "⚠ 继承方向画反了：`Target` 继承 `Adapter`，而 `Adapter.h:13` 又写着 `class Adapter : virtual public Target`——两个类互相继承，头文件也互相 `#include`。适配器模式里应是 `Adapter` 继承 `Target`（或实现它的接口），`Target` 不该知道 `Adapter`。"
+                  },
+                  {
+                    "file": "Adapter.h",
+                    "line": 49,
+                    "kind": "design",
+                    "text": "`request()` 的函数体是空的：适配器应当在这里把调用转发给 `adaptee` 的某个接口，并做必要的转换，这正是模式的全部意义，却一行没写。"
+                  },
+                  {
+                    "file": "Adapter.h",
+                    "line": 86,
+                    "kind": "coupling",
+                    "text": "`Adapter` 持有 `Adaptee*`，但 `Adapter.h` 既没有 `#include \"Adaptee.h\"` 也没有前置声明——`Adaptee` 在这里是未声明的类型。此外头里还提供了 `setAdaptee`/`getAdaptee`，等于把内部持有的被适配对象暴露给外面。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 7,
+                    "kind": "testing",
+                    "text": "`main` 里只有 IDE 模板的 Hello World，没有创建任何适配器：整个目录没有一个能运行、能验证的使用示例。"
+                  }
+                ],
+                "run_note": "原代码从未编译通过：Adaptee.h:6 的 `#include vector` 缺尖括号，且 Target 与 Adapter 互相继承；main 也只打印 Hello World"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线对应的知识点：dp.adapter。先读主线讲解，再回来对照这份旧代码的做法。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.arc.facade",
+          "title": "外观（早期练习）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.facade"
+          ],
+          "track": "archive",
+          "guide_line": "[结构型模式] Facade 持有两个子系统指针，operation() 依次调用并收集字符串；Rocket 以值成员持有 Navigation/Power，lanuch() 依次启动。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出外观模式的结构（一个入口、若干子系统），并找出这份实现的所有权与状态累积问题。",
+            "pain": "外观本身没有业务，只做协调，所以最容易在生命周期和状态上出错。",
+            "model": "外观类持有子系统对象，对外只提供一两个高层操作。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "看外观是否拥有子系统（谁创建谁释放）、对外调用是否可重复。",
+            "landing": "能把 Facade 改成值成员或智能指针，并让操作可重复调用。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两个“外观”：`Facade` 包着 SubSystemA/B，`Rocket` 包着 Navigation/Power。这是旧练习里设计最像样的一批，但也有两个会咬人的小问题：子系统用 `new` 创建却不释放，`Rocket` 的结果成员会越调越多。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_dp_facade",
+                "run": "read-only",
+                "summary": "Facade 持有两个子系统指针，operation() 依次调用并收集字符串；Rocket 以值成员持有 Navigation/Power，lanuch() 依次启动。",
+                "origin": {
+                  "repo": "DesignPattern",
+                  "path": "Facade",
+                  "first_commit": "2022-05-02",
+                  "duplicates": [
+                    "Linux/DesignPattern/Facade"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "Facade.cpp",
+                    "line": 15,
+                    "kind": "ownership",
+                    "text": "⚠ 构造函数里 `new` 了两个子系统，`Facade` 却没有析构函数：每创建一个 `Facade` 就泄漏两个对象。同目录的 `Rocket` 直接用值成员（`Navigation navigation; Power power;`）就没有这个问题——子系统若不需要多态，值成员最简单。",
+                    "end": 16
+                  },
+                  {
+                    "file": "Rocket.cpp",
+                    "line": 6,
+                    "kind": "design",
+                    "text": "⚠ `result` 是成员变量（Rocket.h:14），`lanuch()` 每次都往里追加却从不清空。本机实测：连续调用两次 `lanuch()`，返回的向量大小分别是 **2 和 4**——第二次把第一次的结果又带了一遍。局部变量就够了，应在函数内声明 `vector<string> result`（`Facade::operation()` 就是这样写的，写对了）。"
+                  },
+                  {
+                    "file": "Rocket.h",
+                    "line": 18,
+                    "kind": "naming",
+                    "text": "`lanuch` 是 `launch` 的拼写错误，声明（Rocket.h:18）与定义（Rocket.cpp:3）两处一致，所以没被编译器发现；公开接口的拼写错误一旦被别处引用就很难改。"
+                  },
+                  {
+                    "file": "Facade.h",
+                    "line": 14,
+                    "kind": "design",
+                    "text": "子系统以原始指针成员保存并且是 `private`，外观正确地把子系统藏在了接口后面；但 `Facade` 同时被拷贝时会浅拷贝两个指针——有了析构后就会双重释放，需要禁用拷贝或用 `unique_ptr`。"
+                  },
+                  {
+                    "file": "Navigation.cpp",
+                    "line": 5,
+                    "kind": "testing",
+                    "text": "子系统的 `run()` 只返回一个固定字符串，没有任何会失败的路径；外观的价值在于协调多个子系统的先后与错误处理，这里看不到，也没法测。"
+                  }
+                ],
+                "run_note": "库形态：只有类，没有 main；演示入口在 Qt 壳（见 Qt 应用的 qt.arc.dpshell）"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线对应的知识点：dp.facade。先读主线讲解，再回来对照这份旧代码的做法。"
+              }
+            ]
+          }
+        },
         {
           "id": "dp.arc.observer",
           "title": "观察者模式（早期练习）",
@@ -24,7 +552,7 @@
             "dp.observer"
           ],
           "track": "archive",
-          "guide_line": "2022 年写的 Subject/Observer 实现，对照现行讲解找出写法与组织上的不足。",
+          "guide_line": "[行为型模式] 2022 年写的 Subject/Observer 实现，对照现行讲解找出写法与组织上的不足。",
           "weight": "了解",
           "outline": {
             "promise": "读懂一份真实的、可运行的早期观察者实现，并说出它在所有权、重复、顺序和可测试性上的具体毛病。",
@@ -153,6 +681,447 @@
                 "tone": "info",
                 "title": "对照现行讲解",
                 "text": "所有权与生命周期见情境篇二（C++ 的资源、所有权与错误）；重复代码见情境篇一；观察者的标准结构与改法见模式工具箱「观察者模式」。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.arc.strategy_v0",
+          "title": "策略（经典 Context 版）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.strategy"
+          ],
+          "track": "archive",
+          "guide_line": "[行为型模式] Strategy 声明 new_operation，ConcreteStrategyA/B 各打印一个方案名，Context 保存并调用当前策略。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂策略模式的 Context/Strategy 结构，并找出这份实现里反了的释放条件。",
+            "pain": "策略对象被谁创建、谁释放、能否被替换，这三件事不说清就会泄漏或悬空。",
+            "model": "Context 持有指向抽象策略的指针，委托调用；具体策略可在运行时更换。",
+            "scope": "只读历史代码并批注；与下一条“排序版”演进对照。",
+            "judgment": "先问所有权，再问接口是否真的抽象。",
+            "landing": "能改成值语义/unique_ptr 或 std::function 的策略。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "经典的策略模式：`Context` 持有一个 `Strategy*`，运行时换成 A 或 B。能运行，输出“方案A/方案B”。真正要看的是 `Context` 的析构函数——它把条件写反了——以及三处互相矛盾的所有权约定。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_dp_strategy_v0",
+                "run": "cli",
+                "summary": "Strategy 声明 new_operation，ConcreteStrategyA/B 各打印一个方案名，Context 保存并调用当前策略。",
+                "origin": {
+                  "repo": "DesignPattern",
+                  "path": "StrategyV0",
+                  "first_commit": "2022-05-02",
+                  "duplicates": [
+                    "DesignPatterns/workspace/Strategy"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "Context.cpp",
+                    "line": 11,
+                    "kind": "ownership",
+                    "text": "⚠ 析构函数的条件写反了：`if(!_stg) delete _stg;` 只在指针为**空**时才 delete（等于什么也不做），非空时永远不释放。`-Wall` 还指出下一行 `delete` 一个没有虚析构函数的多态类型 `Strategy` 是未定义行为。该写成 `delete _stg;`（delete nullptr 本来就安全），且 `Strategy` 要有虚析构。"
+                  },
+                  {
+                    "file": "Context.cpp",
+                    "line": 7,
+                    "kind": "ownership",
+                    "text": "默认构造函数只调了空函数 `initAttributes()`（Context.cpp:35），`_stg` 没有被初始化。本机实测：`Context c;` 之后 `c.get_stg()` 得到一个非空的野指针值，析构时再拿它去 `delete`。成员指针必须在构造时置 `nullptr`。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 15,
+                    "kind": "ownership",
+                    "text": "`pc` 先指向 `Context(p_a)`，这一行直接覆盖，第一个 `Context` 泄漏；`p_a`、`p_b`、`pc` 全程没有 delete。若 `Context` 的析构修好了（拥有策略），`p_a` 还会被谁再删一次——所有权没有约定，修一处会暴露另一处。"
+                  },
+                  {
+                    "file": "Context.h",
+                    "line": 112,
+                    "kind": "design",
+                    "text": "`set_stg` 直接替换指针，不释放旧策略；而析构又试图释放——到底是 Context 拥有策略，还是只是借用？两个函数给出了相反的约定。要么统一用 `unique_ptr` 表示拥有，要么在文档里写明借用并由调用方管理。"
+                  },
+                  {
+                    "file": "Strategy.h",
+                    "line": 31,
+                    "kind": "design",
+                    "text": "策略接口 `new_operation()` 不是纯虚函数，带一个空实现：忘记在子类里重写时会静默什么也不做；名字 `new_operation` 是 UML 工具的默认名，没有任何领域含义。接口应写成 `= 0`，并起一个表达意图的名字（如 `execute`）。"
+                  },
+                  {
+                    "file": "ConcreteStrategyA.h",
+                    "line": 13,
+                    "kind": "design",
+                    "text": "单继承却写成 `virtual public`，没有菱形继承要解决，徒增复杂度。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp",
+                  "Context.cpp",
+                  "Strategy.cpp",
+                  "ConcreteStrategyA.cpp",
+                  "ConcreteStrategyB.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线对应的知识点：dp.strategy。先读主线讲解，再回来对照这份旧代码的做法。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.arc.strategy_sort",
+          "title": "策略（排序演进版）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.strategy"
+          ],
+          "track": "archive",
+          "guide_line": "[行为型模式] StrategyContext 同时持有 Strategy* 与 SortAlgorithm*，run() 依次切换并收集每个策略返回的字符串。",
+          "weight": "了解",
+          "outline": {
+            "promise": "看出演进过程中遗留下来的重复层级，并指出“排序策略”没有排序的问题。",
+            "pain": "代码随练习一层层叠加，旧的一套没删，新的一套照抄了旧结构。",
+            "model": "StrategyContext 持有两个抽象策略指针，run() 依次设置并调用。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个策略类问：它是否真的有不同的行为可观察？",
+            "landing": "能合并两套层级，并给排序策略一个真正可比较的输出。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "上一条经典版的“演进”：Context 变成 StrategyContext，又多了一套“排序策略”。读完你会发现两个问题：所谓的排序算法**根本没有排序**，只是返回一个名字；两套几乎相同的策略层级并排放在一个类里。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_dp_strategy_sort",
+                "run": "read-only",
+                "summary": "StrategyContext 同时持有 Strategy* 与 SortAlgorithm*，run() 依次切换并收集每个策略返回的字符串。",
+                "origin": {
+                  "repo": "DesignPattern",
+                  "path": "Strategy",
+                  "first_commit": "2022-05-02",
+                  "duplicates": [
+                    "Linux/DesignPattern/Strategy"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "BubbleSort.cpp",
+                    "line": 5,
+                    "kind": "design",
+                    "text": "“冒泡排序”与“快速排序”两个策略都只返回一句话（QuickSort.cpp 同），并没有接收数据、也没有排序。策略模式的看点是“同一份输入、不同算法、结果一致而过程不同”，这里什么也没比较。至少该给 `operation` 一个 `vector<int>&` 参数并真排序。"
+                  },
+                  {
+                    "file": "StrategyContext.cpp",
+                    "line": 10,
+                    "kind": "design",
+                    "text": "同一个 `run()` 里先切换 `Strategy`（A/B），再切换 `SortAlgorithm`（冒泡/快排）：两套抽象类（`Strategy::execute` 与 `SortAlgorithm::operation`）形状完全相同，是同一个想法写了两遍，上一轮没删。合并成一套，具体策略的数量增加，不是抽象层数增加。",
+                    "end": 16
+                  },
+                  {
+                    "file": "StrategyContext.cpp",
+                    "line": 15,
+                    "kind": "ownership",
+                    "text": "四个 `new` 出来的策略对象依次赋给成员指针，前一个被直接覆盖而不释放，`StrategyContext` 也没有析构函数：每次 `run()` 泄漏四个对象。"
+                  },
+                  {
+                    "file": "StrategyContext.h",
+                    "line": 11,
+                    "kind": "ownership",
+                    "text": "`strategy` 和 `sort` 两个指针没有任何初始化（类里没有构造函数）：在 `run()` 之前调用 `getStrategy()` 得到的是随机值。"
+                  },
+                  {
+                    "file": "StrategyContext.cpp",
+                    "line": 9,
+                    "kind": "style",
+                    "text": "`run()` 里的局部 `result` 遮蔽了同名的成员变量（StrategyContext.h:13），那个成员从来没被用过；留着两个同名变量只会让读者猜哪个才生效。"
+                  },
+                  {
+                    "file": "Strategy.h",
+                    "line": 10,
+                    "kind": "ownership",
+                    "text": "抽象基类 `Strategy`（以及 `SortAlgorithm`）都没有虚析构函数；一旦有人通过基类指针 `delete`，就是未定义行为——这正是上一个条目里析构函数那处警告的根源。"
+                  },
+                  {
+                    "file": "ConcreteStrategyA.cpp",
+                    "line": 4,
+                    "kind": "style",
+                    "text": "`// TODO - implement ConcreteStrategyA::execute` 是 UML 工具生成的占位注释，函数其实已经实现了，注释该删。"
+                  }
+                ],
+                "run_note": "库形态：只有类，没有 main；演示入口在 Qt 壳（见 Qt 应用的 qt.arc.dpshell）"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线对应的知识点：dp.strategy。先读主线讲解，再回来对照这份旧代码的做法。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.arc.template_basic",
+          "title": "模板方法（默认实现版）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.template-method"
+          ],
+          "track": "archive",
+          "guide_line": "[行为型模式] AbstractClass::TemplateMethod 依次调用两个可被覆盖的步骤，ConcreteClass1/2 各自覆盖。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂模板方法的结构，并说出为什么模板方法本身不该是虚函数。",
+            "pain": "想要“流程固定、步骤可换”，却让流程也能被改，模式就失效了。",
+            "model": "基类定义算法骨架，步骤为虚函数并有默认实现，子类重写步骤。",
+            "scope": "只读历史代码并批注；与下一条“坦克版”对照。",
+            "judgment": "骨架是否 non-virtual，步骤是否 protected。",
+            "landing": "能改写成 non-virtual 模板方法加 protected 钩子。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "模板方法的“钩子”版：基类 `AbstractClass` 给两个步骤各一个默认实现，子类按需覆盖。能运行。看点：`TemplateMethod()` 本身被声明成了虚函数——这等于把“固定骨架”这个模式的核心要求给取消了。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_dp_template_basic",
+                "run": "cli",
+                "summary": "AbstractClass::TemplateMethod 依次调用两个可被覆盖的步骤，ConcreteClass1/2 各自覆盖。",
+                "origin": {
+                  "repo": "DesignPatterns",
+                  "path": "workspace/TemplateMethod",
+                  "first_commit": "2020-09-16",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "AbstractClass.h",
+                    "line": 29,
+                    "kind": "design",
+                    "text": "⚠ 模板方法被声明成 `virtual`：子类可以连整个流程一起重写，“固定骨架、只改步骤”的保证就没了。模板方法应是非虚的（NVI 惯用法），可变的步骤才是虚的，并且声明为 `protected`，不让外部直接调用。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 9,
+                    "kind": "design",
+                    "text": "`AbstractClass` 被直接实例化并使用（s），说明它不是抽象类：两个步骤都有默认实现。这是“带钩子的模板方法”的合理用法，但类名叫 Abstract 就名不副实；要么真正抽象（纯虚），要么改名。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 9,
+                    "kind": "ownership",
+                    "text": "`s`、`a`、`b` 三个对象 `new` 出来都没释放。`AbstractClass` 也没有虚析构函数——通过基类指针 `delete` 子类对象是未定义行为，所以就算补上 `delete a;` 也不对。",
+                    "end": 11
+                  },
+                  {
+                    "file": "ConcreteClass1.h",
+                    "line": 14,
+                    "kind": "design",
+                    "text": "单继承写成 `virtual public`，这里没有菱形继承；同一批 UML 生成代码里到处都是。"
+                  },
+                  {
+                    "file": "AbstractClass.cpp",
+                    "line": 1,
+                    "kind": "style",
+                    "text": "整个 .cpp 文件只有这一行 `#include`：所有实现都写在头文件里，却又保留了一个空的 .cpp，是生成器留下的形式。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp",
+                  "AbstractClass.cpp",
+                  "ConcreteClass1.cpp",
+                  "ConcreteClass2.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线对应的知识点：dp.template-method。先读主线讲解，再回来对照这份旧代码的做法。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.arc.template_tank",
+          "title": "模板方法（坦克版）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.template-method"
+          ],
+          "track": "archive",
+          "guide_line": "[行为型模式] Tank 声明 reload/aiming/fire 三个纯虚步骤与非虚的 attack()，T90、M1A1 各自实现；目录里还并存着一套 AbstractClass/ConcreteClassA/B 的通用示例。",
+          "weight": "了解",
+          "outline": {
+            "promise": "对比同一模式的两次实现，看出非虚模板方法这一处改进，以及结果成员累积与缺虚析构这两处遗留问题。",
+            "pain": "同一目录并存两套主题，读者不知道哪套才是代表。",
+            "model": "Tank 是抽象基类，attack() 固定调用三个步骤，T90/M1A1 实现步骤。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "骨架是否非虚；结果由谁持有；多态删除是否安全。",
+            "landing": "能改成 attack() 返回结果、基类带虚析构。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "同一个模式的第二次尝试：这回换成“坦克开火”的例子（装填、瞄准、开火），模板方法写成了**非虚**函数——比上一条进步，但把结果存在成员里的做法带来了新的问题。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_dp_template_tank",
+                "run": "read-only",
+                "summary": "Tank 声明 reload/aiming/fire 三个纯虚步骤与非虚的 attack()，T90、M1A1 各自实现；目录里还并存着一套 AbstractClass/ConcreteClassA/B 的通用示例。",
+                "origin": {
+                  "repo": "DesignPattern",
+                  "path": "TemplateMethod",
+                  "first_commit": "2022-05-02",
+                  "duplicates": [
+                    "Linux/DesignPattern/TemplateMethod"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "Tank.h",
+                    "line": 21,
+                    "kind": "design",
+                    "text": "模板方法 `attack()` 是**非虚**的，三个步骤是纯虚的——这是对的（对比上一条“默认实现版”里 `virtual TemplateMethod`）。固定流程、可变步骤，这才是模式想要的形状。"
+                  },
+                  {
+                    "file": "Tank.h",
+                    "line": 14,
+                    "kind": "design",
+                    "text": "`attack()` 把三个步骤的结果 `push_back` 进成员 `result`，既不返回也不清空：同一个坦克对象第二次 `attack()` 时结果会叠上第一次的。让 `attack()` 返回 `vector<string>`（局部变量）即可，成员状态应该留给真正需要跨调用保存的数据。",
+                    "end": 24
+                  },
+                  {
+                    "file": "Tank.h",
+                    "line": 19,
+                    "kind": "ownership",
+                    "text": "`Tank` 有虚函数却没有虚析构函数：通过 `Tank*` 删除 `T90` 对象是未定义行为。凡是准备被多态使用的基类，都应声明 `virtual ~Tank() = default;`。"
+                  },
+                  {
+                    "file": "Tank.h",
+                    "line": 25,
+                    "kind": "style",
+                    "text": "成员函数体 `}` 之后又写了分号（Tank.h:25、AbstractClass.h:26）：`-Wpedantic` 下是多余的分号警告。"
+                  },
+                  {
+                    "file": "AbstractClass.h",
+                    "line": 22,
+                    "kind": "design",
+                    "text": "同一个目录里还放着 `AbstractClass` + `ConcreteClassA/B`——与 Tank 是**完全相同的结构、不同的名字**。两套并存，读者要自己判断哪套是正文，哪套是上一轮的遗留；每个例子应该单独一个目录。"
+                  }
+                ],
+                "run_note": "库形态：只有头文件和少量实现，没有 main；演示入口在 Qt 壳（见 Qt 应用的 qt.arc.dpshell）"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线对应的知识点：dp.template-method。先读主线讲解，再回来对照这份旧代码的做法。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.arc.notes",
+          "title": "早年设计模式笔记",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.observer",
+            "dp.decorator",
+            "dp.uml.class"
+          ],
+          "track": "archive",
+          "guide_line": "[早年笔记] 时序图的定义与画法；观察者模式的动机、定义与分析；装饰者模式的空标题。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出一份“笔记”缺什么：自己的理解、出处、与代码的联系。",
+            "pain": "大段摘抄加空占位，看起来有笔记，实际什么也没沉淀。",
+            "model": "Markdown 提纲：动机、定义、UML、代码、分析、优缺点。",
+            "scope": "只读历史笔记并批注；其余同内容的文档副本未收。",
+            "judgment": "问：这段是自己写的还是别人的？没写完的部分有没有标记？",
+            "landing": "能把时序图一节补进现行 UML 章节。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "三份提纲式的随堂笔记（时序图、观察者、装饰者）。它们是旧仓库里 18 对同内容双份文档中独有的三篇，只作对照材料：一份内容完整、一份大段引用、一份只有占位。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_dp_notes",
+                "run": "read-only",
+                "summary": "时序图的定义与画法；观察者模式的动机、定义与分析；装饰者模式的空标题。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "design-patterns",
+                  "first_commit": "2020-11-11",
+                  "duplicates": [
+                    "DesignPattern/docs",
+                    "DesignPatterns/docs",
+                    "Linux/DesignPattern/docs"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "0-时序图.md",
+                    "line": 21,
+                    "kind": "style",
+                    "text": "“角色”被写成了“校色”（组成元素清单第 1 项）：这是三份笔记里唯一内容完整、且现行主线没有覆盖的主题——主线目前只讲类图，没有时序图。值得把它补进 UML 章节，并改正错别字。"
+                  },
+                  {
+                    "file": "1.Observer.md",
+                    "line": 21,
+                    "kind": "other",
+                    "text": "“UML图”和“代码”两节只有占位：UML 图写着 `to do`，代码一节写“见实现”而没有链接到任何文件。笔记与同仓库里的 Observer 代码没有建立联系。"
+                  },
+                  {
+                    "file": "1.Observer.md",
+                    "line": 5,
+                    "kind": "other",
+                    "text": "动机与定义两节是整段引用块（以 `>` 开头），既没有标注来源，也没有改写成自己的话；这是三份笔记里最长的一份，但绝大部分篇幅是别处的文字。笔记的价值在于自己的理解，引用必须注明出处（本仓库的出处规则：不凭印象，要写清来源）。",
+                    "end": 15
+                  },
+                  {
+                    "file": "2-装饰者模式.md",
+                    "line": 3,
+                    "kind": "other",
+                    "text": "整份笔记只有标题和 `ssss` 四个字符，是创建文件时的占位。另外装饰者属于**结构型**模式，却放在名为 `3-architectural-patterns`（架构模式）的目录里，目录名与 GoF 分类不一致。"
+                  }
+                ],
+                "run_note": "Markdown 笔记，只读"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线对应的知识点：dp.observer、dp.decorator、dp.uml.class。先读主线讲解，再回来对照这份旧代码的做法。"
               }
             ]
           }
