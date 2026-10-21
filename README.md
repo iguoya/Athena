@@ -14,6 +14,8 @@
 | [`programming/chinese-chess`](programming/chinese-chess) | 中国象棋（教程壳 + gtkmm 棋盘，ADR 0151） | Tauri 2 + React |
 | [`programming/snake`](programming/snake) | 贪吃蛇（教程壳 + raylib 蛇，ADR 0153） | Tauri 2 + React |
 | [`programming/pocket-cube-solver`](programming/pocket-cube-solver) | 二阶魔方（教程壳 + gtkmm 魔方，层先法到最短解，ADR 0169） | Tauri 2 + React |
+| [`programming/qt`](programming/qt) | Qt 历史归档（旧仓库 Qt 练习，原代码保留附批注，ADR 0176） | Tauri 2 + Vite |
+| [`programming/gtkmm-lab`](programming/gtkmm-lab) | gtkmm 旧练习归档（与官方教程精读 gtkmm 互不引用，ADR 0176） | Tauri 2 + Vite |
 | [`programming/machine`](programming/machine) | C 与机器（C 与汇编） | Qt Quick / QML、CMake |
 | [`postgraduate/data-structures`](postgraduate/data-structures) | 数据结构（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |
 | [`postgraduate/algorithms`](postgraduate/algorithms) | 算法设计（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |

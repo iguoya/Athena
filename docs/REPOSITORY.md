@@ -20,6 +20,8 @@ programming/<id>/ 程序设计圈：语言、系统与程序组织的课程（AD
   chinese-chess/ 中国象棋（Tauri 2 + React 教程壳，棋盘是 gtkmm；ADR 0151）
   snake/ 贪吃蛇（Tauri 2 + React 教程壳，蛇是 raylib；ADR 0153）
   pocket-cube-solver/ 二阶魔方（Tauri 2 + React 教程壳，魔方是 gtkmm；从层先法写出能解任意状态的程序；ADR 0169）
+  qt/          Qt 历史归档（Tauri 2 + Vite）——旧仓库 Qt5/Linux 的 Qt 练习，原代码保留附批注；主线未写（ADR 0176）
+  gtkmm-lab/   gtkmm 旧练习归档（Tauri 2 + Vite）——与 guide/gtkmm 互不引用；主线未写（ADR 0176）
 artificial-intelligence/<id>/ 人工智能圈：人工智能课程路线的四门（ADR 0120、0122、0150）
   machine-learning/ 机器学习基础（Tauri 2 + React）——「人工智能」圈；经典 ML 直觉与 sklearn 实战（ADR 0120、0122）
   deep-learning/ 深度学习与 PyTorch（Tauri 2 + React）——「人工智能」圈；从张量到 Transformer（ADR 0120、0122）
@@ -109,6 +111,8 @@ archive/       历史归档，不参与构建
 | `chinese-chess` | 中国象棋（gtkmm 棋盘，教程壳 Tauri；ADR 0151） | `athena-chinese-chess` | `chess.` |
 | `snake` | 贪吃蛇（raylib 蛇，教程壳 Tauri；ADR 0153） | `athena-snake` | `snake.` |
 | `pocket-cube-solver` | 二阶魔方（gtkmm 魔方，教程壳 Tauri；ADR 0169） | `athena-pocket-cube-solver` | `cube.` |
+| `qt` | Qt（历史归档，ADR 0176） | `athena-qt` | `qt.` |
+| `gtkmm-lab` | gtkmm 旧练习（历史归档，ADR 0176；与 `gtkmm` 官方教程精读不同） | `athena-gtkmm-lab` | `gtkmmlab.` |
 | `machine` | C 与机器（原 `c`，ADR 0005） | `athena-machine` | `machine.` |
 | `data-structures` | 数据结构（原 `dsa` 拆出，ADR 0108） | `athena-data-structures` | `ds.` |
 | `algorithms` | 算法设计（原 `dsa` 拆出，ADR 0108） | `athena-algorithms` | `algo.` |

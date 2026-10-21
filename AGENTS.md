@@ -36,7 +36,7 @@
 完整说明（名字对照表、三类判据的全文）见 [docs/REPOSITORY.md](docs/REPOSITORY.md)。
 
 ```
-programming/<id>/ 程序设计圈（ADR 0150）：c-plus-plus machine linux python design-patterns chinese-chess snake pocket-cube-solver；python 是
+programming/<id>/ 程序设计圈（ADR 0150）：c-plus-plus machine linux python design-patterns chinese-chess snake pocket-cube-solver qt gtkmm-lab；python 是
                 人工智能课程路线的入口、归本圈（ADR 0120、0148）
 artificial-intelligence/<id>/ 人工智能圈：machine-learning deep-learning llm-app llm-finetune edge-ai（ADR 0120、0122、0152）
 computer-fundamentals/<id>/ 计算机基础圈：database（软设第 9 章实践课程，ADR 0103、0126）
