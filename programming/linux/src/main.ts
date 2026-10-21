@@ -9,10 +9,13 @@ import {
 } from "./lab-editor";
 import {
   mountTracePlayer,
+  mountArchivePanel,
+  type ArchiveBlock,
   parseTrace,
   stopTracePlayback,
 } from "@athena/viz";
 import "@athena/viz/trace-player.css";
+import "@athena/viz/archive-panel.css";
 import "./styles.css";
 
 /** Vite 打包进前端的案例原文：浏览器预览时可读；保存/编译仍需 Tauri。 */
@@ -81,7 +84,8 @@ type Block =
     }
   | { type: "practice"; prompt: string; hint?: string; open_lab?: string }
   | { type: "quiz"; title?: string; items: QuizItem[] }
-  | { type: "summary"; title?: string; text: string };
+  | { type: "summary"; title?: string; text: string }
+  | ArchiveBlock;
 
 type Outline = {
   promise: string;
@@ -137,6 +141,8 @@ type Chapter = {
   summary: string;
   track?: string;
   topics: Topic[];
+  /** 层级：archive = 历史归档章（ADR 0176），不属于主线 */
+  layer?: "archive";
   /** 章节下随堂考核：用于评判各知识点完成度 */
   checkpoint?: ChapterAssessment | null;
   /** 可选章末综合卷 */
@@ -1700,6 +1706,19 @@ function typeClass(t: string): string {
   return `badge badge-type badge-type-${t}`;
 }
 
+/** 把归档块的占位挂成可看可运行的面板；读文件与运行都走共用壳的两条命令。 */
+function mountArchiveBlocks(panel: HTMLElement, topic: Topic) {
+  panel.querySelectorAll<HTMLElement>(".arc-host").forEach((host) => {
+    const block = topic.lesson.blocks[Number(host.dataset.arc)];
+    if (!block || block.type !== "archive") return;
+    mountArchivePanel(host, block, {
+      loadFiles: (caseId) => invoke("load_case_files", { caseId }),
+      run: (caseId, sources, std, stdin) =>
+        invoke("run_archive_case", { caseId, sources, std: std ?? null, stdin: stdin ?? null }),
+    });
+  });
+}
+
 function renderLesson(topic: Topic) {
   const methodHint =
     topic.knowledge_type === "concept"
@@ -1778,6 +1797,10 @@ function renderLesson(topic: Topic) {
           <h3>${escapeHtml(b.title ?? "随堂测验")}</h3>
           ${renderQuizItems(b.items, `lesson-${topic.id}-${bi}`)}
         </div>`;
+      }
+      if (b.type === "archive") {
+        // 历史归档条目（ADR 0176）：面板在 innerHTML 写入后由 mountArchiveBlocks 挂载
+        return `<div class="card"><div class="arc-host" data-arc="${bi}"></div></div>`;
       }
       if (b.type === "summary") {
         return `<div class="card summary">
@@ -2032,6 +2055,7 @@ async function refreshTopic() {
   destroyLabEditor();
   if (state.tab === "lesson") {
     panel.innerHTML = renderLesson(topic);
+    mountArchiveBlocks(panel, topic);
     panel.querySelectorAll<HTMLButtonElement>("[data-reveal]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const id = btn.dataset.reveal;
