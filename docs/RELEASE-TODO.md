@@ -22,10 +22,8 @@
 - [x] （25ca3d26）`release.yml`：plan 作业、动态矩阵、各作业读应用自己的版本、publish 条件与发布说明两张表；`ci.yml` 加「发布计划演练」；`scripts/check.py` 改读 `release_apps.json`；`CHANGELOG.md` 头部约定。
 - [x] （a933fc76、95bbc510）`release.yml` 更新通道：构建期带签名密钥（缺失降级）、收集 `.sig` 与 macOS `.app.tar.gz`、publish 推 `app-updates` 并双写拾阶；`release_updater.py`；`release_apps.json` 支持 `dir`/`watch`，启动器入清单。
 - [x] （run 39403297384）推送后 `ci.yml` 的 `app=sources` 发布计划演练在 CI 上通过。
-- [ ] **10.1.0 的前置（打 tag 之前必须全部 done）**——更新器要装进已装副本，所以先于发版：
-  - T-103（zcode）更新器批量接入剩余 20 个 Tauri 应用并迁移拾阶；
-  - T-104（zcode）启动器安装模式与 `catalog.json`（ADR 0173）；
-  - T-105（zcode）启动器 webui 适配、打开打包（`bundle.active`）、接入更新器。**T-105 没做完不能发版**：启动器已在发布清单里，`bundle.active: false` 下 tauri 作业会因「期望恰好 1 个安装包」失败。
+- [x] **10.1.0 的前置，机制与代码都做完了**（zcode 的 T-103：f909db27、8fd0139c、34419f35、c1e62994；leader 的 T-104：2e9f4d50、T-105：9a740b59）：更新器批量接入 21 个 Tauri 应用并迁移拾阶；启动器安装模式与内嵌 `catalog.json`（ADR 0173）；启动器 webui 适配、`bundle.active` 打开、更新器接入。验证：六处核对脚本对 23 个应用零问题、`pnpm --frozen-lockfile`、两个 Cargo 工作区、九个应用的 `check.py`、launcher `cargo test`（58）、启动器 NSIS 安装包本机构建成功（5.4MB）、`installer.nsi` 里核对默认安装目录与 catalog 约定一致。**没验证到的**：安装版启动器的 GUI 实机运行（使用者的常驻启动器占着 single-instance 与 exe，没去动它），第一次装好后请手动看一眼。
+- [ ] T-010（cursor）起草 `[10.1.0]` 节。
 - [ ] 前置做完后：本机再跑一遍全量 `check.py`（见上面的环境坑）、`ci.yml` 全量 CI，然后 `python scripts/release.py prepare --minor --dry-run` 核对计划表（预期：几乎所有 Tauri 应用都因加更新器依赖而有改动，按 `feat` 升 minor）。确认后再 `prepare`、`push`。`[10.1.0]` 说明要写：增量发版机制与应用各有版本号、应用内自动更新、启动器可安装、pocket-cube-solver 与 c-gui-lab 首次进入发布、题库整改、驾考倒库素材。
 - [ ] 第一次真实 tag 之后：观察 `plan` / `publish` 作业（这两段只在打 tag 时才跑过）、`app-updates` 标签下各应用 json 是否齐；确认后拾阶旧通道 `ascent-updates` 的停写时机（ADR 0172 决策 7，无硬时限）。
 
