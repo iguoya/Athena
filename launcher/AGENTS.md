@@ -35,6 +35,12 @@
   `app.json` 里的 `progress` 声明，读写应用本地库、与 `nas_admin` 互推；同步失败只写日志，
   不进任何界面，也不拦启动。拉取要写应用的库，所以只在应用没在跑时做。改它先跑
   `cargo test -p launcher-core progress_sync`；对真实服务端的端到端测试是 `--ignored e2e`。
+- **两种运行模式，前端不自己判断**（ADR 0173）：`launcher_core::Workspace` 找得到仓库是仓库模式（上面所有规则
+  照旧），找不到是安装模式——清单取编译期内嵌的 `core/catalog.json`（`launcher catalog` 生成并提交，过期由
+  `cargo test` 里的 `catalog_is_up_to_date` 拦住），已安装与否按各平台默认安装位置判断（只在
+  `core/src/installed.rs`），打开 = 直接启动已装的可执行文件，没装或这类应用不支持就指路 Releases 页，
+  不代装、不假装成功。`list --json` 在安装模式只增 `mode`/`installed`/`installable`/`kind`/`embeddedIcon`。
+  新增发布应用后要重跑 `launcher catalog`。
 - **平台降级要如实说**（ADR 0047、0049、0051）：做不到就明说（例如 Wayland 不允许抢
   焦点时提示使用者自己切过去），不假装成功。
 - **启动器标志是虎头。** 窗口内 `webui/public/tiger-mark.png`，托盘
