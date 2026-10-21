@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  mathematics-compass（数学罗盘）的应用图标：罗盘——环、刻度与磁针，给数学学习指方向的意象。
+  北针海图蓝、南针沙金，与界面令牌同源。本应用自绘，无第三方素材。
+  改完跑 `launcher icons` 重新生成 app.json 里 icon.renders 声明的位图（主仓库 ADR 0065 三处同源）。
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- 外环 -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="#275D8C" stroke-width="30"/>
+  <!-- 主刻度：北东南西 -->
+  <g stroke="#275D8C" stroke-width="24" stroke-linecap="round">
+    <line x1="256" y1="62" x2="256" y2="118"/>
+    <line x1="450" y1="256" x2="394" y2="256"/>
+    <line x1="256" y1="450" x2="256" y2="394"/>
+    <line x1="62" y1="256" x2="118" y2="256"/>
+  </g>
+  <!-- 对角刻度 -->
+  <g stroke="#275D8C" stroke-width="14" stroke-linecap="round" opacity="0.55">
+    <line x1="389" y1="123" x2="352" y2="160"/>
+    <line x1="389" y1="389" x2="352" y2="352"/>
+    <line x1="123" y1="389" x2="160" y2="352"/>
+    <line x1="123" y1="123" x2="160" y2="160"/>
+  </g>
+  <!-- 磁针：北半海图蓝、南半沙金 -->
+  <polygon points="256,110 296,256 216,256" fill="#275D8C"/>
+  <polygon points="216,256 296,256 256,402" fill="#C8A45E"/>
+  <!-- 中心铆钉 -->
+  <circle cx="256" cy="256" r="36" fill="#275D8C"/>
+  <circle cx="256" cy="256" r="14" fill="#F6F4EE"/>
+</svg>

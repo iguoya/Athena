@@ -1,0 +1,559 @@
+@import "tailwindcss";
+
+/* 渲染栈按摘星基线（ADR 0138）：Tailwind v4 + 令牌。颜色全部走令牌，
+   组件类里不写死色值；深色由系统偏好切换（prefers-color-scheme）。 */
+:root {
+  --bg: #f6f4ee;
+  --surface: #fffdf8;
+  --surface-2: #f1ede3;
+  --text: #272624;
+  --muted: #6f6a60;
+  --line: #e2dccc;
+  --accent: #275d8c;
+  --accent-soft: #e3ecf4;
+  --accent-ink: #1c4568;
+  --gold: #8c6a27;
+  font-family: "PingFang SC", "Microsoft YaHei UI", "Noto Sans CJK SC", system-ui, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1b1d;
+    --surface: #222427;
+    --surface-2: #2a2d31;
+    --text: #e6e3dd;
+    --muted: #9d998f;
+    --line: #3a3d42;
+    --accent: #6ea3cf;
+    --accent-soft: #243442;
+    --accent-ink: #a8cbe8;
+    --gold: #c8a45e;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+.shell {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 28px 64px;
+}
+
+/* ── 页头 ── */
+.masthead {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 34px 4px 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.masthead h1 {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: 0.04em;
+}
+
+.masthead p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+.mark {
+  width: 52px;
+  height: 52px;
+  flex: none;
+}
+
+.mark-ring {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+
+.mark-hub {
+  fill: var(--accent);
+}
+
+.mark-needle-n {
+  fill: var(--accent);
+}
+
+.mark-needle-e {
+  fill: var(--gold);
+  opacity: 0.85;
+}
+
+/* ── 双栏 ── */
+.body {
+  display: grid;
+  grid-template-columns: 168px 1fr;
+  gap: 36px;
+  padding-top: 8px;
+}
+
+.toc {
+  position: sticky;
+  top: 20px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 28px;
+}
+
+.toc a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13.5px;
+  line-height: 2;
+  border-left: 2px solid transparent;
+  padding-left: 10px;
+}
+
+.toc a.on {
+  color: var(--accent-ink);
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+
+main {
+  padding-top: 28px;
+  max-width: 780px;
+}
+
+section {
+  padding-top: 26px;
+}
+
+section + section {
+  border-top: 1px solid var(--line);
+  margin-top: 26px;
+}
+
+h2 {
+  font-size: 21px;
+  margin: 0 0 12px;
+  letter-spacing: 0.02em;
+}
+
+h3 {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+h4 {
+  font-size: 13px;
+  margin: 0 0 6px;
+  color: var(--accent-ink);
+  letter-spacing: 0.08em;
+}
+
+p {
+  line-height: 1.85;
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+
+.claim {
+  font-size: 16.5px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.section-note {
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+a {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.howto {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-top: 16px;
+}
+
+.howto ul,
+.milestones {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.9;
+  font-size: 14.5px;
+}
+
+/* ── 路径图 ── */
+.pathmap {
+  margin: 20px 0 8px;
+}
+
+.pathmap-main {
+  display: flex;
+  align-items: stretch;
+}
+
+.pathmap-cell {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.pathmap-arrow {
+  flex: none;
+  width: 96px;
+  text-align: center;
+}
+
+.pathmap-arrow svg {
+  width: 64px;
+  height: 24px;
+  display: block;
+  margin: 0 auto;
+}
+
+.arrow-line {
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+  animation: flow 1.6s linear infinite;
+}
+
+.arrow-head {
+  fill: var(--accent);
+}
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+.arrow-label {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.station {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  text-align: left;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-top: 3px solid var(--accent);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.station:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.station-step {
+  font-size: 11.5px;
+  color: var(--accent-ink);
+  letter-spacing: 0.12em;
+}
+
+.station-name {
+  font-size: 16.5px;
+  font-weight: 700;
+}
+
+.station-claim {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.station-go {
+  font-size: 11.5px;
+  color: var(--accent-ink);
+  margin-top: auto;
+}
+
+.pathmap-tools {
+  margin-top: 18px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 12px 16px 14px;
+  background: var(--surface-2);
+}
+
+.pathmap-drop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.pathmap-drop svg {
+  width: 18px;
+  height: 30px;
+}
+
+.drop-line {
+  stroke: var(--muted);
+  stroke-width: 1.6;
+  stroke-dasharray: 4 3;
+}
+
+.drop-head {
+  fill: var(--muted);
+}
+
+.tool-chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.tool-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 8px 14px;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+
+button.tool-chip {
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+button.tool-chip:hover {
+  border-color: var(--accent);
+}
+
+.tool-chip strong {
+  font-size: 13.5px;
+}
+
+.tool-chip span {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.tool-chip.companion {
+  border-style: dashed;
+}
+
+/* ── 节点详情卡 ── */
+.stage {
+  margin-top: 26px;
+}
+
+.node-card,
+.companion-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-top: 16px;
+}
+
+.node-card header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.node-card h3 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+
+.node-kind {
+  color: var(--muted);
+  font-size: 12.5px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.launch {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  background: var(--accent-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+
+.launch code {
+  font-size: 12.5px;
+  color: var(--accent-ink);
+}
+
+.copied-hint {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.node-card section {
+  padding-top: 10px;
+}
+
+.points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.points li {
+  font-size: 14.5px;
+  line-height: 1.75;
+  padding-left: 14px;
+  border-left: 2px solid var(--accent-soft);
+}
+
+.points strong {
+  display: block;
+  color: var(--accent-ink);
+  font-size: 14px;
+}
+
+.milestones li {
+  font-size: 14.5px;
+}
+
+.time-hint {
+  color: var(--muted);
+  font-size: 12.5px;
+  margin: 10px 0 0;
+}
+
+.companion-card code {
+  font-size: 12.5px;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+
+/* ── 对比表与结论 ── */
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  margin: 14px 0 16px;
+}
+
+.compare th,
+.compare td {
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.7;
+}
+
+.compare thead th {
+  background: var(--surface-2);
+  font-size: 13px;
+}
+
+.compare tbody th {
+  background: var(--surface-2);
+  white-space: nowrap;
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.verdict {
+  display: grid;
+  gap: 8px;
+}
+
+.verdict p {
+  margin: 0;
+  font-size: 14.5px;
+}
+
+footer {
+  margin-top: 40px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.8;
+}
+
+@media (max-width: 900px) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+
+  .toc {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    padding-top: 16px;
+  }
+
+  .toc a {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .pathmap-main {
+    flex-direction: column;
+  }
+
+  .pathmap-cell {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pathmap-arrow {
+    width: auto;
+    transform: rotate(90deg);
+    margin: 6px 0;
+  }
+}
