@@ -12,3 +12,13 @@
 | `CPlusPlus/33-cgi/*.cgi`、`Practice/CGI/*.cgi` | 编译产物（ELF 可执行文件）提交进了仓库，不是源码 |
 | `Practice/CGI/*.cpp` | 与 `CPlusPlus/33-cgi` 源码相同 |
 | 各目录的 `*.project`、`*.workspace`、`*.user`、`CMakeLists.txt.user`、`.codelite` 等 | IDE 工程与本机配置，无内容价值 |
+
+## 来自旧仓库 `algorithm` 的 `21-basic`（C 语言基础）
+
+「C 语言基础」组的 7 个条目来自 `algorithm/21-basic`，收了该目录下全部 9 个练习（`Goldbach`、`pi`、`callback`、`function_pointer`、`struct`、`volume`、`file`、`magic_square`、`check`）。未收的只有：
+
+| 旧路径 | 原因 |
+|---|---|
+| `21-basic/function_pointer/main.bc`、`main.bc.s`、`main.ll`、`main.ll.s`、`main.o` | clang 的编译产物（LLVM 位码、汇编、目标文件）提交进了仓库，不是源码 |
+| `21-basic/README.md` | 只有一行标题「数据结构和算法相关练习」，没有内容 |
+| `Linux/Algorithm/21-basic/` | 与 `algorithm/21-basic/` 逐文件相同的拷贝（2023-02 为做 Qt 演示台素材而拷贝），只收规范版 |

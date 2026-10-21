@@ -682,6 +682,674 @@
               }
             ]
           }
+        },
+        {
+          "id": "linux.arc.goldbach",
+          "title": "哥德巴赫猜想的验证",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[C 语言基础] 枚举第一个素数、检验差是否为素数；is_prime 把 0、1 和负数判为素数，输入流结束后无限循环。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂最朴素的试除法与枚举，并找出它在边界输入下的三处失效。",
+            "pain": "只用正常输入测试时，程序“看起来对”，边界与输入流结束的行为全凭运气。",
+            "model": "从 2 起逐个枚举素数 p，检验 n−p 是否也是素数；素数判断用试除到 √n。",
+            "scope": "只读历史代码并批注，可原样运行。",
+            "judgment": "每个判断函数问：0、1、负数、最大值会怎样？每个读入问：读不到会怎样？",
+            "landing": "能写出带前置检查与退出条件的版本。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "把偶数 n 拆成两个素数之和：从 2 开始枚举 p，只要 n−p 是素数就输出。算法思路没问题，注释里粘贴的运行记录也记着它在 `888888888888` 上算出了 `29 + 888888888859`。问题出在边界：`is_prime` 把 0、1、负数都判为素数，主循环没有出口，`scanf` 的格式还与变量类型对不上。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_goldbach",
+                "run": "cli",
+                "summary": "Goldbach：枚举第一个素数并检验差，主循环无出口。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "21-basic/Goldbach",
+                  "first_commit": "2020-10-05",
+                  "duplicates": [
+                    "Linux/Algorithm/21-basic/Goldbach"
+                  ],
+                  "note": "2018-10 的 C 语言基础练习，同一目录在 Linux 仓库的 Algorithm 里有逐文件相同的拷贝。"
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 7,
+                    "kind": "design",
+                    "text": "⚠ `is_prime` 对 0、1 和负数都返回 `true`：循环条件一次也不成立，直接落到 `return true`。本机实测输入 2 得到 `2 = 2 + 0`，输入 11 得到 `11 = 11 + 0`，0 被当成了素数。应在函数开头 `if (n < 2) return false;`。另外 `sqrt(n)` 每圈都重新算一遍并用浮点比较整数边界，改成 `i * i <= n` 既快又精确（注意乘法别溢出）。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 34,
+                    "kind": "portability",
+                    "text": "`%jd` 要的是 `intmax_t *`，传进去的却是 `long *`。在 Linux x86-64 上两者都是 8 字节，碰巧能用；Windows 上 `long` 只有 4 字节而 `intmax_t` 是 8 字节，`scanf` 按规范会往 4 字节的变量里写 8 字节。本机 MinGW 编译时报 `-Wformat` 警告，输入 `-4` 后回显的是 `4294967292`。变量应声明成 `intmax_t`，或者格式用 `%ld`。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 31,
+                    "kind": "design",
+                    "text": "⚠ 外层循环没有任何出口，`scanf` 的返回值又没检查：输入流结束（EOF）或读到非数字时 `scanf` 失败，`number` 保持原值（第一次则是未初始化的垃圾），然后同样的计算无限重复。本机把输入重定向为空，程序一直刷出随机的数；输入过 `-4` 再遇 EOF，则一遍遍重复 `-4 = 2 + -6`。应检查 `scanf(...) == 1`，失败就 `break`。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 29,
+                    "kind": "style",
+                    "text": "三个 `%d` 配的是 `sizeof` 的结果（`size_t`，64 位平台上 8 字节），格式与类型不符是未定义行为，编译器报了三个警告，应当用 `%zu`。标签写的是 `long int size`，打印的却是 `sizeof(intmax_t)`：本机 Windows 实测同一行里是 `long size: 4, long int size :8`——`long` 与 `long int` 本是同一个类型，两个数字不可能不同。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 55,
+                    "kind": "testing",
+                    "text": "文件末尾粘贴的运行记录（`888888888888 = 29 + 888888888859` 等，本机在 WSL 里复现了同样的输出）说明程序在作者的 64 位 Linux 上是对的，同时暗示了输入范围依赖平台。把这类记录写成断言才是测试：2 无解、4 → 2+2、12 → 5+7、`888888888888` → 29+888888888859，再加上 0、1、负数、奇数的预期行为。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "c99",
+                "run_note": "输入读完后程序不会退出（scanf 失败后无限重复），应用内 10 秒后会被终止，输出有上限；Windows 上 `long` 为 4 字节，大数输入需在 Linux/WSL 里运行",
+                "stdin": "12\n"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "素数判断、试除法的边界处理，会在数据结构与算法的课程里系统讲；这里先把 0 和 1 的陷阱留作案例。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linux.arc.pi_series",
+          "title": "莱布尼茨级数求 π",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[C 语言基础] 交替加减 1/i 逼近 π/4，每圈打印一行共 50 万行，停止条件的精度并不等于结果的精度。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认清“最后一项小于阈值”与“结果误差小于阈值”不是一回事。",
+            "pain": "用终止条件当精度保证，结果最后一位被悄悄放大四倍。",
+            "model": "π/4 = 1 − 1/3 + 1/5 − …，交错级数的误差不超过第一个舍弃项。",
+            "scope": "只读历史代码并批注，可原样运行。",
+            "judgment": "每个“小于阈值就停”都问：最终结果要乘以多少倍？",
+            "landing": "能让输出只含最终结果与迭代次数。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "最小的数值练习：`flag` 来回切换加减，一项一项累加 1/i，项小于 1e-6 就停。结果收敛到 3.14159，但每圈都打印一行，要看结果得翻 50 万行；末尾粘贴的几行注释也印证了数值在 `3.141591` 与 `3.141595` 之间来回跳。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_pi",
+                "run": "cli",
+                "summary": "pi：交替级数逼近 π，每圈输出一行。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "21-basic/pi",
+                  "first_commit": "2020-10-05",
+                  "duplicates": [
+                    "Linux/Algorithm/21-basic/pi"
+                  ],
+                  "note": "2018-10 的 C 语言基础练习，Linux 仓库的 Algorithm 里有逐文件相同的拷贝。"
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 10,
+                    "kind": "design",
+                    "text": "停止条件是“下一项小于 1e-6”，但交错级数的误差上界是**第一个被舍弃的项**，输出时还要乘上外面的 4，所以误差可达约 4×10⁻⁶。本机实测末几行在 `3.141591` 与 `3.141595` 间来回跳，而 π 是 3.141593：打印出的第 6 位小数并不都可信。要 6 位精度，阈值应取 1e-7 以下。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 23,
+                    "kind": "design",
+                    "text": "⚠ 每圈都 `printf` 一行：本机实测共输出 500000 行，真正需要的只有最后一个值，结果淹没在输出里。应用内的输出上限是 20 万字符，连最后一行都看不到。想展示收敛过程，应隔若干项才打印，或者循环结束后只打印一次。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 12,
+                    "kind": "design",
+                    "text": "`pow(10, -6)` 是个常量，却在 50 万圈里各算一次，应当提到循环外，或者直接写浮点字面量 `1e-6`。同一行里变量名 `remainder` 也与 `<math.h>` 里的标准函数 `remainder` 同名，局部变量能遮蔽它，但读代码的人会多想一下。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 9,
+                    "kind": "style",
+                    "text": "用布尔变量切换加减号，要在两个分支里各写一次 `flag = …`；把符号当数处理更简单：`double sign = 1;`，累加 `sum += sign / i`，每圈 `sign = -sign`，不需要 `stdbool.h`，也少一层分支。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "c99",
+                "run_note": "会输出 50 万行，超过应用内 20 万字符的输出上限，只能看到前面的部分；最后一行需在终端里运行才能看到"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "数值方法里的误差估计，在高等数学与数值计算的课程里讲交错级数的余项。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linux.arc.function_pointer",
+          "title": "函数指针与回调",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[C 语言基础] typedef 前后两种写法并排对照是亮点；同一个 main 里还塞了随机数与一段写错了的柔性数组。",
+          "weight": "了解",
+          "outline": {
+            "promise": "用 typedef 读懂函数指针，认出回调的局限，并指出把字符串放在结构体后面的正确写法。",
+            "pain": "函数指针的声明语法难读；一个练习文件里混进几件不相干的事，其中一件还是错的。",
+            "model": "函数指针是“代码的地址”；回调是把行为作为参数传进去；柔性数组成员让变长数据紧跟结构体存放。",
+            "scope": "只读历史代码并批注，可原样运行。",
+            "judgment": "每个“混在一起”的练习问：它在练哪一件事？每个结构体成员问：它是指针还是数据本身？",
+            "landing": "能用 typedef 写出回调接口，并把柔性数组声明成 `char contents[]`。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两个文件讲同一个概念。`function_pointer` 把不带 typedef 的原始写法 `ff` 与带 typedef 的 `f` 并排放着做对照，很有教学价值；但同一个 `main` 里还塞进了一段随机数练习和一段“把字符串放在结构体后面”的试验，后者把成员声明成了指针，读出来的是未初始化的内存。`callback` 是 C++ 版的回调，写了个无符号数相减的陷阱而不自知。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_function_pointer",
+                "run": "cli",
+                "summary": "function_pointer：函数指针的两种写法、随机数、柔性数组。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "21-basic/function_pointer",
+                  "first_commit": "2020-10-05",
+                  "duplicates": [
+                    "Linux/Algorithm/21-basic/function_pointer"
+                  ],
+                  "note": "2018-10 的 C 语言基础练习，Linux 仓库的 Algorithm 里有逐文件相同的拷贝。"
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 13,
+                    "kind": "style",
+                    "text": "`ff` 与 `f` 做的是同一件事：前者直接写函数指针类型，后者先 `typedef` 出 `Pfun`。作者在注释里写“原始写法，阅读不便”与“改进写法，易懂”，并排留作对照，`main` 里各调用一次证明等价——这是本文件最值得保留的部分。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 66,
+                    "kind": "ownership",
+                    "text": "⚠ 想用“柔性数组”把字符串放在结构体后面，却把 `contents` 声明成了指针 `char *`：`strcpy((char *)(ptr + 1), str)` 把字符串写在结构体末尾（偏移 16），而 `contents` 这个指针成员（偏移 8）从未赋值，这里却 `printf(\"%s\", ptr->contents)` 去读它——读的是 `malloc` 出来的未初始化内存。本机实测恰好打印 `(null)`，换个环境就是崩溃。柔性数组成员应声明成 `char contents[];`（C99），用 `ptr->contents` 直接访问紧跟其后的同一块内存。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 55,
+                    "kind": "ownership",
+                    "text": "`malloc` 的返回值没有检查，用完也从未 `free`。`(struct line *)` 的强转在 C 里是多余的，反而会掩盖忘了 `#include <stdlib.h>` 时的警告。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 42,
+                    "kind": "coupling",
+                    "text": "一个文件里混了三件事：函数指针、1–5 的随机数（打印 100 个排成 10 行）、柔性数组。随机数这段与函数指针毫无关系，是另一个练习被留在了同一个 `main` 里。练习文件一个主题一个，后来才找得到。顶部还把 `<stdio.h>` 包含了两次，`<unistd.h>` 完全没用到。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 68,
+                    "kind": "portability",
+                    "text": "`sizeof` 的结果是 `size_t`，用 `%d` 打印是未定义行为（本机编译器报了两处 `-Wformat` 警告），应当用 `%zu`。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "c99",
+                "run_note": "可直接运行；目录里原有的 main.bc、main.ll、main.o 是 clang 的编译产物，没有收进来"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_callback",
+                "run": "cli",
+                "summary": "callback：C++ 版回调，两个计算函数传给同一个驱动函数。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "21-basic/callback",
+                  "first_commit": "2020-11-11",
+                  "duplicates": [
+                    "Linux/Algorithm/21-basic/callback"
+                  ],
+                  "note": "2018-10 的练习，Linux 仓库的 Algorithm 里有逐文件相同的拷贝。"
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 7,
+                    "kind": "design",
+                    "text": "⚠ 函数返回 `size_t`（无符号），表达式却是 `int`：当 `m*n` 小于随机数时结果为负，转成无符号后环绕成一个巨大的数。本机把同一个函数以 `subValue(1, 1)` 调用，得到 `18446744073709551576`。程序里实际用 100×10=1000，永远不会触发，所以看不出来——一个只在参数变小时才爆的错。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 25,
+                    "kind": "design",
+                    "text": "没有调用 `srand`，`rand()` 的序列固定：本机连续运行两次，输出逐字节相同。想演示“每次不同的数据”，要 `srand(time(nullptr))`，更现代的是用 `<random>`。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 15,
+                    "kind": "design",
+                    "text": "回调用的是裸函数指针 `size_t (*func)(int, int)`：只能传自由函数，不能携带状态（比如把次数或随机数种子放进回调里）。C++11 之后更惯用的写法是 `std::function<size_t(int, int)>` 或模板参数，这样 lambda 也能传进来。次数 100 写死在 `doSth` 里，也应该是个参数。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 22,
+                    "kind": "style",
+                    "text": "IDE 新建工程的模板输出被保留，混在程序的数据输出前面；第 24 行注释掉的 `setValue` 在文件里根本不存在，是改名前的残留。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++14"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "函数指针与回调、结构体内存布局，在 C 语言与计算机系统的课程里系统讲。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linux.arc.struct_input",
+          "title": "结构体数组与输入",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[C 语言基础] 嵌套结构体数组的两种遍历写法；另一个小练习把 scanf 写进了从未赋值的指针。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出两个输入输出练习里的未定义行为，并说明它们为什么“看起来能跑”。",
+            "pain": "“跑通了”被当成“写对了”，而实际依赖的是栈上碰巧的值。",
+            "model": "结构体数组可按下标或指针遍历；scanf 需要一个可写的有效地址。",
+            "scope": "只读历史代码并批注，可原样运行。",
+            "judgment": "每个指针问：它指向的对象是谁创建的？每个格式串问：参数类型对得上吗？",
+            "landing": "能把两个练习改成不依赖运气的版本。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两个小练习。`struct` 是嵌套结构体数组，用下标和指针两种方式各遍历一次；`volume` 算长方体体积后，又去 `scanf` 一个**从未赋值**的指针，在作者的机器上碰巧能跑，写进了文件末尾的运行记录里。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_struct_array",
+                "run": "cli",
+                "summary": "struct：嵌套结构体数组，下标与指针两种遍历。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "21-basic/struct",
+                  "first_commit": "2020-10-05",
+                  "duplicates": [
+                    "Linux/Algorithm/21-basic/struct"
+                  ],
+                  "note": "2018-10 的 C 语言基础练习，Linux 仓库的 Algorithm 里有逐文件相同的拷贝。"
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 16,
+                    "kind": "portability",
+                    "text": "`sizeof` 的结果是 `size_t`，用 `%d` 打印是未定义行为（编译器在三处报了 `-Wformat`），应当用 `%zu`。更有意思的是 `sizeof(\"皇甫珍竹\")` 的值取决于**源文件/执行字符集**：本机按 UTF-8 编译输出 13（4 个汉字×3 字节+结尾的 0），用 `-fexec-charset=GBK` 就是 9。把“字节数”当“字数”用，在跨平台代码里会出错。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 19,
+                    "kind": "style",
+                    "text": "初始化器 `{\"皇甫珍竹\", 88, 1988, 6, 13}` 靠“大括号省略”把后三个数填进内嵌的 `birthday`：合法，但编译器用 `-Wmissing-braces` 警告。写成 `{\"…\", 88, {1988, 6, 13}}`，或者指定初始化 `.birthday = {1988, 6, 13}`，一眼就能看出层次。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 10,
+                    "kind": "portability",
+                    "text": "名字字段固定 20 字节，UTF-8 下一个汉字占 3 字节，最多放 6 个汉字（18+1）。本机把第 7 个汉字加进初始化字符串，编译器给出 `initializer-string for array of 'char' is too long (22 chars into 20 available)`：超出的字符被截断，只有一条编译警告。名字的长度限制应该用字符数而不是字节数思考，或者干脆用 `char *` 指向字面量。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 22,
+                    "kind": "design",
+                    "text": "后面的循环里，每个学生被打印了两遍：一遍用下标 `g1c1[i]`，一遍用指针 `p`、`++p`，意在演示两种访问写法等价，想法很好。但是两段 7 行的 `printf` 一字不差地重复，应当抽成 `print_student(const struct student *s)` 一个函数，两次调用，更能看出“等价”。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "c99"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_volume",
+                "run": "cli",
+                "summary": "volume：长方体体积，然后 scanf 一个未初始化的指针。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "21-basic/volume",
+                  "first_commit": "2020-10-05",
+                  "duplicates": [
+                    "Linux/Algorithm/21-basic/volume"
+                  ],
+                  "note": "2018-10 的 C 语言基础练习，Linux 仓库的 Algorithm 里有逐文件相同的拷贝。"
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 13,
+                    "kind": "ownership",
+                    "text": "⚠ `p_number` 从未赋值，就被 `scanf` 当作写入地址。本机在 Windows（MinGW）上它碰巧指向了可写的栈区，程序正常打印 `666`，文件末尾注释里记的也是“成功”的运行；同一份代码在 WSL（Linux）里到这一行直接段错误（`-O0` 与 `-O2` 都一样）。这是未定义行为最危险的样子：开发时一直通过。应先让它指向真实的对象：`int number; scanf(\"%d\", &number);`。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 7,
+                    "kind": "naming",
+                    "text": "三个 `int` 相乘没有溢出检查：本机输入 `2000,2000,2000` 得到 `-589934592`（有符号整数溢出本身是未定义行为，只是通常表现为回绕）。变量名 `volumne` 少了一个字母，`high` 应当是 `height`，`volume` 其实可以直接不要，算完立刻打印。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 6,
+                    "kind": "design",
+                    "text": "`scanf` 的返回值没检查：输入格式不对（比如用空格代替逗号）时，后面的变量保持未初始化，下一行照样做乘法。应当 `if (scanf(...) != 3) { 提示并退出 }`。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "c99",
+                "run_note": "在 Windows 上碰巧能跑完；同样的代码在 Linux/WSL 里会在 scanf 处段错误",
+                "stdin": "2,3,5\n666\n"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "结构体、指针与输入输出，在 C 语言与计算机系统的课程里系统讲。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linux.arc.file_read",
+          "title": "按字符读文件",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[C 语言基础] 用 char 接收 fgetc 的返回值、固定 1000 字节的缓冲区、不检查 fopen。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出 fgetc/EOF 的经典陷阱，并说明固定缓冲区为什么必须带上限。",
+            "pain": "读文件的最短写法同时踩中类型、空指针和缓冲区三个坑。",
+            "model": "fgetc 返回 int：0–255 的字节值或 EOF（−1）；文本编码与 char 的符号性无关。",
+            "scope": "只读历史代码并批注（需要命令行参数，应用内不运行）。",
+            "judgment": "每个文件操作问：失败了怎样？每个循环读入问：上限在哪里？",
+            "landing": "能写出带检查的逐字节拷贝，或改用 fgets/fread。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "把命令行给出的文件读两遍：第一遍边读边 `putchar`，第二遍存进 1000 字节的数组再整体打印，注释说想判断汉字编码。读文件的最短写法，同时踩中了三个经典坑：`char` 接 `fgetc`、不检查 `fopen`、缓冲区不设上限。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_file_read",
+                "run": "read-only",
+                "summary": "file：命令行给文件名，读两遍。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "21-basic/file",
+                  "first_commit": "2020-10-05",
+                  "duplicates": [
+                    "Linux/Algorithm/21-basic/file"
+                  ],
+                  "note": "2018-10 的 C 语言基础练习，Linux 仓库的 Algorithm 里有逐文件相同的拷贝。"
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 12,
+                    "kind": "design",
+                    "text": "⚠ 没检查 `argc`，也没检查 `fopen` 的返回值：不带参数运行时 `argv[1]` 是空指针，`fopen` 失败返回 `NULL`，随后 `fgetc(NULL)` 解引用空指针。本机在 WSL（Linux）里不带参数运行，直接段错误；文件不存在的后果相同。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 14,
+                    "kind": "portability",
+                    "text": "⚠ `fgetc` 返回 `int`（字节值 0–255 或 `EOF`=−1），却存进了 `char`。在 `char` 有符号的平台（x86）上，字节 `0xFF` 与 `EOF` 无法区分：本机用内容为 `abc\\xffdef` 的文件实测，两遍输出都在 `0xFF` 处提前结束，`def` 丢失（Latin-1 的 ÿ、二进制文件里都常见 `0xFF`）；在 `char` 无符号的平台（常见的 ARM Linux）上，`ch != EOF` 恒为真，循环永不结束。变量必须声明成 `int`。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 20,
+                    "kind": "ownership",
+                    "text": "⚠ 固定 1000 字节的缓冲区，循环里每读一个字节就写 `s[i++]`，没有任何上限检查，末尾还要再写一个 `'\\0'`：文件超过 999 字节就写出界。本机用 5000 字节的文件实测，进程崩溃（退出码 139）。应当检查 `i < sizeof s - 1`，或者按文件大小动态分配。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 24,
+                    "kind": "style",
+                    "text": "`if(ch<0) { s[i++]=ch; } else { s[i++] = ch; }` 两个分支一字不差，注释说的“是汉字就存、不是就跳过”并没有实现——全部存了下来。这是改了一半的遗留；这一整段 `while` 实际只是把文件读到内存里。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 7,
+                    "kind": "style",
+                    "text": "为处理宽字符引入的 `<wchar.h>` 与变量 `wa` 一次也没用到（编译器报 `unused variable`），后来改成按字节读，留下了残骸。要处理中文文本，应约定统一的编码（UTF-8），按字节拷贝即可；要按“字”处理，才需要 `setlocale` 加宽字符接口。"
+                  }
+                ],
+                "run_note": "需要命令行参数（文件名），应用内不带参数运行没有意义；目录里的 test.txt 是示例输入"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "文件 I/O 与字符编码，在 C 语言与计算机系统的课程里系统讲。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linux.arc.magic_square",
+          "title": "幻方的前半截：矩阵与进制拆分",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[C 语言基础] 名叫幻方，生成的却是蛇形矩阵；show_coords 不前进指针，核心函数是空壳。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂一个多文件 C 工程的组织，并指出名不副实的函数、泄漏与失效的测试。",
+            "pain": "工程拆成了头文件与源文件，却没有测试保护，写到一半就停在空壳上。",
+            "model": "n 阶幻方每行、每列、两条对角线之和都是 n(n²+1)/2；这里只做了矩阵初始化和把数按 n 进制拆成坐标。",
+            "scope": "只读历史代码并批注，可原样运行（单元测试需要 Check 库，不运行）。",
+            "judgment": "每个函数问：名字说的和做的一致吗？每处 malloc 问：谁来 free？每条测试问：有断言吗？",
+            "landing": "能补全断言，并把泄漏与不前进的指针改掉。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "一个没写完的幻方工程：`matrix.c` 里有蛇形填充的矩阵、n 进制拆分，`main.c` 演示 C99 变长数组指针，`unit_test_main.c` 用 Check 写了测试。组织是对的——头文件、实现、测试各自一个文件——但是函数名与实际行为对不上，三处明显的错误让输出一片重复，最后真正要写的 `generate_formula` 只有一个空函数体。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_magic_square",
+                "run": "cli",
+                "summary": "magic_square：蛇形矩阵与进制拆分，单元测试写了一半。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "21-basic/magic_square",
+                  "first_commit": "2020-10-05",
+                  "duplicates": [
+                    "Linux/Algorithm/21-basic/magic_square"
+                  ],
+                  "note": "2018-10 的练习，Linux 仓库的 Algorithm 里有逐文件相同的拷贝。"
+                },
+                "notes": [
+                  {
+                    "file": "matrix.c",
+                    "line": 11,
+                    "kind": "design",
+                    "text": "⚠ 工程叫 magic_square，这个函数生成的却不是幻方，而是“蛇形”填充：按列、方向交替地写入 1..n²。幻方要求每行、每列、两条对角线之和都等于 n(n²+1)/2；本机实测，2 阶两行之和都是 5，4 阶四行都是 34（偶数阶蛇形碰巧各行相等），3 阶各行之和是 14、15、16，而 `get_avg_sum(3)` 算出的目标是 15。真正生成幻方的 `generate_formula` 是个空壳，文件末尾被注释掉的草稿也只写了开头。"
+                  },
+                  {
+                    "file": "matrix.c",
+                    "line": 92,
+                    "kind": "design",
+                    "text": "⚠ `show_coords` 的循环里指针 `p` 从不前进，每次都打印第一个坐标。本机实测 3 阶时整页都是 `(2, 0)` 重复。应当在循环里 `++p`，或者直接写 `p[i].x`。"
+                  },
+                  {
+                    "file": "matrix.c",
+                    "line": 104,
+                    "kind": "ownership",
+                    "text": "`test()` 在循环里每次调用 `hex_convert`，它每次 `malloc` 一块 `coords` 数组，用完既没有 `free` 也没有返回给别人。`main.c` 里 `init_matrix` 的结果同样从未释放。短命的演示程序里不会出事，但这类“谁分配、谁释放”的约定应该写在函数注释里。"
+                  },
+                  {
+                    "file": "matrix.c",
+                    "line": 9,
+                    "kind": "style",
+                    "text": "同时包含 `<math.h>` 和 `<tgmath.h>`：后者把 `pow` 等换成泛型宏，在这里毫无必要。`number_system[i] = pow(n, i);` 把 `double` 直接截断成 `int`，对整数幂最好用整数循环累乘，避免浮点误差。"
+                  },
+                  {
+                    "file": "matrix.h",
+                    "line": 34,
+                    "kind": "naming",
+                    "text": "公共头文件里声明了一个叫 `test` 的函数：名字说不出它做什么（其实是演示把数字按 n 进制拆成坐标），也很容易和别的测试工具重名。而 `matrix.c` 里定义的 `generate_formula` 在头文件里没有声明，函数体还是空的。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 7,
+                    "kind": "design",
+                    "text": "返回类型是 `int **`，函数里的数据却是 `int (*p)[n]`（指向 n 个元素的数组的指针，C99 的变长数组写法），两者并不兼容；函数结尾先 `free(p)` 再 `return NULL`，调用方根本拿不到矩阵——它其实是个只打印不返回的演示函数，返回类型应当是 `void`。`int (*p)[n]` 这种写法本身值得保留：一次 `malloc` 就得到可以直接 `p[i][j]` 访问的 n×n 矩阵。"
+                  },
+                  {
+                    "file": "unit_test_main.c",
+                    "line": 24,
+                    "kind": "testing",
+                    "text": "`test_matrix` 里的所有断言都被注释掉了，只剩 `show_matrix(p, 5)` 打印：这个用例永远通过，等于没有测试，`p` 也没释放。相反 `test_avg` 才是真正有断言的（n<2 返回 −1，3→15，4→34，5→65），而且覆盖了 −10、0 这样的边界。"
+                  }
+                ],
+                "sources": [
+                  "main.c",
+                  "matrix.c"
+                ],
+                "std": "c99",
+                "run_note": "应用内编译运行 main.c 与 matrix.c；unit_test_main.c 需要 Check 库，不参与运行"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "多文件工程的组织与单元测试，在软件工程与 C 语言的课程里讲。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linux.arc.check_unit",
+          "title": "GNU Check 单元测试起步",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[C 语言基础] 一个减法函数配一个测试；测试驱动的退出码写反了，成功被当成失败。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出测试驱动里的退出码约定，并说明为什么一个用例远远不够。",
+            "pain": "测试框架搭好了，但退出码和用例数量让它形同虚设。",
+            "model": "Suite 装 TCase，TCase 装 test；SRunner 运行并返回失败数；进程退出码为 0 表示全绿。",
+            "scope": "只读历史代码并批注（需要 Check 库，应用内不运行）。",
+            "judgment": "每个测试驱动问：全绿时退出码是什么？每个被测函数问：边界在哪里？",
+            "landing": "能让 ctest 对这个工程给出正确的成败。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "最小的 Check 工程：`sub.c` 里一个减法函数，`test_sub.c` 一个用例，`test_main.c` 创建 Suite 并运行。搭法是对的，但驱动返回的退出码与约定相反，目录里还留着 IDE 模板生成的 Hello World。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_check_unit",
+                "run": "read-only",
+                "summary": "check：减法函数、一个 Check 用例与驱动。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "21-basic/check",
+                  "first_commit": "2020-10-05",
+                  "duplicates": [
+                    "Linux/Algorithm/21-basic/check"
+                  ],
+                  "note": "2018-10 的练习，Linux 仓库的 Algorithm 里有逐文件相同的拷贝。"
+                },
+                "notes": [
+                  {
+                    "file": "test_main.c",
+                    "line": 15,
+                    "kind": "testing",
+                    "text": "⚠ 退出码取反：`n` 是失败的用例数，全部通过（`n == 0`）时返回 1，有失败时反而返回 0。CMake/CI 的 `ctest` 以退出码判成败，这样写会把全绿的测试判为失败、把真正失败的判为通过。对照同一个人写的 `magic_square/unit_test_main.c`，那里 `return number_failed;` 是对的。"
+                  },
+                  {
+                    "file": "test_sub.c",
+                    "line": 9,
+                    "kind": "testing",
+                    "text": "整个工程只有这一条断言：`sub(6, 2)`。没有负数、0、被减数小于减数的情形。`fail_unless` 是 Check 早期的接口，新写法是 `ck_assert_int_eq(sub(6, 2), 4)`，失败时会自动打印两边的实际值，不用再手拼 `\"error, 6 - 2 != 4\"` 这样的说明（这类说明和断言各写一遍，改了一边就会不一致）。"
+                  },
+                  {
+                    "file": "CMakeLists.txt",
+                    "line": 6,
+                    "kind": "naming",
+                    "text": "可执行目标取名 `aa`，工程里看不出它是测试；工程叫 `check`，与被链接的库 `check` 同名也容易混淆。目录里的 `main.c` 只是 IDE 模板生成的 Hello World，没有进任何构建目标。"
+                  },
+                  {
+                    "file": "test_main.c",
+                    "line": 9,
+                    "kind": "style",
+                    "text": "`n1` 与 `sr1` 声明后一直没有用到；注释里的“运行所有测试用例”还放在 `srunner_ntests_failed` 一行后面，顺序与意思对不上。"
+                  }
+                ],
+                "run_note": "需要安装 Check 库（libcheck），应用内只读，不编译不运行"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "单元测试的方法，在软件工程课程里讲；Check 是 C 语言常用的测试框架之一。"
+              }
+            ]
+          }
         }
       ]
     }
