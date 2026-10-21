@@ -43,20 +43,56 @@ impl Compiler {
         }
     }
 
-    /// 组装一条编译命令。两族编译器的参数完全不同，映射集中在这里。
+    /// 组装一条编译命令（单文件，课程实验用）。两族编译器的参数完全不同，映射集中在这里。
     pub fn compile_command(&self, src: &Path, out: &Path, include: Option<&Path>) -> Command {
+        let includes: Vec<&Path> = include.into_iter().collect();
+        self.compile_command_multi(&[src], out, &includes, None)
+    }
+
+    /// 多文件版（历史归档案例用，ADR 0176）：把 `srcs` 一起编译链接。
+    ///
+    /// - 全是 `.c` 时按 C 编译（GCC/Clang 换成 C 驱动，MSVC 按扩展名自动识别），不传
+    ///   `-std=c++..`；混有 `.cpp` 就整体按 C++ 编（g++ 对 `.c` 也当 C++，与情境篇三一致）。
+    /// - `std` 为 `None` 用课程默认（C++20）；归档的老代码可能要 `c++11` / `c++14`，由条目声明，
+    ///   调用方先用 [`is_known_std`] 过滤，这里不再校验。
+    pub fn compile_command_multi(
+        &self,
+        srcs: &[&Path],
+        out: &Path,
+        includes: &[&Path],
+        std: Option<&str>,
+    ) -> Command {
+        let pure_c = !srcs.is_empty()
+            && srcs
+                .iter()
+                .all(|s| s.extension().and_then(|e| e.to_str()) == Some("c"));
         match self {
             Compiler::GnuLike { program } => {
-                let mut cmd = Command::new(program);
-                cmd.arg("-std=c++20").arg("-O0").arg("-Wall").arg("-Wextra");
+                let mut cmd = Command::new(if pure_c { c_driver(program) } else { program.clone() });
+                match (pure_c, std) {
+                    (true, Some(s)) => {
+                        cmd.arg(format!("-std={s}"));
+                    }
+                    (true, None) => {}
+                    (false, s) => {
+                        cmd.arg(format!("-std={}", s.unwrap_or("c++20")));
+                    }
+                }
+                cmd.arg("-O0").arg("-Wall").arg("-Wextra");
                 // 并发实验用 std::thread：旧版 glibc 不加 -pthread 会链接失败；
                 // MinGW 与 macOS 的 clang 都接受这个参数，统一加上免得分平台。
                 // 原先只有 design-patterns 加，其余五个应用各抄一份时漏了。
                 cmd.arg("-pthread");
-                cmd.arg(src);
+                for s in srcs {
+                    cmd.arg(s);
+                }
                 cmd.arg("-o").arg(out);
-                if let Some(dir) = include {
+                for dir in includes {
                     cmd.arg(format!("-I{}", dir.display()));
+                }
+                if pure_c && !cfg!(windows) {
+                    // 老 C 示例常直接用 <math.h>；Windows 的 CRT 自带，不需要也不认 -lm。
+                    cmd.arg("-lm");
                 }
                 cmd
             }
@@ -65,14 +101,19 @@ impl Compiler {
                 // /nologo 去掉版权横幅，否则每次编译日志都顶着两行噪音。
                 // /EHsc 打开标准 C++ 异常模型——MSVC 默认不开，标准库一用就警告。
                 // /Od 对应 -O0，/W4 大致对应 -Wall -Wextra。
-                cmd.arg("/nologo").arg("/std:c++20").arg("/EHsc").arg("/Od").arg("/W4");
-                cmd.arg(src);
+                cmd.arg("/nologo").arg("/EHsc").arg("/Od").arg("/W4");
+                if !pure_c {
+                    cmd.arg(format!("/std:{}", msvc_std(std.unwrap_or("c++20"))));
+                }
+                for s in srcs {
+                    cmd.arg(s);
+                }
                 // /Fe: 指定产物；/Fo: 指定中间 .obj，否则它会散在当前目录里。
                 cmd.arg(format!("/Fe:{}", out.display()));
                 if let Some(parent) = out.parent() {
                     cmd.arg(format!("/Fo:{}\\", parent.display()));
                 }
-                if let Some(dir) = include {
+                for dir in includes {
                     cmd.arg(format!("/I{}", dir.display()));
                 }
                 for (key, value) in env {
@@ -81,6 +122,47 @@ impl Compiler {
                 cmd
             }
         }
+    }
+}
+
+/// 归档条目允许声明的语言标准。白名单：这个字符串会拼进编译命令行。
+pub fn is_known_std(s: &str) -> bool {
+    matches!(
+        s,
+        "c++11" | "c++14" | "c++17" | "c++20" | "c++23" | "c89" | "c99" | "c11" | "c17" | "gnu11" | "gnu17"
+    )
+}
+
+/// 给 C++ 驱动找配套的 C 驱动：`g++` → `gcc`、`clang++` → `clang`；`c++` 是个别名，在
+/// MinGW 上没有对应的 `cc`，所以依次试 `cc`、`gcc`、`clang`。一个都起不来就退回 C++ 驱动
+/// 自己（g++ 把 `.c` 当 C++ 编，老 C 示例大多仍能过，且日志里会看到真实的报错）。
+fn c_driver(cxx: &str) -> String {
+    let candidates: &[&str] = match cxx {
+        "g++" => &["gcc"],
+        "clang++" => &["clang"],
+        "c++" => &["cc", "gcc", "clang"],
+        _ => &[],
+    };
+    candidates
+        .iter()
+        .find(|c| {
+            Command::new(c)
+                .arg("--version")
+                .output()
+                .map(|o| o.status.success())
+                .unwrap_or(false)
+        })
+        .map(|c| c.to_string())
+        .unwrap_or_else(|| cxx.to_string())
+}
+
+/// MSVC 的 `/std:` 只认 c++14 / c++17 / c++20 / c++latest；更老的标准向上取最近一档。
+fn msvc_std(std: &str) -> &'static str {
+    match std {
+        "c++11" | "c++14" => "c++14",
+        "c++17" => "c++17",
+        "c++23" => "c++latest",
+        _ => "c++20",
     }
 }
 

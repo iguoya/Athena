@@ -9,6 +9,7 @@
 //! 不依赖主程序头文件或 `athena.json`；与其他应用没有任何运行时耦合（ADR 0032、0062）。
 //! 前端调用的命令名与参数不变，所以前端无须改动。
 
+mod archive;
 mod compiler;
 pub mod store;
 
@@ -356,6 +357,52 @@ fn compile_and_run(
     })
 }
 
+/// 历史归档案例（ADR 0176）：案例目录名必须以 `arc_` 开头，与课程实验的案例分开命名空间，
+/// 免得归档的只读代码被当成可保存的实验。
+fn archive_case_dir(root: &Path, case_id: &str) -> Result<PathBuf, String> {
+    if !is_plain_segment(case_id) || !case_id.starts_with("arc_") {
+        return Err(format!("非法归档案例：{case_id}"));
+    }
+    Ok(root.join("content/cases").join(case_id))
+}
+
+/// 读出归档案例的全部文本文件，前端用它画多文件代码视图与批注。
+#[tauri::command]
+fn load_case_files(state: State<'_>, case_id: String) -> Result<Vec<archive::CaseFile>, String> {
+    let root = state.lock().unwrap().content_root.clone();
+    let dir = archive_case_dir(&root, &case_id)?;
+    if !dir.is_dir() {
+        return Err(format!("找不到归档案例 {case_id}"));
+    }
+    Ok(archive::list_case_files(&dir))
+}
+
+/// 编译并运行归档案例的指定源文件（多文件、带超时、只读）。
+#[tauri::command]
+fn run_archive_case(
+    state: State<'_>,
+    case_id: String,
+    sources: Vec<String>,
+    std: Option<String>,
+    stdin: Option<String>,
+) -> Result<archive::ArchiveRun, String> {
+    let (binary, root) = {
+        let s = state.lock().unwrap();
+        (s.binary, s.content_root.clone())
+    };
+    let dir = archive_case_dir(&root, &case_id)?;
+    if sources.is_empty() || sources.len() > 64 {
+        return Err("编译清单为空或过长".into());
+    }
+    if let Some(bad) = sources.iter().find(|s| !archive::is_safe_rel_path(s, is_plain_segment)) {
+        return Err(format!("非法源文件路径：{bad}"));
+    }
+    let work = std::env::temp_dir().join(format!("{binary}-{}-{}", safe_path_segment(&case_id), millis_now()));
+    let shared = root.join("content/cases/_shared");
+    let include = shared.is_dir().then_some(shared.as_path());
+    archive::run_case(&dir, &work, &sources, std.as_deref(), stdin.as_deref(), include, archive::RUN_TIMEOUT)
+}
+
 #[tauri::command]
 fn load_mastery(state: State<'_>, topic_id: String) -> Result<i32, String> {
     store::load_mastery(&store_path_of(&state), &topic_id)
@@ -438,6 +485,8 @@ pub fn run(config: ShellConfig, context: tauri::Context) {
             load_case_source,
             save_case_source,
             compile_and_run,
+            load_case_files,
+            run_archive_case,
             format_cpp,
             load_mastery,
             save_mastery,
@@ -478,6 +527,18 @@ mod tests {
         assert!(case_path(root, "..", "main.cpp").is_err());
         assert!(case_path(root, "list-basic", "../../../etc/cron.d/x").is_err());
         assert!(case_path(root, "list-basic", "/tmp/x").is_err());
+    }
+
+    #[test]
+    fn 归档案例只认_arc_前缀且不穿越() {
+        let root = Path::new("/app");
+        assert_eq!(
+            archive_case_dir(root, "arc_dp_adapter").unwrap(),
+            Path::new("/app/content/cases/arc_dp_adapter")
+        );
+        for bad in ["adapter_demo", "arc_../x", "..", "arc_a/b", ""] {
+            assert!(archive_case_dir(root, bad).is_err(), "{bad:?} 应被拒绝");
+        }
     }
 
     #[test]
