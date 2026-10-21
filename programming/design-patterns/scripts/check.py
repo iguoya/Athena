@@ -87,6 +87,12 @@ def check_content() -> None:
             raise SystemExit(f"{path.relative_to(PROJECT_ROOT)}: {error}")
 
     cur = json.loads((content / "curriculum.json").read_text(encoding="utf-8"))
+    # 历史归档章节（ADR 0176）独立成 content/archive.json，运行时由共用壳接在课表末尾；这里同样并入再校验。
+    archive_path = content / "archive.json"
+    if archive_path.is_file():
+        arc = json.loads(archive_path.read_text(encoding="utf-8"))
+        cur["chapters"] = cur["chapters"] + arc.get("chapters", [])
+        cur["tracks"] = cur.get("tracks", []) + arc.get("tracks", [])
     catalog = {
         s["id"]
         for s in json.loads((content / "sources.json").read_text(encoding="utf-8"))["sources"]
@@ -94,8 +100,8 @@ def check_content() -> None:
     problems: list[str] = []
     topic_ids: set[str] = set()
     for ch in cur["chapters"]:
-        if ch.get("layer") not in (None, "topic", "extension"):
-            problems.append(f"章 {ch['id']} 的 layer 只能是 topic / extension 或不写")
+        if ch.get("layer") not in (None, "topic", "extension", "archive"):
+            problems.append(f"章 {ch['id']} 的 layer 只能是 topic / extension / archive 或不写")
         for t in ch["topics"]:
             tid = t["id"]
             if not tid.startswith("dp."):
@@ -137,9 +143,56 @@ def check_content() -> None:
             for b in t["lesson"]["blocks"]:
                 if b["type"] == "fillcode":
                     problems += check_fillcode(b, catalog)
+                if b["type"] == "archive":
+                    problems += check_archive_block(content, t["id"], b)
+        if ch.get("layer") == "archive":
+            for t in ch["topics"]:
+                if not any(b["type"] == "archive" for b in t["lesson"]["blocks"]):
+                    problems.append(f"归档章里的 {t['id']} 没有 archive 块")
 
     if problems:
         raise SystemExit("内容校验没通过：\n  " + "\n  ".join(problems))
+
+
+ARCHIVE_RUN = ("cli", "toolchain", "linux-only", "read-only")
+ARCHIVE_KINDS = ("naming", "ownership", "coupling", "testing", "portability", "style", "design", "other")
+
+
+def check_archive_block(content: Path, tid: str, b: dict) -> list[str]:
+    """历史归档块（ADR 0176）：案例目录与编译清单真实存在，批注行号落在文件范围内，出处写全。"""
+    found: list[str] = []
+    case_dir = content / "cases" / b.get("case", "")
+    if not b.get("case", "").startswith("arc_") or not case_dir.is_dir():
+        return [f"{tid} 的归档案例目录不存在或不以 arc_ 开头：{b.get('case')!r}"]
+    if b.get("run") not in ARCHIVE_RUN:
+        found.append(f"{tid} 的 run 只能是 {ARCHIVE_RUN}")
+    o = b.get("origin") or {}
+    for k in ("repo", "path"):
+        if not o.get(k):
+            found.append(f"{tid} 的 origin 缺 {k}（归档条目必须写明出自哪个旧仓库的哪个路径）")
+    if b.get("run") in ("cli", "linux-only") and not b.get("sources"):
+        found.append(f"{tid} 声明可运行（{b.get('run')}）却没有 sources")
+    for src in b.get("sources", []):
+        if not (case_dir / src).is_file():
+            found.append(f"{tid} 的源文件不存在：{b['case']}/{src}")
+    lines_of: dict[str, int] = {}
+    for n in b.get("notes", []):
+        f = case_dir / n["file"]
+        if not f.is_file():
+            found.append(f"{tid} 的批注指向不存在的文件：{n['file']}")
+            continue
+        if n["file"] not in lines_of:
+            lines_of[n["file"]] = len(f.read_text(encoding="utf-8", errors="replace").splitlines())
+        end = n.get("end", n["line"])
+        if not (1 <= n["line"] <= end <= lines_of[n["file"]]):
+            found.append(f"{tid} 的批注行号越界：{n['file']}:{n['line']}-{end}（文件共 {lines_of[n['file']]} 行）")
+        if n.get("kind") not in ARCHIVE_KINDS:
+            found.append(f"{tid} 的批注 kind 不合法：{n.get('kind')!r}")
+        if len(n.get("text", "")) < 20:
+            found.append(f"{tid} 的批注太短，说不清问题：{n['file']}:{n['line']}")
+    if not b.get("notes"):
+        found.append(f"{tid} 没有批注——归档条目的价值就在于指出不足（ADR 0176）")
+    return found
 
 
 BLANK = re.compile(r"\{\{(\d+)\}\}")

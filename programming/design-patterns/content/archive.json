@@ -1,0 +1,163 @@
+{
+  "tracks": [
+    {
+      "id": "archive",
+      "title": "历史归档",
+      "color": "#a08c64"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "archive",
+      "title": "历史归档 · 早年练习的整理与批注",
+      "track": "archive",
+      "layer": "archive",
+      "summary": "从 2020–2023 年散落在多个 GitHub 旧仓库里的设计模式练习中去重整理而来（ADR 0176）：代码原样保留、能运行的可以直接跑，另有行级批注指出写法与程序组织上的不足。本章不属于主线，不计入进度，留待人工审视后决定并入、保留或删除。",
+      "topics": [
+        {
+          "id": "dp.arc.observer",
+          "title": "观察者模式（早期练习）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.observer"
+          ],
+          "track": "archive",
+          "guide_line": "2022 年写的 Subject/Observer 实现，对照现行讲解找出写法与组织上的不足。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂一份真实的、可运行的早期观察者实现，并说出它在所有权、重复、顺序和可测试性上的具体毛病。",
+            "pain": "自己写的旧代码能跑，不等于对；它的问题往往藏在没被触发的路径里（销毁、重复通知、迭代中修改）。",
+            "model": "Subject 维护观察者列表并 Notify，观察者 Update；本例用裸指针、堆上的 list 和复制粘贴出的两个具体观察者。",
+            "scope": "只读历史代码并给出批注，不重写；现行写法见主线「观察者模式」。",
+            "judgment": "先说谁拥有谁、谁先销毁，再看通知顺序与迭代安全，最后看重复与可测试性。",
+            "landing": "能指出本例至少三处缺陷，并说出主线讲解里对应的改法。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "这是 2022 年练习时写的观察者模式，原样保留，**能编译运行**：两个观察者都收到状态 old、new。它「对」在输出，「错」在你没触发的路径上——点编号看批注，运行后对照输出（注意 B 先于 A）。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_dp_observer",
+                "sources": [
+                  "main.cpp",
+                  "observer.cpp",
+                  "subject.cpp"
+                ],
+                "std": "c++17",
+                "run": "cli",
+                "summary": "Subject/Observer 各一对头文件和实现，main 里 new 出一个 Subject 和两个观察者，设置两次状态并通知。",
+                "origin": {
+                  "repo": "DesignPattern",
+                  "path": "Observer",
+                  "first_commit": "2022-05-02",
+                  "duplicates": [
+                    "DesignPatterns/workspace/Observer",
+                    "Practice/DesignPatterns/Observer",
+                    "Linux/DesignPattern/Observer"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "subject.h",
+                    "line": 20,
+                    "kind": "ownership",
+                    "text": "`list<Observer*>*`：为什么要 new 一个 list 再存它的指针？list 本身就可以直接做成员 `list<Observer*> _obvs;`，生命周期跟着 Subject 走，不用手写 new/delete。这里的 new 在 subject.cpp:9，却没有任何地方 delete（见 subject.cpp:11–12），每个 Subject 泄漏一个 list。"
+                  },
+                  {
+                    "file": "subject.h",
+                    "line": 6,
+                    "kind": "style",
+                    "text": "头文件里写 `using namespace std;` 会把整个 std 灌进每个包含它的文件，observer.h 也这么写。头文件里应写 `std::string`、`std::list`。"
+                  },
+                  {
+                    "file": "subject.h",
+                    "line": 7,
+                    "kind": "naming",
+                    "text": "`typedef string State;` 在 subject.h:7 和 observer.h:7 各写了一遍，subject.cpp:6 还有一个小写的 `typedef string state;`。同一个类型三处声明，改一处另外两处不会跟着变；应只在一个头里声明（或直接用 std::string）。"
+                  },
+                  {
+                    "file": "subject.cpp",
+                    "line": 11,
+                    "kind": "ownership",
+                    "text": "析构函数是空的：`_obvs` 没释放。更要紧的是，`Subject` 的析构是 virtual、但构造函数是 protected，说明本意是被继承；那么「谁拥有观察者」也该说清——这里 Subject 只存裸指针、不拥有，观察者先销毁而 Subject 还在时，列表里留下悬空指针，下次 Notify 就崩。"
+                  },
+                  {
+                    "file": "subject.cpp",
+                    "line": 14,
+                    "kind": "design",
+                    "text": "`push_front` 让后注册的观察者先被通知，所以输出里 B 总在 A 前面（运行一下可以看到）。观察者模式不保证通知顺序，但代码最好别让顺序成为无意的副作用——要么 push_back，要么在文档里写明不承诺顺序。"
+                  },
+                  {
+                    "file": "subject.cpp",
+                    "line": 25,
+                    "kind": "design",
+                    "text": "Notify 一边遍历一边调 `Update`：如果某个观察者在 Update 里 Detach 自己或注册新观察者，会使迭代器失效，这里没有防护。教科书示例通常不写，但真实代码里这是观察者模式最常见的 bug。"
+                  },
+                  {
+                    "file": "subject.cpp",
+                    "line": 29,
+                    "kind": "naming",
+                    "text": "`_st = '\u0000';` 把一个 char 赋给 std::string，可以编译（string 有 operator=(char)），结果是一个含 NUL 的 1 字符串，而不是空串。想表达“空状态”应写 `_st.clear()` 或根本不写（string 默认就是空的）。observer.cpp:7 同样。"
+                  },
+                  {
+                    "file": "observer.cpp",
+                    "line": 16,
+                    "kind": "ownership",
+                    "text": "⚠ 观察者的析构 `delete _sub`：观察者并不拥有 Subject（Subject 是外面 new 出来传进来的）。本例有两个观察者共享同一个 Subject，只要它们都被销毁，Subject 就会被 delete 两次（B 的析构第 37 行还会先去 Detach 一个已被释放的对象）。main.cpp 里恰好从不销毁观察者，这个双重释放才没被触发——是潜伏的未定义行为，不是正确的代码。"
+                  },
+                  {
+                    "file": "observer.cpp",
+                    "line": 12,
+                    "kind": "coupling",
+                    "text": "`ConcreteObserverA` 和 `ConcreteObserverB` 的代码逐行相同，只有打印的名字不同（observer.cpp:12–31 对 32–51）。两个具体观察者应是同一个类带不同参数，或提取公共基类；这里只靠复制粘贴，属于“重复代码”。"
+                  },
+                  {
+                    "file": "observer.cpp",
+                    "line": 26,
+                    "kind": "design",
+                    "text": "`PrintInfo` 读的是 `_sub->GetState()`，而基类里明明有 `_st` 缓存了 Update 时取到的状态（observer.cpp:29）。两份状态来源并存：不同步时会打印出和 Update 时看到的不一致的值。"
+                  },
+                  {
+                    "file": "observer.h",
+                    "line": 11,
+                    "kind": "design",
+                    "text": "`Update(Subject* sub)` 传了 Subject，而各观察者构造时又自己存了一份 `_sub`。要么只用参数（一个观察者就能观察多个 Subject，注释 observer.h:23 说的正是这个意图），要么只用成员，别两头都占——现在的写法恰恰把“一个观察者属于多个 Subject”这条路堵死了。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 7,
+                    "kind": "ownership",
+                    "text": "`new` 了三个对象一个都不 delete；`o1`、`o2` 连使用都没有（编译器会警告 unused variable）。局部变量能解决的不要 new：`ConcreteSubject sub; ConcreteObserverA a(&sub);` 即可。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 15,
+                    "kind": "style",
+                    "text": "被注释掉的读文件代码留在 main 里（还有一行拼错的“ojbk”）。死代码应删掉，需要时从 git 历史里找；explanation.txt 里的说明更适合放进源码注释或文档。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 10,
+                    "kind": "testing",
+                    "text": "没有断言：运行结果靠人看输出。要让它成为可回归的例子，应记录各观察者收到的状态并 assert，而不是只往 cout 打印。这也是 Subject/Observer 直接 cout 带来的耦合——打印写死在观察者里，没法换成别的处理。"
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "所有权与生命周期见情境篇二（C++ 的资源、所有权与错误）；重复代码见情境篇一；观察者的标准结构与改法见模式工具箱「观察者模式」。"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

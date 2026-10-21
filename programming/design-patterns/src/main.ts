@@ -11,6 +11,8 @@ import {
 } from "./lab-editor";
 import {
   mountTracePlayer,
+  mountArchivePanel,
+  type ArchiveBlock,
   parseTrace,
   stopTracePlayback,
 } from "@athena/viz";
@@ -22,6 +24,7 @@ import {
   type FillContext,
 } from "./fill-code";
 import "@athena/viz/trace-player.css";
+import "@athena/viz/archive-panel.css";
 import "./styles.css";
 
 /** Vite 打包进前端的案例原文：浏览器预览时可读；保存/编译仍需 Tauri。 */
@@ -121,7 +124,8 @@ type Block =
       after: { title: string; code: string };
       note?: string;
     }
-  | FillCodeBlock;
+  | FillCodeBlock
+  | ArchiveBlock;
 
 /** 标准 UML 类图的极简描述：类框三格（名/属性/方法）+ 六种关系线，坐标由内容作者给定。 */
 type UmlClass = {
@@ -224,7 +228,7 @@ type Chapter = {
    * 层级（ADR 0121）：缺省为主线；topic = 专题（软考真题集中在这里）；
    * extension = 延伸篇（走出面向对象、现代工程），图谱上与主线区分。
    */
-  layer?: "topic" | "extension";
+  layer?: "topic" | "extension" | "archive";
   /** 可选章末综合卷 */
   assessment?: ChapterAssessment | null;
 };
@@ -718,7 +722,7 @@ function renderMap() {
     const color = track?.color ?? TRACK_FALLBACK;
     const planned = ch.topics.every((t) => t.status === "planned");
     const layerCls = ch.layer ? ` is-${ch.layer}` : "";
-    const layerTag = ch.layer === "topic" ? "专题 · " : ch.layer === "extension" ? "延伸 · " : "";
+    const layerTag = ch.layer === "topic" ? "专题 · " : ch.layer === "extension" ? "延伸 · " : ch.layer === "archive" ? "归档 · " : "";
     const countText = planned ? "建设中" : `${ch.topics.length} 个知识点`;
     bands.push(`<g class="chapter-band${planned ? " is-planned" : ""}${layerCls}">
       <rect class="band-bg${ci % 2 ? " alt" : ""}" x="0" y="${cursorY}" width="${availW}" height="${bandH}" rx="${emPx(0.6)}"></rect>
@@ -1868,6 +1872,19 @@ function typeClass(t: string): string {
   return `badge badge-type badge-type-${t}`;
 }
 
+/** 把归档块的占位挂成可看可运行的面板；读文件与运行都走共用壳的两条命令。 */
+function mountArchiveBlocks(panel: HTMLElement, topic: Topic) {
+  panel.querySelectorAll<HTMLElement>(".arc-host").forEach((host) => {
+    const block = topic.lesson.blocks[Number(host.dataset.arc)];
+    if (!block || block.type !== "archive") return;
+    mountArchivePanel(host, block, {
+      loadFiles: (caseId) => invoke("load_case_files", { caseId }),
+      run: (caseId, sources, std, stdin) =>
+        invoke("run_archive_case", { caseId, sources, std: std ?? null, stdin: stdin ?? null }),
+    });
+  });
+}
+
 function renderLesson(topic: Topic) {
   const methodHint =
     topic.knowledge_type === "concept"
@@ -1963,6 +1980,10 @@ function renderLesson(topic: Topic) {
       }
       if (b.type === "fillcode") {
         return renderFillCode(b, fillContext(topic));
+      }
+      if (b.type === "archive") {
+        // 历史归档条目（ADR 0176）：面板在 innerHTML 写入后由 mountArchiveBlocks 挂载
+        return `<div class="card"><div class="arc-host" data-arc="${bi}"></div></div>`;
       }
       if (b.type === "summary") {
         return `<div class="card summary">
@@ -2327,6 +2348,7 @@ async function refreshTopic() {
   destroyLabEditor();
   if (state.tab === "lesson") {
     panel.innerHTML = renderLesson(topic);
+    mountArchiveBlocks(panel, topic);
     panel.querySelectorAll<HTMLButtonElement>("[data-reveal]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const id = btn.dataset.reveal;
