@@ -168,7 +168,7 @@ function IconSphere({
             metalness={0.08}
             transparent
             // 建成待学（ADR 0139）降视觉权重：行星整体淡一档，悬停可看清。
-            opacity={(active ? 1 : 0.75) * (app.lifecycle === "built" ? 0.55 : 1)}
+            opacity={(active ? 1 : 0.75) * (app.lifecycle === "built" ? 0.55 : 1) * (app.installed === false ? 0.4 : 1)}
           />
         </mesh>
       </group>
@@ -181,7 +181,7 @@ function IconSphere({
             whiteSpace: "nowrap",
             textAlign: "center",
             pointerEvents: "none",
-            opacity: (active ? 1 : 0.6) * (app.lifecycle === "built" ? 0.7 : 1),
+            opacity: (active ? 1 : 0.6) * (app.lifecycle === "built" ? 0.7 : 1) * (app.installed === false ? 0.5 : 1),
             transition: "opacity 140ms",
           }}
         >
@@ -189,6 +189,9 @@ function IconSphere({
             {app.title}
             {app.lifecycle === "built" && (
               <span style={{ opacity: 0.65 }}>· 待学</span>
+            )}
+            {app.installed === false && (
+              <span style={{ opacity: 0.65 }}>· 未安装</span>
             )}
             <span style={{
               width: 7, height: 7, borderRadius: "50%",

@@ -26,6 +26,11 @@ base64 = "0.22"
 # 启动器的清单发现、布局纯函数、进程编排全部来自 core（ADR 0125：执行路径只有 core 一处）。
 launcher-core = { path = "../../core" }
 tauri-plugin-autostart = "2"
+# 安装模式下没装的应用点击后指路 Releases 页（ADR 0173）。
+tauri-plugin-opener = "2"
+# 应用内自动更新（ADR 0172、0173）：与其它 Tauri 应用同一套，版本在 launcher 工作区的公共依赖表。
+tauri-plugin-updater = { workspace = true }
+tauri-plugin-process = { workspace = true }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 # 裸二进制没有 .app，Dock 不读 Info.plist。运行时给 NSApplication 设虎头。

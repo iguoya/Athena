@@ -93,20 +93,28 @@ impl Workspace {
     /// 启动一个应用，返回窗口进程 pid。
     pub fn launch(&self, app: &App, report: impl FnMut(&str)) -> Result<u32, LaunchError> {
         match (&self.repo, &app.install) {
-            (_, Some(install)) => launch_installed(install),
+            (_, Some(install)) => launch_installed(app, install),
             (Some(repo), None) => runner::launch(app, repo, report).map_err(LaunchError::from),
             (None, None) => Err(LaunchError::Failed(format!("{} 没有安装信息，无法启动", app.title))),
         }
     }
 }
 
-fn launch_installed(install: &manifest::Install) -> Result<u32, LaunchError> {
+fn launch_installed(app: &App, install: &manifest::Install) -> Result<u32, LaunchError> {
     if !install.supported {
         return Err(LaunchError::Unsupported(install.kind.clone()));
     }
     let Some(exe) = &install.exe else {
         return Err(LaunchError::NotInstalled);
     };
+    // 已经在跑就只把窗口叫到前面，绝不起第二份（同 CLI 的 open）。
+    let snapshot = runner::ProcessSnapshot::take();
+    if snapshot.state(app) != runner::RunState::Stopped {
+        let _ = runner::activate(app);
+        return Ok(snapshot.pid_of(app).unwrap_or(0));
+    }
+    // 启动前先对一遍进度，与仓库模式的 runner::launch 同一约定（ADR 0155）：尽力而为。
+    crate::progress_sync::before_launch(app);
     let mut command = std::process::Command::new(exe);
     if let Some(dir) = exe.parent() {
         command.current_dir(dir);

@@ -9,7 +9,7 @@ use std::sync::atomic::Ordering;
 use std::sync::{Condvar, LazyLock, Mutex};
 use std::time::Duration;
 
-use launcher_core::{discover_all, fingerprint, App};
+use launcher_core::{fingerprint, App};
 use tauri::{AppHandle, Emitter, Manager};
 
 use crate::cache;
@@ -57,15 +57,13 @@ pub struct Rescan {
 }
 
 pub fn start(app: AppHandle) {
-    let repo = app.state::<crate::Repo>().0.clone();
-    remember(&discover_all(&repo));
+    remember(&app.state::<crate::Ws>().0.apps());
     std::thread::spawn(move || state_loop(app));
 }
 
 /// 手动重扫应用目录。指纹没变就不换界面、不换托盘。
 pub fn rescan(app: &AppHandle) -> Result<Rescan, String> {
-    let repo = app.state::<crate::Repo>().0.clone();
-    let apps = discover_all(&repo);
+    let apps = app.state::<crate::Ws>().0.apps();
     let fresh = fingerprint(&apps);
     let report = {
         let mut guard = CATALOG.lock().unwrap_or_else(|p| p.into_inner());

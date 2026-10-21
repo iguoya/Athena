@@ -818,6 +818,9 @@ importers:
 
   launcher/webui:
     dependencies:
+      '@athena/app-update':
+        specifier: 'workspace:'
+        version: link:../../packages/app-update
       '@react-three/drei':
         specifier: 'catalog:'
         version: 10.7.9(@react-three/fiber@9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.182.0))(@types/react@19.3.0)(@types/three@0.182.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.182.0)
@@ -827,6 +830,12 @@ importers:
       '@tauri-apps/api':
         specifier: 'catalog:'
         version: 2.12.3
+      '@tauri-apps/plugin-process':
+        specifier: 'catalog:'
+        version: 2.4.0
+      '@tauri-apps/plugin-updater':
+        specifier: 'catalog:'
+        version: 2.13.3
       react:
         specifier: 'catalog:'
         version: 19.3.0

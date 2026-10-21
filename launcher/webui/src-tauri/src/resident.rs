@@ -12,7 +12,7 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 
-use launcher_core::{discover_all, runner};
+use launcher_core::{runner, LaunchError};
 use tauri::menu::{CheckMenuItem, Menu, MenuItem, PredefinedMenuItem, Submenu};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Emitter, Manager, WebviewWindow};
@@ -41,10 +41,10 @@ pub fn note_visibility(app: &AppHandle, on: bool) {
 
 /// 按当前清单做一份托盘菜单。应用条目的 id 是契约（`open:` / `stop:`），
 /// 换菜单时点击处理不用跟着换。
-fn build_menu(app: &AppHandle, repo: &std::path::Path) -> Result<Menu<tauri::Wry>, String> {
+fn build_menu(app: &AppHandle) -> Result<Menu<tauri::Wry>, String> {
     let autostart_on = app.autolaunch().is_enabled().unwrap_or(false);
     let menu = Menu::new(app).map_err(|e| e.to_string())?;
-    for entry in discover_all(repo).iter().filter(|entry| !entry.hidden) {
+    for entry in app.state::<crate::Ws>().0.apps().iter().filter(|entry| !entry.hidden) {
         let sub = Submenu::with_id(app, format!("app:{}", entry.id), &entry.title, true)
             .map_err(|e| e.to_string())?;
         let open = MenuItem::with_id(
@@ -104,8 +104,7 @@ pub fn refresh_menu(app: &AppHandle) -> Result<(), String> {
     let Some(icon) = guard.as_ref() else {
         return Ok(());
     };
-    let repo = app.state::<crate::Repo>().0.clone();
-    let menu = build_menu(app, &repo)?;
+    let menu = build_menu(app)?;
     icon.set_menu(Some(menu)).map_err(|e| e.to_string())
 }
 
@@ -115,8 +114,7 @@ pub fn install(
     window: &WebviewWindow,
     quitting: Arc<AtomicBool>,
 ) -> Result<tauri::tray::TrayIcon, String> {
-    let repo = app.state::<crate::Repo>().0.clone();
-    let menu = build_menu(app, &repo)?;
+    let menu = build_menu(app)?;
     let quitting_for_menu = Arc::clone(&quitting);
     let image = tauri::image::Image::from_bytes(include_bytes!("../icons/32x32.png"))
         .map_err(|e| format!("托盘图标读不出来：{e}"))?;
@@ -207,15 +205,21 @@ fn handle_menu(app: &AppHandle, id: &str, quitting: &AtomicBool) {
     } else {
         return;
     };
-    let repo = app.state::<crate::Repo>().0.clone();
+    let handle = app.clone();
     // launch 会跑完整构建链（数十秒），不能堵在菜单回调上。
     tauri::async_runtime::spawn_blocking(move || {
-        let apps = discover_all(&repo);
+        let ws = handle.state::<crate::Ws>();
+        let apps = ws.0.apps();
         let Some(app_cfg) = apps.iter().find(|entry| entry.id == target) else {
             return;
         };
         let result = match action {
-            "open" => runner::launch(app_cfg, &repo, |_| {}).map(|_| ()),
+            "open" => match ws.0.launch(app_cfg, |_| {}) {
+                Ok(_) => Ok(()),
+                // 安装模式下没装 / 不支持：指路 Releases，不算错误（ADR 0173 决策 4）。
+                Err(LaunchError::NotInstalled | LaunchError::Unsupported(_)) => crate::open_releases(&handle),
+                Err(other) => Err(other.to_string()),
+            },
             _ => runner::stop(app_cfg),
         };
         if let Err(error) = result {

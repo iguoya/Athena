@@ -1,5 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { AppUpdate } from "@athena/app-update";
 import App from "./App";
 
 // 工具条等全局样式：骨架阶段集中在这里，组件化时再拆。
@@ -45,5 +46,6 @@ document.head.appendChild(style);
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
+    <AppUpdate />
   </React.StrictMode>
 );

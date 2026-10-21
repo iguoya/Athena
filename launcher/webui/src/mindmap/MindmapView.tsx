@@ -14,6 +14,8 @@ export interface MindNodeDto {
   icon: string | null;
   lifecycle: Lifecycle;
   state: RunState;
+  /** 安装模式下是否已装（ADR 0173）；仓库模式为 null。 */
+  installed: boolean | null;
   reference: boolean;
   x: number;
   y: number;
@@ -94,13 +96,13 @@ function Tile({
     <div
       className="tile"
       data-state={node.state}
-      title={`${node.title}${LIFECYCLE_HINT[node.lifecycle] ?? ""}`}
+      title={`${node.title}${LIFECYCLE_HINT[node.lifecycle] ?? ""}${node.installed === false ? "（未安装，点击打开 Releases 页）" : ""}`}
       style={{
         position: "absolute",
         left: node.x - 58,
         top: node.y - 38,
-        opacity: active ? hot : cold,
-        filter: node.lifecycle === "archived" ? "grayscale(0.9)" : undefined,
+        opacity: (active ? hot : cold) * (node.installed === false ? 0.45 : 1),
+        filter: node.lifecycle === "archived" || node.installed === false ? "grayscale(0.9)" : undefined,
         transition: "opacity 120ms",
       }}
       onClick={() => openApp(node.id).catch(console.error)}

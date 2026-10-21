@@ -17,6 +17,8 @@ export interface AppDto {
   icon: string | null;
   lifecycle: Lifecycle;
   state: RunState;
+  /** 安装模式下是否已装（ADR 0173）；仓库模式为 null。未装的淡显，点击指路 Releases。 */
+  installed: boolean | null;
   pos: [number, number, number];
   orbit: number;
   theta: number;
@@ -30,7 +32,10 @@ export interface OrbitDto {
 }
 
 export interface CatalogDto {
+  /** 仓库路径；安装模式下为空串。 */
   repo: string;
+  /** "repo" | "installed" */
+  mode: string;
   apps: AppDto[];
   orbits: OrbitDto[];
 }

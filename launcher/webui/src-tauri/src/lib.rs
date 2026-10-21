@@ -4,16 +4,27 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
-use launcher_core::paths;
+use launcher_core::Workspace;
 use tauri::Manager;
+use tauri_plugin_opener::OpenerExt;
 
 mod app_icon;
 mod cache;
 mod resident;
 mod watch;
 
-/// 仓库定位一次、整个进程共享：locate_repo 每次都走盘上探测，没必要。
-pub struct Repo(pub std::path::PathBuf);
+/// 运行模式与仓库只定位一次、整个进程共享（ADR 0173）：找到仓库是仓库模式，找不到是安装模式，
+/// 之后清单与启动都问它，webui 不自己判断模式。
+pub struct Ws(pub Workspace);
+
+/// 安装模式下没装（或这类应用不支持安装模式启动）时指路的地方。启动器不代装（ADR 0173 决策 4）。
+const RELEASES_URL: &str = "https://github.com/iguoya/Athena/releases";
+
+pub fn open_releases(app: &tauri::AppHandle) -> Result<(), String> {
+    app.opener()
+        .open_url(RELEASES_URL, None::<&str>)
+        .map_err(|e| format!("打不开 Releases 页：{e}"))
+}
 
 #[derive(serde::Serialize)]
 pub struct AppDto {
@@ -34,6 +45,8 @@ pub struct AppDto {
     lifecycle: String,
     /// runner::RunState::key()：stopped / starting / ready（跨进程契约，ADR 0048）。
     state: String,
+    /// 安装模式下是否已装（ADR 0173）；仓库模式为 null。未装的应用前端淡显，点击指路 Releases。
+    installed: Option<bool>,
     /// 3D 轨道布局里的世界坐标。
     pos: [f32; 3],
     /// 公转动画参数：所在轨道下标与初始参数角（rad）。前端每帧
@@ -52,7 +65,10 @@ pub struct OrbitDto {
 
 #[derive(serde::Serialize)]
 pub struct CatalogDto {
+    /// 仓库路径；安装模式下为空串。
     repo: String,
+    /// "repo" / "installed"（Mode::key）。
+    mode: String,
     apps: Vec<AppDto>,
     orbits: Vec<OrbitDto>,
 }
@@ -61,13 +77,13 @@ pub struct CatalogDto {
 /// 同模块里定义并引用会撞名（Tauri 2 的既知约束）。
 pub mod commands {
     use super::cache;
-    use super::{AppDto, CatalogDto, OrbitDto, Repo};
-    use launcher_core::{discover_all, layout3d, manifest, mindmap, runner};
+    use super::{AppDto, CatalogDto, OrbitDto, Ws};
+    use launcher_core::{layout3d, manifest, mindmap, runner, LaunchError};
     use tauri::State;
 
     #[tauri::command]
-    pub fn catalog(repo: State<Repo>) -> Result<CatalogDto, String> {
-        let apps = discover_all(&repo.0);
+    pub fn catalog(ws: State<Ws>) -> Result<CatalogDto, String> {
+        let apps = ws.0.apps();
         crate::watch::remember(&apps);
         // 归档（ADR 0139）与隐藏（ADR 0093）都不进 3D 视图；归档在思维导图可开关查看。
         let visible: Vec<&manifest::App> = apps
@@ -135,9 +151,14 @@ pub mod commands {
                 group_color: group_colors[g].clone(),
                 letter: app.letter.clone(),
                 accent: app.accent.clone(),
-                icon: app.icon_file.as_deref().and_then(cache::icon_data_url),
+                icon: app
+                    .icon_file
+                    .as_deref()
+                    .and_then(cache::icon_data_url)
+                    .or_else(|| app.embedded_icon.clone()),
                 lifecycle: app.lifecycle.key().to_string(),
                 state: states[i].key().to_string(),
+                installed: app.install.as_ref().map(|install| install.installed),
                 pos: node.pos,
                 orbit: node.group,
                 theta: node.theta,
@@ -145,7 +166,8 @@ pub mod commands {
         }
 
         Ok(CatalogDto {
-            repo: repo.0.display().to_string(),
+            repo: ws.0.repo().map(|path| path.display().to_string()).unwrap_or_default(),
+            mode: ws.0.mode().key().to_string(),
             orbits: layout
                 .orbits
                 .iter()
@@ -174,19 +196,24 @@ pub mod commands {
     }
 
     #[tauri::command]
-    pub fn open_app(repo: State<Repo>, id: String) -> Result<(), String> {
-        let apps = discover_all(&repo.0);
+    pub fn open_app(handle: tauri::AppHandle, ws: State<Ws>, id: String) -> Result<(), String> {
+        let apps = ws.0.apps();
         let app = apps
             .iter()
             .find(|a| a.id == id)
             .ok_or_else(|| format!("清单里没有 {id}"))?;
-        // launch 返回窗口进程 pid，前端只需要成败。
-        runner::launch(app, &repo.0, |_| {}).map(|_| ())
+        // launch 返回窗口进程 pid，前端只需要成败。没装、不支持是安装模式的指路情形：
+        // 打开 Releases 页，不算错误（ADR 0173 决策 4）。
+        match ws.0.launch(app, |_| {}) {
+            Ok(_) => Ok(()),
+            Err(LaunchError::NotInstalled | LaunchError::Unsupported(_)) => super::open_releases(&handle),
+            Err(other) => Err(other.to_string()),
+        }
     }
 
     #[tauri::command]
-    pub fn stop_app(repo: State<Repo>, id: String) -> Result<(), String> {
-        let apps = discover_all(&repo.0);
+    pub fn stop_app(ws: State<Ws>, id: String) -> Result<(), String> {
+        let apps = ws.0.apps();
         let app = apps
             .iter()
             .find(|a| a.id == id)
@@ -206,6 +233,8 @@ pub mod commands {
         /// 学习生命周期（ADR 0139）：前端按 built / archived 淡显。
         lifecycle: String,
         state: String,
+        /// 安装模式下是否已装（ADR 0173）；仓库模式为 null。
+        installed: Option<bool>,
         reference: bool,
         x: f32,
         y: f32,
@@ -281,8 +310,8 @@ pub mod commands {
     }
 
     #[tauri::command]
-    pub fn mindmap(repo: State<Repo>, include_archived: Option<bool>) -> Result<MindmapDto, String> {
-        let apps = discover_all(&repo.0);
+    pub fn mindmap(ws: State<Ws>, include_archived: Option<bool>) -> Result<MindmapDto, String> {
+        let apps = ws.0.apps();
         crate::watch::remember(&apps);
         // 归档默认不呈现（ADR 0139）；「显示归档」开关打开时以淡显节点进来。
         let include_archived = include_archived.unwrap_or(false);
@@ -317,9 +346,14 @@ pub mod commands {
                 title: app.title.clone(),
                 letter: app.letter.clone(),
                 accent: app.accent.clone(),
-                icon: app.icon_file.as_deref().and_then(cache::icon_data_url),
+                icon: app
+                    .icon_file
+                    .as_deref()
+                    .and_then(cache::icon_data_url)
+                    .or_else(|| app.embedded_icon.clone()),
                 lifecycle: app.lifecycle.key().to_string(),
                 state: state_of_id(&node.id),
+                installed: app.install.as_ref().map(|install| install.installed),
                 reference: node.reference,
                 x: node.at.x,
                 y: node.at.y,
@@ -403,8 +437,8 @@ fn autostart_plugin() -> tauri::plugin::TauriPlugin<tauri::Wry> {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let repo =
-        paths::locate_repo().expect("找不到 Athena 仓库：设置 ATHENA_ROOT，或把启动器放在仓库里");
+    // 找到仓库是仓库模式；找不到不再是错误，而是安装模式（ADR 0173）。
+    let workspace = Workspace::locate();
     let quitting = Arc::new(AtomicBool::new(false));
     let quitting_for_run = Arc::clone(&quitting);
 
@@ -414,7 +448,10 @@ pub fn run() {
             resident::show_main(app);
         }))
         .plugin(autostart_plugin())
-        .manage(Repo(repo))
+        .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
+        .manage(Ws(workspace))
         .manage(resident::Shown(Arc::new(AtomicBool::new(
             !resident::launched_hidden(),
         ))))
