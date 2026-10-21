@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import course from "../content/curriculum.json";
+import archiveData from "../content/archive.json";
+import { ArchiveLesson, groupOf, type ArchiveChapter } from "./Archive";
 
 type Block =
   | { type: "lead" | "prose"; text: string }
@@ -46,6 +48,9 @@ type ProgressRow = {
 };
 
 const chapters = course.chapters as Chapter[];
+// 历史归档章（ADR 0176）：单独一份 archive.json，不并入 curriculum.json，不判分、不计进度。
+const archiveChapter = (archiveData.chapters as unknown as ArchiveChapter[])[0];
+const archiveTopics = archiveChapter?.topics ?? [];
 
 const GOAL: Record<string, string> = {
   master: "熟练",
@@ -81,6 +86,7 @@ export default function App() {
   const [currentId, setCurrentId] = useState(topics[0]?.id ?? "");
   const [progress, setProgress] = useState<Record<string, ProgressRow>>({});
   const [legacyNote, setLegacyNote] = useState<string | null>(null);
+  const archiveCurrent = archiveTopics.find((topic) => topic.id === currentId) ?? null;
   const current = topics.find((topic) => topic.id === currentId) ?? topics[0];
 
   useEffect(() => {
@@ -122,7 +128,7 @@ export default function App() {
               <ul>
                 {chapter.topics.map((topic) => {
                   const row = progress[topic.id];
-                  const active = topic.id === current.id;
+                  const active = !archiveCurrent && topic.id === current.id;
                   return (
                     <li key={topic.id}>
                       <button
@@ -145,15 +151,50 @@ export default function App() {
               </ul>
             </section>
           ))}
+          {archiveChapter ? (
+            <section className="mb-3 border-t border-[var(--line)] pt-3">
+              <h2 className="px-2 py-1 text-xs font-semibold tracking-wide text-[var(--muted)]">
+                {archiveChapter.title}
+              </h2>
+              {Array.from(new Set(archiveTopics.map((t) => groupOf(t).group))).map((group) => (
+                <div key={group}>
+                  <p className="px-2 pt-2 text-xs text-[var(--muted)]">{group}</p>
+                  <ul>
+                    {archiveTopics
+                      .filter((t) => groupOf(t).group === group)
+                      .map((topic) => (
+                        <li key={topic.id}>
+                          <button
+                            type="button"
+                            onClick={() => setCurrentId(topic.id)}
+                            className={`flex w-full items-center rounded px-2 py-1.5 text-left text-sm ${
+                              topic.id === currentId
+                                ? "bg-[var(--accent-soft)] text-[var(--accent)]"
+                                : "hover:bg-[var(--paper)]"
+                            }`}
+                          >
+                            <span>{topic.title}</span>
+                          </button>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              ))}
+            </section>
+          ) : null}
         </nav>
       </aside>
       <main className="overflow-y-auto px-8 py-6">
-        <TopicView
-          key={current.id}
-          topic={current}
-          saved={progress[current.id]}
-          onSaved={(row) => setProgress((prev) => ({ ...prev, [row.function_id]: row }))}
-        />
+        {archiveCurrent ? (
+          <ArchiveLesson key={archiveCurrent.id} topic={archiveCurrent} />
+        ) : (
+          <TopicView
+            key={current.id}
+            topic={current}
+            saved={progress[current.id]}
+            onSaved={(row) => setProgress((prev) => ({ ...prev, [row.function_id]: row }))}
+          />
+        )}
       </main>
     </div>
   );

@@ -13,6 +13,8 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { workspace = true }
 
 [dependencies]
+# 历史归档的多文件运行与读取直接用共用壳的 archive 模块（ADR 0176）；本应用的壳仍是自己的 lib.rs。
+athena-course-shell = { path = "../../../packages/athena-course-shell" }
 tauri = { workspace = true }
 tauri-plugin-updater = { workspace = true }
 tauri-plugin-process = { workspace = true }

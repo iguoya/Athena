@@ -275,6 +275,25 @@ fn run_bounded(mut cmd: Command, limit: Duration) -> Result<std::process::Output
     }
 }
 
+/// 历史归档（ADR 0176）：读出案例目录里的全部文本文件。
+#[tauri::command]
+fn load_case_files(case_id: String) -> Result<Vec<athena_course_shell::archive::CaseFile>, String> {
+    let root = app_root().ok_or("找不到应用根目录")?;
+    athena_course_shell::archive::load_files(&root, &case_id)
+}
+
+/// 历史归档：编译并运行案例里指定的源文件（多文件、10 秒超时、只读）。
+#[tauri::command]
+fn run_archive_case(
+    case_id: String,
+    sources: Vec<String>,
+    std: Option<String>,
+    stdin: Option<String>,
+) -> Result<athena_course_shell::archive::ArchiveRun, String> {
+    let root = app_root().ok_or("找不到应用根目录")?;
+    athena_course_shell::archive::run(&root, "athena-c-plus-plus", &case_id, &sources, std.as_deref(), stdin.as_deref())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -285,6 +304,8 @@ pub fn run() {
             record_attempt,
             read_case,
             compile_and_run,
+            load_case_files,
+            run_archive_case,
             open_legacy_window
         ])
         .run(tauri::generate_context!())

@@ -226,3 +226,11 @@ python3 programming/c-plus-plus/scripts/check.py
 - 检查源文件展示是否依赖不可移植的编译期绝对路径。
 - 检查学习内容的篇幅是否与难度、掌握目标匹配，以及有没有一份内容写成两份
   （ADR 0040）。
+
+## 历史归档章节（ADR 0176）
+
+- `content/archive.json` 是**唯一的「历史归档」章**，由 `src/Archive.tsx` 渲染在侧栏最后；它装的是从旧 GitHub 仓库（Practice、Linux）整理来的早年 C++ 练习：原代码原样放在 `content/cases/arc_cpp_*/`，另有行级批注指出写法与程序组织上的不足。
+- 它**不属于主线、不判分、不计入进度**，也不受上文的课表与 GTK 时代规则约束；改主线课时不要碰它。留待使用者人工审视后决定并入、保留或删除，删除须显式（`content/archive-dropped.md` 记录未收录的旧路径）。
+- 本应用的 Rust 壳是自己的 `lib.rs`，读文件与运行归档案例直接调用共用壳 crate 的 `athena_course_shell::archive`（命令 `load_case_files`、`run_archive_case`；多文件、10 秒超时、只读）。
+- 写作规范与验收标准见 `comms/legacy-archive/AUTHORING.md`；根检查 `scripts/archive_check.py` 校验案例目录、源文件、批注行号与孤儿目录。
+

@@ -1,0 +1,1719 @@
+{
+  "tracks": [
+    {
+      "id": "archive",
+      "title": "历史归档",
+      "color": "#a08c64"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "archive",
+      "title": "历史归档 · 早年练习的整理与批注",
+      "track": "archive",
+      "layer": "archive",
+      "summary": "从 2020–2023 年旧 GitHub 仓库 Practice、Linux 里的 C++ 基础练习去重整理而来（ADR 0176）：类型、动态内存、类与继承、多态、标准库、现代 C++、线程，代码原样保留、能运行的可以直接运行，另有行级批注指出写法与程序组织上的不足。本章不属于主线，不计入进度，留待人工审视后决定并入、保留或删除。",
+      "topics": [
+        {
+          "id": "cpp.arc.types_limits",
+          "title": "类型的大小与极限、浮点精度",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[基础语法] 打印各种类型大小与极限的程序里，“最小值”对浮点是错的；浮点字面量被悄悄截断。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出 numeric_limits<T>::min() 对浮点和整数的不同含义，并认出字面量窄化与 rand() 取模带来的问题。",
+            "pain": "打印出来的数字看起来整齐，就容易被当成正确答案。",
+            "model": "用 sizeof 与 numeric_limits 打印各类型的字节数与范围；再演示浮点运算、数学函数与 rand()。",
+            "scope": "只读历史代码并批注；不涉及标准输出格式化。",
+            "judgment": "每个“最小值”都要问：是最小的正数，还是最小的数？每个数字字面量问：它的类型是什么？",
+            "landing": "能改用 lowest()，并用 <random> 重写随机数部分。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两个“看数字”的程序：一个打印各类型的字节数与最大最小值，一个演示浮点运算和随机数。输出都很整齐，所以最该看的是它们说的话和实际值对不对：double 的“最小值”打印的是 2.2×10⁻³⁰⁸，不是 −1.8×10³⁰⁸。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_types_limits",
+                "run": "cli",
+                "summary": "打印各基本类型的字节数、最大最小值。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/variable_limit.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/11-basic/limits"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/variable_limit.cpp",
+                    "line": 40,
+                    "kind": "design",
+                    "text": "⚠ 对浮点类型，`numeric_limits<T>::min()` 是**最小的正规格化正数**，不是最小值：本机实测 double 的“最小值”打印 `2.22507e-308`，float 是 `1.17549e-38`。对整数 `min()` 才是最小值，所以同一份代码里 int 的行是对的、double 的行是错的。应当对所有类型统一用 `lowest()`。"
+                  },
+                  {
+                    "file": "practice/variable_limit.cpp",
+                    "line": 51,
+                    "kind": "design",
+                    "text": "`numeric_limits<std::string>` 没有特化，`max()`/`min()` 返回默认构造的 `std::string`，也就是空串：实测这一行打印的是两个空值，却被当成“最大值”“最小值”印在表里。对非算术类型问极限本身就没有意义。"
+                  },
+                  {
+                    "file": "practice/variable_limit.cpp",
+                    "line": 32,
+                    "kind": "portability",
+                    "text": "`long` 在 Windows（LLP64）上是 4 字节，在 64 位 Linux 上是 8 字节——本机实测 `long` 为 4 字节、最大值 2147483647。程序只打印数字，没有说明这是哪个平台上的结果；想比较类型大小就该同时打印平台，或改用 `<cstdint>` 里的定宽类型。"
+                  },
+                  {
+                    "file": "practice/variable_limit.cpp",
+                    "line": 8,
+                    "kind": "style",
+                    "text": "三十多行几乎一模一样的 `cout` 语句，只是类型名不同：应当写一个函数模板 `print_limits<T>(name)`，再对类型列表调用。`char`、`signed char` 的最大最小值被当成字符直接输出，打印出不可见字符，应转成 `int`。"
+                  },
+                  {
+                    "file": "practice/variable_limit.cpp",
+                    "line": 9,
+                    "kind": "design",
+                    "text": "把 `max`/`min` 用括号括起来是为了躲开 Windows 头文件里的 `max`、`min` 宏——这个习惯写对了，说明作者在 Windows 上被这件事咬过。"
+                  }
+                ],
+                "sources": [
+                  "practice/variable_limit.cpp"
+                ],
+                "std": "c++17",
+                "run_note": "long 在 Windows 为 4 字节、在 64 位 Linux 为 8 字节，输出随平台变化"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_types_limits",
+                "run": "cli",
+                "summary": "浮点运算、数学函数与 rand() 随机数。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/variable.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/11-basic/tiger_limit"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/variable.cpp",
+                    "line": 12,
+                    "kind": "portability",
+                    "text": "字面量 `123456789123456789.8888888888` 是 `double`，赋给 `float` 时只保留约 7 位有效数字（窄化转换，`-Wconversion` 会告警）；`a * b` 与 `a1 * b1` 的两次输出就是为了对比这一点，但程序没有说明为什么不同，读者只会看到两个不一样的数。"
+                  },
+                  {
+                    "file": "practice/variable.cpp",
+                    "line": 41,
+                    "kind": "design",
+                    "text": "用 `rand() % n` 取范围有取模偏差，而且 `rand()` 的质量与范围（`RAND_MAX` 在 Windows 上只有 32767）因平台而异；同目录的 `random.cpp` 与 `random_better` 正是对它的改进（`<random>` 的引擎加分布），这两代写法值得对照阅读。"
+                  },
+                  {
+                    "file": "practice/variable.cpp",
+                    "line": 3,
+                    "kind": "design",
+                    "text": "`<ctime>` 的 include 被注释掉了，下面却调用 `time(NULL)`，能编译全靠 `<cmath>`/`<iostream>` 间接带入；换一个标准库实现就可能失败。用到什么就包含什么。"
+                  },
+                  {
+                    "file": "practice/variable.cpp",
+                    "line": 46,
+                    "kind": "style",
+                    "text": "两段只差范围的 10 个一行的打印循环是复制粘贴的，末尾还留着两段被注释掉的同样的代码：应该提取 `print_random(min, max, count)`。"
+                  }
+                ],
+                "sources": [
+                  "practice/variable.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "基本类型与浮点见 C++ 教程主线的类型相关章节；随机数的现代写法（<random>）见本条目与“随机数两代”对照。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cpp.arc.random",
+          "title": "随机数两代：std::bind 的引擎与固定种子",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[基础语法] 从 rand() 进到 <random>：引擎被 bind 拷贝了一份，另一份固定种子让输出每次相同。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出 std::bind 会拷贝引擎的后果，以及固定种子的取舍。",
+            "pain": "“用上了现代写法”不等于写对：随机数引擎的状态很容易被悄悄拷贝。",
+            "model": "random_device 提供种子，mt19937 或 default_random_engine 生成数，uniform_int_distribution 映射范围。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "问：引擎的状态在哪里？种子从哪里来？同一份代码换平台输出一样吗？",
+            "landing": "能写出可复现、可换种子的随机数辅助函数。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两份“比 rand() 好”的随机数代码：一份用 `random_device` 加 `mt19937`，再用 `std::bind` 绑成一个骰子函数；另一份把种子固定成 0 使输出可复现。它们都用对了 `<random>`，也都有一处值得细看的细节。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_random",
+                "run": "cli",
+                "summary": "random_device 播种 mt19937，用 bind 绑成函数，打印 100 个 0/1。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/random.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/11-basic/random"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/random.cpp",
+                    "line": 16,
+                    "kind": "design",
+                    "text": "`std::bind` 按值保存它的参数：`dice` 里是 `mt` 的**一份拷贝**，每次 `dice()` 推进的是这份拷贝的状态，外面的 `mt` 不动。如果别处还要用 `mt`，会得到重复的序列；想共享状态要写 `std::bind(dist, std::ref(mt))`，或者干脆写成 lambda。"
+                  },
+                  {
+                    "file": "practice/random.cpp",
+                    "line": 6,
+                    "kind": "design",
+                    "text": "把 `random_device` 直接用作唯一的熵源是标准做法，但它在个别平台（旧版 MinGW）上是确定性的，会使每次运行输出相同；需要保证随机时应检查 `rd.entropy()`，或另外混入时间。"
+                  },
+                  {
+                    "file": "practice/random.cpp",
+                    "line": 8,
+                    "kind": "style",
+                    "text": "一段被注释掉的调试循环和重复的 `std::random_device rd;` 注释留在主体里，应当删除（`<functional>` 的 include 是 `bind` 需要的，是必要的）。"
+                  }
+                ],
+                "sources": [
+                  "practice/random.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_random",
+                "run": "cli",
+                "summary": "固定种子的 default_random_engine 填满一个 vector 并打印两遍。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "CPlusPlus/11-basic/random_better",
+                  "first_commit": "2023-02-06",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "linux/random_better/main.cpp",
+                    "line": 13,
+                    "kind": "design",
+                    "text": "固定种子 0 使每次运行输出相同，便于复现和写测试；代价是它不再随机——原来想用的真随机播种（上一行 `random_device{}()`）被注释掉了。另外 `default_random_engine` 的算法由标准库实现自行决定，同样的种子在 libstdc++、MSVC 上给出不同的序列，要跨平台复现必须指定 `mt19937`。"
+                  },
+                  {
+                    "file": "linux/random_better/main.cpp",
+                    "line": 14,
+                    "kind": "style",
+                    "text": "分布的类型是 `unsigned`，却把结果赋给 `vector<int>` 的元素：隐含的符号转换。范围虽小不会出错，但类型应当与目标一致。"
+                  },
+                  {
+                    "file": "linux/random_better/main.cpp",
+                    "line": 15,
+                    "kind": "style",
+                    "text": "`int i = 1;` 从未使用（`-Wunused-variable`）；第二个循环 `for(auto m: sample)` 把每个元素拷贝一份，应写 `const auto &m`；`main` 末尾也没有换行和 `return 0`。"
+                  }
+                ],
+                "sources": [
+                  "linux/random_better/main.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "随机数的现代写法见 C++ 教程主线的标准库章节。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cpp.arc.new_arrays",
+          "title": "new/delete：二维、三维数组与对象数组",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[基础语法] 手写多级指针数组的分配与释放，释放顺序对，但任何一步抛异常都会泄漏。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出多级 new[] 数组的释放顺序与异常安全问题，并知道 vector 版为什么更好。",
+            "pain": "多级指针数组的每一层都要分配、每一层都要释放，错一层就泄漏或崩溃。",
+            "model": "p = new int*[rows]；每行再 new int[cols]；释放时由内向外 delete[]；对象数组 new T[n] 对应 delete[]。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "问：中途失败会怎样？内存连续吗？谁保证 delete 一定被执行？",
+            "landing": "能用 vector 或一维数组加下标换算重写。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "三个 `new` 的练习：二维数组、三维数组、对象数组。释放顺序都写对了，`new[]` 与 `delete[]` 也配对。要看的是：这一切全靠人记得，任何中途异常都会泄漏，且数组元素在内存里并不连续。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_new_arrays",
+                "run": "cli",
+                "summary": "按行分配 4×8 的 int 二维数组，填值、打印、释放。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/new.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/11-basic/new_three-dimensional_array"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/new.cpp",
+                    "line": 9,
+                    "kind": "ownership",
+                    "text": "每行单独 `new int[8]`：如果第 3 行分配抛出 `bad_alloc`，前两行与 `p` 本身都已泄漏。`vector<vector<int>>`，或者一块 `vector<int>(4*8)` 加 `p[i*8+j]` 下标换算，由析构保证释放。"
+                  },
+                  {
+                    "file": "practice/new.cpp",
+                    "line": 11,
+                    "kind": "design",
+                    "text": "按行分配的行与行之间不连续，遍历时对缓存不友好；行数列数 `4`、`8` 都写死在循环里，应当作为常量或变量名出现一次。"
+                  },
+                  {
+                    "file": "practice/new.cpp",
+                    "line": 29,
+                    "kind": "design",
+                    "text": "先释放每一行再 `delete [] p`，顺序是对的（反过来会丢掉行指针）；`delete[]` 也与 `new[]` 成对。这是手写版里最容易出错的一步，写对了。"
+                  }
+                ],
+                "sources": [
+                  "practice/new.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_new_arrays",
+                "run": "cli",
+                "summary": "按层分配 3×3×3 的 int 三维数组，填值、打印、释放。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/new2.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "practice/new2.cpp",
+                    "line": 9,
+                    "kind": "ownership",
+                    "text": "三级指针：分配三层循环、释放三层循环，而且释放要和分配严格对应。`x,y,z` 都是变量 3，却在多处各写一遍循环范围；任意一层 `new` 失败，已分配的所有层都会泄漏。"
+                  },
+                  {
+                    "file": "practice/new2.cpp",
+                    "line": 26,
+                    "kind": "design",
+                    "text": "用 `i+j+k` 填值，打印出来是对称的对角结构，看不出下标有没有写反；换成每个位置唯一的值（如 `i*100+j*10+k`）才能验证三层下标没有写错。"
+                  },
+                  {
+                    "file": "practice/new2.cpp",
+                    "line": 6,
+                    "kind": "style",
+                    "text": "循环变量 `i,j,k` 在函数顶部一次声明（C 风格），后面的循环都复用它们；C++ 里应在 `for` 里声明，作用域最小。"
+                  }
+                ],
+                "sources": [
+                  "practice/new2.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_new_arrays",
+                "run": "cli",
+                "summary": "new Box[5] 与 delete[]，观察 5 次构造与 5 次析构。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/new3.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "practice/new3.cpp",
+                    "line": 17,
+                    "kind": "ownership",
+                    "text": "`new Box[5]` 配 `delete [] myBoxArray` 是对的：5 个构造函数与 5 个析构函数都会被调用。裸 `new` 换成 `std::vector<Box> boxes(5);` 或 `std::make_unique<Box[]>(5)` 效果一样，且不需要手写 `delete`。"
+                  },
+                  {
+                    "file": "practice/new3.cpp",
+                    "line": 8,
+                    "kind": "testing",
+                    "text": "`Box` 没有任何数据，构造与析构打印的字符串完全一样，没法看出 `delete[]` 是按**逆序**析构的（标准保证数组元素逆序销毁）。给对象一个编号并打印，才能让例子真的证明点什么。"
+                  },
+                  {
+                    "file": "practice/new3.cpp",
+                    "line": 10,
+                    "kind": "style",
+                    "text": "析构函数没有 `virtual`——这里没有继承，所以没问题，但 `Box` 若将来被继承并通过基类指针删除，就是未定义行为；示例里应当说明为什么可以省略。"
+                  }
+                ],
+                "sources": [
+                  "practice/new3.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "动态内存与智能指针见 C++ 教程主线的资源管理部分。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cpp.arc.const_extern",
+          "title": "const 的用法与 extern 全局变量",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[基础语法] const 示例读了未初始化的成员；extern 示例的全局变量叫 count，一旦 using namespace std 就与 std::count 冲突。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出 const 示例里读未初始化成员的 bug，并说出全局 extern 变量的冲突与耦合问题。",
+            "pain": "演示 const 的程序本身不能有未定义行为，否则演示的就是反例。",
+            "model": "const 修饰变量、指针、成员函数、参数；extern 在另一个翻译单元里引用同一个全局变量。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个类成员问：构造后有值吗？每个全局变量问：名字会不会撞标准库？",
+            "landing": "能写出带构造初始化的 const 示例，并把全局变量改成函数或参数。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "一个讲 const 的程序和一个讲 extern 的两文件程序。前者在演示 const 成员函数时读取了从未初始化的成员，输出里出现了一个随机的大负数；后者的全局变量叫 `count`，在最常见的 `using namespace std;` 之下会和 `std::count` 冲突。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_const_extern",
+                "run": "cli",
+                "summary": "const 变量、const 成员函数、顶层与底层 const 的指针。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/const.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "practice/const.cpp",
+                    "line": 18,
+                    "kind": "ownership",
+                    "text": "⚠ 常成员函数 `f1` 打印成员 `a`，而 `A` 的构造函数从来没有初始化它：读未初始化的 `int` 是未定义行为。本机实测，第一次调用 `obj.f1(1000)` 碰巧打印 `0`，第二次 `obj2.f1(999)` 打印 `-186486720`。构造函数应当用成员初始化列表给 `a` 赋值。"
+                  },
+                  {
+                    "file": "practice/const.cpp",
+                    "line": 20,
+                    "kind": "design",
+                    "text": "按值传参的形参前加 `const` 只约束函数体内部，对函数类型和调用者都没有影响（`f2(const int)` 与 `f2(int)` 是同一个函数签名）；演示“const 保护实参”应当用 `const int &` 或指针。"
+                  },
+                  {
+                    "file": "practice/const.cpp",
+                    "line": 42,
+                    "kind": "design",
+                    "text": "`cout << *p1` 打印的是 `*p1`——第一个字符 `C`（实测输出 `C`），不是字符串；想打印整个串应写 `cout << p1`。上面被注释的 `*p1 = \"Japan\"` 本来就是类型错误（把字符串赋给 `char`），并不能说明“指向常量的指针不能改”。"
+                  },
+                  {
+                    "file": "practice/const.cpp",
+                    "line": 54,
+                    "kind": "style",
+                    "text": "`p3` 声明后从未使用（`-Wunused-variable`）；全文用一串 `!!!!!!` 的注释标记“这里会报错”：想演示编译错误，更好的办法是写一个会失败的单独文件，或用 `static_assert`/`requires` 在编译期证明。"
+                  }
+                ],
+                "sources": [
+                  "practice/const.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_const_extern",
+                "run": "cli",
+                "summary": "两个 .cpp 共享一个全局变量 count。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/extern.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/11-basic/extern",
+                    "Linux/CPlusPlus/11-basic/const"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/extern.cpp",
+                    "line": 3,
+                    "kind": "naming",
+                    "text": "⚠ 全局变量叫 `count`，与标准库的 `std::count` 同名。本文件没有 `using namespace std`，所以暂时没事；本机实测，只要加上 `using namespace std;` 并包含 `<algorithm>`，`count = 5` 就报 `reference to 'count' is ambiguous`。同目录其他文件几乎都写着 `using namespace std;`，这个名字是个陷阱。"
+                  },
+                  {
+                    "file": "practice/extern.cpp",
+                    "line": 4,
+                    "kind": "coupling",
+                    "text": "跨文件共享靠两个文件各自手写 `extern` 声明（本文件声明函数，extern_other.cpp 声明变量），没有共享头文件：声明与定义对不上时编译器查不出来，只在链接期才暴露（或者根本不暴露）。应该把声明放进一个头文件，两个 .cpp 都包含它。"
+                  },
+                  {
+                    "file": "practice/extern.cpp",
+                    "line": 8,
+                    "kind": "design",
+                    "text": "两个文件通过一个可随意改写的全局变量交换数据：`write_extern` 把 `count` 改成 100，`main` 靠副作用读到。这类隐式耦合应当改成参数和返回值。"
+                  },
+                  {
+                    "file": "practice/extern_other.cpp",
+                    "line": 5,
+                    "kind": "style",
+                    "text": "单个文件不能独立编译运行（缺 `main`/缺 `count` 的定义），而目录里没有构建文件说明该一起编哪几个——`Linux/CPlusPlus` 里的同一练习才补上了 CMakeLists。"
+                  }
+                ],
+                "sources": [
+                  "practice/extern.cpp",
+                  "practice/extern_other.cpp"
+                ],
+                "std": "c++17",
+                "run_note": "必须两个文件一起编译"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "const 与存储类说明见 C++ 教程主线的相关章节。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cpp.arc.classes",
+          "title": "类：构造、拷贝、静态成员、友元",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[类与对象] 三五法则缺一条：定义了拷贝构造和析构，没定义拷贝赋值，一赋值就堆损坏。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出拷贝构造、拷贝赋值、析构必须一起考虑（三五法则），并认出构造函数不初始化成员、静态计数不计拷贝这类典型坑。",
+            "pain": "这些类都能编译运行，输出也对——直到有人写了一行赋值。",
+            "model": "Line 管理一块堆内存；Box 用静态成员计数；Point 的拷贝构造故意把坐标加 10000 用来演示它被调用。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "一个类只要管资源，就问：拷贝、赋值、销毁各自会发生什么？",
+            "landing": "能补全三五法则，并把计数与资源管理交给成员对象。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "构造函数、拷贝构造函数、静态成员、友元四个经典例子，外加后来整理出来的一个多文件 `Point`。它们的毛病都出在“没写的那部分”：没初始化的成员、没定义的拷贝赋值、不计拷贝的计数器。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_classes",
+                "run": "cli",
+                "summary": "最小的类：构造、析构、设置与读取长度。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/class_constructor.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/13-class/constructor"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/class_constructor.cpp",
+                    "line": 18,
+                    "kind": "ownership",
+                    "text": "构造函数只打印一句话，没有初始化 `length`。本机实测：去掉 `setLength` 直接 `getLength()`，得到 `1.66412e-312` 这样的垃圾值。成员应当用初始化列表给初值：`Line() : length(0) {}`。"
+                  },
+                  {
+                    "file": "practice/class_constructor.cpp",
+                    "line": 9,
+                    "kind": "design",
+                    "text": "`getLength` 不修改对象，应当声明为 `const` 成员函数，否则 `const Line&` 上无法调用；`(void)` 参数列表是 C 的写法，C++ 里写 `()`。"
+                  },
+                  {
+                    "file": "practice/class_constructor.cpp",
+                    "line": 20,
+                    "kind": "style",
+                    "text": "靠构造/析构里的 `cout` 观察对象生命周期是演示手段，真实代码里这样做会让类依赖标准输出；记数与日志应当通过可替换的接口。"
+                  }
+                ],
+                "sources": [
+                  "practice/class_constructor.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_classes",
+                "run": "cli",
+                "summary": "带指针成员的 Line：构造、拷贝构造、析构；按值传参触发拷贝。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/class_contructor_copy.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/13-class/2-copy_constructor"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/class_contructor_copy.cpp",
+                    "line": 10,
+                    "kind": "ownership",
+                    "text": "⚠ 定义了拷贝构造函数和析构函数，却没有定义拷贝赋值运算符（三五法则缺一）：编译器生成的赋值会逐位拷贝 `ptr`，两个对象指向同一块 `int`，析构时释放两次。本机实测：在 `main` 里加一行 `Line line3(1, \"x\"); line3 = line;`，进程以 `0xC0000374`（堆损坏）退出；`-Wdeprecated-copy` 也会提示。应补上赋值运算符，或直接 `= delete`。"
+                  },
+                  {
+                    "file": "practice/class_contructor_copy.cpp",
+                    "line": 23,
+                    "kind": "design",
+                    "text": "为一个 `int` 在堆上单独 `new`，既慢又增加了所有权问题；这个例子想演示“深拷贝”，用 `std::string` 或 `std::vector` 成员就不需要自己管内存。"
+                  },
+                  {
+                    "file": "practice/class_contructor_copy.cpp",
+                    "line": 32,
+                    "kind": "design",
+                    "text": "拷贝构造函数里把 `msg` 改成了“我是复制的”：这是为了演示“拷贝构造被调用了”，但拷贝出来的对象内容与原对象不同，违反了拷贝的值语义，容易误导读者；演示调用次数用一个静态计数器更合适。"
+                  },
+                  {
+                    "file": "practice/class_contructor_copy.cpp",
+                    "line": 19,
+                    "kind": "naming",
+                    "text": "文件名 `contructor` 拼错（应为 constructor）；构造函数的形参 `msg` 与成员同名，靠初始化列表区分，这是合法的但读起来绕。`display(Line obj)` 按值传参触发拷贝，是想演示的点（实测每次调用都多一次“调用拷贝构造函数”）。"
+                  }
+                ],
+                "sources": [
+                  "practice/class_contructor_copy.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_classes",
+                "run": "cli",
+                "summary": "静态成员 objectCount 统计创建的 Box 数。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/class_static.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/13-class/static"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/class_static.cpp",
+                    "line": 17,
+                    "kind": "design",
+                    "text": "⚠ 计数只在**构造函数**里加一：拷贝构造出来的对象走的是编译器生成的拷贝构造函数，不会计数；析构也不减。本机实测：在两个 Box 之后再 `Box Box3 = Box1;`，输出依然是 `Total objects: 2`——实际有 3 个对象。想统计存活对象，要在拷贝构造里加、析构里减。"
+                  },
+                  {
+                    "file": "practice/class_static.cpp",
+                    "line": 8,
+                    "kind": "design",
+                    "text": "静态计数器是 public 且可变：外面可以随便改；多线程创建对象时 `objectCount++` 也有数据竞争（应使用 `std::atomic<int>`）。C++17 起类内可写 `inline static int objectCount = 0;`，不必再在类外单独定义。"
+                  },
+                  {
+                    "file": "practice/class_static.cpp",
+                    "line": 10,
+                    "kind": "style",
+                    "text": "三个缺省参数的构造函数同时充当默认构造函数；成员在函数体里赋值而不是用初始化列表。`double` 的体积比较与四舍五入也没有说明。"
+                  }
+                ],
+                "sources": [
+                  "practice/class_static.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_classes",
+                "run": "cli",
+                "summary": "友元函数访问私有成员。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/class_friend.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/13-class/3-friend"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/class_friend.cpp",
+                    "line": 9,
+                    "kind": "design",
+                    "text": "友元函数 `printWidth(Box box)` 按值传参，白白拷贝一个 `Box`；应当 `const Box &`。友元打破封装，只在 `operator<<` 这类必须访问内部的函数上才值得；这里提供一个公有的 `getWidth()` 就够了。"
+                  },
+                  {
+                    "file": "practice/class_friend.cpp",
+                    "line": 7,
+                    "kind": "ownership",
+                    "text": "`Box` 没有构造函数，`width` 在 `setWidth` 之前是未初始化的；`Box box; printWidth(box);` 会打印垃圾值。"
+                  }
+                ],
+                "sources": [
+                  "practice/class_friend.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_classes",
+                "run": "cli",
+                "summary": "多文件 Point：默认/带参/拷贝构造、静态计数、静态工厂。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "CPlusPlus/13-class/10-4copy-constructor",
+                  "first_commit": "2023-02-06",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "linux/13-class/10-4copy-constructor/point.cpp",
+                    "line": 7,
+                    "kind": "ownership",
+                    "text": "⚠ 默认构造函数是空的，`x`、`y` 没有初始化：`main` 里 `Point d; d.show();` 打印的是垃圾坐标；而且这个构造函数里没有 `++Sum`，默认构造的对象不计数。"
+                  },
+                  {
+                    "file": "linux/13-class/10-4copy-constructor/point.cpp",
+                    "line": 21,
+                    "kind": "design",
+                    "text": "拷贝构造函数把坐标加 10000，赋值（`d = c;` 用的是编译器生成的拷贝赋值）却不加也不计数：**拷贝构造与拷贝赋值的行为不一致**，是三五法则里最坏的一种违反。这样写的本意是让读者看到“拷贝构造被调用了”，但一个会改变值的拷贝会让所有调用 `Point b(a)` 的人吃惊。"
+                  },
+                  {
+                    "file": "linux/13-class/10-4copy-constructor/point.cpp",
+                    "line": 42,
+                    "kind": "design",
+                    "text": "`Point c = Point::generate_point();` 本来想看一次拷贝构造，但 C++17 起返回临时对象的初始化是强制省略拷贝的：不会调用拷贝构造，坐标就是 (666,999)，不会加 10000。示例的预期取决于编译所用的 C++ 标准，应在注释里写明。"
+                  },
+                  {
+                    "file": "linux/13-class/10-4copy-constructor/point.h",
+                    "line": 22,
+                    "kind": "design",
+                    "text": "`Sum` 是 public 静态变量，在 point.cpp 里定义、`show()` 里读取：它统计的是“经过带参构造与拷贝构造的对象数”，不是存活对象数（没有析构递减，也不含默认构造）。名字 `Sum` 与含义也不符，应叫 `created_count` 之类。"
+                  }
+                ],
+                "sources": [
+                  "linux/13-class/10-4copy-constructor/main.cpp",
+                  "linux/13-class/10-4copy-constructor/point.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "构造、拷贝、静态成员与友元见 C++ 教程主线的类与对象章节；三五法则见资源管理部分。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cpp.arc.inheritance",
+          "title": "继承：访问控制、多重继承与菱形继承",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[类与对象] 把 A() 写在构造函数体里并不会初始化基类；叫“循环继承”的其实是菱形。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出构造函数体里 A() 只是创建了一个临时对象，说出 class 默认私有继承，并区分菱形继承与循环继承。",
+            "pain": "继承示例常常靠注释说明“结果是对的”，运行起来却没有人验证。",
+            "model": "Base→Derived 的三种继承方式；多重继承的 Shape+PaintCost；虚继承解决 D 的重复基类。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个 is-a 关系问：真的是 is-a 吗？基类成员由谁初始化？",
+            "landing": "能说出什么时候该用组合代替继承。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "五个继承小例子：保护继承、私有继承、多重继承、菱形继承、基类派生出性别子类；再加一个后来整理的访问控制多文件示例。这里的错误多半是“概念上”的：构造函数里的 `A();` 以为在初始化基类，“循环继承”其实是菱形，用子类表示性别是个建模问题。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_inheritance",
+                "run": "cli",
+                "summary": "A 的三种访问级别成员，B 私有继承 A。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/class_inherit_private.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/13-class/11-2-visit-control（同主题的后续整理）"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/class_inherit_private.cpp",
+                    "line": 30,
+                    "kind": "design",
+                    "text": "⚠ 在构造函数体里写 `A();` 创建的是一个**临时对象**，语句结束就销毁，对基类子对象毫无影响——基类 `A` 在进入 `B` 的函数体之前就已经默认构造好了。想给基类传参要写初始化列表 `B(int i) : A(...)`。本机实测 `b.add()` 输出 3（来自基类默认构造里写死的 1+2），与 `i` 无关。"
+                  },
+                  {
+                    "file": "practice/class_inherit_private.cpp",
+                    "line": 6,
+                    "kind": "naming",
+                    "text": "`B` 声明了与基类同名的 `int a`，隐藏了 `A::a`：`B::fun` 里的 `a` 是 `B` 自己的，要访问基类的要写 `A::a`。同名遮蔽是继承里最常见的混淆之一。"
+                  },
+                  {
+                    "file": "practice/class_inherit_private.cpp",
+                    "line": 2,
+                    "kind": "style",
+                    "text": "`assert.h` 包含了却没用；注释里每一行都写“正确”，但程序没有任何输出能验证注释说的访问规则（编译错误的情形没有出现）。"
+                  }
+                ],
+                "sources": [
+                  "practice/class_inherit_private.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_inheritance",
+                "run": "cli",
+                "summary": "protected 成员被私有继承的派生类访问。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/class_protect.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "practice/class_protect.cpp",
+                    "line": 10,
+                    "kind": "design",
+                    "text": "`class` 的默认继承方式是**私有**，所以这里其实是私有继承，并不是注释里说的“派生类”那种 is-a 关系；`SmallBox` 对外根本不是 `Box`（不能转成 `Box&`）。要么写 `public Box`，要么承认这是组合。"
+                  },
+                  {
+                    "file": "practice/class_protect.cpp",
+                    "line": 7,
+                    "kind": "design",
+                    "text": "`width` 被声明为 `protected` 是想演示“派生类可以访问”，但示例只展示了能访问的一面；没有一行代码演示“类外访问 protected 会被拒绝”，protected 的全部意义就在这里。"
+                  },
+                  {
+                    "file": "practice/class_protect.cpp",
+                    "line": 14,
+                    "kind": "ownership",
+                    "text": "`width` 没有初始化，`getSmallWidth()` 在 `setSmallWidth` 之前调用会读未初始化的 `double`。"
+                  }
+                ],
+                "sources": [
+                  "practice/class_protect.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_inheritance",
+                "run": "cli",
+                "summary": "Rectangle 同时继承 Shape 与 PaintCost。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/multi_inherit.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "practice/multi_inherit.cpp",
+                    "line": 33,
+                    "kind": "design",
+                    "text": "`PaintCost` 没有任何成员数据，`getCost` 只用传进来的参数：它是个工具函数，却用继承拉进了 `Rectangle`。“矩形是一种涂漆成本”不成立，继承表达的是 is-a。应当组合（`PaintCost cost;`）或写成自由函数。"
+                  },
+                  {
+                    "file": "practice/multi_inherit.cpp",
+                    "line": 18,
+                    "kind": "ownership",
+                    "text": "`width`、`height` 没有初始化，`getArea()` 要等到两个 setter 都调用过才有意义。可以用构造函数 `Shape(int w, int h)` 强制。"
+                  },
+                  {
+                    "file": "practice/multi_inherit.cpp",
+                    "line": 28,
+                    "kind": "style",
+                    "text": "单价 70 与货币符号 `$`（输出字符串里）是魔法数字，应当作为命名常量或构造参数。"
+                  }
+                ],
+                "sources": [
+                  "practice/multi_inherit.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_inheritance",
+                "run": "cli",
+                "summary": "菱形继承与虚继承，打印构造/析构顺序与 sizeof。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/cycle_inherit.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/13-class/5-cycle-inherit"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/cycle_inherit.cpp",
+                    "line": 33,
+                    "kind": "naming",
+                    "text": "文件名叫 `cycle_inherit`（循环继承），但这是个**菱形**：`D` 在顶部，`B`、`A` 虚继承它，`C` 同时继承 `B` 和 `A`。C++ 不允许真正的循环继承。名字会让读者找错术语。"
+                  },
+                  {
+                    "file": "practice/cycle_inherit.cpp",
+                    "line": 15,
+                    "kind": "design",
+                    "text": "`virtual public D` 用对了：没有它，`C` 里会有两份 `D` 子对象。本机实测构造顺序是 D、B、A、C，析构完全相反，`sizeof(C)` 为 40（含虚基类指针的开销）——这正是注释里写的预期顺序，验证过了。"
+                  },
+                  {
+                    "file": "practice/cycle_inherit.cpp",
+                    "line": 12,
+                    "kind": "design",
+                    "text": "四个 `protected` 的 `int` 成员从未使用也没有初始化，只为了让 `sizeof` 有个数；各类的析构函数不是 `virtual`，通过基类指针 `delete` 会出问题，示例里没有这样用，所以不会暴露。"
+                  }
+                ],
+                "sources": [
+                  "practice/cycle_inherit.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_inheritance",
+                "run": "cli",
+                "summary": "Person 派生 Male、Female，各有自己的方法。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/inherit.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "practice/inherit.cpp",
+                    "line": 36,
+                    "kind": "design",
+                    "text": "用子类表示性别是个建模问题：一个人的性别是属性，不是类型；`Male`、`Female` 各自的成员和方法只是同一份数据的不同名字，而且对象创建后性别无法改变。继承不适合表示这种“取值不同”。用一个枚举成员即可。"
+                  },
+                  {
+                    "file": "practice/inherit.cpp",
+                    "line": 9,
+                    "kind": "ownership",
+                    "text": "`Person()` 默认构造函数不初始化 `height`、`weight`；`Male()`/`Male(double,double)` 的第一个版本会让 `fightBattle()` 读未初始化的值。"
+                  },
+                  {
+                    "file": "practice/inherit.cpp",
+                    "line": 13,
+                    "kind": "style",
+                    "text": "构造函数体后面多写了分号 `};`（`-Wextra-semi`）；`say()` 不是 `virtual`，子类若再定义同名函数是隐藏而不是重写。"
+                  }
+                ],
+                "sources": [
+                  "practice/inherit.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_inheritance",
+                "run": "cli",
+                "summary": "Parent 派生 PublicChild、ProtectedChild、PrivateChild，多文件。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "CPlusPlus/13-class/11-2-visit-control",
+                  "first_commit": "2023-02-06",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "linux/13-class/11-2-visit-control/child.h",
+                    "line": 25,
+                    "kind": "design",
+                    "text": "三个子类只演示了“能访问什么”，每个 `visit_control` 都只读了 public 与 protected 成员，**从不碰 private**，也没有任何一行代码（哪怕是注释）说明从外部访问会怎样被拒绝。访问控制的规则恰恰体现在“被拒绝”上，而这个示例里一个拒绝也没有。"
+                  },
+                  {
+                    "file": "linux/13-class/11-2-visit-control/parent.h",
+                    "line": 4,
+                    "kind": "style",
+                    "text": "头文件里写 `using namespace std;`（parent.h、child.h 都有），会把整个 std 灌进每个包含者；成员函数体后还有 `};` 与 `cout<<...<<endl;;` 这样多余的分号。"
+                  },
+                  {
+                    "file": "linux/13-class/11-2-visit-control/parent.h",
+                    "line": 9,
+                    "kind": "ownership",
+                    "text": "构造函数在函数体里给三个成员赋值，应当用初始化列表；`Parent` 没有虚析构函数，作为基类使用时是隐患。"
+                  },
+                  {
+                    "file": "linux/13-class/11-2-visit-control/child.cpp",
+                    "line": 1,
+                    "kind": "style",
+                    "text": "`child.cpp` 和 `parent.cpp` 都只有一行 `#include`：类全部写在头文件里，两个空的 .cpp 只是向导生成的残留。"
+                  }
+                ],
+                "sources": [
+                  "linux/13-class/11-2-visit-control/main.cpp",
+                  "linux/13-class/11-2-visit-control/child.cpp",
+                  "linux/13-class/11-2-visit-control/parent.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "继承、访问控制与虚继承见 C++ 教程主线的类与继承章节；“优先组合”的原则见设计模式应用的设计原则。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cpp.arc.polymorphism",
+          "title": "多态：形状、薪水与“进化”",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[类与对象] 三个多态示例都没有虚析构函数、都泄漏了 new 出来的对象；“进化”那个根本没有多态。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出多态基类为什么需要虚析构函数与 override，并认出一个“继承链”不等于多态。",
+            "pain": "通过基类指针使用对象，却没人负责销毁它。",
+            "model": "Shape 声明虚函数 area 与纯虚函数 say；officer 声明纯虚的 salary、work；AnimalAncestor→Ape→Human 是单线继承。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "问：基类有虚析构吗？重写的函数加了 override 吗？这里真的发生动态分派了吗？",
+            "landing": "能用 unique_ptr<Base> 与 override 重写。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "三个“多态”例子：形状面积、官员薪水、人类“进化”。前两个确实用了虚函数，但都忘了基类的虚析构函数，`new` 出来的对象一个也没 `delete`；第三个名为多态，其实一个虚函数也没有——只是一条继承链。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_polymorphism",
+                "run": "cli",
+                "summary": "Shape 基类（虚 area、纯虚 say）与两个派生类，通过基类指针调用。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/polymorphism.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "practice/polymorphism.cpp",
+                    "line": 52,
+                    "kind": "ownership",
+                    "text": "`r`、`t` 是 `new` 出来的裸指针，从未 `delete`；而且 `Shape` 虽然有虚函数，**没有虚析构函数**，哪怕补上 `delete r;` 通过基类指针删除派生类对象也是未定义行为。应声明 `virtual ~Shape() = default;`，并用 `std::unique_ptr<Shape>`。"
+                  },
+                  {
+                    "file": "practice/polymorphism.cpp",
+                    "line": 15,
+                    "kind": "design",
+                    "text": "派生类重写 `area()` 与 `say()` 时没有写 `override`：函数名或参数写错一个字母就变成新函数、基类版本被静默沿用，编译器不报错。C++11 起应一律加 `override`。"
+                  },
+                  {
+                    "file": "practice/polymorphism.cpp",
+                    "line": 40,
+                    "kind": "design",
+                    "text": "三角形面积用整数运算 `width * height / 2`，奇数乘积会向下取整（`width=5, height=5` 得 12）；基类成员 `int width, height` 也限制了形状只能用整数边长。"
+                  }
+                ],
+                "sources": [
+                  "practice/polymorphism.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_polymorphism",
+                "run": "cli",
+                "summary": "officer 抽象基类与 teacher、doctor 两个子类（多文件）。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "CPlusPlus/16-polymorphism/114-salary",
+                  "first_commit": "2023-02-06",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "linux/16-polymorphism/114-salary/main.cpp",
+                    "line": 12,
+                    "kind": "ownership",
+                    "text": "与上面同样的问题：`new` 出来的 `teacher`、`doctor` 没有释放，基类 `officer` 也没有虚析构函数。"
+                  },
+                  {
+                    "file": "linux/16-polymorphism/114-salary/teacher.cpp",
+                    "line": 18,
+                    "kind": "design",
+                    "text": "`salary()` 的返回类型是 `void`，薪水只是被**打印**出来：调用者拿不到数字，没法求和或比较。多态的价值在于对同一接口得到不同的**结果**，这里应当 `virtual double salary() const = 0;`。"
+                  },
+                  {
+                    "file": "linux/16-polymorphism/114-salary/officer.h",
+                    "line": 9,
+                    "kind": "design",
+                    "text": "接口里纯虚函数没有 `const` 限定（它们不应修改对象），派生类也没写 `override`；基类的构造函数 `officer();` 只有声明，且基类本身没有虚析构。"
+                  },
+                  {
+                    "file": "linux/16-polymorphism/114-salary/teacher.cpp",
+                    "line": 7,
+                    "kind": "naming",
+                    "text": "输出字符串里 `teacher` 拼成了 `tearcher`；类名全部小写（`officer`、`teacher`），与 C++ 习惯的首字母大写不一致。"
+                  }
+                ],
+                "sources": [
+                  "linux/16-polymorphism/114-salary/main.cpp",
+                  "linux/16-polymorphism/114-salary/officer.cpp",
+                  "linux/16-polymorphism/114-salary/teacher.cpp",
+                  "linux/16-polymorphism/114-salary/doctor.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_polymorphism",
+                "run": "cli",
+                "summary": "AnimalAncestor→Ape→Human 三层继承，没有虚函数。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "CPlusPlus/16-polymorphism/113-human-evolved",
+                  "first_commit": "2023-02-06",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "linux/16-polymorphism/113-human-evolved/animalancestor.h",
+                    "line": 9,
+                    "kind": "design",
+                    "text": "⚠ 目录叫多态（16-polymorphism），但整条 AnimalAncestor→Ape→Human 链上没有一个 `virtual` 函数：`respire()`、`move()`、`use_tools()` 都是普通成员函数，所有调用都在编译期就确定了。这只是继承（代码复用），不是多态。"
+                  },
+                  {
+                    "file": "linux/16-polymorphism/113-human-evolved/human.h",
+                    "line": 6,
+                    "kind": "design",
+                    "text": "单线继承把“人类是猿，猿是动物祖先”写成类层次，建模上更像“进化树”而不是 is-a：`Human` 能当 `Ape` 用吗？当作业演示继承语法没问题，但它不能代表多态。"
+                  },
+                  {
+                    "file": "linux/16-polymorphism/113-human-evolved/human.cpp",
+                    "line": 7,
+                    "kind": "testing",
+                    "text": "每个构造函数打印一句话是唯一的“验证”，构造顺序（祖先→猿→人）从输出里能看到，但没有对它做任何断言。"
+                  }
+                ],
+                "sources": [
+                  "linux/16-polymorphism/113-human-evolved/main.cpp",
+                  "linux/16-polymorphism/113-human-evolved/animalancestor.cpp",
+                  "linux/16-polymorphism/113-human-evolved/ape.cpp",
+                  "linux/16-polymorphism/113-human-evolved/human.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "多态与虚函数见 C++ 教程主线的类与继承章节；用 unique_ptr 持有多态对象见资源管理部分。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cpp.arc.stdlib_io",
+          "title": "标准库与输入输出：remove 惯用法、字符串字节数、>> 读文件",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[标准库] remove 之后没有 erase，“字”数其实是字节数，用 >> 读一行姓名只读到第一个词。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出标准库示例里的三个经典误解：remove 不删元素、string::size 数字节、>> 按空白切词。",
+            "pain": "这些例子“能跑出结果”，结果本身却和作者以为的不一样。",
+            "model": "vector+remove 演示删除惯用法；模板 Stack 封装 vector；string 拼接；fstream 读写文件；ctime 取时间。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个输出都问：它真的是我以为的那个量吗？",
+            "landing": "能写出 erase-remove 惯用法、按字符数计中文、按行读文件。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "六个标准库小例子。它们大多演示正确，却也有三个值得停下来看的“输出和说法对不上”：`remove` 之后容器里仍留着旧元素、所谓的“字数”其实是字节数、用 `>>` 读姓名只拿到第一个词。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_stdlib_io",
+                "run": "cli",
+                "summary": "用 std::remove 从 vector 里“删除”10 并观察结果。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/std_vector.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/21-sequential_container/vector"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/std_vector.cpp",
+                    "line": 31,
+                    "kind": "design",
+                    "text": "示例正确地展示了 `std::remove` 的真相：它只是把保留的元素前移，返回新的逻辑末尾，**不会缩小容器**。本机实测“After remove”一行是 `20 15 12 7 9 7 9`——尾部还留着两个旧值。但示例没有做完那一步：想真正删除要写 `Numbers.erase(ret, Numbers.end())`（erase-remove 惯用法）；C++20 起一行 `std::erase(Numbers, 10);`。"
+                  },
+                  {
+                    "file": "practice/std_vector.cpp",
+                    "line": 20,
+                    "kind": "style",
+                    "text": "迭代器类型写全名、循环手写 `it != end(); it++`：现在可以写 `for (int n : Numbers)`；`it++` 对迭代器应优先用 `++it`。`<functional>` 被包含但没有使用。"
+                  },
+                  {
+                    "file": "practice/std_vector.cpp",
+                    "line": 12,
+                    "kind": "style",
+                    "text": "七次 `push_back` 逐个添加：用初始化列表 `vector<int> Numbers{10, 20, 10, 15, 12, 7, 9};` 更直接。"
+                  }
+                ],
+                "sources": [
+                  "practice/std_vector.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_stdlib_io",
+                "run": "cli",
+                "summary": "用 vector 实现的模板栈 Stack<T>，演示异常。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/stack.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/21-sequential_container/stack"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/stack.cpp",
+                    "line": 17,
+                    "kind": "design",
+                    "text": "`top()` 按**值**返回栈顶元素，对 `string` 这类大对象多拷贝一份，也不能通过它修改栈顶；标准库 `std::stack::top()` 返回引用。`pop()` 返回 `void`、`top()` 单独取值，这个分离是对的（保证异常安全），写得好。"
+                  },
+                  {
+                    "file": "practice/stack.cpp",
+                    "line": 34,
+                    "kind": "design",
+                    "text": "空栈 `pop`/`top` 抛出 `out_of_range`：错误路径有处理，`main` 里也用 `try/catch` 演示了（第二次 `stringStack.pop()` 就是故意触发）。这部分比同期的 C 版栈（不检查返回值）规范得多。"
+                  },
+                  {
+                    "file": "practice/stack.cpp",
+                    "line": 68,
+                    "kind": "style",
+                    "text": "`catch` 之后 `return -1`，而正常路径没有 `return`（`main` 隐含 0）；进程退出码 -1 在不同系统上显示为 255，建议用 `EXIT_FAILURE`。`Stack` 的定义与 `main` 放在同一个 .cpp，模板应当放进头文件。"
+                  }
+                ],
+                "sources": [
+                  "practice/stack.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_stdlib_io",
+                "run": "cli",
+                "summary": "C 字符数组、string 拷贝与拼接、size()。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/string.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/11-basic/string"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/string.cpp",
+                    "line": 30,
+                    "kind": "design",
+                    "text": "⚠ 输出“总共18+24个字”，但 `std::string::size()` 数的是**字节**：在 UTF-8 源文件里每个汉字占 3 个字节，“我们是中国人”六个字被报成 18。统计字数要先解码（`std::u32string`、ICU，或按 UTF-8 首字节计数）。"
+                  },
+                  {
+                    "file": "practice/string.cpp",
+                    "line": 8,
+                    "kind": "portability",
+                    "text": "三行被注释掉的 `setlocale`、一段被注释掉的 `wchar_t` 宽字符实验：作者在 Windows/Linux 的中文输出问题上试过几种办法。这些环境相关的写法没有被整理成一句结论（源文件用 UTF-8，终端要设成 UTF-8），读者无从得知哪种有效。"
+                  },
+                  {
+                    "file": "practice/string.cpp",
+                    "line": 11,
+                    "kind": "style",
+                    "text": "C 风格字符数组与 `std::string` 并存在一个例子里；数组长度 `6` 要自己数、末尾 `'\\0'` 要自己写，写错就越界。C++ 里直接 `std::string greeting = \"Hello\";`。"
+                  }
+                ],
+                "sources": [
+                  "practice/string.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_stdlib_io",
+                "run": "cli",
+                "summary": "写入两行再读回；姓名用 getline，年龄用 >>。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/file.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/24-io/file_operation"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/file.cpp",
+                    "line": 36,
+                    "kind": "design",
+                    "text": "⚠ 写入时用 `getline` 读姓名、`>>` 读年龄，读回时却两次都用 `>>`：`>>` 按空白切词。本机实测输入姓名 `Zara Ali`、年龄 `20`，读回打印的是 `Zara` 和 `Ali`——第二行读到的是姓氏，不是年龄。读一行应当用 `getline(infile, line)`。"
+                  },
+                  {
+                    "file": "practice/file.cpp",
+                    "line": 8,
+                    "kind": "ownership",
+                    "text": "`char data[100]` 配 `cin >> data` 是经典的缓冲区溢出写法：C++20 之前 `operator>>` 不限制长度（C++20 起对数组形参有了长度限制）。应使用 `std::string` 与 `getline`。"
+                  },
+                  {
+                    "file": "practice/file.cpp",
+                    "line": 12,
+                    "kind": "design",
+                    "text": "文件名写死、没有检查 `open` 是否成功（`outfile.is_open()`），写进当前工作目录——在别的目录运行就会在别处产生文件（本仓库根目录里就出现过一个 `afile.dat`）。显式 `close()` 可以省，用 RAII 的作用域结束时自动关闭。"
+                  }
+                ],
+                "sources": [
+                  "practice/file.cpp"
+                ],
+                "std": "c++17",
+                "stdin": "Zara Ali\n20\n"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_stdlib_io",
+                "run": "cli",
+                "summary": "cout、cerr、clog 三个输出流。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/io.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "practice/io.cpp",
+                    "line": 18,
+                    "kind": "design",
+                    "text": "⚠ 准备了 `err` 变量（“发生了错误....”）却没有输出它，`cerr` 打印的是 `str`（“Hello C++”）：错误信息变量与实际输出对不上。`clog` 那一行用对了 `log`。"
+                  },
+                  {
+                    "file": "practice/io.cpp",
+                    "line": 17,
+                    "kind": "style",
+                    "text": "用到 `std::string` 却没有 `#include <string>`，依赖 `<iostream>` 间接带入；输入输出段被整段注释掉，主程序实际只演示了 `cout`/`cerr`/`clog` 三个流。"
+                  },
+                  {
+                    "file": "practice/io.cpp",
+                    "line": 20,
+                    "kind": "design",
+                    "text": "`cerr` 不缓冲、`clog` 缓冲，两者默认都输出到标准错误；示例没有把它们重定向开来证明区别（`2>log.txt`），读者看到的只是三行文字。"
+                  }
+                ],
+                "sources": [
+                  "practice/io.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_stdlib_io",
+                "run": "cli",
+                "summary": "time、ctime、gmtime、localtime 的基本用法。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/time.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/11-basic/time"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/time.cpp",
+                    "line": 12,
+                    "kind": "ownership",
+                    "text": "`ctime`、`asctime`、`gmtime`、`localtime` 都返回指向**静态内部缓冲区**的指针：下一次调用就会被覆盖，多线程下互相踩踏。这里先后用了几个，每次打印完才调用下一个，所以碰巧没出错；线程安全的版本是 `localtime_r`/`gmtime_r`（Windows 上是 `localtime_s`）。"
+                  },
+                  {
+                    "file": "practice/time.cpp",
+                    "line": 9,
+                    "kind": "design",
+                    "text": "C 风格的时间接口：`time(0)`、`tm` 结构里的年份要加 1900、月份要加 1。C++11 起 `<chrono>`（C++20 的日历与 `std::format`）能替代这些手工换算。"
+                  },
+                  {
+                    "file": "practice/time.cpp",
+                    "line": 14,
+                    "kind": "style",
+                    "text": "`ctime` 的结果自带换行，再加 `endl` 就多出一个空行；打印时间戳的格式应当自己控制（`put_time`）。"
+                  }
+                ],
+                "sources": [
+                  "practice/time.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "标准库容器与算法见 C++ 教程主线的标准库章节；文件输入输出与字符串见相应章节。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cpp.arc.modern",
+          "title": "现代 C++ 小例子：lambda、shared_ptr、nullptr、类型别名",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[现代 C++] lambda 例子把 lambda 对象直接打印出来；shared_ptr 例子还在用 new。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出把闭包对象送进 cout 的含义，并说出 make_shared 相对 new 的好处。",
+            "pain": "“用上了新特性”并不等于用对了。",
+            "model": "lambda 作为 for_each 与 sort 的谓词、std::function 存放不同的可调用对象；shared_ptr 计引用；nullptr 解决重载二义性；using 别名与 decltype。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "问：不同的 lambda 类型相同吗？智能指针是怎么创建的？",
+            "landing": "能写出 vector<function<...>> 的正确用法。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "几个 C++11 之后的新特性小例子。看点不在特性本身，而在读者容易忽略的细节：每个 lambda 都是一个独立的类型（所以被注释掉的 `fps.push_back(fp2)` 编译不过）、`cout << 闭包` 打印出一个没意义的 1。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_modern",
+                "run": "cli",
+                "summary": "lambda 的多种写法、捕获与 std::function。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "CPlusPlus/26-lamada",
+                  "first_commit": "2023-02-06",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "linux/26-lamada/main.cpp",
+                    "line": 26,
+                    "kind": "design",
+                    "text": "`cout << printHello` 把一个**闭包对象**送进输出流：无捕获的 lambda 会隐式转成函数指针、再转成 `bool`，所以打印的是 `1`；`&printHello` 才是闭包对象的地址。这行不是在“调用”lambda，调用要写 `printHello()`（下一行才是）。"
+                  },
+                  {
+                    "file": "linux/26-lamada/main.cpp",
+                    "line": 75,
+                    "kind": "design",
+                    "text": "⚠ 被注释掉的 `fps.push_back(fp2)`、`fp3`…正是这个例子最有教学价值的地方：**每个 lambda 表达式都有自己独一无二的类型**，哪怕签名完全一样，所以 `vector<decltype(fp)>` 只能放 `fp` 自己，放 `fp2` 就编译失败。要把不同的 lambda 放进同一个容器，必须像上面那样用 `std::function<double(double)>` 擦除类型。示例里这个现象被注释“遮住”了，没有写明原因。"
+                  },
+                  {
+                    "file": "linux/26-lamada/main.cpp",
+                    "line": 8,
+                    "kind": "style",
+                    "text": "`eval` 定义了却从未调用；`std::function` 按值传递会拷贝可调用对象，只读使用时可以用模板参数或 `const std::function&`。`for(int i=0;i<fv.size();i++)` 的有符号与无符号比较也有告警。"
+                  },
+                  {
+                    "file": "linux/26-lamada/main.cpp",
+                    "line": 35,
+                    "kind": "design",
+                    "text": "按引用捕获 `total` 做累加是正确的用法（`for_each` 里改外部变量）；对照下一步的 `std::accumulate` 更能说明“算法加 lambda”的好处，示例里没有拿它们比较。"
+                  }
+                ],
+                "sources": [
+                  "linux/26-lamada/main.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_modern",
+                "run": "cli",
+                "summary": "shared_ptr 的 reset、拷贝与引用计数。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "CPlusPlus/27-share_ptr",
+                  "first_commit": "2023-02-06",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "linux/27-share_ptr/main.cpp",
+                    "line": 26,
+                    "kind": "ownership",
+                    "text": "用 `shared_ptr<T>(new T)` 构造需要两次分配（对象和控制块），且在参数求值顺序中可能泄漏；`std::make_shared<Person>(1)`（被注释掉的那行 p2）一次分配、更安全——注释里写了，却没有用作主路径。"
+                  },
+                  {
+                    "file": "linux/27-share_ptr/main.cpp",
+                    "line": 30,
+                    "kind": "design",
+                    "text": "注释写得很准：`reset(new …)` 先构造新对象，再让旧对象的引用计数归零并析构——运行输出里 `Cons3` 出现在 `Des1` 之前，可以验证这条说明。注释既解释了行为又留下可核对的现象，这是一个好习惯。"
+                  },
+                  {
+                    "file": "linux/27-share_ptr/main.cpp",
+                    "line": 9,
+                    "kind": "style",
+                    "text": "构造函数在函数体里给 `value` 赋值，应当用初始化列表；`cout << p3.get()` 打印的是裸指针值，每次运行不同，不适合当作“验证”。"
+                  }
+                ],
+                "sources": [
+                  "linux/27-share_ptr/main.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_modern",
+                "run": "cli",
+                "summary": "nullptr 与整数 0 的重载选择。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/nullptr.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/11-basic/nullptr"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/nullptr.cpp",
+                    "line": 18,
+                    "kind": "design",
+                    "text": "演示 `nullptr` 解决 `func(int*)` 与 `func(int)` 在传 `0`/`NULL` 时的二义性：`func(nullptr)` 选指针版，`func(0)` 选整数版，实测输出与预期一致——这是一个写得好的、小而完整的例子。"
+                  },
+                  {
+                    "file": "practice/nullptr.cpp",
+                    "line": 16,
+                    "kind": "style",
+                    "text": "`argc`、`argv` 没有使用（`-Wunused-parameter`），`<string>` 也没有用到；用不到的参数可以不写。"
+                  }
+                ],
+                "sources": [
+                  "practice/nullptr.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_modern",
+                "run": "cli",
+                "summary": "using 别名、decltype、constexpr 数组大小。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "CPlusPlus/11-basic/using",
+                  "first_commit": "2023-02-06",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "linux/11-basic/using/main.cpp",
+                    "line": 18,
+                    "kind": "design",
+                    "text": "演示 `using` 类型别名与 `decltype`：`using` 比 `typedef` 更易读（尤其函数指针与数组别名）。写得对，但 `pfunc2`、`parr2`、`tparr2`、`dnum2` 声明了却没有使用，`using func2` 又被注释掉了——别名只“声明”不“使用”，读者看不到它省掉了什么。"
+                  },
+                  {
+                    "file": "linux/11-basic/using/main.cpp",
+                    "line": 30,
+                    "kind": "design",
+                    "text": "注释里写得对：`decltype(cj)` 是引用类型，所以 `decltype(cj) z;` 不初始化会报错。这个小细节（`decltype` 保留引用与顶层 const）是整个例子里最值得记住的。"
+                  },
+                  {
+                    "file": "linux/11-basic/using/main.cpp",
+                    "line": 38,
+                    "kind": "style",
+                    "text": "同一个函数里两次输出 Hello World（一次 `cout`、一次 `std::cout`），是向导模板残留；`arr2 b{5, 7};` 把一个 10 元素数组只初始化了前两个，其余补零。"
+                  }
+                ],
+                "sources": [
+                  "linux/11-basic/using/main.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "lambda、智能指针、nullptr 等见 C++ 教程主线的现代 C++ 章节。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cpp.arc.threads",
+          "title": "线程：pthread 的 100 个线程与 std::thread",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[并发] pthread 版在线程里调 rand()、泄漏每个线程的参数；std::thread 版 detach 之后主线程可能先退出。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出线程参数的所有权、线程里使用 rand() 的问题、detach 与 join 的取舍。",
+            "pain": "并发示例的输出靠运气稳定。",
+            "model": "pthread 版创建 100 个线程各睡随机秒数再打印；std::thread 版演示 id、join、detach 与线程数组。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "问：谁释放线程的参数？程序结束前所有线程都完成了吗？",
+            "landing": "能用 std::jthread 与 std::stop_token 重写。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "同样是“创建线程”：一份用 POSIX 的 `pthread`，创建 100 个线程；一份用 C++11 的 `std::thread`，演示 id、join 与 detach。前者把每个线程的参数都泄漏了，后者的 detach 线程是否打印取决于主线程什么时候退出。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_threads",
+                "run": "cli",
+                "summary": "创建 100 个 pthread 线程，各睡随机时间后打印自己的编号。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/thread.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/32-thread/pthread_create",
+                    "Linux/CPlusPlus/32-thread/pthread_args"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/thread.cpp",
+                    "line": 25,
+                    "kind": "ownership",
+                    "text": "每个线程的参数 `new int` 之后，线程函数里只读取 `*(int *)id`，**从来没有 `delete`**：100 个线程泄漏 100 个 `int`。线程函数应当在用完后 `delete`（或者传整数值本身，用 `(void*)(intptr_t)i`），或者干脆用 `std::thread` 的按值参数传递。"
+                  },
+                  {
+                    "file": "practice/thread.cpp",
+                    "line": 14,
+                    "kind": "design",
+                    "text": "在线程里调用 `rand()`：它不保证线程安全（共享一个全局状态），而且线程之间没有 `srand`，每次运行得到的睡眠时间序列相同；睡眠秒数最长 29 秒，整个程序要跑近半分钟。要用线程局部的 `<random>` 引擎，或在主线程里先算好再传入。"
+                  },
+                  {
+                    "file": "practice/thread.cpp",
+                    "line": 35,
+                    "kind": "design",
+                    "text": "`main` 末尾的 `pthread_exit(NULL)` 让主线程结束但进程等待所有线程退出——是想“等线程”的取巧写法，没有保存 `pthread_t` 去 `pthread_join`（虽然声明了 `tids` 数组）。输出由 100 个线程各自用 `cout` 打印，行内容可能互相交错。"
+                  },
+                  {
+                    "file": "practice/thread.cpp",
+                    "line": 3,
+                    "kind": "portability",
+                    "text": "`pthread` 与 `<unistd.h>` 的 `sleep` 是 POSIX 的：本机 MinGW 能编译（有 winpthreads），原生 MSVC 不行；`std::thread` 与 `std::this_thread::sleep_for` 是标准的，应优先使用。"
+                  }
+                ],
+                "sources": [
+                  "practice/thread.cpp"
+                ],
+                "std": "c++17",
+                "run_note": "线程最长睡 29 秒，应用内 10 秒超时会截断；想看完整输出请在终端里运行"
+              },
+              {
+                "type": "archive",
+                "case": "arc_cpp_threads",
+                "run": "cli",
+                "summary": "std::thread 的 id、join、detach 与线程数组。",
+                "origin": {
+                  "repo": "Practice",
+                  "path": "CPP/thread2.cpp",
+                  "first_commit": "2020-02-22",
+                  "duplicates": [
+                    "Linux/CPlusPlus/32-thread/thread"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "practice/thread2.cpp",
+                    "line": 27,
+                    "kind": "design",
+                    "text": "⚠ `std::thread a(hello); a.detach();` 之后没有任何同步：`main` 可能在线程打印之前就返回，进程退出时被分离的线程被直接杀掉，`hello` 的输出是否出现取决于时间。detach 只适用于不需要结果、也不依赖已销毁对象的后台任务；这里应该 `join`，或者用 `std::jthread`。"
+                  },
+                  {
+                    "file": "practice/thread2.cpp",
+                    "line": 23,
+                    "kind": "design",
+                    "text": "`hardware_concurrency()` 是静态函数，通过对象 `t.` 调用也能编译，但读者会误以为它是这个线程的属性；写成 `std::thread::hardware_concurrency()`。它只是提示值，可能返回 0。"
+                  },
+                  {
+                    "file": "practice/thread2.cpp",
+                    "line": 32,
+                    "kind": "design",
+                    "text": "线程对象放进数组、移动赋值，最后 `join` 逐个等待——这是正确的“启动一组线程并等待全部结束”的写法，写得好。多个线程用 `std::cout` 打印同一行内可能交错，要保序应加互斥或每个线程自己格式化好整行再输出。"
+                  }
+                ],
+                "sources": [
+                  "practice/thread2.cpp"
+                ],
+                "std": "c++17",
+                "run_note": "约 5 秒"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "线程与并发见 C++ 教程主线的并发章节，以及 Linux 程序设计应用的进程与线程部分。"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
