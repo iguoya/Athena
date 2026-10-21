@@ -5,8 +5,10 @@ import "@fontsource/noto-sans-sc";
 import "./styles.css";
 import { App } from "./App";
 
+import { AppUpdate } from "@athena/app-update";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />
+    <AppUpdate />
   </StrictMode>,
 );

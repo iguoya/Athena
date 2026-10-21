@@ -1,3 +1,4 @@
+import { AppUpdate } from "@athena/app-update";
 import '@fontsource-variable/sora'
 import '@fontsource-variable/fraunces'
 import '@fontsource/zcool-kuaile'
@@ -14,5 +15,6 @@ applySkin(currentSkin())
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
+    <AppUpdate />
   </React.StrictMode>,
 )

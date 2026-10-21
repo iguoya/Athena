@@ -1,3 +1,4 @@
+import { AppUpdate } from "@athena/app-update";
 import React, { Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
@@ -28,6 +29,7 @@ createRoot(document.getElementById("root")!).render(
       }
     >
       <App />
+      <AppUpdate />
     </Suspense>
   </React.StrictMode>,
 );

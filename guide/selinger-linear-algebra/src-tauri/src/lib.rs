@@ -159,6 +159,8 @@ pub fn run() {
     let state = AppState { content_root: content_root(), store_path: store_path() };
     let _ = open_store(&state.store_path);
     tauri::Builder::default()
+    .plugin(tauri_plugin_updater::Builder::new().build())
+    .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_opener::init())
         .manage(state)
         .invoke_handler(tauri::generate_handler![get_curriculum, get_section, get_checks, get_figure, record_attempt, get_attempts])
