@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 320" font-family="Noto Sans SC, sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#24292f"/>
+    </marker>
+    <marker id="arrow-u" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#1565c0"/>
+    </marker>
+    <marker id="arrow-v" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#c62828"/>
+    </marker>
+  </defs>
+  <rect width="460" height="320" fill="#ffffff"/>
+  <!-- 网格：原点 (70,270)，一格 40px -->
+  <g stroke="#e3e8ee" stroke-width="1">
+    <path d="M70 30 V270 M110 30 V270 M150 30 V270 M190 30 V270 M230 30 V270 M270 30 V270 M310 30 V270 M350 30 V270 M390 30 V270 M430 30 V270"/>
+    <path d="M30 270 H440 M30 230 H440 M30 190 H440 M30 150 H440 M30 110 H440 M30 70 H440 M30 30 H440"/>
+  </g>
+  <!-- 坐标轴 -->
+  <g stroke="#9aa4af" stroke-width="1.5">
+    <path d="M40 270 H445" marker-end="url(#arrow)"/>
+    <path d="M70 300 V35" marker-end="url(#arrow)"/>
+  </g>
+  <text x="448" y="274" fill="#6a737d">x</text>
+  <text x="64" y="26" fill="#6a737d">y</text>
+  <text x="58" y="288" fill="#6a737d" font-size="12">O</text>
+  <!-- 平行四边形：u=(2,1)->(150,230)；v=(1,3)->(110,150)；u+v=(3,4)->(190,110) -->
+  <path d="M70 270 L150 230 L190 110 L110 150 Z" fill="#e3edf8" fill-opacity="0.75" stroke="#1565c0" stroke-width="1.5"/>
+  <!-- 向量 -->
+  <line x1="70" y1="270" x2="150" y2="230" stroke="#1565c0" stroke-width="2.5" marker-end="url(#arrow-u)"/>
+  <line x1="70" y1="270" x2="110" y2="150" stroke="#c62828" stroke-width="2.5" marker-end="url(#arrow-v)"/>
+  <!-- 标签 -->
+  <text x="152" y="238" fill="#1565c0" font-weight="700">(2,1)</text>
+  <text x="86" y="142" fill="#c62828" font-weight="700">(1,3)</text>
+  <text x="196" y="104" fill="#24292f">(3,4)</text>
+  <!-- 面积注记 -->
+  <text x="252" y="180" font-size="15">S = |2×3 − 1×1| = 5</text>
+  <text x="252" y="206" font-size="14" fill="#24292f">行列式 = 5 &gt; 0：(2,1) 在前、</text>
+  <text x="252" y="228" font-size="14" fill="#24292f">(1,3) 在后，呈逆时针方向</text>
+</svg>

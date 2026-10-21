@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 340" font-family="Noto Sans SC, sans-serif" font-size="14">
+  <defs>
+    <marker id="ax" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#9aa4af"/>
+    </marker>
+  </defs>
+  <rect width="460" height="340" fill="#ffffff"/>
+  <!-- 坐标轴：O 在 (110,250)，一格 40px；z 轴斜向上表透视 -->
+  <g stroke="#9aa4af" stroke-width="1.5">
+    <path d="M60 250 H430" marker-end="url(#ax)"/>
+    <path d="M110 300 V45" marker-end="url(#ax)"/>
+    <path d="M110 250 L230 170" marker-end="url(#ax)"/>
+  </g>
+  <text x="436" y="254" fill="#6a737d">x</text>
+  <text x="104" y="38" fill="#6a737d">z</text>
+  <text x="236" y="164" fill="#6a737d">y</text>
+  <text x="96" y="268" fill="#6a737d" font-size="12">O</text>
+  <!-- 单位标记 -->
+  <g fill="#6a737d" font-size="11">
+    <text x="146" y="266">1</text>
+    <text x="186" y="266">2</text>
+    <text x="118" y="215">1</text>
+    <text x="118" y="175">2</text>
+    <text x="118" y="135">3</text>
+    <text x="156" y="188">1</text>
+  </g>
+  <!-- 点 M(2,1,3)：x=2 -> (190,250)；y=1 -> +(-,60)= (230,210)? 透视：y 每单位 (-30,-20) -->
+  <!-- 底面投影 (2,1,0) = (190,250)+( -30,-20 )=(160,170)? 从 M 竖直落底面 -->
+  <g stroke="#1565c0" stroke-width="1.5" stroke-dasharray="5 4" fill="none">
+    <path d="M190 250 L190 130"/>
+    <path d="M160 190 L190 130 L230 170"/>
+  </g>
+  <circle cx="190" cy="130" r="5" fill="#1565c0"/>
+  <text x="198" y="122" fill="#1565c0" font-weight="700">M(2, 1, 3)</text>
+  <circle cx="190" cy="250" r="3.5" fill="#6a737d"/>
+  <text x="176" y="272" fill="#6a737d" font-size="12">(2, 1, 0)</text>
+  <!-- 长方体对角线注记 -->
+  <g stroke="#c62828" stroke-width="2">
+    <path d="M110 250 L190 130" fill="none"/>
+  </g>
+  <text x="256" y="256" font-size="14">|OM| = √(2² + 1² + 3²) = √14</text>
+  <text x="256" y="282" font-size="13" fill="#6a737d">三个坐标定一个点；</text>
+  <text x="256" y="302" font-size="13" fill="#6a737d">到原点的距离是坐标平方和开方</text>
+</svg>

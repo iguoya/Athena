@@ -1,0 +1,374 @@
+@import "@fontsource/noto-sans-sc/400.css";
+@import "@fontsource/noto-sans-sc/500.css";
+@import "@fontsource/noto-sans-sc/700.css";
+
+:root {
+  --accent: #1565c0;
+  --accent-soft: #e3edf8;
+  --line: #d8dee6;
+  --text: #24292f;
+  --muted: #6a737d;
+  --ok: #1a7f37;
+  --bad: #c62828;
+  --warn-bg: #fff8e1;
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: "Noto Sans SC", system-ui, sans-serif;
+  color: var(--text);
+  background: #fbfcfd;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  border-right: 1px solid var(--line);
+  padding: 18px 14px;
+  background: #fff;
+  overflow-y: auto;
+}
+.course-title {
+  font-size: 19px;
+  margin: 0;
+}
+.course-code {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 4px 0 10px;
+}
+.course-info {
+  font-size: 12.5px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+.course-note {
+  margin: 4px 0 0;
+}
+.course-progress {
+  font-weight: 600;
+  color: var(--text);
+  margin: 6px 0 0;
+}
+.chapter-title {
+  font-weight: 700;
+  font-size: 13px;
+  margin: 12px 0 4px;
+  color: var(--accent);
+}
+.section-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border: 0;
+  background: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  gap: 8px;
+}
+.section-link:hover:not(:disabled) {
+  background: var(--accent-soft);
+}
+.section-link.active {
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+.section-link.missing {
+  color: var(--muted);
+  cursor: default;
+}
+.dots {
+  display: inline-flex;
+  gap: 3px;
+  flex: none;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line);
+  display: inline-block;
+}
+.dot.m1,
+.dot.m2 {
+  background: #f0b429;
+}
+.dot.m3,
+.dot.m4 {
+  background: #7cb342;
+}
+.dot.m5 {
+  background: var(--ok);
+}
+
+.main {
+  padding: 28px 36px 80px;
+}
+.section,
+.intro {
+  max-width: 860px;
+}
+.crumb {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
+}
+.section h2 {
+  margin: 4px 0 8px;
+}
+.knowledge-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+}
+.knowledge-list .k {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  font-size: 13.5px;
+  background: #fff;
+  line-height: 1.7;
+}
+.k-meta,
+.k-req {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.prose {
+  font-size: 15px;
+  line-height: 1.9;
+}
+.math-display {
+  display: block;
+  overflow-x: auto;
+  padding: 4px 0;
+}
+
+.example {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  background: #fff;
+}
+.example summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.example-problem {
+  margin-top: 8px;
+  line-height: 1.9;
+}
+.hint {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+.steps {
+  line-height: 2;
+}
+.steps .why {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.pitfall {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 14px 0;
+}
+.pitfall > div {
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.pitfall .wrong {
+  background: #fdecea;
+  border: 1px solid #f5c6c0;
+}
+.pitfall .right {
+  background: #eaf5ec;
+  border: 1px solid #c4e0ca;
+}
+.pitfall .tag {
+  font-weight: 700;
+  font-size: 12.5px;
+  margin-bottom: 4px;
+}
+.why-wrong {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.exercise {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  background: #fff;
+}
+.exercise.retrieval {
+  border-left-color: #f0b429;
+  background: var(--warn-bg);
+}
+.exercise .tag {
+  font-weight: 700;
+  font-size: 12.5px;
+  color: #8a6d1a;
+  margin-bottom: 6px;
+}
+.stem {
+  line-height: 1.9;
+  margin-bottom: 10px;
+}
+.options {
+  display: grid;
+  gap: 8px;
+}
+.option {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 12px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+.option:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.option .letter {
+  font-weight: 700;
+  color: var(--accent);
+}
+.option.picked {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.option.ok {
+  border-color: var(--ok);
+  background: #eaf5ec;
+}
+.option.bad {
+  border-color: var(--bad);
+  background: #fdecea;
+}
+.numeric {
+  display: flex;
+  gap: 8px;
+}
+.numeric input {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 15px;
+}
+.numeric button,
+.retry {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.retry {
+  background: none;
+  color: var(--accent);
+  margin-top: 8px;
+}
+.verdict {
+  margin-top: 10px;
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+  line-height: 1.9;
+}
+.verdict.ok > p {
+  color: var(--ok);
+  font-weight: 600;
+}
+.verdict.bad > p {
+  color: var(--bad);
+  font-weight: 600;
+}
+.solution {
+  font-size: 14.5px;
+}
+
+.source-badge {
+  display: inline-flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.source {
+  font-size: 11.5px;
+  border-radius: 4px;
+  padding: 1px 7px;
+}
+.rel-verbatim {
+  background: #eaf5ec;
+  color: var(--ok);
+}
+.rel-adapted {
+  background: var(--warn-bg);
+  color: #8a6d1a;
+}
+.rel-authored {
+  background: #eceff1;
+  color: var(--muted);
+}
+
+.figure {
+  margin: 16px 0;
+}
+.figure-svg svg {
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.figure-missing {
+  color: var(--bad);
+  font-size: 13px;
+}
+figcaption {
+  color: var(--muted);
+  font-size: 12.5px;
+  margin-top: 4px;
+}
+
+.intro h2 {
+  margin-bottom: 10px;
+}
+.katex-error {
+  color: var(--bad);
+}
