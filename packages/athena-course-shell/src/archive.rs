@@ -237,6 +237,57 @@ pub fn run_case(
     result
 }
 
+// ---- 给应用自己的 Tauri 命令用的高层入口（共用壳 run() 之外的应用，如 c-plus-plus） ----
+
+/// 案例 id / 源文件路径里的一段：只含字母、数字和 `._-`，不是 `.` / `..`。
+fn plain_segment(s: &str) -> bool {
+    !s.is_empty() && s != "." && s != ".." && s.chars().all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '-' || c == '.')
+}
+
+/// 归档案例目录：名字必须以 `arc_` 开头，与课程实验的案例分开命名空间。
+pub fn case_dir(content_root: &Path, case_id: &str) -> Result<PathBuf, String> {
+    if !plain_segment(case_id) || !case_id.starts_with("arc_") {
+        return Err(format!("非法归档案例：{case_id}"));
+    }
+    Ok(content_root.join("content/cases").join(case_id))
+}
+
+/// 读出归档案例的全部文本文件。
+pub fn load_files(content_root: &Path, case_id: &str) -> Result<Vec<CaseFile>, String> {
+    let dir = case_dir(content_root, case_id)?;
+    if !dir.is_dir() {
+        return Err(format!("找不到归档案例 {case_id}"));
+    }
+    Ok(list_case_files(&dir))
+}
+
+/// 校验后编译运行归档案例；`binary` 只用来给临时目录命名。
+pub fn run(
+    content_root: &Path,
+    binary: &str,
+    case_id: &str,
+    sources: &[String],
+    std: Option<&str>,
+    stdin_text: Option<&str>,
+) -> Result<ArchiveRun, String> {
+    let dir = case_dir(content_root, case_id)?;
+    if sources.is_empty() || sources.len() > 64 {
+        return Err("编译清单为空或过长".into());
+    }
+    if let Some(bad) = sources.iter().find(|s| !is_safe_rel_path(s, plain_segment)) {
+        return Err(format!("非法源文件路径：{bad}"));
+    }
+    let stamp = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_millis())
+        .unwrap_or(0);
+    let tag: String = case_id.chars().filter(|c| c.is_ascii_alphanumeric() || *c == '_').collect();
+    let work = std::env::temp_dir().join(format!("{binary}-{tag}-{stamp}"));
+    let shared = content_root.join("content/cases/_shared");
+    let include = shared.is_dir().then_some(shared.as_path());
+    run_case(&dir, &work, sources, std, stdin_text, include, RUN_TIMEOUT)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
