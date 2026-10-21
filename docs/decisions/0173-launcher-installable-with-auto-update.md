@@ -17,9 +17,9 @@
 2. **两种运行模式，由 `locate_repo()` 决定**：
    - **仓库模式**：找到仓库（`ATHENA_ROOT`、可执行文件上溯或当前目录上溯命中）——行为与现在一字不改，开发机照旧。
    - **安装模式**：找不到仓库——用内嵌清单工作（下条）。装了启动器的开发机上，安装版开机自启走安装模式；要用仓库模式就设 `ATHENA_ROOT` 或从仓库里启动。
-3. **安装模式的应用清单是编译期内嵌的 `catalog.json`**：由编排器新增的 `launcher catalog` 子命令从仓库的 `app.json` 与各 Tauri 应用的 `tauri.conf.json` 生成，提交入库（`launcher/core/catalog.json`），`scripts/check.py` 校验它没有过期。只含发布清单（`scripts/release_apps.json`）里的应用；字段取展示与定位所需的（id、名称、分组、`related`、`evolves_from`、图标、`productName`、`mainBinaryName`、`identifier`、`progress` 声明），不含 `dev` 块。启动器里仍然没有按应用写的分支（`launcher/AGENTS.md` 规则不变）。
+3. **安装模式的应用清单是编译期内嵌的 `catalog.json`**：由编排器新增的 `launcher catalog` 子命令从仓库的 `app.json` 与各 Tauri 应用的 `tauri.conf.json` 生成，提交入库（`launcher/core/catalog.json`），过期由 `launcher-core` 的单元测试 `catalog_is_up_to_date` 拦住（CI 的启动器作业跑 `cargo test`），不进 `check.py`——避免 `--sources-only` 为此编译 Rust。只含发布清单（`scripts/release_apps.json`）里的应用；字段取展示与定位所需的（id、名称、分组、`related`、`evolves_from`、图标、`productName`、`mainBinaryName`、`identifier`、`progress` 声明），不含 `dev` 块。启动器里仍然没有按应用写的分支（`launcher/AGENTS.md` 规则不变）。
 4. **安装模式下状态与动作按平台约定**：
-   - 已安装 = 在约定位置找到可执行文件：Windows 为 NSIS 每用户安装目录 `%LOCALAPPDATA%\<productName>\<mainBinaryName>.exe`（再查注册表卸载项）；macOS 为 `/Applications` 与 `~/Applications` 下的 `<productName>.app`；Linux 为 PATH 里的 `<mainBinaryName>`。
+   - 已安装 = 在约定位置找到可执行文件：Windows 为 NSIS 每用户安装目录 `%LOCALAPPDATA%\<productName>\<mainBinaryName>.exe`（及 `Programs\` 与 `Program Files` 下的同名目录），只认默认位置，装到别处的识别不了、按未安装指路；macOS 为 `/Applications` 与 `~/Applications` 下的 `<productName>.app`；Linux 为 PATH 里的 `<mainBinaryName>`。
    - 运行中 = 进程在（现有判据不变）；`starting` 状态（构建进程）在安装模式下不存在。
    - 打开 = 直接启动可执行文件；未安装 = 灰态，点击打开仓库的 Releases 页指路，**启动器不代装**。
    - 异构应用（驾考 Flutter、旧 cpp 窗口、c-gui-lab Electron）的安装位置没有统一约定：清单里显示，标「未支持安装模式启动」，点击同样指路 Releases。以后哪个有了稳定的安装约定再补。

@@ -938,6 +938,8 @@ mod tests {
             hidden: false,
             lifecycle: crate::manifest::Lifecycle::Active,
             progress: None,
+            install: None,
+            embedded_icon: None,
         }
     }
 

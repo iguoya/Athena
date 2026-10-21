@@ -11,15 +11,22 @@
 //!   launcher progress sync [<id>]   把本地进度库与路由器对一遍（ADR 0155）；路由器不可达只报告
 //!   launcher progress status        每个应用的本地库、待推送条数、拉取游标
 //!   launcher progress backup [<dir>]  本地库与中心库导出成带时间戳的 JSON 快照，不进 git
+//!   launcher catalog [--check]  生成安装模式用的内嵌清单 launcher/core/catalog.json（ADR 0173）；
+//!                             --check 只核对不写。仓库模式专属
 //!   launcher icons [--check]  按各应用 app.json 的 icon.renders 从 icon.svg 生成位图；
 //!                             不给 --root 时 各分组目录、practice/、certification/、mentor/ 与 tools/ 一起扫（ADR 0065、0142、0144、0146）
 //!
 //! `--root <dir>` 把发现范围收成仓库根下的那一层（`launcher --root practice list`）。
 //! 不给 `--root` 时 各分组目录、practice/、certification/、mentor/ 与 tools/ 一起扫：桌面应用都归启动器管。
+//!
+//! 找得到 Athena 仓库是**仓库模式**，行为如上；找不到（装在没有仓库的机器上）是**安装模式**
+//! （ADR 0173）：清单取编译期内嵌的 catalog.json，`open` 直接启动已安装的应用，
+//! `list --json` 的每行多出 mode / installed / installable / kind。构建、日志、图标、git 同步
+//! 这些仓库专属命令在安装模式下直接说明做不了，不假装成功。
 
 use std::process::ExitCode;
 
-use launcher_core::{discover_all, paths, runner, App, ProcessSnapshot};
+use launcher_core::{paths, runner, App, Mode, ProcessSnapshot, Workspace};
 
 /// 从参数里摘出 `--root <dir>`（相对仓库根），不管它出现在哪个位置；
 /// 剩下的参数原样交给下面的子命令解析，`--root` 对它们不可见。
@@ -45,20 +52,17 @@ fn line(text: &str) {
 
 fn main() -> ExitCode {
     let (root_override, arguments) = extract_root_flag(std::env::args().skip(1).collect());
-    let Some(repo) = paths::locate_repo() else {
-        eprintln!("找不到 Athena 仓库：设置 ATHENA_ROOT，或在仓库里执行。");
-        return ExitCode::FAILURE;
-    };
-    let apps = match &root_override {
-        Some(root) => launcher_core::discover_in(&repo.join(root)),
-        None => discover_all(&repo),
+    let workspace = Workspace::locate();
+    let apps = match (workspace.repo(), &root_override) {
+        (Some(repo), Some(root)) => launcher_core::discover_in(&repo.join(root)),
+        _ => workspace.apps(),
     };
 
     match arguments.first().map(String::as_str) {
         None | Some("list") => {
             let snapshot = ProcessSnapshot::take();
             if arguments.get(1).map(String::as_str) == Some("--json") {
-                line(&listing_json(&apps, &snapshot));
+                line(&listing_json(&apps, &snapshot, workspace.mode()));
                 return ExitCode::SUCCESS;
             }
             for app in &apps {
@@ -73,7 +77,7 @@ fn main() -> ExitCode {
             ExitCode::SUCCESS
         }
         Some("open") => match pick(&apps, arguments.get(1)) {
-            Ok(app) => open(app, &repo),
+            Ok(app) => open(app, &workspace),
             Err(code) => code,
         },
         Some("stop") => match pick(&apps, arguments.get(1)) {
@@ -96,6 +100,27 @@ fn main() -> ExitCode {
             }
             Err(code) => code,
         },
+        Some("catalog") => match workspace.repo() {
+            None => repo_only("catalog"),
+            Some(repo) => {
+                let result = if arguments.get(1).map(String::as_str) == Some("--check") {
+                    launcher_core::catalog::check(repo).map(|()| "catalog.json 是最新的".to_string())
+                } else {
+                    launcher_core::catalog::write(repo).map(|count| format!("已写入 {count} 个应用"))
+                };
+                match result {
+                    Ok(message) => {
+                        line(&message);
+                        ExitCode::SUCCESS
+                    }
+                    Err(message) => {
+                        eprintln!("{message}");
+                        ExitCode::FAILURE
+                    }
+                }
+            }
+        },
+        Some("icons") if workspace.repo().is_none() => repo_only("icons"),
         Some("icons") => {
             let check = arguments.get(1).map(String::as_str) == Some("--check");
             // 默认清单已经包含 postgraduate/、practice/、certification/、mentor/ 与 tools/。指定了 --root 就只渲染那一层。
@@ -117,12 +142,15 @@ fn main() -> ExitCode {
                 }
             }
         }
-        Some("sync") => match launcher_core::progress::sync(&repo, &apps, line) {
-            Ok(()) => ExitCode::SUCCESS,
-            Err(message) => {
-                eprintln!("{message}");
-                ExitCode::FAILURE
-            }
+        Some("sync") => match workspace.repo() {
+            None => repo_only("sync"),
+            Some(repo) => match launcher_core::progress::sync(repo, &apps, line) {
+                Ok(()) => ExitCode::SUCCESS,
+                Err(message) => {
+                    eprintln!("{message}");
+                    ExitCode::FAILURE
+                }
+            },
         },
         Some("progress") => match arguments.get(1).map(String::as_str) {
             Some("sync") => {
@@ -196,7 +224,7 @@ fn main() -> ExitCode {
 /// 菜单栏版原来自己再解析一遍 app.json，字段默认值在 Rust 和 Swift 各写一份，
 /// 已经开始对不上（symbol 的兜底一边是 "book" 一边是 "book.closed"）。清单怎么
 /// 读只保留这一处，前端消费结论就行（ADR 0046、0048）。
-fn listing_json(apps: &[App], snapshot: &ProcessSnapshot) -> String {
+fn listing_json(apps: &[App], snapshot: &ProcessSnapshot, mode: Mode) -> String {
     let rows: Vec<serde_json::Value> = apps
         .iter()
         .map(|app| {
@@ -222,6 +250,12 @@ fn listing_json(apps: &[App], snapshot: &ProcessSnapshot) -> String {
                 "runnable": app.is_runnable(),
                 "state": snapshot.state(app).key(),
                 "log": paths::log_file(&app.id),
+                // ADR 0173：新增字段只增不改。仓库模式下后三项是 null。
+                "mode": mode.key(),
+                "installed": app.install.as_ref().map(|install| install.installed),
+                "installable": app.install.as_ref().map(|install| install.supported),
+                "kind": app.install.as_ref().map(|install| install.kind.clone()),
+                "embeddedIcon": app.embedded_icon,
             })
         })
         .collect();
@@ -239,7 +273,13 @@ fn pick<'a>(apps: &'a [App], wanted: Option<&String>) -> Result<&'a App, ExitCod
     })
 }
 
-fn open(app: &App, repo: &std::path::Path) -> ExitCode {
+/// 安装模式下做不了的仓库专属命令：直说，不假装成功（ADR 0047）。
+fn repo_only(command: &str) -> ExitCode {
+    eprintln!("`launcher {command}` 只在仓库模式可用：没有找到 Athena 仓库（设置 ATHENA_ROOT，或在仓库里执行）。");
+    ExitCode::FAILURE
+}
+
+fn open(app: &App, workspace: &Workspace) -> ExitCode {
     // 已经在跑就只把窗口叫到前面——绝不起第二份。
     let snapshot = ProcessSnapshot::take();
     if snapshot.state(app) != launcher_core::RunState::Stopped {
@@ -252,7 +292,7 @@ fn open(app: &App, repo: &std::path::Path) -> ExitCode {
         };
     }
 
-    match runner::launch(app, repo, line) {
+    match workspace.launch(app, line) {
         Ok(pid) => {
             line(&format!(
                 "{} 已启动（pid {pid}），日志：{}",
@@ -261,8 +301,9 @@ fn open(app: &App, repo: &std::path::Path) -> ExitCode {
             ));
             ExitCode::SUCCESS
         }
-        Err(message) => {
-            eprintln!("{message}");
+        Err(error) => {
+            // 没装、不支持都是「指路」情形，退出码仍非 0，脚本据此分辨。
+            eprintln!("{error}");
             ExitCode::FAILURE
         }
     }

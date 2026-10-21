@@ -6,7 +6,7 @@
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 /// 环境变量的值。除了直接给字符串，还可以让编排器从几个候选里挑第一个存在的
 /// 路径——`programming/machine` 找 Qt 前缀就是这么干的，各平台装在哪不一样。
@@ -150,7 +150,7 @@ impl Lifecycle {
 
 /// 本地进度库的同步声明（ADR 0155）：库在用户数据目录的哪里、哪些表怎么合并。
 /// 没有这个字段的应用不参与进度同步（图谱/参考类、practice、已迁走的 driver）。
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ProgressSpec {
     /// 用户数据目录下放本应用库的目录名，与应用里 `database_path` 用的名字一致。
     pub dir: String,
@@ -158,7 +158,7 @@ pub struct ProgressSpec {
     pub tables: std::collections::BTreeMap<String, TableSpec>,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TableSpec {
     pub mode: TableMode,
     /// 业务键的列。省略则取表的 PRIMARY KEY；没有主键的表必须写。
@@ -167,7 +167,7 @@ pub struct TableSpec {
 }
 
 /// `append`：事件，同一键只记第一次，取并集；`lww`：可变记录，更新时间新者胜。
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum TableMode {
     Append,
@@ -215,6 +215,18 @@ struct RawManifest {
     progress: Option<ProgressSpec>,
 }
 
+/// 安装模式下一个应用的安装信息（ADR 0173）。仓库模式的应用没有它。
+#[derive(Debug, Clone)]
+pub struct Install {
+    /// 在默认位置找到了可执行文件。
+    pub installed: bool,
+    pub exe: Option<PathBuf>,
+    /// 安装模式能不能启动这类应用（Tauri 可以；驾考、旧 cpp、Electron 暂不）。
+    pub supported: bool,
+    /// 发布清单里的 kind，原样给前端做提示用。
+    pub kind: String,
+}
+
 #[derive(Debug, Clone)]
 pub struct App {
     pub id: String,
@@ -248,6 +260,10 @@ pub struct App {
     pub lifecycle: Lifecycle,
     /// 本地进度库的同步声明（ADR 0155）；没有就不参与同步。
     pub progress: Option<ProgressSpec>,
+    /// 安装模式下的安装信息；仓库模式恒为 None。
+    pub install: Option<Install>,
+    /// 内嵌的图标 data URL：安装模式没有 `icon.svg` 文件可读；仓库模式恒为 None。
+    pub embedded_icon: Option<String>,
 }
 
 impl App {
@@ -400,6 +416,8 @@ fn parse(dir: &Path) -> Option<App> {
         hidden: raw.hidden,
         lifecycle,
         progress: raw.progress,
+        install: None,
+        embedded_icon: None,
     })
 }
 
@@ -452,6 +470,8 @@ mod tests {
             hidden: false,
             lifecycle: Lifecycle::Active,
             progress: None,
+            install: None,
+            embedded_icon: None,
         }
     }
 
