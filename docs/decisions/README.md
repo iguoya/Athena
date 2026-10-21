@@ -173,3 +173,4 @@
 | [0176](0176-apex-calculus-for-math2.md) | 考研数学二高等数学补进 `guide/apex-calculus`：钉 APEX Calculus 第 4 版并按考纲裁剪；计算工具沿用已有的 SymPy 与 Octave，不另起应用；与自考高数工本、数学自编课分开 | 已接受 |
 | [0177](0177-chen-linear-algebra.md) | 新增 `guide/chen-linear-algebra`：陈怀琛《实用大众线性代数（MATLAB 版）》精读（「数学」圈），首本进 guide 的中文版权教材；题目 verbatim 取自原书（locator 给页码与题号）是应用级硬门禁、authored 默认不入题库，答案由本机 Octave 复算，慕课视频只登记链接；开 comms 舱把习题采集分给 worker | 已接受 |
 | [0178](0178-probability-statistics-self-study.md) | 立项 `self-study/probability-statistics`（概率论与数理统计·工）：修订 0175 的分期条件（门槛改为本应用自己有首批内容，不再等线代高数）与端口（1526 已被占，改 1529）；划定自考范围（考试范围以考纲为界、习题范围以真题与指定教材习题为界，不向考研看齐）；开 comms 舱派 ZCode 核对教材与采集真题 | 已接受 |
+| [0180](0180-chen-linear-algebra-mooc.md) | 确立「视频课」形态并新增 `guide/chen-linear-algebra-mooc`：西电慕课《实用大众线性代数（MATLAB版）》视频课精读（「数学」圈，端口 1531）；视频是原材料，不做无检索闭环的被动观看；播放三档（文本+外链 / 本地文件 / 在线内嵌），首发只做文本+外链，数据以时间锚点为核心；文本底本取课件与程序集，题源硬门禁沿 0177；与图书应用并存互不引用；首批范围第 1–2 周；翁恺《C 语言》本地播放闭环另议；修订 HANDOFF「视频课」条与 LEARNING-METHODS 措辞 | 已接受 |
