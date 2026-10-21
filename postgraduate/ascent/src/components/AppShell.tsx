@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Backdrop } from "./Backdrop";
 import { Sidebar } from "./Sidebar";
 import { TitleBar } from "./TitleBar";
-import { UpdateToast } from "./UpdateToast";
+import { AppUpdate } from "@athena/app-update";
 import { cn } from "@/lib/utils";
 
 export function AppShell() {
@@ -15,7 +15,7 @@ export function AppShell() {
     <div className="flex h-full overflow-hidden">
       <Backdrop />
       <TitleBar />
-      <UpdateToast />
+      <AppUpdate />
       <Sidebar />
       <main
         className={cn(
