@@ -15,6 +15,10 @@ tauri-build = { workspace = true }
 [dependencies]
 athena-course-shell = { path = "../../../packages/athena-course-shell" }
 tauri = { workspace = true }
+tauri-plugin-updater = { workspace = true }
+tauri-plugin-process = { workspace = true }
+# conf 有了 plugins 节后，generate_context! 展开会用到 ::serde_json
+serde_json = { workspace = true }
 # 插件在共用 crate 里注册，但 tauri-build 只从应用的**直接依赖**里收集插件权限；
 # 删掉它，capabilities/default.json 里的 "opener:default" 就找不到，构建失败。
 tauri-plugin-opener = "2"

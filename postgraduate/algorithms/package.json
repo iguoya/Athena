@@ -13,6 +13,7 @@
     "build:app": "tauri build"
   },
   "dependencies": {
+    "@athena/app-update": "workspace:",
     "@athena/viz": "workspace:*",
     "@codemirror/autocomplete": "^6.20.3",
     "@codemirror/commands": "^6.11.0",
@@ -23,6 +24,8 @@
     "@codemirror/view": "^6.43.11",
     "@tauri-apps/api": "catalog:",
     "@tauri-apps/plugin-opener": "catalog:",
+    "@tauri-apps/plugin-process": "catalog:",
+    "@tauri-apps/plugin-updater": "catalog:",
     "codemirror": "^6.0.2"
   },
   "devDependencies": {

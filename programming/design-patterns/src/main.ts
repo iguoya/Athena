@@ -1,3 +1,4 @@
+import { mountAppUpdate } from "@athena/app-update/mount";
 import { invoke as tauriInvoke } from "@tauri-apps/api/core";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import curriculumFallback from "../content/curriculum.json";
@@ -2698,3 +2699,7 @@ void boot();
 initNavResizer();
 initGraphResize();
 initExternalLinks();
+
+if (typeof window !== "undefined" && "__TAURI_INTERNALS__" in window) {
+  mountAppUpdate();
+}

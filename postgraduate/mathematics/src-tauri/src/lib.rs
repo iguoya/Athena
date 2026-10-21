@@ -302,6 +302,8 @@ pub fn run() {
     };
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_opener::init())
         .manage(Mutex::new(state))
         // 引擎不在这里启动：它按需起，起一次常驻（ADR 0025 第 1 节）。

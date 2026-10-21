@@ -1,3 +1,4 @@
+import { mountAppUpdate } from "@athena/app-update/mount";
 // Athena Mathematics — 前端入口。
 // 内容驱动：界面按 content/ 下的 JSON 渲染，不为新增知识点或诊断项复制整页。
 
@@ -1834,3 +1835,7 @@ function bindPredict(t: Topic, e: Experiment) {
 }
 
 void boot();
+
+if (typeof window !== "undefined" && "__TAURI_INTERNALS__" in window) {
+  mountAppUpdate();
+}

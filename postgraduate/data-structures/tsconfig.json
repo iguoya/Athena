@@ -11,6 +11,8 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    // @athena/app-update 的源码是 .tsx，解析到它需要项目允许 JSX
+    "jsx": "react-jsx",
     "noEmit": true,
     "types": ["vite/client"],
 
