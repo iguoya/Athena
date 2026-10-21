@@ -1,0 +1,19 @@
+张三和小桃跳舞
+李四和小红跳舞
+王五和小璐跳舞
+赵六和小桃跳舞
+张三和小红跳舞
+李四和小璐跳舞
+王五和小桃跳舞
+赵六和小红跳舞
+张三和小璐跳舞
+
+
+/home/tiger/algorithm/queue/cmake-build-debug/queue
+Hello, World!
+two_demensional
+0x7ffda7920980	0x7ffda7920984	0x7ffda7920988	0x7ffda792098c	0x7ffda7920990	0x7ffda7920994	0x7ffda7920998	0x7ffda792099c	0x7ffda79209a0
+0x7ffda7920980	0x7ffda7920984	0x7ffda7920988	0x7ffda792098c	0x7ffda7920990	0x7ffda7920994	0x7ffda7920998	0x7ffda792099c	0x7ffda79209a0
+0x7ffda7920980	0x7ffda7920984	0x7ffda7920988	0x7ffda792098c	0x7ffda7920990	0x7ffda7920994	0x7ffda7920998	0x7ffda792099c	0x7ffda79209a0
+one_demensional
+0x7ffda79209b0	0x7ffda79209b4	0x7ffda79209b8	0x7ffda79209bc	0x7ffda79209c0	0x7ffda79209c4	0x7ffda79209c8	0x7ffda79209cc	0x7ffda79209d0

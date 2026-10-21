@@ -1,0 +1,929 @@
+{
+  "tracks": [
+    {
+      "id": "archive",
+      "title": "历史归档",
+      "color": "#a08c64"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "archive",
+      "title": "历史归档 · 早年练习的整理与批注",
+      "track": "archive",
+      "layer": "archive",
+      "summary": "从 2018–2020 年旧 GitHub 仓库 algorithm（及 Practice、Linux 里的重复拷贝）整理来的数据结构练习（ADR 0176）：C 与 C++ 的线性表、栈队列、串、树、查找，代码原样保留、能运行的可以直接运行，另有行级批注指出写法与程序组织上的不足。本章不属于主线，不计入进度，留待人工审视后决定并入、保留或删除。",
+      "topics": [
+        {
+          "id": "ds.arc.c_array",
+          "title": "数组练习：前 N 大、矩阵旋转、“幻方”",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "ds.linear.array"
+          ],
+          "track": "archive",
+          "guide_line": "[线性表] C 语言数组三题，能运行；幻方其实不是幻方。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂三个数组小题，并说出每一题里隐含的错误：硬编码、丢失的返回值、名不副实的“幻方”。",
+            "pain": "数组题很容易“看起来对”：输出整齐，但约束没有被真正检验。",
+            "model": "找前 N 大值用一个长度为 N 的小数组，每轮替换其最小值；矩阵旋转按 rot[j][n-1-i] = a[i][j]；“幻方”按列蛇形填数。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个函数问：参数写死了吗？返回值有人用吗？它真的满足自己声称的性质吗？",
+            "landing": "能把前 N 大改成参数化，并写出真正的幻方判定。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "三个数组小题放在一个 main.c 里：找前 5 大、矩阵顺时针旋转 90°、按列蛇形填数。输出整齐，所以最容易放过的是下面这些：数字 5 被写死，返回值没人用，“幻方”只检查了行和。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_ds_c_array",
+                "run": "cli",
+                "summary": "找前 5 大值、矩阵旋转、“幻方”三个函数，由 main 依次调用。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "11-linner/1-array",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 41,
+                    "kind": "design",
+                    "text": "输出循环的上界写死成 `5`，而不是函数里的变量 `n`：把 `n` 改成 3 或 8，筛选用 `n`、打印仍用 5，结果就错位或越界读。`n` 本想由 `scanf` 输入（第 13–14 行被注释掉了），也应一并成为参数。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 17,
+                    "kind": "ownership",
+                    "text": "`find_max` 把 `malloc` 的结果作为返回值交给调用者，`main` 里却直接丢弃（`find_max();`），每次调用泄漏一块内存；另外函数内部既打印又返回，职责不清——应当只算不打，或只打不返。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 78,
+                    "kind": "design",
+                    "text": "`int **matrix_rotation()` 声明要返回一个二维数组，实际在最后 `return NULL`：旋转结果存在局部数组里，函数结束就失效，所以只好边算边打印。返回类型与行为不符，调用者拿到的永远是空指针；应传入输出缓冲区，或把旋转后的矩阵作为参数填好。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 100,
+                    "kind": "design",
+                    "text": "⚠ 这不是幻方：每个“幻方”只检查了**行和**（第 100 行）。按代码的蛇形填法，4 阶时每行和都是 34，但第一列是 1+2+3+4=10、主对角线 1+7+11+13=32，列和与对角线和都不相等。2 阶幻方本来就不存在，程序却依然“输出”了一个。验证性质要检查行、列、两条对角线，而不是只看它想看的那一项。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 82,
+                    "kind": "ownership",
+                    "text": "用变长数组类型的指针接 `malloc` 的结果是 C99 的写法，值得称赞；但用完没有 `free`，函数名与局部变量同名 `magic_square` 也容易读混。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 19,
+                    "kind": "style",
+                    "text": "`sizeof` 的结果是 `size_t`，用 `%d` 打印是格式错误（`-Wformat` 实测告警），应写 `%zu`；循环里 `i < sizeof(arr)/sizeof(int)` 把 `int` 与无符号数比较，同样告警。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "线性表中的数组见本应用主线「数组」知识点；硬编码与返回值问题的一般处理可参见 C++ 教程的函数设计部分。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ds.arc.c_list",
+          "title": "单链表（从未编译通过）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "ds.linear.list"
+          ],
+          "track": "archive",
+          "guide_line": "[线性表] 带头结点的单链表，头文件里一半函数没写对，main 与头文件对不上。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂带头结点链表的插入逻辑，并找出这份头文件里的编译错误与隐含约定。",
+            "pain": "数据结构的头文件被写成“能被包含一次的代码”，错一个名字就整个不能用。",
+            "model": "ListNode 含 data 与 next，头结点不存数据；insert_list 找到第 index-1 个结点后插入。",
+            "scope": "只读历史代码并批注，不修复。",
+            "judgment": "先让它编译；再问下标越界、内存分配失败、元素类型从哪里来。",
+            "landing": "能写出可编译的 list.h/list.c 拆分版本。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "单链表的第一版：带头结点，插入、判空、遍历。它**从来没有编译通过**——`main.c` 调的函数名大小写与头文件对不上。更值得读的是头文件里那些即使改对名字也会留下的设计问题。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_ds_c_list",
+                "run": "read-only",
+                "summary": "带头结点的单链表：init、empty、insert、visit；主程序插入四个元素后遍历。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "11-linner/2-list",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 11,
+                    "kind": "naming",
+                    "text": "⚠ `init_List()` 与头文件里的 `init_list()` 大小写不同；第 16 行 `visit(l, print)` 调的又是不存在的 `visit`（头文件里叫 `visit_list`）。`gcc` 15 实测：这三处都报 implicit declaration 的**错误**，所以这个目录无法编译。老编译器只警告，这类笔误当年能被放过。"
+                  },
+                  {
+                    "file": "list.h",
+                    "line": 13,
+                    "kind": "coupling",
+                    "text": "头文件使用 `ListElemType` 却没有定义它：全靠 `main.c` 在 `#include \"list.h\"` **之前**先写 `typedef int ListElemType;`（main.c:2）。包含顺序一换就不能编译，一个程序里也只能有一种元素类型。这是用宏或 typedef 假装泛型的典型代价。"
+                  },
+                  {
+                    "file": "list.h",
+                    "line": 28,
+                    "kind": "design",
+                    "text": "函数定义直接写在头文件里：任何两个 `.c` 文件同时包含 `list.h`，链接时就是重复定义。头文件里应放声明，定义放 `.c`（或至少标 `static inline`）。"
+                  },
+                  {
+                    "file": "list.h",
+                    "line": 43,
+                    "kind": "ownership",
+                    "text": "先 `malloc` 新结点，再检查下标：`index` 不合法时第 54 行直接 `return false`，刚申请的结点泄漏；`malloc` 的返回值也没检查。更危险的是第 48–51 行的 `while(i < index) p = p->next`，下标超出长度 +1 时会解引用 `NULL`；`int i` 与 `size_t index` 的比较也有符号告警。"
+                  },
+                  {
+                    "file": "list.h",
+                    "line": 62,
+                    "kind": "design",
+                    "text": "遍历回调的类型是 `(List, ElemType)` 两个参数，`main.c` 里的 `print` 只有一个参数 `(int e)`；而 `visit_list` 调用时传的第一个参数是**表头** `l`（第 67 行），对每个元素都一样，没有意义。回调应当只收元素（再加一个用户数据指针）。"
+                  },
+                  {
+                    "file": "list.h",
+                    "line": 20,
+                    "kind": "design",
+                    "text": "双向链表结点 `DListNode` 的 `prior`/`next` 声明成 `struct ListNode *`，类型写错（应为 `struct DListNode *`）；`DList` 也没有任何函数使用。写了一半的东西留在头文件里，会被读者当成已实现的功能。"
+                  },
+                  {
+                    "file": "list.h",
+                    "line": 69,
+                    "kind": "coupling",
+                    "text": "`visit_list` 里用了 `printf`，头文件却没有 `#include <stdio.h>`，依赖 `main.c` 先包含；整个头文件也没有 `destroy`/`free` 函数，创建了链表就没有办法释放。"
+                  }
+                ],
+                "run_note": "原代码从未编译通过：main.c:11 的 init_List 与头文件 init_list 大小写不同，main.c:16 调用了不存在的 visit"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "链表的结构与操作见本应用主线「链表」知识点；元素类型参数化在 C++ 中用模板解决，见 C++ 教程。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ds.arc.cpp_linear",
+          "title": "C++ 模板的动态数组与双向链表",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "ds.linear.array",
+            "ds.linear.list"
+          ],
+          "track": "archive",
+          "guide_line": "[线性表] 动态数组的扩容写成 new T(capacity)，堆缓冲区溢出；链表没有析构函数。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂模板化动态数组与双向链表的实现，并认出 new T(n) 与 new T[n] 的区别造成的缓冲区溢出。",
+            "pain": "手写容器的 bug 在小数据时常常不显形：这份代码对 6 个元素“正常”输出了结果。",
+            "model": "Linear 用三个指针（begin/end/容量）管理一块连续内存，满了就翻倍；List 是带 prior/next 的双向链表。",
+            "scope": "只读历史代码并批注；约瑟夫环示例只用 List。",
+            "judgment": "问：谁分配、谁释放？拷贝会发生什么？满与空的定义是什么？",
+            "landing": "能修正扩容代码并补上 rule of three/five。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "用 C++ 模板写的两个线性表：连续存储的 `Linear`（简化的 vector）和双向链表 `List`，`main` 里用链表演示约瑟夫环。`Linear` 的扩容那一行少了一个方括号，整个动态数组就成了堆缓冲区溢出——小规模数据甚至不会崩溃，用 AddressSanitizer 才能看到。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_ds_cpp_linear",
+                "run": "cli",
+                "summary": "Linear（动态数组）与 List（双向链表）模板；main 用链表解约瑟夫环与发牌。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "DataStructure/linear",
+                  "first_commit": "2020-10-10",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "linear.h",
+                    "line": 55,
+                    "kind": "ownership",
+                    "text": "⚠ `new T(_capacity)` 分配的是**一个** `T`，并用 `_capacity` 去初始化它；想要容量个元素必须是 `new T[_capacity]`。随后 `copy` 把旧元素写进只有一个元素大小的块，再 `*_end = e` 继续写：堆缓冲区溢出。本机用 clang 的 AddressSanitizer 实测：连续 `push_back` 6 个 `int`，在 linear.h:62 报 `heap-buffer-overflow`，内存分配点正是这一行。不开检测时程序打印 `6 8`，看起来一切正常——这类错误必须用工具而不是肉眼发现。"
+                  },
+                  {
+                    "file": "linear.h",
+                    "line": 58,
+                    "kind": "ownership",
+                    "text": "`delete _begin`（第 58、70 行）与数组分配不配对：数组要用 `delete[]`。第一次分配用的是 `new T`（单个元素，第 52 行），之后换成数组分配，释放方式却不区分；加之没有拷贝构造和赋值运算符，两个 `Linear` 一拷贝就会重复释放（rule of three）。"
+                  },
+                  {
+                    "file": "linear.h",
+                    "line": 37,
+                    "kind": "design",
+                    "text": "空容器的 `size()` 与 `capacity()` 都是 0，所以 `full()` 对空容器返回 true——这个“满则扩容”的实现细节漏进了公开语义，`test_linear.cpp` 里甚至断言 `EXPECT_EQ(t.full(), true)` 作用于空容器。`? true : false` 也是多余的写法。"
+                  },
+                  {
+                    "file": "linear.h",
+                    "line": 65,
+                    "kind": "naming",
+                    "text": "`at` 是 **1 起始**的下标，且不检查范围（`index == 0` 读到数组之前）；标准库的 `vector::at` 是 0 起始并抛 `out_of_range`。同名而语义不同，容易误用。`copy` 的参数 `_begin`/`_end` 还遮蔽了成员变量（第 40 行）。"
+                  },
+                  {
+                    "file": "linear.cpp",
+                    "line": 3,
+                    "kind": "style",
+                    "text": "这个文件定义 `linear::linear()`，但类名是 `Linear`（大写）且是模板，根本不存在小写的 `linear`：此文件永远不能编译。好在 `CMakeLists.txt` 只编译 `main.cpp` 与测试，没有包含它——一份被遗忘的孤儿文件。"
+                  },
+                  {
+                    "file": "list.h",
+                    "line": 53,
+                    "kind": "ownership",
+                    "text": "`List` 用 `new` 创建每个结点，却没有析构函数（也没有 `clear`）：一个链表对象销毁后，所有结点都泄漏。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 10,
+                    "kind": "coupling",
+                    "text": "约瑟夫环用 `end()->next = begin()` 把链表首尾接成环，是直接改结点指针，绕开了 `List` 的接口和内部不变式（`begin()->prior` 仍是 `NULL`，`size()`、`erase` 的假设都被破坏）；输出里还打印了结点指针 `mark`、`mark->prior`（第 26–29 行）这类调试信息，而不是出圈顺序以外的东西。"
+                  },
+                  {
+                    "file": "CMakeLists.txt",
+                    "line": 9,
+                    "kind": "portability",
+                    "text": "`find_package(GTest REQUIRED)` 写在所有目标之前：没装 GoogleTest 的机器连 `main` 都构建不出来。应当只给测试目标单独查找，或者用 `option` 开关。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17",
+                "run_note": "只运行 main.cpp（只用到 list.h）；Linear 的溢出要用 AddressSanitizer 才能观察，不会在这里表现出来"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "线性表的两种存储结构见本应用主线「数组」「链表」知识点；容器的拷贝语义（rule of three/five）见 C++ 教程。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ds.arc.c_stack",
+          "title": "链栈与三个应用：逆置、进制转换、括号匹配",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "ds.linear.stack_queue"
+          ],
+          "track": "archive",
+          "guide_line": "[栈与队列] 链栈的实现和它的三个应用，进制转换会打印乱码，括号匹配扫过了缓冲区的末尾。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂链栈的实现与三个典型应用，并找出每个应用里的边界错误：未结尾的字符串、多扫的长度、未初始化的比较。",
+            "pain": "栈的应用题最容易错在边界：空栈、空串、字符串终止符。",
+            "model": "链栈用头插法，栈顶即表头；应用是逆置、除基取余、左右括号配对。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "先问每个应用在空输入、非法输入时会怎样；再问哪些内存没有释放。",
+            "landing": "能写出带 destroy 的栈，并修正三个应用的边界。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "同一个 `stack.h`，三个典型应用：把一串字符放进栈再翻转、十进制转任意进制、括号是否匹配。其中两个应用在最普通的输入下就会出错：进制转换打印乱码，括号匹配读了一块没初始化的内存。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_ds_c_stack",
+                "run": "cli",
+                "summary": "把 A–G 七个字符压栈，遍历，再原地逆置并遍历。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "11-linner/3-stack",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "stack.h",
+                    "line": 15,
+                    "kind": "ownership",
+                    "text": "栈句柄 `LinkStack` 是“指向栈顶指针的指针”（`init_stack` 里 `malloc` 的是一个指针大小的块，第 26 行），这一层间接让 `push`/`pop` 能改栈顶，但所有调用方都要记得 `*top` 才是栈顶结点——而且整个头文件没有 `destroy`，`init_stack` 分配的句柄和未弹出的结点都没有释放的办法。"
+                  },
+                  {
+                    "file": "stack.h",
+                    "line": 12,
+                    "kind": "coupling",
+                    "text": "元素类型 `StackElemType` 要求使用者在 `#include \"stack.h\"` 之前 `typedef`（三个程序各写了一次：`char`、`int`、`char`），函数又直接定义在头文件里：同一个程序里无法同时有“字符栈”和“整数栈”，这也是后面 `btree.h` 同时需要栈和队列时要靠 `typedef Btree StackElemType` 硬凑的原因。"
+                  },
+                  {
+                    "file": "stack.h",
+                    "line": 40,
+                    "kind": "ownership",
+                    "text": "`push` 不检查 `malloc` 失败，也没有栈满的概念；返回 `void` 让调用方无从得知失败。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 30,
+                    "kind": "coupling",
+                    "text": "“单链表逆序”绕开栈接口，直接拿 `*ls` 的结点改 `next` 指针来做原地逆置，而且默认至少有两个元素：栈里只有 0 或 1 个元素时 `index->next` 就是空指针解引用。逆置完成后栈对象的 `*ls` 仍指向旧栈顶（已经变成链尾），栈的内部结构被破坏。想演示链表逆置，应该就写在链表上，而不是借栈的结点。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11"
+              },
+              {
+                "type": "archive",
+                "case": "arc_ds_c_stack",
+                "run": "cli",
+                "summary": "输入“数,进制”，用栈做除基取余，输出转换结果（进制为 0 时结束）。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "11-linner/3-stack",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "number_system_conversion.c",
+                    "line": 27,
+                    "kind": "ownership",
+                    "text": "⚠ 结果字符串从来没有写结尾的 `'\\0'`：`malloc` 的 1000 字节没有清零，第 42 行用 `%s` 打印时会一直读到碰巧遇到的 0 为止。本机实测输入 `10,2` 得到的是 `1010e\\x01`（后面跟着垃圾字节）。循环结束后应写 `result[i] = '\\0';`。"
+                  },
+                  {
+                    "file": "number_system_conversion.c",
+                    "line": 11,
+                    "kind": "ownership",
+                    "text": "结果缓冲区固定 1000 字节、无长度检查；返回的指针被 `printf(\"%s\\n\", number_system_conversion(...))` 直接用掉，没有人 `free`；栈 `top`（第 12 行）也没释放。输入 0 时循环一次都不进，返回的是未初始化内存。"
+                  },
+                  {
+                    "file": "number_system_conversion.c",
+                    "line": 15,
+                    "kind": "style",
+                    "text": "调试用的 `printf` 留在了函数里，每次压栈都会打印一行结点地址，混进了正常输出；数字转字符用 `+= 48` 和 `+= 55` 两个魔法数字（应写 `'0'`、`'A' - 10`）。"
+                  },
+                  {
+                    "file": "number_system_conversion.c",
+                    "line": 38,
+                    "kind": "design",
+                    "text": "`scanf` 的返回值没检查：输入遇到 EOF（例如管道结束）时 `decimal` 保留上次的值，条件 `decimal == 0` 永远不成立，程序无限循环。本机实测：只喂 `10,2` 后关闭输入，程序在 3 秒内刷出了两百多万行输出。"
+                  }
+                ],
+                "sources": [
+                  "number_system_conversion.c"
+                ],
+                "std": "gnu11",
+                "stdin": "10,2\n255,16\n0,0\n"
+              },
+              {
+                "type": "archive",
+                "case": "arc_ds_c_stack",
+                "run": "linux-only",
+                "summary": "读入一行文本，用栈检查 { [ ( 是否配对。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "11-linner/3-stack",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "symbol_matching.c",
+                    "line": 74,
+                    "kind": "design",
+                    "text": "⚠ 传给 `symbol_matching` 的是 `len`——`getline` 的**缓冲区容量**，而不是它返回的实际读入长度 `read`。函数里循环 `i <= len` 还多扫一个，于是会读到字符串结尾之后、没有初始化的缓冲区内容，这些字节碰巧是括号就会影响结果。应传 `read`，循环用 `i < len`。"
+                  },
+                  {
+                    "file": "symbol_matching.c",
+                    "line": 21,
+                    "kind": "ownership",
+                    "text": "`left_symbol` 没有初始化，而且 `get_top` 的返回值被忽略：输入以右括号开头（例如 `)`）时栈是空的，`get_top` 什么都没写，后面拿未初始化的 `left_symbol` 比较，是未定义行为。要先判断 `get_top` 的返回值，空栈时直接判为不匹配。"
+                  },
+                  {
+                    "file": "symbol_matching.c",
+                    "line": 13,
+                    "kind": "ownership",
+                    "text": "每判断一行就 `init_stack()` 一次，函数返回前没有释放栈句柄和剩余结点；`main` 里 `getline` 分配的 `line` 也没有 `free`。"
+                  },
+                  {
+                    "file": "symbol_matching.c",
+                    "line": 69,
+                    "kind": "portability",
+                    "text": "`getline` 与 `ssize_t` 是 POSIX 的，不在标准 C 里：本机 Windows 的 gcc 编译时报 `getline` 隐式声明；换成 `fgets` 加固定缓冲区，或者在文档里写明只支持 POSIX。"
+                  }
+                ],
+                "sources": [
+                  "symbol_matching.c"
+                ],
+                "std": "gnu11",
+                "run_note": "用到 POSIX 的 getline，Windows 的 MinGW 无法编译，请在 WSL / Linux 里运行；其中第二行输入 `)` 会触发未初始化变量",
+                "stdin": "(a[b]{c})\n)\n(((\n"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "栈的实现与应用见本应用主线「栈与队列」知识点；括号匹配是该知识点的典型例题，可与这里的写法对照。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ds.arc.c_queue",
+          "title": "链队列：杨辉三角与舞伴问题",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "ds.linear.stack_queue"
+          ],
+          "track": "archive",
+          "guide_line": "[栈与队列] 带哨兵结点的链队列写得不错，但 de_queue 没有返回值、舞伴示例每轮泄漏两块内存。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出带哨兵结点链队列的正确写法，并找出 de_queue 缺 return、sizeof 用错带来的两个问题。",
+            "pain": "队列应用常用来凑“看起来能跑”的演示，细节错误会被输出的整齐掩盖。",
+            "model": "队列由 front、rear 两个指针构成，front 指向哨兵结点；front == rear 即为空。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "函数每条路径是否都有返回？分配的内存有没有被使用？",
+            "landing": "能写出无警告的队列实现，并用单队列改写杨辉三角。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "一个链队列，两个应用：用两个队列逐层生成杨辉三角，以及经典的舞伴配对（男队女队轮流出队再入队）。队列本身写得比同目录的其他代码都更规范；问题出在边角：`de_queue` 有一条路径没有返回值，舞伴程序里的 `malloc(sizeof(100))` 分的根本不是 100 字节。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_ds_c_queue",
+                "run": "cli",
+                "summary": "两个队列逐层生成 15 行杨辉三角。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "11-linner/4-queue",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "queue.h",
+                    "line": 25,
+                    "kind": "design",
+                    "text": "队列创建时先分配一个哨兵（头）结点，`front == rear` 表示空——这样入队、出队到最后一个元素时不需要特殊处理空队列，`de_queue` 里只在 `pn == lq->rear` 时回拨 `rear`。这是写对了的做法。"
+                  },
+                  {
+                    "file": "queue.h",
+                    "line": 59,
+                    "kind": "design",
+                    "text": "⚠ 返回类型是 `bool`，却只有“队列为空”的分支 `return false`，成功出队的分支走到函数末尾没有返回值（`-Wreturn-type` 实测）：调用方一旦检查返回值就是未定义行为。该分支应 `return true`。"
+                  },
+                  {
+                    "file": "queue.h",
+                    "line": 14,
+                    "kind": "coupling",
+                    "text": "与栈相同，元素类型靠使用者在包含前 `typedef`，函数定义写在头文件里；杨辉三角用 `int`、舞伴用 `char *`，只能各自成一个程序。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 38,
+                    "kind": "design",
+                    "text": "杨辉三角用两个队列、三层嵌套分支（`index == 1`、`index == level`、其余）逐层倒腾，层数 `range` 写死为 15。同样的事用一个队列、每层循环“出队 `level` 个再入队相邻和”就能写，分支会少一半。",
+                    "end": 79
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 7,
+                    "kind": "style",
+                    "text": "二维数组与指针地址的一整段实验（第 7–34 行）被注释后留在 `main` 里，与杨辉三角无关；同目录 `README.md` 里贴的是这段实验在 `/home/tiger/...` 机器上的运行输出，不是说明文档。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11"
+              },
+              {
+                "type": "archive",
+                "case": "arc_ds_c_queue",
+                "run": "cli",
+                "summary": "男队 4 人、女队 3 人，轮流出队配对，再各自入队。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "11-linner/4-queue",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "dance_party.c",
+                    "line": 34,
+                    "kind": "ownership",
+                    "text": "⚠ `sizeof(100)` 是 `int` 的大小（4 字节），不是 100 字节；更关键的是，下一行 `get_queue_head(male, &boy)` 立刻把 `boy` 指针覆盖成队里字符串字面量的地址——`malloc` 的内存从未被使用，也无法再释放。循环 19 轮，泄漏 38 块。这两行 `malloc` 应当整个删掉。"
+                  },
+                  {
+                    "file": "dance_party.c",
+                    "line": 33,
+                    "kind": "design",
+                    "text": "固定循环 19 轮来演示“轮流配对”，没有用队列的状态判断结束；运行输出每 3 或 4 轮出现一次循环，是想展示男队 4 人、女队 3 人时的配对周期，但没有把周期（12）算出来或在注释里说明。"
+                  },
+                  {
+                    "file": "dance_party.c",
+                    "line": 9,
+                    "kind": "design",
+                    "text": "`show_queue` 直接访问队列内部的 `front`、`rear` 与结点，绕过了队列的接口：数据结构的内部表示被泄漏到应用代码里，将来换成数组队列就要改应用。应在 `queue.h` 里提供遍历函数。"
+                  }
+                ],
+                "sources": [
+                  "dance_party.c"
+                ],
+                "std": "gnu11"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "队列的结构与实现见本应用主线「栈与队列」知识点；杨辉三角与舞伴问题都是该知识点的经典例题。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ds.arc.c_string",
+          "title": "串：自写的 string.h 与最长公共子串（未完成）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[串] 头文件有语法错误、与系统头文件同名；最长公共子串对四组输入都返回长度 0。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出“自己写的头文件与系统头文件同名”的风险，并找出最长公共子串这份实现为什么对所有输入都返回 0。",
+            "pain": "没有测试的字符串代码最容易“看起来有输出”：它打印出一行长度 0 加一串乱码，却没有人发现。",
+            "model": "用定长数组加长度表示串；最长公共子串用三重循环比较。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "先问：它用例子验证过吗？返回的串是以 0 结尾的吗？",
+            "landing": "能用动态规划或后缀数组写出正确的最长公共子串。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两个半成品：一个自己写的 `string.h`（只写了一半，还有语法错误），和 `main.c` 里的 ftoa 与最长公共子串。把 `main.c` 单独编译运行，输出是四行“长度 0”加上乱码。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_ds_c_string",
+                "run": "read-only",
+                "summary": "自定义 string 类型与三个函数，主程序里 ftoa 与最长公共子串。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "11-linner/5-string",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "string.h",
+                    "line": 5,
+                    "kind": "portability",
+                    "text": "头文件取名 `string.h`，与标准库的 `<string.h>` 同名：一旦它所在目录进了 include 路径（CMake 的 `include_directories` 就会这样），`#include <string.h>` 先找到的就是它，标准库的 `strlen`、`memcpy` 等全部消失。自己的头文件要换名字，如 `my_string.h`。"
+                  },
+                  {
+                    "file": "string.h",
+                    "line": 13,
+                    "kind": "design",
+                    "text": "⚠ 数组与字符串字面量比较的是**地址**，永远不相等（`-Waddress` 告警），`empty` 恒返回 false；应写 `s.data[0] == '\\0'` 或 `s.length == 0`。紧接着的 `return true` 少了分号，是语法错误，gcc 报 `expected ';' before '}'`。"
+                  },
+                  {
+                    "file": "string.h",
+                    "line": 8,
+                    "kind": "design",
+                    "text": "字符串类型是 1000 字节的定长数组再加长度，而函数 `empty(string s)`、`strlen(string s)` 都按值传参：每次调用复制 1 KB。要么传指针，要么用动态长度。"
+                  },
+                  {
+                    "file": "string.h",
+                    "line": 28,
+                    "kind": "style",
+                    "text": "`replace` 只有声明没有函数体，参数名 `new` 是 C++ 关键字，`strlen` 的重新定义还与内建函数冲突（`-Wbuiltin-declaration-mismatch`）。写了一半的函数留在头文件里。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 25,
+                    "kind": "design",
+                    "text": "`ftoa` 把整数部分按位倒着取，却在**遇到余数 0 时就停**：整数 `2045` 取到个位 5、十位 4 后遇到 0 就结束，百位以上全丢；所有位倒着存没有翻转；小数部分算了 `decimal_num` 但从未使用；函数末尾没有 `return`（`-Wreturn-type`）。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 45,
+                    "kind": "design",
+                    "text": "⚠ 最长公共子串写错了：`first_str[i+j]` 在 `i+j` 超过长度时越界读；`current_common_len`（第 39 行）只在循环外初始化一次，从不清零；`max_from_index = k` 记的是**第二个串**里的位置，第 66 行却拿它去复制**第一个串**。本机实测（把 `main.c` 单独编译）四组输入——包括明显含有公共子串 `ZhengZhou` 的两组——全部输出 `length:0`。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 68,
+                    "kind": "ownership",
+                    "text": "返回的 `common_str` 是 `malloc` 出来的，写结尾 `'\\0'` 的那行被注释掉了，所以 `printf(\"%s\")` 打印的是没有结尾的内存（实测输出为乱码）；调用方也没有 `free`。外层循环 `i < strlen(first_str)`（第 40 行）每次迭代都重新计算 `strlen`，整个函数是 O(n·m·m)。"
+                  }
+                ],
+                "run_note": "string.h 与系统头文件同名，且 string.h:14 有语法错误；main.c 单独编译可以运行，但最长公共子串对四组输入全部返回长度 0"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "串的存储与模式匹配见本应用主线（串尚无专门知识点，本条先作归档）。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ds.arc.c_tree",
+          "title": "二叉树（C 版，依赖了不存在的栈队列头文件）",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "ds.tree.basics"
+          ],
+          "track": "archive",
+          "guide_line": "[树] 二叉链表加递归/非递归遍历，include 路径指向已搬走的目录，show_tree 总是打印根。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂二叉链表与四种遍历的 C 实现，并找出按层打印函数里“永远打印根结点”的错误。",
+            "pain": "把栈、队列当“别的目录的头文件”来用，目录一调整整个树就编译不了。",
+            "model": "BNode 含左右孩子与数据；遍历用递归和显式栈两种写法；按层打印用队列。",
+            "scope": "只读历史代码并批注，不修复。",
+            "judgment": "先看它能不能编译，再看每个函数的参数是值还是指针。",
+            "landing": "能写出带 destroy 的二叉树，并用队列正确实现层序遍历。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "一棵用 C 写的二叉树：创建、挂孩子、先序/中序遍历（递归与非递归各一版）、结点数、高度、按层打印。结构合理，遍历写得也对，但它 `#include \"../stack/stack.h\"`——那个目录在整理时已经不在了，所以编译不过；除此之外还有几个“能编译就会暴露”的问题。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_ds_c_tree",
+                "run": "read-only",
+                "summary": "BNode 二叉链表、遍历、结点数与高度、按层打印。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "12-tree/1-tree",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "btree.h",
+                    "line": 23,
+                    "kind": "portability",
+                    "text": "⚠ 相对路径 `../stack/stack.h` 与 `../queue/queue.h` 指向的目录在这个仓库里根本不存在（栈和队列在 `11-linner/3-stack`、`4-queue`），`gcc` 报 `fatal error: No such file or directory`，整个目录无法编译。包含路径依赖兄弟目录的布局，是最脆弱的一种耦合。"
+                  },
+                  {
+                    "file": "btree.h",
+                    "line": 27,
+                    "kind": "design",
+                    "text": "`T = NULL` 给的是**形参副本**，对调用者没有任何效果：要改指针本身必须传 `Btree *`。`destroy_btree`（第 31 行）函数体里只有一行被注释掉的 `delete(T)`——C++ 的习惯带进了 C，也没有真正的释放，整棵树只创建不销毁。"
+                  },
+                  {
+                    "file": "btree.h",
+                    "line": 170,
+                    "kind": "design",
+                    "text": "⚠ `show_tree` 想用队列做按层打印，但循环里始终用的是 `T`（根结点）：`T->data` 每轮都是根，从队列里取出的结点从来没被读（`get_queue_head` 没调用，只 `de_queue`）。结果是只会重复打印根。另外 `high-tree_level` 是 `size_t` 减 `int`，层数超过高度时会下溢，`max_length` 算了没有用。"
+                  },
+                  {
+                    "file": "btree.h",
+                    "line": 129,
+                    "kind": "design",
+                    "text": "返回类型是 `size_t`，函数体里却没有 `return`（`-Wreturn-type`），结果靠指针参数带出；同一功能写了两个版本（返回值版与指针版），`main` 里各调一次打印同一个数字。"
+                  },
+                  {
+                    "file": "btree.h",
+                    "line": 151,
+                    "kind": "style",
+                    "text": "用浮点 `pow` 在循环里累加 2 的幂再赋给 `size_t`：结果等于 `2^level - 1`，直接 `(1u << level) - 1` 就行，不必经过浮点。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 6,
+                    "kind": "coupling",
+                    "text": "`btree.h` 里的遍历函数调用 `visit_tree_node`，而这个函数由使用者在 `#include \"btree.h\"` **之前**定义（main.c:6）：库依赖调用者先提供一个同名函数，包含顺序一换就链接不了。应该把访问函数作为函数指针参数传入。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 42,
+                    "kind": "style",
+                    "text": "`%u` 配 `size_t` 是格式错误（`-Wformat`），应写 `%zu`；`main` 里创建的所有结点没有释放。"
+                  }
+                ],
+                "run_note": "btree.h 引用了不在本目录的 ../stack/stack.h 与 ../queue/queue.h，无法编译"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "二叉树的结构与遍历见本应用主线「树」知识点；非递归遍历用显式栈，是该知识点的经典内容。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ds.arc.cpp_btree",
+          "title": "C++ 模板的二叉树（只有 size_t 能用）",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "ds.tree.basics"
+          ],
+          "track": "archive",
+          "guide_line": "[树] 声明成模板，实现里写死 size_t；每个结点两次 new，从不释放。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出“假泛型”：模板参数没有真正参与实现；并说出裸指针数据成员带来的所有权问题。",
+            "pain": "模板代码只用一种类型测试，就发现不了它其实不泛型。",
+            "model": "BtreeNode 保存指向数据的指针和左右孩子；Btree 提供生成随机树、满树和遍历。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "问：把 T 换成 string 会怎样？谁释放结点和数据？",
+            "landing": "能把数据成员改成值语义并补上析构。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "一棵 C++ 模板二叉树：随机树、满树、递归与非递归遍历、按层打印。非递归先序/中序遍历实测与递归版结果一致（在 7 个结点的满树上），写得是对的；毛病在别处：成员函数把模板参数写死成了 `size_t`，数据又存成裸指针，没有任何释放。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_ds_cpp_btree",
+                "run": "cli",
+                "summary": "BtreeNode/Btree 模板，随机树、满树、遍历、按层打印；main 生成两棵树并打印。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "DataStructure/tree",
+                  "first_commit": "2020-10-10",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "btree.h",
+                    "line": 68,
+                    "kind": "design",
+                    "text": "⚠ `set_random_tree` 是 `Btree<T>` 的成员，却创建 `BtreeNode<size_t>` 并赋给 `BtreeNode<T>* root`（`set_full_tree` 同，第 91 行）：只有 `T = size_t` 才能编译，换成 `string`（`main.cpp` 被注释掉的那段 `Btree<string>` 用法）就是类型错误。模板的外壳里写死了一种类型。"
+                  },
+                  {
+                    "file": "btree.h",
+                    "line": 18,
+                    "kind": "ownership",
+                    "text": "结点保存的是 `T *data`：每个结点要 `new` 两次（结点本身和它的数据），而类里没有析构函数，结点与数据都不会被释放——整棵树建好就泄漏。数据直接存值（`T data`）更简单，也不需要所有权约定。"
+                  },
+                  {
+                    "file": "btree.h",
+                    "line": 42,
+                    "kind": "style",
+                    "text": "`root` 被设成 public，原来的 `private:` 被注释掉：外部可以随便改根指针，`main.cpp` 里的 `tree.root->add_child(...)` 就是这样用的，封装形同虚设。"
+                  },
+                  {
+                    "file": "btree.h",
+                    "line": 96,
+                    "kind": "style",
+                    "text": "未使用的变量 `is_left`（`-Wunused-variable` 实测）；`size_t node_limit = pow(2, high) -1;` 用浮点 `pow` 算 2 的幂再转整数；头文件里还有 `using namespace std;`。"
+                  },
+                  {
+                    "file": "btree.h",
+                    "line": 125,
+                    "kind": "design",
+                    "text": "先序的非递归实现：用栈只存右孩子，沿左链一路走下去——这是“用显式栈替代递归”的标准做法，写得对（本机在 7 结点满树上实测与递归的 `DLR` 输出一致）。中序 `LDRTraverse` 要同时维护 `right_children` 和 `parent` 两个栈，比标准写法（一个栈）绕得多，但实测结果也一致。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "二叉树的结构与遍历见本应用主线「树」知识点。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ds.arc.cpp_search",
+          "title": "C++ 顺序查找与二分查找（下溢与不存在的重载）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[查找] 二分查找在目标小于所有元素时下标下溢；递归版调用了不存在的三参数重载。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出 size_t 上做 -1 的风险，并找出二分查找里两处会下溢的位置。",
+            "pain": "无符号数的减法在边界处不报错，而是变成一个巨大的数。",
+            "model": "顺序查找逐个比较；二分查找缩小区间，返回 1 起始下标（0 表示没找到）。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个减 1 的地方都问：这个数可能是 0 吗？",
+            "landing": "能写出对无符号下标安全的二分查找。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两个查找函数加一个只打印 Hello World 的 `main`：顺序查找、递归二分、迭代二分。迭代二分在要找的值比所有元素都小时抛出 `out_of_range`，原因是 `size_t` 减 1 下溢；递归二分更糟——它调用的重载根本不存在，只是因为模板没被用过才没报错。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_ds_cpp_search",
+                "run": "cli",
+                "summary": "Search 模板：顺序查找、递归与迭代二分；main 只打印 Hello World。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "DataStructure/search",
+                  "first_commit": "2020-10-10",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "search.h",
+                    "line": 53,
+                    "kind": "design",
+                    "text": "⚠ `size_t` 下溢：区间缩到下标 0 时 `middle - 1` 变成 `SIZE_MAX`，下一轮 `data.at((begin+end)/2)` 访问一个巨大的下标。本机实测：在 `{1,2,3,4,5}` 里查 `0`，抛出 `vector::_M_range_check: __n (which is 9223372036854775807) >= this->size() (which is 5)`。第 48 行的 `data.size()-1` 在空向量上也会下溢。无符号下标上的二分要用半开区间，或先判断 `middle == 0`。"
+                  },
+                  {
+                    "file": "search.h",
+                    "line": 38,
+                    "kind": "design",
+                    "text": "递归版 `binary_recursion` 在第 38、40 行调用的是 `binary(e, middle, end+1)`——三个参数的 `binary` 不存在（只有一个参数的版本），显然想调用自己。模板成员函数在没有被实例化时不会检查这种错误，所以一直没人发现；没有一个测试调用它。"
+                  },
+                  {
+                    "file": "search.h",
+                    "line": 14,
+                    "kind": "design",
+                    "text": "查找的目标用 `T *e`（指针）传入，函数里全是 `*e`，调用者必须先建一个变量取地址；用 `const T &` 更自然。返回 1 起始的位置、`0` 表示未找到，与 C++ 习惯（0 起始、`npos`/迭代器）相反，调用者容易误用。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 11,
+                    "kind": "testing",
+                    "text": "`main` 只打印 Hello World，下面的 `basic()` 是返回 0 的空函数加一行注释：没有任何地方调用查找函数，`test_search.cpp` 有 GoogleTest 用例但与 CMake 里的 `REQUIRED` 依赖一样，需要另外安装才能跑。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17",
+                "run_note": "main 只打印 Hello World；下溢要自己写调用才能复现（见批注里的实测说明）"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "查找与排序见本应用主线「排序与查找」相关知识点（本应用主线目前没有独立的查找知识点）。"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
