@@ -206,5 +206,19 @@
     "manifest": "practice/c-gui-lab/package.json",
     "manifest_format": "package_json",
     "first_release": "10.0.0"
+  },
+  {
+    "id": "launcher",
+    "root": "launcher",
+    "dir": "launcher/webui",
+    "kind": "tauri",
+    "manifest": "launcher/webui/src-tauri/tauri.conf.json",
+    "manifest_format": "tauri_conf",
+    "watch": [
+      "launcher/core",
+      "launcher/Cargo.toml",
+      "launcher/Cargo.lock"
+    ],
+    "first_release": "10.0.0"
   }
 ]

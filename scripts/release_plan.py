@@ -80,7 +80,13 @@ def load_apps(path: Path | None = None) -> list[dict]:
 
 
 def app_dir(app: dict) -> str:
-    return f"{app['root']}/{app['id']}"
+    """应用目录。缺省 <root>/<id>；启动器等目录不规整的应用在清单里写 dir（ADR 0173）。"""
+    return app.get("dir") or f"{app['root']}/{app['id']}"
+
+
+def watch_paths(app: dict) -> list[str]:
+    """目录之外、改了也算这个应用有改动的路径（启动器的 core 与它自己的 Cargo 工作区文件）。"""
+    return list(app.get("watch") or [])
 
 
 def read_version(data: bytes, manifest_format: str) -> str:
@@ -427,7 +433,8 @@ def decide(
     decisions: list[dict] = []
     for app in apps:
         directory = app_dir(app)
-        own = [path for path in files if _under(path, directory)]
+        watched = watch_paths(app)
+        own = [path for path in files if _under(path, directory) or any(_under(path, w) for w in watched)]
         pnpm_deps = [d for d in seeds_reaching(directory, pnpm_seeds, pnpm_graph) if d != directory]
         cargo_dir = directory + "/src-tauri"
         cargo_deps = []
@@ -466,7 +473,7 @@ def decide(
         suggested = current
         level = "none"
         if changed and not is_new and not already:
-            pathspecs = [directory]
+            pathspecs = [directory, *watched]
             pathspecs.extend(pnpm_deps)
             pathspecs.extend(cargo_deps)
             if via_pins:
@@ -536,7 +543,7 @@ def matrix_from_versions(apps: list[dict], base_versions: dict[str, str | None],
             continue
         if app["kind"] == "tauri":
             for platform in TAURI_PLATFORMS:
-                include.append({"app": app["id"], "root": app["root"], **platform})
+                include.append({"app": app["id"], "root": app["root"], "dir": app_dir(app), **platform})
         elif app["id"] in flags:
             flags[app["id"]] = True
     return {"tauri": {"include": include}, **flags}

@@ -261,6 +261,29 @@ def test_dependency_and_toolchain_selection() -> None:
     expect(pinned_by["driver"]["suggested"] == "10.0.0+1", "没改动的驾考版本不动")
 
 
+def test_dir_and_watch_paths() -> None:
+    plain = {"id": "snake", "root": "programming", "kind": "tauri", "manifest": "m", "manifest_format": "tauri_conf"}
+    launcher = {
+        "id": "launcher", "root": "launcher", "dir": "launcher/webui", "kind": "tauri",
+        "manifest": "m", "manifest_format": "tauri_conf", "watch": ["launcher/core", "launcher/Cargo.toml"],
+    }
+    expect(mod.app_dir(plain) == "programming/snake", "dir 缺省是 root/id")
+    expect(mod.app_dir(launcher) == "launcher/webui", "显式 dir 优先")
+    decisions = mod.decide(
+        [plain, launcher], ["launcher/core/src/paths.rs"], {}, {}, False,
+        lambda app: "10.0.0", lambda _paths: ["feat(launcher): 安装模式"],
+    )
+    by_id = {item["id"]: item for item in decisions}
+    expect(by_id["launcher"]["changed"] and by_id["launcher"]["bump"] == "minor", f"watch 路径改动要算启动器有改动：{by_id['launcher']}")
+    expect(not by_id["snake"]["changed"], "别的应用不受影响")
+    only_dir = mod.decide([launcher], ["launcher/gui/old.rs"], {}, {}, False, lambda app: "10.0.0", lambda _paths: [])
+    expect(not only_dir[0]["changed"], "launcher/gui 不在 dir 也不在 watch，不算")
+    payload = mod.matrix_from_versions([plain, launcher], {"snake": "1.0.0", "launcher": "1.0.0"}, {"snake": "1.0.0", "launcher": "1.1.0"})
+    include = payload["tauri"]["include"]
+    expect({item["app"] for item in include} == {"launcher"}, include)
+    expect(all(item["dir"] == "launcher/webui" and item["root"] == "launcher" for item in include), "矩阵展开项带 dir")
+
+
 def test_matrix_shape() -> None:
     apps = _apps()
     base = {app["id"]: "0.1.0" for app in apps}
@@ -290,11 +313,11 @@ def test_matrix_shape() -> None:
 def test_catalog_covers_release_matrix() -> None:
     apps = mod.load_apps()
     tauri = [app["id"] for app in apps if app["kind"] == "tauri"]
-    expect(len(tauri) == 22, f"tauri 应是 22 个：{tauri}")
+    expect(len(tauri) == 23, f"tauri 应是 23 个（含启动器）：{tauri}")
     ids = {app["id"] for app in apps}
     expect(ids >= {"ascent", "driver", "cpp", "c-gui-lab"}, ids)
     for app in apps:
-        expect(app["manifest"].startswith(f"{app['root']}/{app['id']}/"), app)
+        expect(app["manifest"].startswith(mod.app_dir(app) + "/"), app)
 
 
 def test_matrix_on_temp_repo() -> None:
@@ -357,6 +380,7 @@ def main() -> int:
     test_toolchain_pins_compare_values_not_counts()
     test_dependency_and_toolchain_selection()
     test_matrix_shape()
+    test_dir_and_watch_paths()
     test_catalog_covers_release_matrix()
     test_matrix_on_temp_repo()
     print("ok — release_plan 自测通过")
