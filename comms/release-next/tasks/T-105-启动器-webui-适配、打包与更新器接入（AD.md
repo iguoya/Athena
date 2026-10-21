@@ -1,12 +1,12 @@
 ---
 id: T-105
 title: 启动器 webui 适配、打包与更新器接入（ADR 0173）
-owner: zcode
-status: todo
+owner: claude-code
+status: done
 priority: P1
 depends: T-104
 created: 2026-10-21 08:23
-updated: 2026-10-21 08:23
+updated: 2026-10-21 09:29
 ---
 ## 背景
 ADR 0173。T-104 交付了编排器的安装模式与 `catalog.json`。本任务把 **webui 适配安装模式、打开打包、接入更新器**。表现层冻结：不新增视图、不做视觉打磨，只做「隐藏仓库专属元素、加灰态与指路」。
@@ -27,3 +27,7 @@ ADR 0173。T-104 交付了编排器的安装模式与 `catalog.json`。本任务
 - 依赖 T-104；T-104 没 `done` 前，你可以先做第 2、3 条（打包配置与更新器接入，两者不依赖安装模式）并提交，第 1、4 条等 T-104。
 
 ## 进展记录
+- [2026-10-21 10:00] claude-code：zcode 因使用者当面指派新任务暂停，T-105 由 leader 接手实现（owner 改为 claude-code）
+- [2026-10-21 09:29] claude-code：todo → doing · leader 实现
+- [2026-10-21 09:29] claude-code：doing → review · 已提交 9a740b59：webui 适配、bundle、updater；cargo test 58 过、webui tsc+vite 过、launcher NSIS 安装包本机构建成功（athena-launcher_10.0.0_x64-setup.exe 5.4MB）；installer.nsi 核对默认安装目录与 catalog 约定一致。GUI 安装版实机启动未做（使用者的常驻启动器占着 single-instance，不动它）
+- [2026-10-21 09:29] claude-code：review → done · leader 自验（接手实现）

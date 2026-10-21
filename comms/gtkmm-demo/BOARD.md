@@ -1,6 +1,6 @@
 # gtkmm-demo 协作看板
 
-> 由 `comms/comms.py board` 生成于 2026-10-18 21:03，**不要手改**。任务详情见各任务文件，通讯规则见 [../README.md](../README.md)。
+> 由 `comms/comms.py board` 生成于 2026-10-21 05:41，**不要手改**。任务详情见各任务文件，通讯规则见 [../README.md](../README.md)。
 
 ## 未读消息
 
@@ -14,18 +14,18 @@
 
 | 对方 | 状态 | 最近痕迹 | 距今 |
 |---|---|---|---|
-| zcode | unreachable | 无 | 从未 |
-| cursor | online | 更新任务 | 0 分钟前 |
+| zcode | online | 更新任务 | 0 分钟前 |
+| cursor | unreachable | 即时消息 | 45 小时前 |
 
 ## 概览
 
-todo 1 · doing 0 · review 1 · blocked 0 · done 2
+todo 0 · doing 0 · review 2 · blocked 0 · done 2
 
 ## zcode
 
 | 任务 | 优先级 | 状态 | 标题 | 依赖 | 更新 |
 |---|---|---|---|---|---|
-| [T-101](tasks/T-101-参考层译文审查与缺译补译.md) | P1 | todo | 参考层译文审查与缺译补译 |  | 2026-10-18 19:49 |
+| [T-101](tasks/T-101-参考层译文审查与缺译补译.md) | P1 | review | 参考层译文审查与缺译补译 |  | 2026-10-21 05:41 |
 
 ## cursor
 

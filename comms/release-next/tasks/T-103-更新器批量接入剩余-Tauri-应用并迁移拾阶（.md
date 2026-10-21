@@ -2,11 +2,11 @@
 id: T-103
 title: 更新器批量接入剩余 Tauri 应用并迁移拾阶（ADR 0172）
 owner: claude-code
-status: doing
+status: done
 priority: P1
 depends: 
 created: 2026-10-21 08:23
-updated: 2026-10-21 08:24
+updated: 2026-10-21 09:09
 ---
 ## 背景
 ADR 0172（docs/decisions/0172-app-updater-for-all-tauri-apps.md，你写的）已落地机制与 snake 样板。本任务把更新器**批量接入剩余的 Tauri 发布应用**。接入清单就是你写在 `packages/app-update/README.md` 里的六处，snake 的提交 29096047 是样板。
@@ -37,3 +37,5 @@ ADR 0172（docs/decisions/0172-app-updater-for-all-tauri-apps.md，你写的）�
 ## 进展记录
 - [2026-10-21 08:24] zcode：todo → doing
 - [2026-10-21 09:10] claude-code：leader 接手收尾（zcode 因使用者当面指派新任务暂停；二十多个应用的接入改动已在工作区，剩验证与提交；owner 改为 claude-code）
+- [2026-10-21 09:09] claude-code：doing → review · zcode 已分四组提交（f909db27、8fd0139c、34419f35、c1e62994）；leader 验收：verify_updater 检查 23 个应用六处零问题，pnpm --frozen-lockfile、cargo check（根与 launcher 两个工作区）通过，algorithms/mathematics/cs408/gtkmm/jiuzhou/polaris/ascent/embedded/pocket-cube-solver 的 check.py 全绿
+- [2026-10-21 09:09] claude-code：review → done · leader 验收通过

@@ -1,0 +1,79 @@
+{
+ "chapter-refptr/sec-refptr-constness.json": {
+  "0": "C++ 中 const 关键字的含义并不总是那么一目了然。你可能没有意识到 const Something* 声明的是一个指向 const Something 的指针：指针本身可以改动，但它所指向的 Something 不能。",
+  "1": "因此，在方法参数中，与 Something* 等价的 RefPtr 写法是 const Glib::RefPtr<Something>&；与 const Something* 等价的写法是 const Glib::RefPtr<const Something>&。",
+  "2": "用 const ... & 包围是出于效率考虑，就像方法参数里用 const std::string& 而不是 std::string 一样，为的是避免不必要的复制。"
+ },
+ "chapter-refptr/sec-refptr-copying.json": {
+  "0": "你可以像复制普通指针一样复制 RefPtr。但与普通指针不同，你无需操心删除底层实例。"
+ },
+ "chapter-refptr/sec-refptr-dereferencing.json": {
+  "2": "你也可以用 * 运算符或 get() 方法访问底层实例，但通常不建议这么做：一不留神，你就会得到一个不在引用计数之内的指针或引用。"
+ },
+ "chapter-signals/sec-binding-extra-arguments.json": {
+  "0": "如果你想用同一个信号处理函数捕获来自多个部件的同一种信号，你可能希望这个信号处理函数能额外收到一些信息。例如，你可能想知道是哪个按钮被点击了。这可以用 sigc::bind() 做到。下面是 helloworld2 示例的部分代码：",
+  "2": "这行代码表示我们希望信号向信号处理函数多传一个 Glib::ustring 参数，其值为 \"button 1\"。当然，我们还需要在信号处理函数的声明中加上这个额外的参数：",
+  "4": "当然，正常的 \"clicked\" 信号处理函数是没有参数的。",
+  "5": "sigc::bind() 并不常用，但有时你会发现它有用。如果你熟悉 GTK 编程，可能已经注意到它类似于所有 GTK 回调都带的那个额外的 gpointer data 参数。在 GTK 里这种做法通常被过度使用——本应存为派生部件成员数据的信息也被这样传递，因为 C 语言里派生部件实在太难。而在 gtkmm 中，我们对这类 hack 的需求就少得多了。"
+ },
+ "chapter-signals/sec-connecting-signal-handlers.json": {
+  "0": "gtkmm 的部件类拥有信号访问器方法，例如 Gtk::Button::signal_clicked()，这些方法允许你连接自己的信号处理函数。得益于 gtkmm 所用的 libsigc++ 回调库的灵活性，信号处理函数几乎可以是任何类型的函数，不过你多半会想用类的成员函数。在 GTK 的 C 程序员口中，这类信号处理函数常被称为回调。",
+  "3": "这段（不能运行的）代码里有不少值得琢磨的地方。先来认一认其中涉及的各方：",
+  "11": "C++ lambda 表达式是一种函子，在调用 connect() 时可以被隐式转换成 sigc::slot。lambda 表达式可以代替 sigc::ptr_fun() 使用；也可以用它代替 sigc::mem_fun()，但这样一来，当 sigc::trackable 派生对象离开作用域时，信号处理函数就不会自动断开了。",
+  "15": "第二个更有意思。sigc::mem_fun() 接收两个参数：第一个是 *this，即新槽将要指向的对象；第二个是指向该对象某个成员函数的指针。这一版本的 sigc::mem_fun() 会创建一个槽，它在被「调用」时会执行指定对象的那个成员函数。"
+ },
+ "chapter-signals/sec-eventsignals.json": {
+  "0": "事件信号（event signals）因用户输入而产生，例如按键或鼠标移动。通常你不需要直接处理这些事件，而是使用 Gtk::EventController 的子类，比如 Gtk::EventControllerKey 或 Gtk::GestureClick。事件控制器可以用 Gtk::Widget::add_controller() 添加到部件上。",
+  "1": "当常规信号无法满足需求时，直接处理事件偶尔会很有用。例如，Gtk::Button 的 clicked 信号不携带鼠标指针坐标；如果需要这个信息，可以处理 Gtk::GestureClick::signal_pressed()。处理按键则常用 Gtk::EventControllerKey::signal_key_pressed()。",
+  "2": "一些事件控制器信号的行为略有不同：信号处理函数的返回值用于指示事件是否已被完全「处理」。返回 false 时，gtkmm 会把事件继续传给下一个信号处理函数；返回 true 时，就不会再调用其他信号处理函数了。",
+  "3": "处理事件不影响部件的其他信号。即使你为 Gtk::Button 处理了 Gtk::GestureClick::signal_pressed()，你仍然能收到它的 clicked 信号。这两个信号几乎在同一时刻发出。",
+  "6": "当鼠标位于按钮上方并按下鼠标按键时，on_button_press() 将被调用。",
+  "7": "这个例子里必须调用 set_propagation_phase()，因为 C 语言的 GtkButton 类自带一个事件控制器，会在捕获阶段处理按钮点击。GtkButton 会认领该事件，也就是说事件不会进入冒泡阶段传播——而事件控制器默认正是在冒泡阶段处理事件的。",
+  "9": "默认情况下，返回 void 的信号处理函数会在之前连接的信号处理函数之后被调用。但对可以通过返回 true 阻止事件继续传播的事件信号来说，这会出问题：已有的信号处理函数或默认信号处理函数可能返回 true，使你的信号处理函数得不到调用。要让你的信号处理函数在其他处理函数之前被调用，可以把 connect() 的 after 参数指定为 false。仅当信号处理函数返回 void 时，这个 connect() 参数才是可选的。例如：",
+  "11": "事件在部件之间的传播分为 3 个阶段。",
+  "12": "捕获阶段——从顶级窗口向下传递到事件部件。",
+  "13": "目标阶段——只在事件部件上执行。",
+  "14": "冒泡阶段——从事件部件向上回到顶级窗口。",
+  "15": "GTK 文档中的 Input Handling 一章（https://docs.gtk.org/gtk4/input-handling.html）更详细地描述了用户输入的处理。"
+ },
+ "chapter-signals/sec-exceptions-in-signal-handlers.json": {
+  "1": "本小节主要介绍在 Linux 系统上使用 gdb 调试器调试这类问题时会出现的情况。",
+  "4": "下面是一次 gdb 会话的摘录，这里只列出输出中最有意思的部分：",
+  "6": "可以看到，异常是从 without_signal.cc 的第 6 行抛出的（throw \"Something\";）。",
+  "9": "下面是这一情形下的 gdb 会话摘录。",
+  "11": "glibmm 会捕获这个异常，并通过调用 g_error() 结束程序。其他异常可能导致不同的行为，但无论如何，从信号处理函数抛出的异常都会被 glibmm 或 gtkmm 捕获，gdb 看不到它被抛出的位置。",
+  "14": "如果在出现你感兴趣的那个未捕获异常之前已经有很多被捕获的异常，这个办法会非常繁琐。可以用下面这组 gdb 命令把它自动化。",
+  "16": "这些命令会在每次 throw 时打印回溯信息然后继续。程序停下来之前，最后一个（或者倒数第二个）throw 的回溯通常就是你要找的。"
+ },
+ "chapter-signals/sec-overriding-default-signal-handlers.json": {
+  "6": "这里我们定义了一个名为 OverriddenButton 的新类，它继承自 Gtk::Button。我们唯一改动的是 on_clicked() 方法：每当 Gtk::Button 发出 clicked 信号，这个方法就会被调用。它把 \"Hello World\" 打印到 stdout，然后调用原先被覆盖的方法，让 Gtk::Button 完成它本来要做的事。"
+ },
+ "chapter-signals/sec-writing-signal-handlers.json": {
+  "2": "除了信号名 focus 之外，这里需要注意的是模板参数：第一个参数 bool 是信号处理函数应当返回的类型；括号里的 Gtk::DirectionType 是该信号第一个也是唯一一个参数的类型。查阅参考文档还能看到参数的名字。",
+  "3": "参数更多的信号也遵循同样的规则。下面是一个带三个参数的信号（取自 <gtkmm/textbuffer.h>）："
+ },
+ "sec-signals-comparison/sec-signals-comparison.json": {
+  "1": "gtkmm 的信号处理函数是强类型的；而 GTK 的 C 代码允许你连接参数个数与类型都不匹配的回调，进而在运行时导致段错误。而且与 Qt 不同，gtkmm 做到这一点无需修改 C++ 语言本身。"
+ },
+ "sec-windows-installation/sec-windows-installation.json": {
+  "1": "gtkmm 目前可以配合支持 C++17 的 MinGW/GCC 编译器使用（例如 gcc 7 或更高版本）；在 Windows 平台上也可以使用 Microsoft Visual C++ 2017 15.7.x 或更高版本（包括免费的 Express/Community 版）。Microsoft Windows 上有一个 gtkmm 安装器，但截至撰写本文时（2024 年 12 月）它只包含 gtkmm2 的安装包。请注意：虽然通常混用 Visual Studio 2017 和 2019 构建没什么问题，但在构建 gtkmm 及其 -mm 依赖时请不要这样做。",
+  "2": "有一些 README 文件，说明如何在 Windows 上构建 gtkmm 及其依赖：",
+  "3": "libsigc++：MSVC_NMake/MSVC-Builds.md（https://github.com/libsigcplusplus/libsigcplusplus/blob/master/MSVC_NMake/MSVC-Builds.md）",
+  "4": "glibmm：README.win32.md（https://gitlab.gnome.org/GNOME/glibmm/tree/master/README.win32.md）",
+  "5": "cairomm：MSVC_NMake/MSVC-Builds.md（https://gitlab.freedesktop.org/cairo/cairomm/-/blob/master/MSVC_NMake/MSVC-Builds.md）",
+  "6": "pangomm：README.win32.md（https://gitlab.gnome.org/GNOME/pangomm/tree/master/README.win32.md）",
+  "7": "gtkmm：README.win32.md（https://gitlab.gnome.org/GNOME/gtkmm/tree/master/README.win32.md）与 MSVC_NMake/README（https://gitlab.gnome.org/GNOME/gtkmm/tree/master/MSVC_NMake/README）。"
+ },
+ "chapter-working-with-source/sec-installing-jhbuild.json": {
+  "4": "这个命令会构建并安装一连串模块，第一次运行可能要花很长时间。不过之后就快多了，因为它只会重新构建自上次构建以来发生变化的文件。第一次构建并安装 gtkmm 之后，你可以用 jhbuild buildone gtkmm 命令单独重新构建 gtkmm（不必重新构建所有依赖）。",
+  "6": "安装 git 版本的 gtkmm 后，就可以开始使用和试验它了。要用上刚安装的新版本，需要设置一些环境变量，让你的 configure 或 meson.build 脚本找得到新库。好在 jhbuild 为这个问题提供了一个简单的办法：执行 jhbuild shell 命令会启动一个已设好全部环境变量的新 shell。这时像平常一样重新配置并构建你的项目，它就会链接到新安装的库。要回到之前的环境，退出这个 jhbuild shell 即可。"
+ },
+ "chapter-working-with-source/sec-setting-up-jhbuild.json": {
+  "7": "默认情况下，jhbuild 被配置成把用它构建的所有软件安装到 ~/jhbuild/install 前缀下。你可以选择别的前缀，但建议与系统里其他软件的安装位置区分开（不要设成 /usr！）。如果你按 jhbuild 的说明操作，这个前缀就归你的用户所有，因此不需要以 root 身份运行 jhbuild。",
+  "8": "你还应该在 jhbuildrc 中设置 buildroot。jhbuild 用 Meson 构建 gtkmm 及其许多依赖，而 Meson 不允许在源码树内构建。jhbuild 默认会在源码根目录正下方的 build 目录中构建。有些模块的 build 目录里还留有使用 Autotools 构建时的文件，如果让 jhbuild 在那个目录里构建，这些文件可能会被破坏。"
+ },
+ "chapter-contributing/chapter-contributing.json": {
+  "1": "理想情况下，我们希望你向 docs/tutorial/C/index-in.docbook 文件提交 merge request。该文件位于 GNOME git 的 gtkmm-documentation 模块中。",
+  "2": "如果你决定贡献，请把你的贡献以 issue 或 merge request 的形式提交到 GNOME GitLab 上的 gtkmm-documentation 仓库。你也可以在 GNOME 的 Discourse 论坛的 Platform/Language bindings 分类下（带 cplusplus 标签）讨论你的想法。另外请注意，本文档整体是自由的，你补充的内容也必须是自由的——也就是说，人们必须能在自己的程序中使用你示例的任何部分，本文档的副本（包括你的贡献）也可以自由分发。"
+ }
+}
