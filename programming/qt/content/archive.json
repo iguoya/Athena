@@ -3207,6 +3207,123 @@
               }
             ]
           }
+        },
+        {
+          "id": "qt.arc.algorithm_console",
+          "title": "算法演示台（Task 抽象与按名反射创建）",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[综合小项目] 把算法题装进 Qt 窗口的任务框架：ui 未创建、按名反射对不上、二分无限递归。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂用 QMetaType 按类名创建对象的任务框架，并找出它起不来的三个原因。",
+            "pain": "想用字符串名字解耦调用方与任务类，却让错误推迟到运行期，而且名字要在两个文件里各写一份。",
+            "model": "Task 抽象基类声明信号与 run()；每个算法一个子类并在静态初始化时注册元类型；主窗口收到按钮名后反射创建并运行。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个“按名字查找”的地方都问：名字在几处出现？找不到时会怎样？",
+            "landing": "能用工厂表替换反射，并让主窗口真正能启动。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "一个 Qt Widgets 的“算法演示台”：每个算法是一个继承 `Task` 的类，主窗口按按钮上写的类名用 Qt 元对象系统反射创建任务，再把结果送进文本框、表格、树三个视图。结构想法不错，但这份代码**连窗口都起不来**——构造函数里创建界面对象的那一行被注释掉了——后面还有按名字反射创建对象时名字对不上等问题。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_qt_algorithm_console",
+                "run": "toolchain",
+                "summary": "按钮 → 按类名反射创建 Task → 信号把结果送进视图；Task 子类放在 Recursion、Deduction、DivideConquer、Exhaustion 目录。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "Algorithm",
+                  "first_commit": "2022-12-30",
+                  "duplicates": [
+                    "Practice/QT 无对应；Linux/Algorithm/qdarkstyle（第三方，未收）"
+                  ],
+                  "note": "2022-12 至 2023-02 的最后一个算法练习：用 GUI 把算法题抽象成可调度的任务"
+                },
+                "notes": [
+                  {
+                    "file": "mainwindow.cpp",
+                    "line": 6,
+                    "kind": "ownership",
+                    "text": "⚠ 构造函数初始化列表里创建 `ui` 的那行被注释掉了，而 `ui` 是没有默认值的裸指针成员（mainwindow.h 里 `Ui::MainWindow *ui;`）。紧接着第一条语句 `ui->setupUi(this)` 就对一个未初始化的指针解引用：程序一启动就是未定义行为，通常直接崩溃。mainwindow 的两个源文件里没有别处给 `ui` 赋值。析构函数里的 `delete ui;` 也同样被注释掉了——这是一个调试到一半的状态。"
+                  },
+                  {
+                    "file": "mainwindow.cpp",
+                    "line": 60,
+                    "kind": "ownership",
+                    "text": "每点一次按钮就 `newInstance()` 创建一个 `Task`，`run()` 之后既没有 `delete`，也没有设 `parent`（`newInstance()` 的 parent 参数默认为空）：每次点击泄漏一个任务对象，它又连着多个信号槽。应当把任务建在栈上，或设 `parent`/用 `deleteLater()`；任务里 `new QStandardItem` 挂到共享的 model 上是另一回事（model 接管）。"
+                  },
+                  {
+                    "file": "mainwindow.cpp",
+                    "line": 47,
+                    "kind": "design",
+                    "text": "⚠ 按名字反射创建对象：按钮映射里写的是 `\"RabbitA*\"`（带星号），而 `rabbita.cpp` 里注册的是 `qRegisterMetaType<RabbitA*>(\"RabbitA\")`（不带星号）。按 Qt 文档，`QMetaType::type()` 只认注册时用的名字，名字对不上返回“未知类型”（0），`QMetaType::metaObjectForType(0)` 返回空指针，`->newInstance()` 就是空指针解引用。`Q_DECLARE_METATYPE(RabbitA*)` 又被注释掉了。字符串类型名在两处各写一次，是这个设计最脆弱的地方；更稳妥的是用一个工厂表 `QMap<QString, std::function<Task*()>>`。"
+                  },
+                  {
+                    "file": "mainwindow.cpp",
+                    "line": 32,
+                    "kind": "design",
+                    "text": "为了把六个按钮映射到同一个槽，用了 `QSignalMapper` 并且要靠 `static_cast` 去区分 `map()` 的两个重载——写法本身就说明这套老机制不好用。Qt 5.15 起官方更推荐直接用 lambda：`connect(button, &QPushButton::clicked, this, [this, name]{ run(name); });`，不需要映射器，也不需要强转。"
+                  },
+                  {
+                    "file": "mainwindow.cpp",
+                    "line": 11,
+                    "kind": "design",
+                    "text": "表格视图与树视图（下一行）共用同一个 `QStandardItemModel`：表格任务往 model 里按行列放项目、树任务往根下挂子项目，列头也被不同的任务互相覆盖；`displayTable` 还只写入 `setItem` 而从不清空旧内容。两种视图应当各自有 model，或者按任务类型切换。"
+                  },
+                  {
+                    "file": "mainwindow.cpp",
+                    "line": 65,
+                    "kind": "design",
+                    "text": "`displayList` 槽的函数体全部被注释掉了，`displayTree` 里用的是写死的“一级节点/二级节点/三级节点”演示数据而不是任务的结果：界面上两种展示方式（列表与树）实际上都是空壳，任务发出的 `displayList`、`displayTree` 信号被接收了却什么也没显示。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 12,
+                    "kind": "ownership",
+                    "text": "加载第三方暗色样式表时没有检查 `open` 的返回值：资源缺失时读出空字符串，`setStyleSheet(\"\")` 悄悄退回默认样式，没有任何提示。同时整套 qdarkstyle 作为第三方库（481 个文件）被拷进了旧仓库，而这里没有说明它的来源与版本。"
+                  },
+                  {
+                    "file": "Abstract/task.h",
+                    "line": 37,
+                    "kind": "ownership",
+                    "text": "`Task` 的构造函数是空的，`m_number`、`m_parent` 没有初始化：只要调用方忘记先 `setNumber`/`setParent` 就直接 `run()`，子类里 `for(size_t i = 1; i < m_number; ++i)` 就读到垃圾值。成员应在类内给默认值：`size_t m_number = 0; QStandardItem *m_parent = nullptr;`。"
+                  },
+                  {
+                    "file": "Deduction/rabbita.cpp",
+                    "line": 23,
+                    "kind": "design",
+                    "text": "循环里每生成一项就把 `m_parent` 改成刚创建的结点，下一项再挂在它下面：斐波那契数列在树视图里形成一条深度为 n 的单链，而不是同一层的 n 个结点（第二个任务 `Recursion/rabbit` 做的才是平铺）。想表达的是“兔子繁殖的世代”，用深度表示世代数是合理的，但改写了成员 `m_parent` 让任务对象不能再次 `run()`。最后的 `display(\"hello world！！\")` 是调试残留。"
+                  },
+                  {
+                    "file": "DivideConquer/binsearch.cpp",
+                    "line": 46,
+                    "kind": "design",
+                    "text": "⚠ 递归二分查找在两元素的序列里查比最小元素还小的数时**无限递归**：`start=0, end=1` 时 `middle=0`，`at(0) > key` 递归到 `binSearch(0, -1)`；此时 `start == end` 不成立，`middle = (0 + -1) / 2` 在 C++ 里向零取整为 `0`，再次走到同一分支，永远不会终止。本机把这个函数原样抽出来测试：序列 `{5, 7}`、key 为 1，进程以栈溢出（`0xC00000FD`）退出。区间收缩到 `start > end` 时必须先返回 -1。"
+                  },
+                  {
+                    "file": "DivideConquer/binsearch.cpp",
+                    "line": 50,
+                    "kind": "style",
+                    "text": "返回的是“位置 +1”（从 1 起），查不到返回 -1，而下标是从 0 起的：同一个函数里存在两套编号，调用者要记住这个换算；`binSearch(0, m_series.size()-1, key)` 在空序列上 `size()-1` 也会下溢。"
+                  }
+                ],
+                "run_note": "需要 Qt 5/6 加 QDarkStyleSheet（CMakeLists 用的是 qt5_add_resources）；窗口本身因 ui 未初始化会崩溃，应用内只读"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线尚未编写；元对象系统与信号槽的用法见官方文档。这个例子里“用字符串类型名反射创建对象”的做法，更稳妥的替代是工厂函数表。"
+              }
+            ]
+          }
         }
       ]
     }

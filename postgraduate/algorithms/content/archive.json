@@ -1,0 +1,1254 @@
+{
+  "tracks": [
+    {
+      "id": "archive",
+      "title": "历史归档",
+      "color": "#a08c64"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "archive",
+      "title": "历史归档 · 早年练习的整理与批注",
+      "track": "archive",
+      "layer": "archive",
+      "summary": "从 2018–2020 年旧 GitHub 仓库 algorithm（及 Linux 里的重复拷贝）整理来的算法练习（ADR 0176）：递归、回溯、分治、迭代与枚举，代码原样保留、能运行的可以直接运行，另有行级批注指出写法与程序组织上的不足；批注里的现象都经本机编译运行核对过。本章不属于主线，不计入进度，留待人工审视后决定并入、保留或删除。",
+      "topics": [
+        {
+          "id": "algo.arc.fibonacci",
+          "title": "斐波那契：朴素递归、迭代与累积式递归",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "algo.complexity.measure"
+          ],
+          "track": "archive",
+          "guide_line": "[递归] 朴素递归与迭代放在同一个 main 里，却没有计时，两者的差别没有被演示出来。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出朴素递归斐波那契为什么指数级慢，并看出累积式递归是怎样做到线性的。",
+            "pain": "两个版本结果完全一样，只有放在时间尺子下才看得出差别。",
+            "model": "fib(n)=fib(n-1)+fib(n-2) 的朴素递归重复计算；迭代版只保留前两项；v2 把结果累积进 vector，递归深度为 n。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个递归都问：同一个子问题被算了几次？递归深度是多少？",
+            "landing": "能写出带记忆化的版本，并用计时说明差别。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "斐波那契的三种写法：朴素递归、迭代、以及把结果累积进容器的递归。读代码时最该问的是：这些写法的复杂度各是多少？程序里有没有让读者**看见**这个差别？"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_fibonacci",
+                "run": "cli",
+                "summary": "朴素递归与迭代各算前 40 项斐波那契。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "22-recursion/fibonacci",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 24,
+                    "kind": "design",
+                    "text": "两个版本各自跑一遍 `i = 1..40` 并把结果打印出来，但**没有计时**：朴素递归是指数级，迭代是线性，这个程序恰好是演示这个差别的最佳场景，却只让读者看到两组相同的数字（本机实测整个程序约 1.1 秒，其中几乎全是朴素版）。应当用 `clock()` 或 `time` 分别计时，再对 `n=45` 这类更大的值各跑一次。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 10,
+                    "kind": "design",
+                    "text": "迭代版只保留前两项、一个循环，是对的写法；与朴素版放在同一个文件里对照很好。`result` 在 `n<=2` 提前返回之前就声明为 0，之后循环才赋值，读起来比直接用滚动变量绕。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 3,
+                    "kind": "portability",
+                    "text": "返回类型 `int`：`fib(47) = 2971215073` 已经超出 `int` 的范围，循环上限恰好定为 40 才没暴露；上限应当算出来（或改 `long long`），并在注释里写明 `int` 能算到哪一项。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_fibonacci_v2",
+                "run": "cli",
+                "summary": "把斐波那契结果累积进 vector 的递归版本。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "22-recursion/fibnonacciv2",
+                  "first_commit": "2020-10-06",
+                  "duplicates": [],
+                  "note": "与上一份同主题，目录名 fibnonacciv2"
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 8,
+                    "kind": "design",
+                    "text": "递归先算出 `n-1` 项的结果放进 `result`，再从末尾取最后两项求和追加——每个子问题只算一次，**线性时间**，是把朴素递归改成线性的一种干净做法（递归深度仍是 n）。第一个 `fibonacci(n-1, result)` 返回后 `result` 至少有 1 项，所以 `size()-2` 不会下溢。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 5,
+                    "kind": "naming",
+                    "text": "目录名 `fibnonacciv2` 拼错了（fibonacci）；函数对 `n <= 0` 什么也不做、`n == 1` 追加一项，边界处理对，但没有任何注释说明约定。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 25,
+                    "kind": "style",
+                    "text": "`const auto it` 按值拷贝每个元素，对 `int` 无伤，换成 `string` 就是性能陷阱，应写 `const auto &it`；`main` 里还有 IDE 模板的 Hello World 输出。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "复杂度的度量见本应用主线「复杂度」知识点；递归与重复子问题（记忆化、动态规划）见动态规划知识点。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "algo.arc.footstep",
+          "title": "爬台阶：static 状态与按值传参的两版回溯",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "algo.paradigm.backtrack"
+          ],
+          "track": "archive",
+          "guide_line": "[递归] 第一版用 static 变量记状态，第二次调用的编号接着第一次；第二版按值传参，push/pop 多余。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出 static 局部变量做递归状态的风险，以及按值传参时 push_back/pop_back 为什么是多余的。",
+            "pain": "回溯要“选一步、递归、撤销”，把撤销写对比把递归写对更难。",
+            "model": "每步迈 1、2 或 3 级，走完剩余台阶数为 0 时记录一条路径。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "递归函数的状态放在哪里？谁负责撤销？",
+            "landing": "能写出状态全在参数里、无 static 的版本。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "同一个问题的两次写法：一次用 `static` 局部变量保存路径和计数，一次把路径作为按值传递的参数。第二次比第一次干净，但按值传参让回溯里的“撤销”变成了多余的动作。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_footstep",
+                "run": "cli",
+                "summary": "用 static 数组记录路径，枚举每次迈 1–3 级的所有走法。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "22-recursion/footstep",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 9,
+                    "kind": "design",
+                    "text": "⚠ 三个 `static` 变量（`step_queue`、`index`、`total_method`）让函数记住了上一次调用的状态：本机实测先 `step(4)` 打印 1–7 号走法，再 `step(10)` 时编号**从 8 接着数**。static 状态使函数不可重入、不可重复调用，也无法在两个线程里同时用。应把路径、计数放进参数或一个结构体。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 7,
+                    "kind": "ownership",
+                    "text": "路径数组固定 20 项：台阶数超过 20 时，全 1 的那条路径会写越界。大小应与最大台阶数联动，或用动态容器。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 11,
+                    "kind": "design",
+                    "text": "函数声明返回 `int`，`n<0` 返回 -1、`n==0` 返回 0，其余分支（循环那条路径）走到函数末尾**没有 return**（`-Wreturn-type` 实测）；调用方 `main` 把所有返回值都丢掉了。要么改成 `void`，要么统一返回走法数。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_footstep_v2",
+                "run": "cli",
+                "summary": "把路径作为参数、结果收集进 vector 的版本。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "22-recursion/footstepv2",
+                  "first_commit": "2020-10-06",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 6,
+                    "kind": "design",
+                    "text": "`route` 按值传入：每层调用都拷贝一份当前路径，所以函数体里的 `push_back(...)`、递归后的 `pop_back()` 只影响这一份拷贝，**撤销其实是多余的**（拷贝本来就随函数返回而销毁）。要么把 `route` 改成引用并保留 push/pop（省掉拷贝），要么去掉 pop_back。两种都对，混在一起会让读者误以为按值传参也需要撤销。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 22,
+                    "kind": "design",
+                    "text": "`result` 用引用收集所有路径，是比第一版的 static 计数更好的设计：函数没有隐藏状态，可重复调用、可测试；输出与第一版一致（同一批走法）。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 23,
+                    "kind": "style",
+                    "text": "`n < 0` 的 `else` 分支是空的（只有一个空行）：这种“无声的剪枝”应当写一句注释说明是剪枝；`main` 里有 IDE 模板的 Hello World，并且遍历 `result` 时 `for(auto route: result)` 按值拷贝每条路径。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "回溯法见本应用主线「回溯」知识点；“选择—递归—撤销”的框架在那里有完整讲解。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "algo.arc.hanoi",
+          "title": "汉诺塔：日志里的起点终点和真实移动对不上",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "algo.complexity.measure"
+          ],
+          "track": "archive",
+          "guide_line": "[递归] 打印的“计划”文字把起点、经由、终点标反了，n=0 也打印“整体结束”。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出日志输出本身会撒谎：说明文字与真实动作不一致比没有日志更糟。",
+            "pain": "为了把递归过程“看见”，加了大量打印，却没有核对打印出的话和动作是否一致。",
+            "model": "hanoi(n, a, b, c)：把 n 个盘从 a 借 b 移到 c；先把上面 n-1 个移到 b，再移第 n 个，再把 n-1 个从 b 移到 c。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "先核对日志，再信日志。",
+            "landing": "能写出带移动计数且日志正确的汉诺塔。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "汉诺塔的递归实现，加了大量“前期计划、后期计划”的日志，想让读者看懂递归过程。运行它你会发现：日志说“从 A 通过 B 移动到 C”的那一步，实际打印的移动却是“从 A 移动到 B”——说明文字的角色标反了。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_hanoi",
+                "run": "cli",
+                "summary": "n=5 的汉诺塔，打印每一步计划与移动。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "22-recursion/hanoi",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 12,
+                    "kind": "design",
+                    "text": "⚠ 说明文字与实际动作不一致：函数把 n 个盘从 `a` 借 `b` 移到 `c`（`move(n, a, c)`），但这行“计划”写的是“从 a 通过 c 移动到 b”。本机实测 `n=2`：计划行说“从A通过B移动到C”，紧接着的移动行却是“将编号1圆盘从A移动到B”。日志越详细，错得越有说服力；输出文字应由同一组参数生成，而不是手抄一遍。",
+                    "end": 18
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 20,
+                    "kind": "design",
+                    "text": "这行“整体结束”写在 `if(n)` 的外面，所以递归到 `n == 0` 的空调用也会打印“移动0（含）编号以上盘子整体结束”——实测 `n=2` 的输出里出现了两次。n 个盘的移动一共 2ⁿ−1 步，但日志里夹杂的空调用提示让步数无法数清；程序也没有移动计数器可以验证 2ⁿ−1。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 6,
+                    "kind": "design",
+                    "text": "`move` 只负责打印，递归函数与输出耦合在一起：想统计步数或验证结果就得改函数。把移动记录进一个列表（或回调）再统一输出，递归本身才可测试。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "递归的基本结构见本应用主线「复杂度与递归」相关知识点；汉诺塔的移动次数是指数级，可与复杂度度量对照。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "algo.arc.compositions_bases",
+          "title": "递归小题：“整数分解”与进制转换",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "algo.paradigm.backtrack"
+          ],
+          "track": "archive",
+          "guide_line": "[递归] “整数分解”枚举的是有序组合，进制转换只打印了最高位的下标。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出“整数分解”与“整数分拆”的区别，并认出一个函数返回的是下标而不是结果。",
+            "pain": "名字说一件事、代码做另一件事，输出又很整齐。",
+            "model": "枚举把 n 拆成若干正整数之和的所有方式；把十进制数按除基取余递归转成别的进制。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "函数名与它真正产出的东西对得上吗？",
+            "landing": "能写出输出确实是数字的进制转换。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两个递归小题。第一个叫“整数分解”，实际上输出的是 1+2 与 2+1 算两种的有序组合，共 512 种；第二个叫进制转换，最后打印出来的却只是最高位的下标。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_integer_factorization",
+                "run": "cli",
+                "summary": "递归枚举把 10 拆成若干正整数之和的所有有序方式。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "22-recursion/integer_factorization",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 18,
+                    "kind": "naming",
+                    "text": "⚠ 每层从 1 试到 n，所以 1+2 与 2+1 被当成不同的拆法：对 `n = 10` 输出 2⁹ = **512** 种**有序组合**（compositions），而不是整数分拆（partitions，p(10) = 42）。名字叫“整数分解”（常指质因数分解）更是另一回事。要得到分拆，需要限制后一项不小于前一项。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 10,
+                    "kind": "design",
+                    "text": "与爬台阶同样的 `static` 状态：`total_sum` 与 `index` 让函数只能调用一次，第二次调用时编号继续累加；`factor_arr[100]` 对 `n > 100` 同样越界。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 18,
+                    "kind": "design",
+                    "text": "复杂度没有说明：输出 2ⁿ⁻¹ 行，本身就是指数级；把“列出所有拆法”和“统计拆法个数”分开写会更有用（后者有 O(n²) 的动态规划）。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_numeral_system",
+                "run": "cli",
+                "summary": "dec_to_bin 与 number_representation 两种进制转换。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "22-recursion/numeral_system",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 42,
+                    "kind": "design",
+                    "text": "⚠ `number_representation` 返回的是**最高位的下标**，数字本身写进了 `result` 数组；而 `main` 只把这三个下标打印出来——本机实测输出就是一行 `6, 2, 3`，转换出来的 `1111111`、`101`、`1000` 从来没有被显示。要看结果必须再写一个循环倒序打印 `result`。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 18,
+                    "kind": "design",
+                    "text": "靠函数内的 `static int index` 在递归调用间传递下标，并在最后一层把它清零：一旦某次递归中途出错（或有人在递归外直接调用），下标就没复位，下一次转换的结果会接在上一次后面。应当把下标作为参数传递。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 24,
+                    "kind": "design",
+                    "text": "函数在 `number >= base` 的分支里，只有 `number != 0` 才返回递归结果，没有 `else` 分支——编译器报 `control reaches end of non-void function`（`-Wreturn-type` 实测），逻辑上这条路径不会走到，但代码没有表达出来。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 36,
+                    "kind": "testing",
+                    "text": "`dec_to_bin` 的所有调用都被注释掉了，函数本身是更直接的递归写法（先递归再打印，天然从高位到低位），反而成了没被用到的代码。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "递归的基本结构见本应用主线相关知识点；整数的拆分计数是动态规划的经典例题。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "algo.arc.sum_max",
+          "title": "递归求和、阶乘、最大值：一个堆损坏，一个破坏输入",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "algo.complexity.measure"
+          ],
+          "track": "archive",
+          "guide_line": "[递归] 叫 average_value 的程序没有平均值，还在 list 上用错了 erase，进程以堆损坏退出。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出 list::erase 之后迭代器失效的错误，并说出递归求最大值为什么不该破坏输入。",
+            "pain": "容器操作里的迭代器失效错误不会立刻崩溃，而是在之后某个时刻以堆损坏的形式出现。",
+            "model": "summation 与 factorial 是教科书式递归；max_value 每次弹出末尾元素并比较。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个会改容器的调用都问：哪些迭代器因此失效？",
+            "landing": "能写出不改变输入的递归最大值。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两个递归小程序。`average_value` 并没有求平均，只算了和与阶乘，后半段对 `std::list` 的删除操作是错的；`max_value` 能给出正确的最大值，代价是把调用者传进来的向量弹空了一大半。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_average_value",
+                "run": "cli",
+                "summary": "递归求和与阶乘，以及对 list 做删除遍历。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "22-recursion/average_value",
+                  "first_commit": "2020-10-07",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 47,
+                    "kind": "ownership",
+                    "text": "⚠ 删除元素的写法错了：先 `auto tmp = it; ++it;`，然后 `erase(it)`——擦掉的是**下一个**元素而不是刚才要处理的 `tmp`；`erase` 之后 `it` 失效，下一轮 `++it` 就是未定义行为；循环条件 `i != sample.size()` 又在不断变化。本机实测程序以 `0xC0000374`（堆损坏）退出（多次运行表现不一，有时静默）。要一边遍历一边删除，应写 `it = sample.erase(it);`，或者直接用 `remove_if`。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 8,
+                    "kind": "naming",
+                    "text": "文件和目录都叫 `average_value`，但全文没有求平均值：只有被注释掉的 `//int average_value()` 一行，实现的是 `summation` 与 `factorial`。名字是计划，代码是另一件事。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 9,
+                    "kind": "design",
+                    "text": "`summation` 与 `factorial` 只处理 `n == 1` 为基本情形：`n <= 0` 时递归不会停止（栈溢出）；`factorial(13)` 已超出 `int`。基本情形与取值范围都应在注释或断言里写明。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 45,
+                    "kind": "style",
+                    "text": "`tmp` 赋了值从未使用（`-Wunused-but-set-variable`），暗示作者原本想擦除的是它；`for(auto i=0; i != sample.size(); ++i)` 是有符号与无符号的比较。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17",
+                "run_note": "在本机会以堆损坏（0xC0000374）退出，这是代码本身的未定义行为"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_max_value",
+                "run": "cli",
+                "summary": "递归求 100 个随机数的最大值。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "22-recursion/max_value",
+                  "first_commit": "2020-10-06",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 12,
+                    "kind": "design",
+                    "text": "递归求最大值每一层 `pop_back()` 弹出末尾元素，**调用者传入的向量被一步步弹空，只剩 1 个元素**。求一个值不该以破坏输入为代价；应当传下标（`max_value(v, i)`）或迭代器区间，或者传 `span`。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 11,
+                    "kind": "naming",
+                    "text": "变量叫 `min`，装的却是当前候选的最大值比较对象：`if(max < min) max = min;`。读代码的人会以为在找最小值。名字应写 `candidate`。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 2,
+                    "kind": "portability",
+                    "text": "使用了 `vector` 却没有 `#include <vector>`，能编译全靠 `<random>` 间接带入；换一个标准库实现就可能失败。递归深度也等于元素个数，10 万个元素就会栈溢出；标准库的 `std::max_element` 是首选。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "递归与复杂度见本应用主线「复杂度」知识点；迭代器失效属于 C++ 标准库的陷阱，见 C++ 教程的容器章节。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "algo.arc.permutation",
+          "title": "全排列：list::remove 会删掉所有相等元素",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "algo.paradigm.backtrack"
+          ],
+          "track": "archive",
+          "guide_line": "[回溯] 全排列对元素互不相同时正确，一有重复元素就丢元素。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出这份全排列只对元素互不相同的输入成立，以及原因。",
+            "pain": "示例数据恰好没有重复元素，错误被数据掩盖了。",
+            "model": "每层从剩余集合里选一个放进路线，递归处理剩下的；集合为空时记录一条路线。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个“从集合里删除”的操作都问：它删掉几个元素？",
+            "landing": "能写出对含重复元素输入也正确的全排列。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "经典的全排列回溯：从剩余元素里选一个、递归、再撤销。对 `{1,2,3,4}` 和四个不同的字符串都正确——因为它们互不相同。把重复元素放进去，输出的“排列”就会短一截。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_permutation",
+                "run": "cli",
+                "summary": "用 list 做候选集的全排列回溯，分别排列 4 个整数和 4 个字符串。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "22-recursion/permutation",
+                  "first_commit": "2020-10-07",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 15,
+                    "kind": "design",
+                    "text": "⚠ `std::list::remove(value)` 删除**所有**与 `value` 相等的元素，不是只删一个。当输入有重复元素时，选一个就把同值的全删了：本机实测把集合改成 `{1, 2, 1}`，输出的每个“排列”只有 **2 个**元素（`1 2`、`2 1`、`2 1`、`1 2`），而不是 3 个。要删单个元素，应当 `erase(it)`（对拷贝后的列表用对应位置的迭代器），或用下标加“已使用”标记数组。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 14,
+                    "kind": "design",
+                    "text": "每一层递归都拷贝整个 `list`，再 `remove`：O(n) 的拷贝与线性的删除叠在递归的每个结点上，总代价是 O(n·n!)。用一个“已选”布尔数组，或者原地交换元素的回溯，只需 O(n) 的额外空间。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 8,
+                    "kind": "design",
+                    "text": "`sample` 与 `route` 都是按值传参：函数体里的 `route.push_back`/`pop_back` 配对因此是多余的（与爬台阶 v2 同一个问题）；`result` 用引用收集是对的。模板写成通用的 `T`，用 `int` 与 `string` 两种类型测试过，是好的做法。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 44,
+                    "kind": "style",
+                    "text": "被注释掉的 `result.erase()`（`vector::erase` 需要参数，写法本身不对）与几行测试用的 `cout` 留在了 `main` 里；`//ddd` 是一段无意义的注释。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "全排列属于回溯法，见本应用主线「回溯」知识点；含重复元素的排列要用“同层去重”剪枝。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "algo.arc.queen",
+          "title": "N 皇后：烂尾的第一版与生成—检验的第二版",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "algo.paradigm.backtrack"
+          ],
+          "track": "archive",
+          "guide_line": "[回溯] 第一版只打印一个全零棋盘；第二版生成全部 8! 个排列再检验，没有剪枝，92 种解是对的。",
+          "weight": "了解",
+          "outline": {
+            "promise": "区分“枚举后检验”与“回溯剪枝”，并认出一个烂尾文件是怎样留在仓库里的。",
+            "pain": "同一个问题放在两个目录（递归、分治），哪个都不是它的类别。",
+            "model": "第二版：对 1..8 的所有排列检验对角线；第一版：未完成。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "冲突要在放下皇后的那一步发现，还是全放完再检查？",
+            "landing": "能写出带剪枝的 N 皇后，并比较两者的搜索量。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "N 皇后的两次尝试。第一版（放在递归目录里）只打印一个 4×4 的全零棋盘，是个烂尾的“墓碑文件”；第二版（放在分治目录里）把 8 个皇后的所有排列都生成出来，再逐个检验，找出 92 种解——结果是对的，做法却是枚举而不是回溯。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_queen_stub",
+                "run": "cli",
+                "summary": "第一版 N 皇后：只打印空棋盘。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "22-recursion/queen",
+                  "first_commit": "2020-10-05",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 59,
+                    "kind": "design",
+                    "text": "⚠ 烂尾：`queen(int n)` 完全不使用 `n`，只打印一个 `BLOCK×BLOCK`（4×4）的全零数组——本机实测输出就是四行 `0 0 0 0`。`check()`（第 55 行）恒返回 `true`，上面近 50 行是被注释掉的第一次尝试（还引用了 `../stack/stack.h`）。这个文件没有实现任何东西，却叫 queen。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 7,
+                    "kind": "style",
+                    "text": "第 7–50 行是一整段被注释掉的、基于栈与坐标结构体的第一版思路：保留“放弃的方案”最好写成一句说明（为什么放弃），或者留在版本历史里，而不是整段注释留在源码里。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 53,
+                    "kind": "design",
+                    "text": "棋盘大小用宏 `BLOCK` 写死为 4，而函数又有一个不被使用的参数 `n`：两个“规模”互不相干。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_queen_permute",
+                "run": "cli",
+                "summary": "枚举 1..8 的所有排列，检验对角线，得出 8 皇后的 92 种解。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "23-divide_and_conconquer/queen",
+                  "first_commit": "2020-10-07",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 64,
+                    "kind": "design",
+                    "text": "⚠ 这不是回溯：它先用 `queen` 生成 1..8 的**全部 8! = 40320 个排列**（行列冲突在生成排列时就消除了），到叶子才 `check_rule` 检查对角线。回溯的关键是**在放下一个皇后的那一步就发现冲突并剪枝**，这里全放完才检验，搜索量固定是 8!。能得出正确答案，但 N 一大就不可行（12 皇后要 4.79 亿个排列）。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 12,
+                    "kind": "design",
+                    "text": "`check_points` 每检验一个候选就先把它全部打印出来：本机实测输出约 **4 万行**（40320 个候选加 92 个解的棋盘），耗时 0.7 秒；真正想看的 92 个解被淹没在里面。打印应当只对通过检验的解做。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 9,
+                    "kind": "design",
+                    "text": "`map<int,int>` 按值传参（拷贝整个 map）、用 map 表示“第 row 行的皇后在第几列”，不如直接用 `vector<int>` 的下标；两层循环比较每对皇后的行偏移与列差，判断对角线冲突的逻辑是对的——**实测共找到 92 种解，与 8 皇后的已知解数一致**。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 62,
+                    "kind": "naming",
+                    "text": "这个文件放在目录 `23-divide_and_conconquer`（分治）里，内容却是排列枚举；目录名还拼错了（conquer）。分类名要与技术对得上，否则读者会带着“分治”的期待来读它。`is_less_valid` 变量未使用。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "回溯与剪枝见本应用主线「回溯」知识点；N 皇后是该知识点的经典例题，可与这里的“生成再检验”写法对比搜索量。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "algo.arc.binary_search",
+          "title": "二分查找：区间端点用错，查大值时进程中止",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "algo.paradigm.divide"
+          ],
+          "track": "archive",
+          "guide_line": "[分治] 函数把 end 当闭区间，调用却传 size()，查找比所有元素都大的值时越界。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出二分查找最经典的区间约定错误：闭区间与半开区间混用。",
+            "pain": "前两次查找都碰巧成功，第三次才暴露。",
+            "model": "在 [begin, end] 闭区间里取中点，比较后缩小一半；找不到返回 -1。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个二分都先写下区间的含义（闭还是半开），再检查每次更新和每次调用是否一致。",
+            "landing": "能写出区间约定一致的二分。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "递归的二分查找，加一个生成 100 个随机数的 main。函数把 `end` 当作**最后一个元素的下标**（闭区间），main 里却传了 `sample.size()`（越过末尾一位）。前两次查找碰巧找到了；第三次查一个比所有元素都大的数，越界访问触发断言，进程以 3 退出。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_binary_search",
+                "run": "cli",
+                "summary": "在排好序的 100 个随机数里二分查找三个值。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "23-divide_and_conconquer/binary_search",
+                  "first_commit": "2020-10-07",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 60,
+                    "kind": "design",
+                    "text": "⚠ 区间约定不一致：函数里 `if(begin > end) return -1` 和 `middle_key-1`、`middle_key+1` 的写法说明 `end` 是闭区间的最后一个下标，调用却写 `sample.size()`，比最后一个下标大 1。本机实测：前两次查找分别打印 45、72，第三次（9999，大于所有元素）走到 `sample[100]`，触发 `vector::operator[]` 的断言 `__n < this->size()`，进程以退出码 **3** 中止。应当传 `sample.size() - 1`；或者把函数改成半开区间 [begin, end)。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 12,
+                    "kind": "naming",
+                    "text": "自定义的函数叫 `binary_search`，而文件里有 `using namespace std;` 和 `<algorithm>`：与标准库的 `std::binary_search` 同名，参数个数不同所以重载分得开，但极易在改动时调到错的那个；应换名（`binary_find`）。下标用 `int`，与 `vector::size()` 的无符号类型混用。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 17,
+                    "kind": "design",
+                    "text": "用 `begin+(end-begin)/2` 取中点而不是 `(begin+end)/2`，避免了 `begin+end` 溢出——这是二分里最常被忽略的细节，写对了。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 49,
+                    "kind": "testing",
+                    "text": "为了展示“有序/无序”先后用 `greater` 与默认顺序各排了一遍并打印，但查找的三个值是**对着打印出来的某次随机数据手工挑的**（种子固定为 0 才稳定）；没有查“不存在”的值（比最小的还小、介于两个元素之间的数），而这些边界恰恰是二分最容易错的地方。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17",
+                "run_note": "第三次查找会触发 vector 的断言并以退出码 3 中止，这是代码本身的错误"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "分治与二分见本应用主线「分治」知识点；区间不变量的写法见该知识点对二分的讲解。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "algo.arc.merge_gold",
+          "title": "分治两题：名不副实的归并排序、会静默截断的金块问题",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "algo.paradigm.divide"
+          ],
+          "track": "archive",
+          "guide_line": "[分治] 叫归并排序的程序没有任何排序；金块问题的模板里写死了 int。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出文件名与内容不符的烂尾代码，并说出模板函数里写死具体类型的后果。",
+            "pain": "目录和文件名承诺了一个算法，代码里什么也没做。",
+            "model": "金块问题：把序列分成两半各找最大最小，再合并，一次比较处理两元素的基本情形。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "问：这个文件真的实现了它的名字吗？模板里有没有写死的类型？",
+            "landing": "能写出真正的归并排序，并用 minmax_element 校验金块。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "分治目录里的两道题。`merge_sort` 完全没有实现归并排序——它只生成并打印随机数；`gold`（求最大最小值）的结构是对的，但模板函数里用 `int` 存中间结果，换成 `double` 就会悄悄丢掉小数。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_merge_sort",
+                "run": "cli",
+                "summary": "（名不副实）生成并打印 100 个随机数。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "23-divide_and_conconquer/merge_sort",
+                  "first_commit": "2020-10-10",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 8,
+                    "kind": "naming",
+                    "text": "⚠ **名不副实**：目录与程序叫 `merge_sort`，但整个文件里没有一行排序或归并代码——只是生成 100 个随机数然后打印。`std::sort` 都没调用，更不用说手写的归并；末尾的“排序后”输出打印的仍是同一批无序数。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 14,
+                    "kind": "design",
+                    "text": "在填充随机数**之前**先 `for_each` 打印了一遍：本机实测输出先是 100 个 `0`，然后才是随机数——第一次打印的是刚构造出来、全部为 0 的 `vector<int>(100)`。想对比“排序前后”，应当在排序前打印数据，而不是在填充前。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 22,
+                    "kind": "style",
+                    "text": "`//dddddddd` 是敲错留下的注释，被注释掉的 `shuffle` 也是未完成的实验；`default_random_engine e(random_device{}());` 用得对，但这些残留与实际要做的事（归并排序）毫无关系。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_gold",
+                "run": "cli",
+                "summary": "分治求 1000 个随机数的最大值与最小值。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "23-divide_and_conconquer/gold",
+                  "first_commit": "2020-10-08",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 12,
+                    "kind": "design",
+                    "text": "⚠ 函数是 `template <typename T>`，中间变量却写死 `int`：`tie(max1, min1) = find_max_min_gold(...)` 把 `tuple<T,T>` 赋给 `int`，`T = double` 时每一层都悄悄截掉小数，返回时再转回 `T` 也找不回来。应使用 `T max1, min1, max2, min2;`。`main` 只用 `int` 测试，所以没人发现。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 13,
+                    "kind": "design",
+                    "text": "把序列分成两半时**新建两个 vector** 并传值：每层都拷贝全部元素，总拷贝量是 O(n log n)，而问题本身只需要 O(n) 次比较；用下标区间（`lo, hi`）或迭代器范围递归，不需要拷贝。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 30,
+                    "kind": "design",
+                    "text": "基本情形（两个元素）用一次比较同时得到最大与最小，这正是金块问题“约 3n/2 次比较”的核心：比分别找最大最小（2n 次）更少。这个设计是对的，值得保留。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 51,
+                    "kind": "testing",
+                    "text": "只打印结果，没有用 `std::minmax_element` 对拍：分治程序最容易错在边界（长度 1、2、3、奇偶），一行对拍就能发现；`time(NULL)` 作种子也没有包含 `<ctime>`，靠间接包含。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "分治法见本应用主线「分治」知识点；归并排序是该知识点的核心例题，可与这里的缺失对照。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "algo.arc.iterative",
+          "title": "迭代小算法：公约数、质因数、牛顿开方",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[迭代与枚举] 输出把最小公倍数写成“最小公约数”；质因数分解多一个星号且 0 会死循环。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出标签错位、尾部多余分隔符、边界输入死循环这三类“打印出来像对的”问题。",
+            "pain": "算法函数里直接打印，没有返回值，输出的文字谁也没核对过。",
+            "model": "辗转相除求最大公约数、试除求质因数、牛顿迭代开方。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "函数该返回值还是打印？每个循环对 0、1、负数会怎样？",
+            "landing": "能写出返回值而不打印的版本并加测试。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "三个迭代算法放在三个头文件里，由 main 依次调用。算法本身大多对，毛病在输出：公倍数被标成“最小公约数”、质因数分解末尾多一个 `*`，而且这些函数直接 `printf`，没有返回值，没法写测试。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_dict_iterative",
+                "run": "cli",
+                "summary": "最大公约数/最小公倍数、质因数分解、牛顿迭代开方。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "1-速学速用大辞典/iterative",
+                  "first_commit": "2020-10-03",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "common_multiple_divisor.h",
+                    "line": 21,
+                    "kind": "naming",
+                    "text": "⚠ 输出文字写“最小公约数”，算的却是**最小公倍数**（`x*y/dividend`）：本机实测 `100, 20的最大公约数:20, 最小公约数:100`。最小公约数永远是 1，没有意义；应为“最小公倍数”。另外 `x*y` 在大数时会溢出 `int`，应先除后乘（`x / gcd * y`）。"
+                  },
+                  {
+                    "file": "factorization.h",
+                    "line": 16,
+                    "kind": "design",
+                    "text": "⚠ 每找到一个因子就打印 `因子*`，所以结果末尾总有一个多余的 `*`：实测 `因数分解:100 = 2*2*5*5*`。而 `factorization(0)` 会无限循环（`while(n != 1)` 里 `for(i=2; i<=n; ...)` 对 0 一个也找不到），负数同理。输入应先校验 `n >= 2`。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 16,
+                    "kind": "design",
+                    "text": "`factorization(54)` 连续调用了两次，是复制粘贴的重复；三个函数全是 `void` 且直接打印，没有返回值，也就没有办法写自动化测试——应该返回 `gcd`、因子数组、近似根，打印放在 `main` 里。"
+                  },
+                  {
+                    "file": "sqrt.h",
+                    "line": 11,
+                    "kind": "design",
+                    "text": "牛顿迭代法的收敛判据是相邻两次差小于 `1e-2`，精度只有两位小数，而且是写死的；`my_sqrt` 的返回类型是 `void`，只打印每轮的 `x0`、`x1`。初始值 `x0 = n/2` 对 `n = 0` 恰好不进循环，对负数则不收敛。"
+                  },
+                  {
+                    "file": "sqrt.h",
+                    "line": 8,
+                    "kind": "coupling",
+                    "text": "三个头文件里的函数都在头文件里**定义**（非 `static inline`），且用了 `printf` 与 `fabs` 却没有自己 `#include <stdio.h>`/`<math.h>`，全靠 `main.c` 先包含——头文件不能单独使用，也不能被两个 `.c` 同时包含。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11",
+                "run_note": "需要链接数学库的平台请加 -lm（应用内的 C 编译在 Windows 上不需要）"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "迭代与复杂度的基本概念见本应用主线「复杂度」知识点。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "algo.arc.enum_combine",
+          "title": "枚举两题：整除判断的无结尾字符串、少了 84 个的组合",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[迭代与枚举] 整除判断读越界且输入结束后死循环；“组合”只输出 36 个，而 C(10,3)=120。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出没有结尾符的字符数组、不检查 scanf 的死循环，以及一个声称穷举却漏掉三分之二的“组合”。",
+            "pain": "输出整齐的程序，行数就是最好的检验：36 行对 120 行。",
+            "model": "用三位字符 0/1 编码“能否被 3、5、7 整除”再 atoi 成数字做 switch；用循环枚举 1..n 中取 r 个的组合。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "穷举的结果有没有和公式对过数？",
+            "landing": "能写出真正的递归组合枚举。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两个“枚举”练习。第一个把整除结果编码成 `\"101\"` 这样的字符串再转成数字；第二个号称列出“1–n 中取 r 个数的所有组合”，实际只列了 36 个，而 C(10,3) = 120。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_dict_enum",
+                "run": "cli",
+                "summary": "判断一个数能否被 3、5、7 整除，输入 0 以外的整数反复判断。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "1-速学速用大辞典/enum",
+                  "first_commit": "2020-10-03",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 11,
+                    "kind": "ownership",
+                    "text": "⚠ `result` 有 3 个字符，三位都用上了，**没有位置放结尾的 `'\\0'`**；随后 `printf(\"%s:%d\\n\", result, atoi(result))` 把它当 C 字符串读，会越过数组末尾——读到什么取决于栈上碰巧是什么。应当开 4 个字节并 `result[3] = '\\0'`。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 10,
+                    "kind": "design",
+                    "text": "⚠ `scanf` 的返回值没检查，外层是 `while (1)`：输入结束（EOF）时 `scanf` 失败、`n` 保持上次的值，程序无限循环输出同一行。本机实测，只要不给输入，5 秒内程序不会退出。应检查 `scanf(...) == 1`，并给出退出方式。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 12,
+                    "kind": "design",
+                    "text": "把三个布尔值拼成 `\"101\"` 再 `atoi` 成十进制数 101 去 `switch`，是“用十进制数字模拟二进制”的绕路：直接 `int flags = (n%7==0)<<2 | (n%5==0)<<1 | (n%3==0);` 再 `switch (flags)`，既没有字符串也没有越界问题。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11",
+                "run_note": "程序是死循环（无输入时更是如此），应用内 10 秒后会被终止",
+                "stdin": "15\n21\n105\n"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_dict_backtrack",
+                "run": "cli",
+                "summary": "取出 r=3 个数的“所有组合”，n=10。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "1-速学速用大辞典/backtrack",
+                  "first_commit": "2020-10-03",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 20,
+                    "kind": "design",
+                    "text": "⚠ 号称“取出 r 个数的所有组合”，本机实测只输出了 **36 行**，而 C(10,3) = **120**。原因：前 r−1 个元素被写死为**连续**的 `data[i .. i+r-2]`，只有最后一个元素在后面扫描，所以 `1 3 5` 这类前两个不相邻的组合永远出不来。代码只对 `r = 3` 的“连续前缀加一个”成立，变量 `r` 形同虚设。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 5,
+                    "kind": "naming",
+                    "text": "目录叫 `backtrack`，全文却没有递归也没有回溯（选一个、递归、撤销）：就是三重嵌套的 for 的变形。组合的标准回溯只需要十几行，并且对任意 `r` 成立。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 13,
+                    "kind": "testing",
+                    "text": "程序在循环里累加 `total_num` 并逐行打印，但从未把最终个数与 C(n,r) 对一下——一行 `assert(total_num == 120)` 就能当场发现少了 84 个。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "枚举与回溯见本应用主线「回溯」知识点；组合数的计算与枚举见该知识点的例题。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "algo.arc.sort_list",
+          "title": "链表插入排序与“冒泡排序”（依赖已搬走的 list.h）",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[迭代与枚举] include 路径指向已搬走的目录；“冒泡排序”其实是交换排序。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出一份叫“冒泡”的排序其实不是冒泡，并说出对链表做插入排序的特征。",
+            "pain": "排序算法的名字常常被混用，只有数据流动的方式才能区分。",
+            "model": "插入排序：把每个元素插进已有序的链表；“冒泡”：拿 i 位置的元素与后面每一个比较并交换。",
+            "scope": "只读历史代码并批注，不修复。",
+            "judgment": "每次交换发生在哪两个位置？",
+            "landing": "能写出真正的冒泡排序并比较两者的交换次数。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两个排序：用链表实现的插入排序，以及叫“冒泡”的排序。后者拿固定位置 `i` 的元素与后面每个元素比较并交换，并不是相邻元素两两交换的冒泡排序。这份代码还依赖 `../list/list.h`，而那个目录早就不在这里了，所以无法编译。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_dict_sort",
+                "run": "read-only",
+                "summary": "链表插入排序与交换排序（依赖已搬走的 ../list/list.h）。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "1-速学速用大辞典/sort",
+                  "first_commit": "2020-10-03",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 5,
+                    "kind": "portability",
+                    "text": "⚠ 依赖的 `../list/list.h` 在这个仓库里根本不存在（链表在 `11-linner/2-list`，且那份本身也无法编译），所以这个目录无法编译。跨目录相对路径把练习绑死在当年的目录布局上。"
+                  },
+                  {
+                    "file": "sort.h",
+                    "line": 70,
+                    "kind": "design",
+                    "text": "⚠ 名叫 `bubble_sort`，实际是**交换排序**：外层固定位置 `i`，内层 `j` 从 `i` 往后扫，只要后面有更小的就与 `unsort[i]` 立即交换。冒泡排序比较并交换的是**相邻**元素。两者都是 O(n²)，但比较与交换的次数、稳定性都不同，起错名字会误导读者。"
+                  },
+                  {
+                    "file": "sort.h",
+                    "line": 75,
+                    "kind": "design",
+                    "text": "`flag` 记录“这一趟有没有交换”，用来提前结束：对真正的冒泡排序这是有效的优化（一趟没交换说明已有序）；但在这种“拿位置 i 与后面所有元素比较”的写法里，没有交换只说明第 i 个已经是剩余部分的最小值，不能说明整体有序，提前 `break` 的前提不成立。"
+                  },
+                  {
+                    "file": "sort.h",
+                    "line": 64,
+                    "kind": "ownership",
+                    "text": "排序**原地修改传入的数组**，同时返回它的指针并每趟打印一次：调用者的数据被改动了（`main` 里先做插入排序再做“冒泡”，第二次拿到的已经是有序数据），打印也让函数无法用于真正的测试。"
+                  },
+                  {
+                    "file": "sort.h",
+                    "line": 13,
+                    "kind": "design",
+                    "text": "链表插入排序用三段分支（空表、中间、表尾）找位置，并且每次都从表头重新数 `pos` 再调用 `insert_list`（那个函数又要从表头走到位置）——每次插入走两遍链表，总代价比需要的多一个常数倍；在遍历时直接记住前驱结点就能一次插入。"
+                  }
+                ],
+                "run_note": "include 的 ../list/list.h 在本仓库不存在，无法编译"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "排序算法见本应用主线与数据结构应用的排序知识点（`ds.sort.basic`）。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "algo.arc.c_string_ptr",
+          "title": "C 字符串与二维字符数组的小练习",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[迭代与枚举] 用了 atol 却没有 stdlib.h，在 gcc 15 下是编译错误；fflush(stdin) 是未定义行为。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出老 C 代码里“旧编译器只警告、新编译器直接报错”的隐式声明，并说出 fflush(stdin) 的问题。",
+            "pain": "2018 年能编译的代码，换一个编译器就过不去。",
+            "model": "读两个短字符串、转数字、交换、相加；演示二维字符数组与 sizeof。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个库函数都问：它的声明从哪个头文件来？",
+            "landing": "能写出在 C17 下无警告的版本。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "一个读取两个字符串、转成数字、交换再相加的小练习，加上二维字符数组的 `sizeof` 实验。它在 2018 年的编译器上大概只有警告，在现在的 gcc 15 上会因为隐式声明直接编译失败。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_algo_dict_c_string",
+                "run": "read-only",
+                "summary": "两个字符串的读取、转数字、交换与相加，二维字符数组的 sizeof。",
+                "origin": {
+                  "repo": "algorithm",
+                  "path": "1-速学速用大辞典/c_string",
+                  "first_commit": "2020-10-03",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 15,
+                    "kind": "portability",
+                    "text": "⚠ 用了 `atol` 却没有 `#include <stdlib.h>`（只包含了 `<stdio.h>`、`<string.h>`、`<stdint.h>`）：隐式函数声明。老编译器只警告，**gcc 14 起把它当作错误**，所以这个文件在新工具链下无法编译。同一行 `%d` 配 `atol` 返回的 `long` 也是格式错误。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 16,
+                    "kind": "portability",
+                    "text": "`fflush(stdin)` 对输入流是**未定义行为**（只有部分平台的实现定义了它的行为，C 标准没有）；想丢掉缓冲区里残留的换行应当循环 `getchar()` 到换行。`fgets(s1, str_length, stdin)` 的缓冲区只有 10 个字节，超过 9 个字符的输入会被截断，残余留在输入流里。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 45,
+                    "kind": "ownership",
+                    "text": "`char **p_str = str;` 把 `char (*)[11]`（指向 11 字节数组的指针）赋给 `char **`：类型不同，gcc 报不兼容指针类型；这正是“数组名不是二级指针”这个经典误解，注释里被注释掉的 `char *t_str = {...}` 也是同类问题。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 41,
+                    "kind": "style",
+                    "text": "`sizeof` 的结果是 `size_t`，用 `%d` 打印是格式错误（应 `%zu`）；循环 `i < sizeof(str)/sizeof(*str)` 是有符号与无符号比较。"
+                  }
+                ],
+                "run_note": "在 gcc 14 及以上无法编译（atol 隐式声明是错误），并且需要键盘输入"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "字符串与指针的基础见 C 与机器应用的 C 相关章节。"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
