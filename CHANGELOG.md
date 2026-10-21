@@ -474,6 +474,7 @@ Athena 的各个应用随同一个版本号统一发布。本文件记录每个�
 - **首个打包发行版本**：建立分类、章节、知识点三级导航与运行闭环，Reference 与
   RAII 知识点可运行；引入 macOS 可携带应用打包流程。
 
+[10.1.0]: https://github.com/iguoya/Athena/compare/v10.0.0...v10.1.0
 [10.0.0]: https://github.com/iguoya/Athena/compare/v9.0.0...v10.0.0
 [9.0.0]: https://github.com/iguoya/Athena/compare/v8.0.0...v9.0.0
 [8.0.0]: https://github.com/iguoya/Athena/compare/v7.0.0...v8.0.0
