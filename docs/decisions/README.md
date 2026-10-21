@@ -167,3 +167,4 @@
 | [0171](0171-incremental-release-per-app-versions.md) | 增量发版：应用各有自己的真实版本号（写在各栈清单），只构建有改动的应用；Release 页只放本次构建的；不做逐应用 tag | 已接受；修订 0081 决策 1~3，落地后第一次发版是 10.1.0 |
 | [0172](0172-app-updater-for-all-tauri-apps.md) | 应用内自动更新器推广到全部 Tauri 发布应用：官方 updater 全矩阵接入，启动即静默更、失败静默、无手动入口；集中 `app-updates` 标签每应用一个 json；c-gui-lab、driver、practice/cpp 排除；启动器统一更新中心不做 | 已接受；延伸 0081 决策 4 与 0171 |
 | [0173](0173-launcher-installable-with-auto-update.md) | 启动器做成安装包并接入应用内自动更新：进发布矩阵；找不到仓库时进安装模式（编译期内嵌 catalog.json，按平台约定判断已安装、启动、指路 Releases）；仓库模式不变 | 已接受；修订 0170 第 1 条与 0172 第 2 条末句 |
+| [0174](0174-mathematics-compass-in-mentor.md) | 数学学习导引：`mentor/` 新增 `mathematics-compass`（数学罗盘，图谱/参考类），给数学五个学习应用排唯一推荐路径、写学习目的与掌握要点；如实写明高数缺口；薄壳阅读为主 + 一张可点顺序图 | 已接受 |
