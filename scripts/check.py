@@ -390,6 +390,14 @@ def run_react_frontend_check() -> None:
         raise SystemExit(f"课程类前端统一检查没通过（{len(problems)} 处）。")
 
 
+def run_archive_check() -> None:
+    print("== 跨应用检查：历史归档章节（ADR 0176） ==", flush=True)
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import archive_check
+
+    archive_check.run(REPO_ROOT, list(APP_ROOTS))
+
+
 def run_source_check() -> None:
     print("== 跨应用检查：内容必须有出处 ==", flush=True)
     node = shutil.which("node")
@@ -745,6 +753,7 @@ def main(argv: list[str]) -> int:
     if argv[:1] == ["--sources-only"]:
         run_skill_mirror_check()
         run_source_check()
+        run_archive_check()
         run_workflow_check()
         run_stack_version_check()
         run_shared_build_check()
@@ -758,6 +767,7 @@ def main(argv: list[str]) -> int:
 
     run_skill_mirror_check()
     run_source_check()
+    run_archive_check()
     run_workflow_check()
     run_stack_version_check()
     run_shared_build_check()
