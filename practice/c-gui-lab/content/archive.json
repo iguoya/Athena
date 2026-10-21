@@ -1,0 +1,365 @@
+{
+  "tracks": [
+    {
+      "id": "archive",
+      "title": "历史归档",
+      "color": "#a08c64"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "archive",
+      "title": "历史归档 · 早年练习的整理与批注",
+      "track": "archive",
+      "layer": "archive",
+      "summary": "从旧 GitHub 仓库 Linux 里整理来的 GTK（C）与 SDL 练习（ADR 0176）：GTK 2/3 时代的写法——回调、CSS、Builder 与 Glade、对话框，以及 SDL 入门。本应用的画廊展示的是 GTK4 与其他框架的现行样式，这里是历史代码：原样保留，另有行级批注指出写法与版本差异。本章不计入进度，留待人工审视后决定留存或删除。",
+      "topics": [
+        {
+          "id": "gtk.arc.callback",
+          "title": "按钮回调与 user_data",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[信号] 回调与 user_data。",
+          "weight": "了解",
+          "outline": {
+            "promise": "看 `g_signal_connect` 传 user_data 打印标签。",
+            "pain": "命名撒谎、回调复制粘贴、半数按钮未连接。",
+            "model": "垂直 GtkBox + 四个按钮，两个连 pressed。",
+            "scope": "单文件。",
+            "judgment": "作信号入门反例很好。",
+            "landing": "能指出命名、重复函数、未连接按钮三处。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "点「你好」「郭雅」应 printf；另外两按钮无连接。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_gtk_callback",
+                "sources": [
+                  "main.c"
+                ],
+                "std": "c11",
+                "run": "toolchain",
+                "run_note": "需要 GTK3 开发库（pkg-config gtk+-3.0）；含 GtkHBox/gtk_main/gtk_widget_show_all 等旧 API，GTK4 中已改",
+                "summary": "演示 user_data；`hbox` 名不副实；两按钮未连。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "GTK/23-CallBack",
+                  "first_commit": "2022-07-14",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 38,
+                    "kind": "naming",
+                    "text": "变量叫 `hbox`，实际 `gtk_box_new(GTK_ORIENTATION_VERTICAL, 50)`——名字与方向相反，读代码会误判布局。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 5,
+                    "kind": "design",
+                    "text": "`hello` 与 `guoya` 函数体完全相同，只是连接时 user_data 字符串不同；应合成一个回调，用 `user_data` 区分前缀。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 53,
+                    "kind": "portability",
+                    "text": "连接的是 `\"pressed\"` 而非 `\"clicked\"`：按下即触发、含重复 press；GTK4 手势/事件模型又不同。教学上应说明与 clicked 的差异。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 44,
+                    "kind": "design",
+                    "text": "`button3`/`button4` 加入盒子却未 `g_signal_connect`，点「旅行」「开心」无输出，像半截练习。"
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "`practice/c-gui-lab` 现行 `apps/gtk-style` 走 GTK4+libadwaita，与本条旧 GTK2/3 代码不能直接对跑；批注只标旧 API 与结构问题。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "gtk.arc.gtkapp3",
+          "title": "GtkApp3：gtk_main + Builder 主窗",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[应用结构] GtkApp3 名实偏离。",
+          "weight": "了解",
+          "outline": {
+            "promise": "看小型多文件 GTK 工程如何名实偏离。",
+            "pain": "Application 路被注释；Process 无进程。",
+            "model": "main 开 Builder 主窗 + Glade 信号进 Process。",
+            "scope": "比纯 Hello 大，比完整应用小。",
+            "judgment": "收作「模块化未完成」样例。",
+            "landing": "能指出注释掉的 Application 与假 create_task。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "主窗依赖 `ui/mainwindow.glade`；进程相关按钮勿期待真 fork。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_gtk_gtkapp3",
+                "sources": [
+                  "main.c",
+                  "IPC/ipc.c",
+                  "Process/process.c",
+                  "Public/public.c",
+                  "src/GtkApp.c",
+                  "System/system.c",
+                  "Thread/thread.c",
+                  "IPC/ipc.h",
+                  "Process/process.h",
+                  "Public/public.h",
+                  "System/system.h",
+                  "Thread/thread.h",
+                  "ui/bak.glade",
+                  "ui/bak_dialog.glade",
+                  "ui/ipc.glade",
+                  "ui/mainwindow.glade",
+                  "ui/part1.glade",
+                  "ui/process.glade",
+                  "ui/simple.glade",
+                  "ui/thread.glade",
+                  "ui/window.glade"
+                ],
+                "std": "c11",
+                "run": "toolchain",
+                "run_note": "需要 GTK3 开发库（pkg-config gtk+-3.0）；含 GtkHBox/gtk_main/gtk_widget_show_all 等旧 API，GTK4 中已改",
+                "summary": "GtkApp3：退回 gtk_main；Process 逻辑被注释。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "GTK/GtkApp3",
+                  "first_commit": "2023-01-28",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 56,
+                    "kind": "design",
+                    "text": "大段 `GtkApplication`/`activate` 被注释，最终退回 `gtk_init`+`gtk_main`——与目录名 GtkApp3、以及 Process/ 子模块想表达的「应用」不一致。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 70,
+                    "kind": "portability",
+                    "text": "`destroy`→`gtk_main_quit` + `show_all` + `gtk_main`：经典 GTK3 循环。旧 API，4 中已改。"
+                  },
+                  {
+                    "file": "Process/process.c",
+                    "line": 13,
+                    "kind": "design",
+                    "text": "`create_task` 实际执行的只有往 `TextView` 追加一行“创建进程.....”，没有创建任何进程：`fork()`、`waitpid` 的部分（process.c:32、42 附近）以及对 `GtkTextBuffer` 的几段试验都被注释掉了。按钮名和提示文字让人以为这里在做进程实验，实际只是个界面占位。"
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "`practice/c-gui-lab` 现行 `apps/gtk-style` 走 GTK4+libadwaita，与本条旧 GTK2/3 代码不能直接对跑；批注只标旧 API 与结构问题。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "gtk.arc.dialog_builder",
+          "title": "dialog.c：Builder 弹窗未接 parent",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[对话框] dialog.c 名实不符。",
+          "weight": "了解",
+          "outline": {
+            "promise": "追查 dialog.c 名实不符的弹窗辅助函数。",
+            "pain": "参数不用、Builder 泄漏、路径写死。",
+            "model": "Anjuta 主壳 + 手写 quick_message。",
+            "scope": "收 g32 因 dialog.c 有实质问题。",
+            "judgment": "对话框反例。",
+            "landing": "能重写 quick_message 使 parent/message 生效。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "阅读 `dialog.c`；不要期待 message 会显示在 UI 上。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_gtk_dialog_builder",
+                "sources": [
+                  "src/main.c",
+                  "src/dialog.c",
+                  "src/g32-grid.c",
+                  "src/dialog.h",
+                  "src/g32-grid.h",
+                  "src/dialog.ui",
+                  "src/g32_grid.ui"
+                ],
+                "std": "c11",
+                "run": "toolchain",
+                "run_note": "需要 GTK3 开发库（pkg-config gtk+-3.0）；含 GtkHBox/gtk_main/gtk_widget_show_all 等旧 API，GTK4 中已改",
+                "summary": "quick_message 忽略参数并泄漏 Builder。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "GTK/g32-grid",
+                  "first_commit": "2022-07-14",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "src/dialog.c",
+                    "line": 18,
+                    "kind": "design",
+                    "text": "`quick_message(parent, message)` 两个参数都未使用：未设 transient、未把 `message` 填进 UI，函数名与行为不符。"
+                  },
+                  {
+                    "file": "src/dialog.c",
+                    "line": 24,
+                    "kind": "ownership",
+                    "text": "`gtk_builder_add_from_file` 后 `get_object` 得到 window 就 `show_all`，Builder 未 `unref`，也未保存指针——每次调用漏一个 Builder。"
+                  },
+                  {
+                    "file": "src/dialog.c",
+                    "line": 24,
+                    "kind": "portability",
+                    "text": "又写死 `src/dialog.ui`；从别的 cwd 启动必失败，且 error 传 NULL。"
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "`practice/c-gui-lab` 现行 `apps/gtk-style` 走 GTK4+libadwaita，与本条旧 GTK2/3 代码不能直接对跑；批注只标旧 API 与结构问题。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sdl.arc.intro",
+          "title": "SDL 入门：1.2 的颜色循环与 SDL2 的图片显示",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[SDL] 三个 SDL 小程序，一个跑 46 个小时、一个无法编译、一个失败后直接崩。",
+          "weight": "了解",
+          "outline": {
+            "promise": "认出 SDL 入门代码里的三类常见错误：嵌套循环加延时、不检查返回值、事件循环缺失。",
+            "pain": "图形程序的“能显示出东西”会掩盖初始化失败与阻塞。",
+            "model": "SDL1.2 用 SetVideoMode 得到屏幕 surface；SDL2 用窗口加窗口 surface；都靠 FillRect 与 BlitSurface。",
+            "scope": "只读历史代码并批注，不运行（本应用没有 SDL 开发库）。",
+            "judgment": "每个初始化调用问：失败了怎么办？每个延时问：这期间事件谁处理？",
+            "landing": "能写出带事件循环和错误检查的 SDL2 窗口。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "三个 SDL 入门程序：一个 SDL 1.2 的“遍历颜色”、两个 SDL2 的“纯色窗口”与“显示图片”。多数代码出自教程模板，真正属于练习者的是改动处：而改动处恰好是错误所在——三重循环加 10 毫秒延时，以及忽略初始化与加载的返回值。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_sdl_intro",
+                "run": "toolchain",
+                "summary": "SDL 1.2 与 SDL2 的三个最小程序。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "SDL",
+                  "first_commit": "2022-07-12",
+                  "duplicates": [],
+                  "note": "Linux/SDL 里另有 1-backgound（Code::Blocks SDL 模板原样）、3-line（Anjuta 生成的 autotools 骨架）未收"
+                },
+                "notes": [
+                  {
+                    "file": "2-beginning/main.cpp",
+                    "line": 21,
+                    "kind": "design",
+                    "text": "⚠ 三重循环 255×255×255 ≈ 1658 万次，每次 `SDL_FillRect` 整屏加 `SDL_Delay(10)`：光延时就要 16 万秒（约 46 小时）才能画完一遍，程序等于永远不会结束。想演示“遍历颜色”应当按帧推进（每帧改一个分量）并处理退出事件，而不是用嵌套循环加睡眠。"
+                  },
+                  {
+                    "file": "2-beginning/main.cpp",
+                    "line": 26,
+                    "kind": "design",
+                    "text": "循环里完全没有事件处理（`SDL_PollEvent`）：窗口会被系统判定为无响应，也无法用关闭按钮退出；`SDL_Init`、`SDL_SetVideoMode` 的返回值也都没检查（对比被注释掉的完整模板里是检查的）。"
+                  },
+                  {
+                    "file": "2-beginning/main.cpp",
+                    "line": 22,
+                    "kind": "style",
+                    "text": "`{11` 里的数字 `11` 是误敲进代码的字符：它是一条表达式语句，只是没有任何效果（`-Wunused-value`）；编辑器里按了数字键没发现。`atexit(SDL_QUIT)` 那行被注释，写成了常量 `SDL_QUIT` 而不是函数 `SDL_Quit`，注释掉才没编译错。"
+                  },
+                  {
+                    "file": "2-beginning/main.c",
+                    "line": 3,
+                    "kind": "portability",
+                    "text": "⚠ `#include <pthread>` 既不是 C 头文件（标准的是 `<pthread.h>`），在 `main.c` 里更没有用到线程：这个文件根本无法编译；`main.cpp` 才是能用的那一份，同一目录里两份并存。SDL 的头文件也混用了 `<SDL.h>`（main.c）与 `<SDL/SDL.h>`（main.cpp）。"
+                  },
+                  {
+                    "file": "4-line/main.c",
+                    "line": 21,
+                    "kind": "naming",
+                    "text": "目录叫 `4-line`，要画的线却被注释掉了（`Draw_Line` 在最后几行注释里，那是 SDL_draw 扩展库的函数，SDL2 里并不存在）：程序实际只是用纯色填满窗口。SDL2 里画线用渲染器 `SDL_RenderDrawLine`。"
+                  },
+                  {
+                    "file": "4-line/main.c",
+                    "line": 25,
+                    "kind": "design",
+                    "text": "`SDL_Delay(5000)` 让程序卡在这里 5 秒，期间没有事件循环：窗口无法响应关闭或移动；标准做法是事件循环里 `SDL_PollEvent` 到 `SDL_QUIT` 才退出。`SDL_CreateWindow` 的返回值也没有检查。"
+                  },
+                  {
+                    "file": "5-image/main.c",
+                    "line": 28,
+                    "kind": "design",
+                    "text": "⚠ `init()` 与 `loadMedia()` 都返回 `bool` 表示成败，`main` 却把返回值直接丢掉：图片加载失败（`redflag.bmp` 不在工作目录里时就是这样）后依然把空指针 `gHelloWorld` 传给 `SDL_BlitSurface`，随后崩溃。应当 `if (!init() || !loadMedia()) return 1;`。"
+                  },
+                  {
+                    "file": "5-image/main.c",
+                    "line": 81,
+                    "kind": "naming",
+                    "text": "加载失败时的错误信息里打印的文件名是教程原文的 `02_getting_an_image_on_the_screen/hello_world.bmp`，而实际加载的是 `redflag.bmp`——复制教程时没改，出错时会把人带到错误的方向。"
+                  },
+                  {
+                    "file": "5-image/main.c",
+                    "line": 11,
+                    "kind": "design",
+                    "text": "自定义的 `close()` 与 POSIX 的 `close(int)`（`<unistd.h>`）同名；本文件没有包含它所以暂时能编译，但在把 SDL 与 POSIX 头一起包含的工程里就会冲突。全局的窗口与 surface 指针也让这段代码不能复用。"
+                  }
+                ],
+                "run_note": "需要 SDL 1.2 或 SDL2 开发库与图形环境；本应用只读展示，不运行"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "SDL 与其他 GUI 框架的并排对比见本应用画廊（LVGL、Dear ImGui、Nuklear 等）。"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

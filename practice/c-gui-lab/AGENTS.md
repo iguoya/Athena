@@ -65,4 +65,11 @@ third_party/   imgui / lvgl / cimgui / raygui / nuklear 源码（不进版本库
 
 ## 验证
 
-`python3 scripts/check.py`：结构完整性 + Electron 主进程语法 + 三个原生程序增量编译。
+`python3 scripts/check.py`：结构完整性 + Electron 主进程语法 + 三个原生程序增量编译。
+
+## 历史归档（ADR 0176）
+
+- 母体里的「打开历史归档」按钮会开一个只读窗口（`launcher/archive.html`），展示从旧 GitHub 仓库 Linux 整理来的 **GTK（C）与 SDL 练习**：旧代码原样放在 `content/cases/arc_*/`，行级批注在 `content/archive.json`。这是历史材料，**不是本应用的画廊内容**：画廊展示的是 GTK4 与各 C GUI 框架的现行样式，旧代码是 GTK2/3、SDL 1.2/2 时代的写法，本机没有对应开发库也无妨——归档窗口不编译、不运行。
+- 归档窗口复用仓库 `packages/viz` 的 `archive-panel`：`launcher/vendor/archive-panel.js` 是它的 tsc 产物（`pnpm exec tsc packages/viz/src/archive-panel.ts --ignoreConfig --target ES2022 --module ES2022 --lib ES2022,DOM --outDir launcher/vendor`），改源文件后重新生成，不要手改 vendor 里的文件。
+- 写作规范与验收标准见 `comms/legacy-archive/AUTHORING.md`；根检查 `scripts/archive_check.py` 校验案例目录、批注行号与孤儿目录。未收录的旧路径记在 `content/archive-dropped.md`。
+

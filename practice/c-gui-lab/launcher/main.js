@@ -142,6 +142,54 @@ ipcMain.handle("lab:launch", (_ev, key) => launch(key));
 ipcMain.handle("lab:launch-demo-window", () => launch("imgui-demo"));ipcMain.handle("lab:launch-official", (_ev, name) => launchOfficial(name));
 ipcMain.handle("lab:probe", () => probe());
 
+// ---- 历史归档（ADR 0176）：旧 GTK(C)、SDL 练习的只读查看 ----
+// 内容在 content/archive.json 与 content/cases/arc_*/，原样保留旧代码并带行级批注。
+// 这里只提供“读”：案例 id 必须以 arc_ 开头且是单段安全名字，文件只读、数量与大小有上限。
+// 旧代码依赖 GTK2/3、SDL 开发库，本机没有也无妨——这个窗口不编译、不运行它们。
+const CONTENT_ROOT = path.join(__dirname, "..", "content");
+const ARCHIVE_TEXT_EXT = new Set([".c", ".h", ".cpp", ".cc", ".hpp", ".txt", ".md", ".ui", ".glade", ".css", ".xml", ".json", ".am", ".ac", ".in"]);
+
+function archiveCaseDir(caseId) {
+  if (typeof caseId !== "string" || !/^arc_[A-Za-z0-9_]+$/.test(caseId))
+    throw new Error(`非法归档案例：${caseId}`);
+  return path.join(CONTENT_ROOT, "cases", caseId);
+}
+
+function collectArchiveFiles(dir, base, out) {
+  for (const name of fs.readdirSync(dir).sort()) {
+    if (out.length >= 300) return;
+    const full = path.join(dir, name);
+    const st = fs.statSync(full);
+    if (st.isDirectory()) collectArchiveFiles(full, base, out);
+    else if (st.size <= 256 * 1024 && (ARCHIVE_TEXT_EXT.has(path.extname(name).toLowerCase()) || name === "CMakeLists.txt" || name === "Makefile")) {
+      const text = fs.readFileSync(full, "utf8").replace(/\r\n/g, "\n");
+      out.push({ path: path.relative(base, full).split(path.sep).join("/"), text });
+    }
+  }
+}
+
+ipcMain.handle("archive:data", () => JSON.parse(fs.readFileSync(path.join(CONTENT_ROOT, "archive.json"), "utf8")));
+ipcMain.handle("archive:files", (_ev, caseId) => {
+  const dir = archiveCaseDir(caseId);
+  if (!fs.existsSync(dir)) throw new Error(`找不到归档案例 ${caseId}`);
+  const out = [];
+  collectArchiveFiles(dir, dir, out);
+  return out;
+});
+
+function openArchiveWindow() {
+  const win = new BrowserWindow({
+    width: 1400,
+    height: 920,
+    backgroundColor: "#f5f6f8",
+    title: "C GUI Lab · 历史归档",
+    autoHideMenuBar: true,
+    webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false },
+  });
+  win.loadFile(path.join(__dirname, "archive.html"));
+}
+ipcMain.handle("lab:open-archive", () => openArchiveWindow());
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 1400,

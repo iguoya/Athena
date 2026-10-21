@@ -40,4 +40,6 @@ document.querySelectorAll("[data-official]").forEach((btn) =>
   })
 );
 
+document.getElementById("open-archive").addEventListener("click", () => window.lab.openArchive());
+
 boot();

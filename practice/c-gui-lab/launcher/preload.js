@@ -5,4 +5,7 @@ contextBridge.exposeInMainWorld("lab", {
   launchDemoWindow: () => ipcRenderer.invoke("lab:launch-demo-window"),
   launchOfficial: (name) => ipcRenderer.invoke("lab:launch-official", name),
   probe: () => ipcRenderer.invoke("lab:probe"),
+  openArchive: () => ipcRenderer.invoke("lab:open-archive"),
+  archiveData: () => ipcRenderer.invoke("archive:data"),
+  archiveFiles: (caseId) => ipcRenderer.invoke("archive:files", caseId),
 });
