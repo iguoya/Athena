@@ -171,3 +171,4 @@
 | [0175](0175-self-study-math-exam-apps.md) | 新增顶层目录 `self-study/`（「自考」圈）与自考数学三课：linear-algebra（线性代数·工，13175/02198）、advanced-mathematics（高等数学·工本，00023）、probability-statistics（规划中）；对准全国考委指定教材，出处档 exam，真题整卷入库，自编教案非精读 | 已接受 |
 | [0176](0176-legacy-github-repos-archive-merge.md) | 六个散乱旧 GitHub 仓库（Practice、Linux、algorithm、DesignPatterns、DesignPattern、Qt5）按内容去重分类，并入对应教学应用各自独立的「历史归档」章节（`layer: archive`）：原代码原样保留可运行、另写批注；GTK→c-gui-lab、gtkmm→新建 gtkmm-lab、Qt→新建 qt、汇编→machine；共用壳补多文件案例；清单先行；远程仓库待使用者确认后再设 archived | 已接受 |
 | [0176](0176-apex-calculus-for-math2.md) | 考研数学二高等数学补进 `guide/apex-calculus`：钉 APEX Calculus 第 4 版并按考纲裁剪；计算工具沿用已有的 SymPy 与 Octave，不另起应用；与自考高数工本、数学自编课分开 | 已接受 |
+| [0177](0177-chen-linear-algebra.md) | 新增 `guide/chen-linear-algebra`：陈怀琛《实用大众线性代数（MATLAB 版）》精读（「数学」圈），首本进 guide 的中文版权教材；题目 verbatim 取自原书（locator 给页码与题号）是应用级硬门禁、authored 默认不入题库，答案由本机 Octave 复算，慕课视频只登记链接；开 comms 舱把习题采集分给 worker | 已接受 |
