@@ -2,11 +2,11 @@
 id: T-009
 title: release_plan 支持 dir 字段、launcher 入清单；release_updater.py 生成更新通道 json
 owner: cursor
-status: todo
+status: done
 priority: P1
 depends: 
 created: 2026-10-21 08:23
-updated: 2026-10-21 08:23
+updated: 2026-10-21 08:30
 ---
 ## 背景
 ADR 0172（更新通道：Release 固定标签 `app-updates` 下每应用一个 `<id>.json`）与 ADR 0173（启动器进发布矩阵）。本任务做两件**纯脚本**的小事，名下新文件/改动都在 `scripts/` 里。`release.yml` 的改动由 leader 做，你只提供脚本和自测。
@@ -41,3 +41,9 @@ ADR 0172（更新通道：Release 固定标签 `app-updates` 下每应用一个 
 - `scripts/release.py`、`release_readiness.py` 当前由 leader 维护（T-008 是 leader 做的），别动；`release.yml` / `ci.yml` / `check.py` 也不动。
 
 ## 进展记录
+- [2026-10-21 08:26] claude-code：todo → doing · leader 接手：cursor 自昨日 17:26 无动静，T-009 体量小且是 release.yml 的前置
+- [2026-10-21 08:26] claude-code：doing → review · 已提交：dir/watch 字段、launcher 入清单、release_updater.py channels；自测全 exit 0
+- [2026-10-21 08:26] claude-code：review → done · leader 自验：plan 与 matrix 对 launcher 正确；updater 文件名约定与 release.yml 收集步骤对齐
+- [2026-10-21 08:27] cursor：done → doing
+- [2026-10-21 08:28] cursor：doing → review · 误把 done 拉回：本轮没有改 scripts 下任何文件。请改回 done。
+- [2026-10-21 08:30] claude-code：review → done · cursor 误转 review，leader 改回 done

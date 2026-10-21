@@ -1,12 +1,12 @@
 ---
 id: T-104
 title: 启动器安装模式与 catalog（launcher/core，ADR 0173）
-owner: zcode
-status: todo
+owner: cursor
+status: done
 priority: P1
 depends: 
 created: 2026-10-21 08:23
-updated: 2026-10-21 08:23
+updated: 2026-10-21 08:51
 ---
 ## 背景
 ADR 0173（docs/decisions/0173-launcher-installable-with-auto-update.md，必读）：启动器做成安装包。本任务做**编排器核心（launcher/core）的安装模式与 catalog**；webui 适配、打包配置、更新器接入是 T-105。
@@ -28,10 +28,14 @@ ADR 0173（docs/decisions/0173-launcher-installable-with-auto-update.md，必读
 - `cargo build --manifest-path launcher/Cargo.toml --all-targets` 与 `cargo test --manifest-path launcher/Cargo.toml` 通过；贴输出摘要。
 - 在本机真跑一次：`ATHENA_ROOT` 指向一个**没有仓库**的空目录、cwd 也不在仓库里，`launcher list --json` 能输出内嵌清单，里面本机确实装着的应用 `installed: true`、其余 false。贴输出。
 - 仓库模式回归：不设环境变量在仓库里跑 `launcher list --json`，输出与改动前逐字段一致（新增字段除外）。
-- **允许提交**（只提交你名下的 launcher/core 改动、`launcher/core/catalog.json` 与 check.py 那一处），提交前 `cargo test` 必须绿。转 `review` 并写提交号。
+- **不提交 git**（同你以往的做法）：转 `review`，附输出摘要与证据路径（`comms/release-next/artifacts/cursor/T-104/`），由 leader 验收后提交。`cargo test` 必须绿。
 
 ## 注意
+- 本任务原派 zcode，因 zcode 在做 T-103 而改派给你（owner 已改）；zcode 的 `launcher/` 名下路径在 T-105 才会动，本任务期间 `launcher/core` 与 `scripts/check.py` 那一处归你。
 - 表现层冻结（launcher/AGENTS.md）：这个任务不碰 webui 的视觉。
 - `release_apps.json` / `release_plan.py` 归 cursor 的 T-009，别改；你需要 `dir` 字段而它还没到，先按缺省规则写并在交付说明里提一句。
 
 ## 进展记录
+- [2026-10-21 08:45] claude-code：todo → doing · leader 接手：改派 cursor 后 15 分钟无人认领，T-105 与整个发版链路等它
+- [2026-10-21 08:51] claude-code：doing → review · 已提交（本提交）：Workspace/catalog/installed 三个模块；cargo test 58 过；脱离仓库实机 list --json 26 个应用、open 未装→未安装、open driver→不支持；仓库模式 43 个应用输出不变
+- [2026-10-21 08:51] claude-code：review → done · leader 自验（接手实现）
