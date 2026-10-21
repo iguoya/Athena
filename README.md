@@ -19,6 +19,8 @@
 | [`postgraduate/algorithms`](postgraduate/algorithms) | 算法设计（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |
 | [`postgraduate/ascent`](postgraduate/ascent) | 拾阶（四六级 / 专四专八） | Tauri + Vite |
 | [`postgraduate/mathematics`](postgraduate/mathematics) | 数学学习 | Tauri + Vite（Python sidecar） |
+| [`self-study/linear-algebra`](self-study/linear-algebra) | 线性代数（自考，ADR 0175） | Tauri 2 + React |
+| [`self-study/advanced-mathematics`](self-study/advanced-mathematics) | 高等数学（工本）（自考，ADR 0175） | Tauri 2 + React |
 | [`tools/math-tools`](tools/math-tools) | 数学工具 | Tauri 2 + React |
 | [`tools/comms-console`](tools/comms-console) | 协作观察台 | Tauri 2 + React |
 | [`certification/driver`](certification/driver) | 驾考学习 | Flutter 桌面 |

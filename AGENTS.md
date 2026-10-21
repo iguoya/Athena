@@ -41,6 +41,8 @@ programming/<id>/ 程序设计圈（ADR 0150）：c-plus-plus machine linux pyth
 artificial-intelligence/<id>/ 人工智能圈：machine-learning deep-learning llm-app llm-finetune edge-ai（ADR 0120、0122、0152）
 computer-fundamentals/<id>/ 计算机基础圈：database（软设第 9 章实践课程，ADR 0103、0126）
 electronics/<id>/ 电子信息圈：firmware microcontroller rtos（嵌入式系统设计师实践课程，ADR 0103、0123）
+self-study/<id>/   自考应用（ADR 0175）：linear-algebra（线性代数·工）、advanced-mathematics
+                （高等数学·工本）；probability-statistics（概率统计·工）规划中
 postgraduate/<id>/ 考研应用（ADR 0149）：cs408（408 考试主应用）及本体挂它的 data-structures algorithms
                 organization os network（ADR 0116、0118、0119），加考研公共课 mathematics ascent；
                 os、network 兼作软设承接章
@@ -136,7 +138,7 @@ archive/        历史归档，不参与构建
 - 知识点分概念、技能、策略三类，教学动作按类型选（ADR 0031）。
 - **内容驱动 UI**：有限的块类型承载全部讲解，不按章手写整页（ADR 0058）。
 - **出处按应用性质分档**（ADR 0043、0089）：考试/考证考级类（判据：对应真实外部考试，
-  当前 driver、software、ascent、mathematics、cs408）判分内容必须有出处且检查阻断；技术
+  当前 driver、software、ascent、mathematics、cs408、linear-algebra、advanced-mathematics）判分内容必须有出处且检查阻断；技术
   学习类（当前 cpp、machine、data-structures、algorithms、gtkmm、selinger-linear-algebra、siefken-linear-algebra、octave-manual、sympy-tutorial、design-patterns）出处是默认习惯、不做门禁，自造配额解除；不判分
   类（图谱/参考、素材坑、practice）不适用。底线全档一致：不凭印象伪造出处，AI 现场出题
   不算数。

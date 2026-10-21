@@ -128,6 +128,8 @@
 | english 磨砚（已并入摘星，ADR 0117；英语二章节同此画像） | L | R | 考试题按 R 组卷；输入与输出各占一条线 | 真题、翻译/写作任务、语块回忆 |
 | ascent 摘星 | L | — | 词卡语境先行、释义点开；Today 首推到期复习 | 语境回忆、分级阅读、写作 |
 | mathematics 数学 | S | D | 样例 → 缺步 → 独立；卡住时逐级提示 | 交错组卷、找错改错、多表征互译（借 math-tools） |
+| linear-algebra 线性代数（自考） | S | R | 例题折叠分步每步带 why；节首提取题先行；正反例并排 | 真题、规则封闭计算变式、概念辨析 |
+| advanced-mathematics 高数（工本） | S | R | 同线代（自考）；几何与区域配 SVG 图 | 真题、计算变式、含参方程辨析 |
 | c-plus-plus C++ | P | E | lesson → predict 块 → 实验 dock → checkpoint；章首前测 | 输出预测、填空、骨架实验、Parsons |
 | machine C 与机器 | P | M | 预测 → 运行 → 看内存/寄存器视图对照 | 输出预测、内存布局图填空、trace |
 | gtkmm | P | E | 先预测界面效果（布局、信号顺序）再运行 | 现象预测、骨架实验 |

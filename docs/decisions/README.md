@@ -168,3 +168,4 @@
 | [0172](0172-app-updater-for-all-tauri-apps.md) | 应用内自动更新器推广到全部 Tauri 发布应用：官方 updater 全矩阵接入，启动即静默更、失败静默、无手动入口；集中 `app-updates` 标签每应用一个 json；c-gui-lab、driver、practice/cpp 排除；启动器统一更新中心不做 | 已接受；延伸 0081 决策 4 与 0171 |
 | [0173](0173-launcher-installable-with-auto-update.md) | 启动器做成安装包并接入应用内自动更新：进发布矩阵；找不到仓库时进安装模式（编译期内嵌 catalog.json，按平台约定判断已安装、启动、指路 Releases）；仓库模式不变 | 已接受；修订 0170 第 1 条与 0172 第 2 条末句 |
 | [0174](0174-mathematics-compass-in-mentor.md) | 数学学习导引：`mentor/` 新增 `mathematics-compass`（数学罗盘，图谱/参考类），给数学五个学习应用排唯一推荐路径、写学习目的与掌握要点；如实写明高数缺口；薄壳阅读为主 + 一张可点顺序图 | 已接受 |
+| [0175](0175-self-study-math-exam-apps.md) | 新增顶层目录 `self-study/`（「自考」圈）与自考数学三课：linear-algebra（线性代数·工，13175/02198）、advanced-mathematics（高等数学·工本，00023）、probability-statistics（规划中）；对准全国考委指定教材，出处档 exam，真题整卷入库，自编教案非精读 | 已接受 |

@@ -42,7 +42,7 @@ def _force_utf8_output() -> None:
 
 # 应用住在这两处，彼此平级（ADR 0060）。按意图分住处，但都走同一个验证入口。
 # 课程类学习应用按分组分目录（ADR 0150），其余按应用类别分；增减分组目录只改这两行。
-GROUP_ROOTS = ("programming", "artificial-intelligence", "computer-fundamentals", "electronics", "postgraduate")
+GROUP_ROOTS = ("programming", "artificial-intelligence", "computer-fundamentals", "electronics", "postgraduate", "self-study")
 APP_ROOTS = (*GROUP_ROOTS, "guide", "practice", "certification", "mentor", "tools")
 _ROOTS_RE = "|".join(APP_ROOTS)
 

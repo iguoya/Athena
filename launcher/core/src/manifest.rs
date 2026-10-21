@@ -295,12 +295,13 @@ impl App {
 }
 
 /// 课程类学习应用所在的目录：按分组分目录（ADR 0150），各装一个领域圈的课程。
-pub const LEARNING_ROOTS: [&str; 5] = [
+pub const LEARNING_ROOTS: [&str; 6] = [
     "programming",
     "artificial-intelligence",
     "computer-fundamentals",
     "electronics",
     "postgraduate",
+    "self-study",
 ];
 
 /// 扫描 `LEARNING_ROOTS` 下的 `<root>/*/app.json`，合起来按应用目录名排，界面上的次序才不随

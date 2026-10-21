@@ -33,6 +33,9 @@ electronics/<id>/ 电子信息圈：嵌入式系统设计师的实践子课程�
   firmware/         嵌入式程序设计实验（Tauri 2 + React）——嵌入第 6/8/11 章实践课程，电子信息圈（ADR 0103、0123）
   microcontroller/  硬件实验台（Tauri 2 + React）——嵌入第 2/5 章实践课程，电子信息圈（ADR 0103、0123）
   rtos/             实时操作系统（Tauri 2 + React）——嵌入第 4 章实践课程，电子信息圈（ADR 0106、0123）
+self-study/<id>/ 自考应用：一门应用绑一门全国统考课，目录与「自考」圈一致（ADR 0175）
+  linear-algebra/       线性代数（工）（Tauri 2 + React）——按指定教材与考纲组织，真题判分（ADR 0175）
+  advanced-mathematics/ 高等数学（工本）（Tauri 2 + React）——教材不含一元微积分，先修缺口以 prereq 补（ADR 0175）
 postgraduate/<id>/ 考研应用：408 与考研公共课，目录与「考研」圈一致（ADR 0149）
   cs408/         408 计算机学科专业基础（Tauri 2 + Vite）——考研考试主应用，「考研」圈；数据结构、算法设计、
                  组成原理、操作系统、计算机网络五门科目课本体挂它下面，软设以文字指引承接（ADR 0116、0118、0119）
@@ -139,6 +142,8 @@ archive/       历史归档，不参与构建
 | `edge-ai` | 端侧 AI 推理与部署（「人工智能」圈，ADR 0152） | `athena-edge-ai` | `edge.` |
 | `competitions` | 赛历（「大赛」圈，ADR 0114） | `athena-competitions` | （无进度库） |
 | `jiuzhou` | 九州（「兴趣」圈，ADR 0156） | `athena-jiuzhou` | （无进度库） |
+| `linear-algebra` | 线性代数（自考，「自考」圈，ADR 0175） | `athena-linear-algebra` | `linalg.` |
+| `advanced-mathematics` | 高等数学（工本）（「自考」圈，ADR 0175） | `athena-advanced-mathematics` | `advmath.` |
 | `mathematics-compass` | 数学罗盘（「数学」圈，ADR 0174） | `athena-mathematics-compass` | （无进度库） |
 
 `driver` 是机动车理论考试，不是设备驱动；Dart 包名仍是 `athena_driver`（包名不能有连字符）。
@@ -156,7 +161,8 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   `cs408`（ADR 0116）/ `organization`（ADR 0115）/ `gtkmm` / `linux`（ADR 0109）/
   `python`（ADR 0120）及其人工智能课程路线的四门（`machine-learning` / `deep-learning` /
   `llm-app` / `llm-finetune`，ADR 0120、0122）/ `edge-ai`（ADR 0152）/
-  `design-patterns`（ADR 0121）/ `chinese-chess`（ADR 0151）/ `snake`（ADR 0153）/ `pocket-cube-solver`（ADR 0169）/ 软考实践子课程（ADR 0103：`database` / `os` / `network` /
+  `design-patterns`（ADR 0121）/ `chinese-chess`（ADR 0151）/ `snake`（ADR 0153）/ `pocket-cube-solver`（ADR 0169）/ `linear-algebra` 与 `advanced-mathematics`
+  （自考，ADR 0175）/ 软考实践子课程（ADR 0103：`database` / `os` / `network` /
   `firmware` / `microcontroller` / `rtos`，ADR 0106）。驾考 `driver`、软件设计师
   `software`、嵌入式系统设计师 `embedded` 同样是学习应用，目录在仓库根
   `certification/`（ADR 0142、0147）。
