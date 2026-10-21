@@ -256,7 +256,42 @@ fn load_curriculum(state: State<'_>) -> Result<serde_json::Value, String> {
     let path = s.content_root.join("content/curriculum.json");
     let text =
         fs::read_to_string(&path).map_err(|e| format!("无法读取课表 {}: {e}", path.display()))?;
-    serde_json::from_str(&text).map_err(|e| e.to_string())
+    let mut curriculum: serde_json::Value = serde_json::from_str(&text).map_err(|e| e.to_string())?;
+    // 历史归档章节（ADR 0176）独立成 `content/archive.json`，启动时接在课表末尾：
+    // 搬运旧仓库的条目很多，放进主课表会让 diff 和合并冲突都落在那份巨大的文件上，
+    // 而且使用者日后要整体审视去留——删掉这一个文件，归档就整体消失，主课表毫发无损。
+    let archive_path = s.content_root.join("content/archive.json");
+    if archive_path.is_file() {
+        let atext = fs::read_to_string(&archive_path)
+            .map_err(|e| format!("无法读取归档 {}: {e}", archive_path.display()))?;
+        let archive: serde_json::Value =
+            serde_json::from_str(&atext).map_err(|e| format!("archive.json 格式错误：{e}"))?;
+        merge_archive(&mut curriculum, archive)?;
+    }
+    Ok(curriculum)
+}
+
+/// 把 `archive.json` 里的 `chapters` 追加到课表 `chapters` 末尾；它若带 `tracks` 也一并并入
+/// （归档章节用自己的轨道色，不占用主课表的轨道）。
+fn merge_archive(curriculum: &mut serde_json::Value, archive: serde_json::Value) -> Result<(), String> {
+    let extra = match archive.get("chapters") {
+        Some(serde_json::Value::Array(a)) => a.clone(),
+        _ => return Err("archive.json 缺少 chapters 数组".into()),
+    };
+    let extra_tracks = match archive.get("tracks") {
+        Some(serde_json::Value::Array(a)) => a.clone(),
+        _ => Vec::new(),
+    };
+    match curriculum.get_mut("chapters") {
+        Some(serde_json::Value::Array(chs)) => chs.extend(extra),
+        _ => return Err("课表缺少 chapters 数组".into()),
+    }
+    if !extra_tracks.is_empty() {
+        if let Some(serde_json::Value::Array(ts)) = curriculum.get_mut("tracks") {
+            ts.extend(extra_tracks);
+        }
+    }
+    Ok(())
 }
 
 #[tauri::command]
@@ -527,6 +562,16 @@ mod tests {
         assert!(case_path(root, "..", "main.cpp").is_err());
         assert!(case_path(root, "list-basic", "../../../etc/cron.d/x").is_err());
         assert!(case_path(root, "list-basic", "/tmp/x").is_err());
+    }
+
+    #[test]
+    fn 归档章节接在课表末尾() {
+        let mut cur = serde_json::json!({"chapters": [{"id": "a"}]});
+        merge_archive(&mut cur, serde_json::json!({"chapters": [{"id": "archive"}]})).unwrap();
+        assert_eq!(cur["chapters"][1]["id"], "archive");
+        assert!(merge_archive(&mut cur, serde_json::json!({})).is_err());
+        let mut bad = serde_json::json!({});
+        assert!(merge_archive(&mut bad, serde_json::json!({"chapters": []})).is_err());
     }
 
     #[test]
