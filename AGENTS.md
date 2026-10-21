@@ -48,7 +48,8 @@ postgraduate/<id>/ 考研应用（ADR 0149）：cs408（408 考试主应用）�
                 os、network 兼作软设承接章
 guide/<id>/     手册类教程：跟随一本外部手册/官方教程精读，gtkmm（ADR 0143）、selinger-linear-algebra
                 、siefken-linear-algebra（「数学」圈，两本线代教材精读，ADR 0162）、octave-manual、
-                sympy-tutorial（「数学」圈，数学工具教程精读，ADR 0163）
+                sympy-tutorial（「数学」圈，数学工具教程精读，ADR 0163）、chen-linear-algebra
+                （陈怀琛《实用大众线性代数（MATLAB版）》精读，「数学」圈，ADR 0177）
 mentor/<id>/    导师类（图谱/参考类）：polaris（路线图与指南针）、competitions（「大赛」圈的赛历，
                 ADR 0114）、jiuzhou（「兴趣」圈的九州历史地理图鉴，ADR 0156）、
                 mathematics-compass（数学罗盘，数学学习导引，「数学」圈，ADR 0174）；

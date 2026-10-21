@@ -77,6 +77,7 @@ guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，�
   siefken-linear-algebra/   Siefken《MAT223 Workbook: Linear Algebra》精读：几何直观先行的一学期线代（Tauri 2 + React，「数学」圈，ADR 0162）
   octave-manual/            GNU Octave 官方手册按线代与高数需要裁剪的精读（Tauri 2 + React，「数学」圈，ADR 0163）
   sympy-tutorial/           SymPy 官方入门教程精读：符号计算做微积分与矩阵运算（Tauri 2 + React，「数学」圈，ADR 0163）
+  chen-linear-algebra/      陈怀琛《实用大众线性代数（MATLAB版）》精读：题目逐字取自原书、Octave 复算（Tauri 2 + React，「数学」圈，ADR 0177）
 tools/         配套工具：做出能用的工具，不建进度库（ADR 0146）
   math-tools/  数学工具（Tauri 2 + React）——数学学习的配套工具（ADR 0084、0146）
   comms-console/ 协作观察台（Tauri 2 + React，只读）——多智能体协作的任务、决策与
@@ -135,6 +136,7 @@ archive/       历史归档，不参与构建
 | `siefken-linear-algebra` | Siefken 线性代数精读（「数学」圈，ADR 0162） | `athena-siefken-linear-algebra` | `siefken.` |
 | `octave-manual` | Octave 手册精读（「数学」圈，ADR 0163） | `athena-octave-manual` | `octave.` |
 | `sympy-tutorial` | SymPy 教程精读（「数学」圈，ADR 0163） | `athena-sympy-tutorial` | `sympy.` |
+| `chen-linear-algebra` | 大众线性代数精读（陈怀琛，「数学」圈，ADR 0177） | `athena-chen-linear-algebra` | `chen.` |
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
 | `organization` | 计算机组成原理（408，ADR 0115） | `athena-organization` | `org.` |
 | `cs408` | 408 计算机学科专业基础（考研考试主应用，ADR 0116） | `athena-cs408` | `cs408.` |

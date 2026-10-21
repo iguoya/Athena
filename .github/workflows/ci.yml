@@ -17,7 +17,7 @@ on:
         description: 只跑哪个应用（all 为全量，sources 只跑跨应用检查）
         type: choice
         default: all
-        options: [all, sources, comms-console, c-plus-plus, chinese-chess, snake, pocket-cube-solver, qt, gtkmm-lab, pocket_cube, cpp, machine, polaris, data-structures, algorithms, mathematics, ascent, math-tools, gtkmm, driver, software, nas_admin, launcher, c-gui-lab, embedded, database, design-patterns, os, network, firmware, microcontroller, rtos, linux, organization, cs408, python, machine-learning, deep-learning, llm-app, llm-finetune, competitions, earth, edge-ai, jiuzhou, octave-manual, selinger-linear-algebra, siefken-linear-algebra, sympy-tutorial, linear-algebra, advanced-mathematics]
+        options: [all, sources, comms-console, c-plus-plus, chinese-chess, snake, pocket-cube-solver, qt, gtkmm-lab, pocket_cube, cpp, machine, polaris, data-structures, algorithms, mathematics, ascent, math-tools, gtkmm, driver, software, nas_admin, launcher, c-gui-lab, embedded, database, design-patterns, os, network, firmware, microcontroller, rtos, linux, organization, cs408, python, machine-learning, deep-learning, llm-app, llm-finetune, competitions, earth, edge-ai, jiuzhou, octave-manual, selinger-linear-algebra, siefken-linear-algebra, sympy-tutorial, chen-linear-algebra, linear-algebra, advanced-mathematics]
 
 permissions:
   contents: read
@@ -302,7 +302,7 @@ jobs:
       "data-structures","deep-learning","design-patterns","earth","edge-ai","embedded","firmware",
       "comms-console","gtkmm","jiuzhou","linux","llm-app","llm-finetune","math-tools","mathematics",
       "machine-learning","microcontroller","network","organization","os","polaris",
-      "pocket-cube-solver","qt","gtkmm-lab","python","rtos","snake","software","octave-manual","selinger-linear-algebra","siefken-linear-algebra","sympy-tutorial",
+      "pocket-cube-solver","qt","gtkmm-lab","python","rtos","snake","software","octave-manual","selinger-linear-algebra","siefken-linear-algebra","sympy-tutorial","chen-linear-algebra",
         "linear-algebra","advanced-mathematics"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
@@ -314,7 +314,7 @@ jobs:
           "data-structures","deep-learning","design-patterns","earth","edge-ai","embedded","firmware",
           "comms-console","gtkmm","jiuzhou","linux","llm-app","llm-finetune","math-tools","mathematics",
           "machine-learning","microcontroller","network","organization","os","polaris",
-          "pocket-cube-solver","qt","gtkmm-lab","python","rtos","snake","software","octave-manual","selinger-linear-algebra","siefken-linear-algebra","sympy-tutorial",
+          "pocket-cube-solver","qt","gtkmm-lab","python","rtos","snake","software","octave-manual","selinger-linear-algebra","siefken-linear-algebra","sympy-tutorial","chen-linear-algebra",
           "linear-algebra","advanced-mathematics"]' || format('["{0}"]', inputs.app)) }}
         os: [macos-15, windows-latest, ubuntu-26.04]
     # Linux 降级：回归了报出来，但不阻塞整体结论（ADR 0051）
