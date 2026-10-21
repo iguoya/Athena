@@ -123,3 +123,10 @@ launcher open dsa       # 日常开发（热更新）；启动器和图谱走的
 2. 改运行时：只动 `src-tauri`，保持命令表面稳定。
 3. 改 UI 布局：只动 `src/` + `index.html`，不要求 C++ 教程的界面跟着改。
 4. 学科入口若要出现在北极星，改 `mentor/polaris`，与本应用发版可分开。
+
+## 历史归档章节（ADR 0176）
+
+- `content/archive.json` 是**唯一的「历史归档」章**（`layer: "archive"`），启动时由共用壳接在主课表末尾；它装的是从旧 GitHub 仓库整理来的早年练习：原代码原样放在 `content/cases/arc_*/`，另有行级批注指出写法与程序组织上的不足。
+- 它**不属于主线、不判分、不计入进度**，也不受上文课表规范约束（骨架、考核、先修分层都不适用）；改主线课时不要碰它，反过来也一样。留待使用者人工审视后决定并入、保留或删除，删除须显式（`content/archive-dropped.md` 记录未收录的旧路径）。
+- 写作规范与验收标准见 `comms/legacy-archive/AUTHORING.md`；根检查 `scripts/archive_check.py` 校验案例目录、源文件、批注行号与孤儿目录。
+
