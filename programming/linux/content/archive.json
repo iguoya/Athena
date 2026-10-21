@@ -1,0 +1,689 @@
+{
+  "tracks": [
+    {
+      "id": "archive",
+      "title": "历史归档",
+      "color": "#a08c64"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "archive",
+      "title": "历史归档 · 早年练习的整理与批注",
+      "track": "archive",
+      "layer": "archive",
+      "summary": "从 2022–2023 年旧 GitHub 仓库 Linux 里去重整理而来（ADR 0176）：线程、进程与信号、内核模块、CGI 的练习，代码原样保留、能运行的可以直接运行，另有行级批注指出写法与程序组织上的不足。本章不属于主线，不计入进度，留待人工审视后决定并入、保留或删除。",
+      "topics": [
+        {
+          "id": "linux.arc.pthread_create",
+          "title": "线程创建（pthread_create）",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[线程] 主线程创建一个线程，两边各打印 pid 和线程 id，主线程睡 2 秒后返回。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂线程创建的最小示例，说出它缺少的三件事：等待、检查、同步。",
+            "pain": "示例能跑出结果，就容易让人以为这样写是对的。",
+            "model": "pthread_create 传入线程函数与参数；线程与进程同 pid、不同线程 id。",
+            "scope": "只读历史代码并批注；线程的系统讲解见本应用「进程与线程」章（尚未编写）。",
+            "judgment": "先问：谁等这个线程？它失败了怎么知道？输出顺序有没有被依赖？",
+            "landing": "能把 sleep 换成 pthread_join，并给出返回值检查。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "一个最小的 pthread 示例：创建线程、打印 pid 与线程 id。能运行（约 2 秒）。看点不在它演示了什么，而在它**没做**什么：没等线程结束、没检查返回值、没处理输出顺序。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_pthread_create",
+                "run": "cli",
+                "summary": "主线程创建一个线程，两边各打印 pid 和线程 id，主线程睡 2 秒后返回。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "Thread/T01-Create",
+                  "first_commit": "2023-01-28",
+                  "duplicates": [
+                    "Linux/Thread/01-ThreadCreate"
+                  ],
+                  "note": "同一练习的早一代 01-ThreadCreate 用 sleep(5) 等线程，本代缩成 2 秒；内容相同的取最新一代。"
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 24,
+                    "kind": "design",
+                    "text": "用 `sleep(2)` 等新线程跑完：线程若超过 2 秒，`main` 返回时进程退出，线程被直接终止。等线程结束的正确办法是 `pthread_join`（见同目录系列的 join 示例），而不是猜一个时间。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 20,
+                    "kind": "style",
+                    "text": "`pthread_create` 的返回值没检查，失败（资源不足、参数错）时 `new_tid` 是未定义值，下一行还会照常把它打印出来。它返回错误码而不是设置 `errno`，要用返回值本身判断。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 8,
+                    "kind": "portability",
+                    "text": "`pthread_t` 是不透明类型，`%lu` 打印它只在 glibc（恰好是 `unsigned long`）上成立；在 macOS、MinGW 上它是指针或别的类型，输出的数值也不可比较。可移植的写法是不打印它，或用平台相关的线程 id 函数并注明。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 23,
+                    "kind": "design",
+                    "text": "两个线程各自 `printf` 的先后没有任何同步，输出顺序由调度决定（本机实测每次顺序可能不同）。示例没有说明这一点，读者容易把偶然看到的顺序当成规律；演示“线程与进程同 pid、不同 tid”时应只比较 id，不依赖行序。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 18,
+                    "kind": "style",
+                    "text": "`printf(\"Hello World!\\n\")` 是 IDE 新建工程的模板残留，和线程示例无关；同系列目录里到处都有。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11",
+                "run_note": "Windows 上用 MinGW 的 pthread，线程 id 数值与 Linux 不同"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线的「进程与线程」「进程间通信」等章节尚未编写，这里的批注先行；写主线时可以直接引用这些条目作为“常见错误”的素材。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linux.arc.pthread_join",
+          "title": "线程返回值与 join",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[线程] 线程一返回字符串字面量，线程二返回 malloc 的 Student；main 依次 join 并打印。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说清 pthread_join 取回的 void* 的来历与所有权，并能找出这份代码里返回值被覆盖的错误。",
+            "pain": "void* 返回值没有类型保证，错了编译器不会提醒。",
+            "model": "线程函数返回 void*；join 把它写入调用方给的指针。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "每个 void* 都问：它指向哪里、谁释放、被谁覆盖过？",
+            "landing": "能改用调用方提供结果缓冲区的写法。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "两个线程分别返回字符串和堆上的结构体，主线程 join 取回。读完批注你会发现这一版把上一代对的写法“整理”坏了：同一个变量接了两次返回值。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_pthread_join",
+                "run": "cli",
+                "summary": "线程一返回字符串字面量，线程二返回 malloc 的 Student；main 依次 join 并打印。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "Thread/T02-Join",
+                  "first_commit": "2023-01-28",
+                  "duplicates": [
+                    "Linux/Thread/02-ThreadJoin"
+                  ],
+                  "note": "02-ThreadJoin 是上一代（用两个变量接返回值，正确）；T02-Join 是改名整理后的一代，引入了回归，取后者以便批注这个回归。"
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 55,
+                    "kind": "ownership",
+                    "text": "⚠ 两次 `pthread_join` 用同一个 `result` 接返回值：先 join `tid2`（返回堆上的 `Student*`），随即 join `tid` 又把 `result` 覆盖成线程一返回的字符串字面量 `\"hello\"`。第 59 行再把它当 `Student*` 读，是未定义行为——本机实测输出 `qq :1819043176, name :o`（`\"hell\"` 的四个字节被当成了整数）。上一代 `02-ThreadJoin` 用两个变量就没这个错，这一版“整理”时引入了回归。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 59,
+                    "kind": "ownership",
+                    "text": "把 `void *` 强转成 `Student *` 之前没有任何类型保证：线程返回什么、谁来释放，全靠约定。更稳妥的接口是调用方传入一个结果结构体指针，线程把结果写进去，`pthread_join` 只用来同步。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 35,
+                    "kind": "ownership",
+                    "text": "线程里 `malloc` 的 `Student` 交给 join 的一方接管，但 `main` 读完直接退出，没有 `free`。这里进程马上结束不会造成实际泄漏，可作为示例就应该写出“所有权转移给 join 方并由它释放”这一步，否则读者会学到“线程返回堆内存可以不管”。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 37,
+                    "kind": "style",
+                    "text": "用 `snprintf(s->name, sizeof(s->name), ...)` 而不是 `strcpy`，缓冲区大小取自对象本身——这是这份代码里写得对的地方。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 36,
+                    "kind": "other",
+                    "text": "示例数据用的是真实的个人号码和姓名。归档进公开仓库的代码里，示例数据最好换成虚构的。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11",
+                "run_note": "完整运行约 20 秒，应用内 10 秒超时会截断；想看到最后那行出错的输出请在终端里完整运行"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线的「进程与线程」「进程间通信」等章节尚未编写，这里的批注先行；写主线时可以直接引用这些条目作为“常见错误”的素材。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linux.arc.thread_counter",
+          "title": "“互斥”示例：没有互斥量，还会崩溃",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[线程] 两个线程各对全局 counter 做十次“读、睡、写”，意在演示竞争，传参方式却让程序在启动时崩溃。",
+          "weight": "了解",
+          "outline": {
+            "promise": "找出让程序崩溃的 void* 传参错误，并说出要演示丢失更新还差哪两处改动。",
+            "pain": "传错参数造成的崩溃发生得太早，把原本想看的竞争现象盖住了。",
+            "model": "全局变量 + 两个线程 + sleep 放大竞争窗口。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "先让程序按预期跑起来，再谈竞争；加锁时注意锁的范围。",
+            "landing": "能写出修正后的传参与加锁版本。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "目录叫 Mutex，全文没有互斥量；想演示数据竞争，却在更前面就崩了。点“运行原代码”看它的退出码，再按批注一步步找原因。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_thread_counter",
+                "run": "cli",
+                "summary": "两个线程各对全局 counter 做十次“读、睡、写”，意在演示竞争，传参方式却让程序在启动时崩溃。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "Thread/T03-Mutex",
+                  "first_commit": "2023-01-28",
+                  "duplicates": [
+                    "Linux/Thread/03-ThreadMutex"
+                  ],
+                  "note": "03-ThreadMutex 与 T03-Mutex 内容逐字节相同（同一份代码放在两个目录），只收一份。"
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 13,
+                    "kind": "ownership",
+                    "text": "⚠ 这个程序一启动就崩溃：第 25–26 行把整数 `1`、`2` 强转成 `void *` 传进来，第 10 行把它当 `int *`，这里的 `*seconds` 就是读地址 0x1。本机实测立即以访问违例退出（Windows `0xC0000005`，Linux 上是 SIGSEGV），一行输出都没有。想按值传整数，要么把它的**地址**传进去（变量须活到线程结束），要么在线程里用 `(int)(intptr_t)arg` 取回。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 12,
+                    "kind": "design",
+                    "text": "目录叫 Mutex，全文却没有任何互斥量。第 12–15 行是典型的“读、等、写”：两个线程各读一份 `counter`、睡眠、再各写回 `val+1`，会丢更新，这才是它想演示的数据竞争。修好第 13 行的崩溃后，要在这四行外面包 `pthread_mutex_lock/unlock` 才是互斥；注意别把 `sleep` 也锁进去，否则两个线程变成串行。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 14,
+                    "kind": "portability",
+                    "text": "`(unsigned int)pthread_self()` 把不透明的 `pthread_t` 强转成 32 位整数：64 位平台上会截断、编译器告警，换平台还可能根本不是整数。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 27,
+                    "kind": "design",
+                    "text": "两个线程都 `pthread_join` 了，生命周期处理是对的。但 `main` 在 join 之后没有打印最终的 `counter`，演示丢更新的程序结尾应当打印它并和期望值 20 对比，否则读者看不到问题。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 8,
+                    "kind": "style",
+                    "text": "被注释掉的上一版尝试（第 8–9 行）留在源码里：`printf(\"Hello, %d\\n\", arg)` 正是同一个“把整数当指针”的错误的早期形态。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11",
+                "run_note": "运行会立刻崩溃（退出码为访问违例），这是代码本身的问题，不是环境问题"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线的「进程与线程」「进程间通信」等章节尚未编写，这里的批注先行；写主线时可以直接引用这些条目作为“常见错误”的素材。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linux.arc.zombie_sigchld",
+          "title": "防止僵尸进程（SIGCHLD）",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[进程与信号] 父进程 fork 子进程，子进程输出五行后以 2 退出；父进程在循环里注册 SIGCHLD 处理函数并在其中 waitpid。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出这份“能跑”的僵尸进程回收代码里的五类问题，并给出 sigaction + WNOHANG 循环的改法。",
+            "pain": "信号相关的 bug 难以复现，示例凑巧能过就容易被当成范本。",
+            "model": "fork 后子进程退出变成僵尸，直到父进程 wait；SIGCHLD 通知父进程。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "问：信号合并了怎么办？处理函数里能做什么？fork 前缓冲区里有什么？",
+            "landing": "能写出可靠的子进程回收循环。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "想用 SIGCHLD 处理函数回收子进程。它在本机 WSL 里确实能跑出 `num: 2`，但同一份代码里至少埋着五个问题：缓冲复制、`exit` 与 `_exit`、注册时机、合并信号、异步信号安全。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_zombie_sigchld",
+                "run": "linux-only",
+                "summary": "父进程 fork 子进程，子进程输出五行后以 2 退出；父进程在循环里注册 SIGCHLD 处理函数并在其中 waitpid。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "Process/G02-PreventZombie",
+                  "first_commit": "2023-01-28",
+                  "duplicates": [],
+                  "note": "只有一份。"
+                },
+                "notes": [
+                  {
+                    "file": "main.c",
+                    "line": 12,
+                    "kind": "design",
+                    "text": "`fork` 之前 `printf` 了一行但没有换行以外的刷新：标准输出被重定向到文件或管道时是全缓冲，缓冲区里的 `Hello World!` 被子进程一并复制，最后会打印两次。本机在 WSL 里实测：`./g02 > out.txt`，文件里出现两行 `Hello World!`。`fork` 前要 `fflush(stdout)`，或不在 fork 之前输出。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 31,
+                    "kind": "design",
+                    "text": "子进程里用 `exit(2)`：它会运行从父进程继承来的 `atexit` 处理函数并刷新（复制来的）stdio 缓冲，加剧上一条的重复输出。`fork` 出来的子进程在不 `exec` 时应使用 `_exit`。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 23,
+                    "kind": "design",
+                    "text": "SIGCHLD 的处理函数在父进程的循环里、`sleep(2)` 之后才注册，且每轮重复注册一次。子进程若在注册前就退出，信号已经错过，子进程会留成僵尸；应在 `fork` 之前注册一次（或用 `SIG_IGN`/`SA_NOCLDWAIT` 直接让内核回收）。另外 `signal()` 的语义在不同系统上不一致，应改用 `sigaction`。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 40,
+                    "kind": "design",
+                    "text": "处理函数里只 `waitpid` 了一次：多个子进程几乎同时退出时 SIGCHLD 会合并成一次递送，只回收一个，其余仍是僵尸。惯用写法是 `while (waitpid(-1, &st, WNOHANG) > 0) {}`。这里还用了阻塞的 `waitpid(0, ...)`，在处理函数里阻塞是危险的。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 41,
+                    "kind": "design",
+                    "text": "信号处理函数里调用 `printf`：它不是异步信号安全函数，主程序恰好也在 `printf` 时可能死锁或破坏缓冲。处理函数里只应做安全的事（置标志、`write`），打印放到主循环里。"
+                  },
+                  {
+                    "file": "main.c",
+                    "line": 8,
+                    "kind": "portability",
+                    "text": "前向声明 `void signal_terminated();` 与第 37 行的定义 `(int signal)` 不一致。C17 及以前允许（空括号表示参数未指定），但 C23 起空括号等于 `(void)`：本机 WSL 用 `gcc -std=c2x` 编译，第 23 行报 `incompatible pointer type`。形参还与 `<signal.h>` 的 `signal` 函数同名，应改名。"
+                  }
+                ],
+                "sources": [
+                  "main.c"
+                ],
+                "std": "gnu11",
+                "run_note": "用到 fork / waitpid，只能在 Linux 或 WSL 里运行；约 20 秒"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线的「进程与线程」「进程间通信」等章节尚未编写，这里的批注先行；写主线时可以直接引用这些条目作为“常见错误”的素材。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linux.arc.sigint_handler",
+          "title": "信号处理：捕获 Ctrl+C",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[进程与信号] 每秒打印一行，收到 SIGINT 时在处理函数里打印并 exit。",
+          "weight": "了解",
+          "outline": {
+            "promise": "说出信号处理函数里不该做什么，以及 signal 与 sigaction 的区别。",
+            "pain": "教程里的写法能跑，不等于安全。",
+            "model": "signal 注册处理函数；主循环被打断时处理函数异步执行。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "处理函数里只做异步信号安全的事；退出交给主循环。",
+            "landing": "能改写成 sigaction + 标志位版本。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "教科书式的 SIGINT 示例：`signal` 注册、处理函数里打印并退出。它几乎原样出现在各种教程里，也正因此值得逐行看它违反了哪些信号处理的规矩。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_sigint",
+                "run": "cli",
+                "summary": "每秒打印一行，收到 SIGINT 时在处理函数里打印并 exit。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "CPlusPlus/31-signal",
+                  "first_commit": "2023-02-06",
+                  "duplicates": [],
+                  "note": "只有一份。"
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 9,
+                    "kind": "design",
+                    "text": "处理函数里用 `cout`：iostream 不是异步信号安全的，而主循环大部分时间就在 `cout`（第 24 行）里或刚刚离开，信号恰好在输出中途到达时可能破坏缓冲甚至死锁。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 14,
+                    "kind": "design",
+                    "text": "在处理函数里 `exit(signum)`：`exit` 会跑 `atexit` 处理函数和静态对象析构，同样不是异步信号安全。惯用做法是处理函数只置位 `volatile sig_atomic_t` 标志，主循环检查后自己干净地退出；退出码也习惯用 `128 + signum`，而不是直接用信号编号。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 21,
+                    "kind": "portability",
+                    "text": "`signal()` 的行为在 System V 与 BSD 系统上不同（处理函数是否在触发后复位、被打断的系统调用是否重启），POSIX 推荐 `sigaction` 并明确指定 `SA_RESTART` 等标志。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 14,
+                    "kind": "portability",
+                    "text": "用了 `exit` 却没有 `#include <cstdlib>`，能编译全靠 `<iostream>` 间接带进来。换一个标准库实现就可能出错，应自己写出需要的头文件。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 5,
+                    "kind": "style",
+                    "text": "`using namespace std;` 对这个几十行的示例影响不大，但养成习惯后会带进头文件；保持 `std::` 前缀更稳。"
+                  }
+                ],
+                "sources": [
+                  "main.cpp"
+                ],
+                "std": "c++17",
+                "run_note": "程序是死循环，应用内 10 秒后会被终止，不会触发 Ctrl+C 的处理；在终端里运行并按 Ctrl+C 才能看到处理函数"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线的「进程与线程」「进程间通信」等章节尚未编写，这里的批注先行；写主线时可以直接引用这些条目作为“常见错误”的素材。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linux.arc.kernel_hello",
+          "title": "内核模块 Hello World（两代）",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[内核模块] 两个最小内核模块：init 里 printk 一句话，exit 里再 printk 一句。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读懂一个最小内核模块的结构，并找出 printk 级别与语法上的错误。",
+            "pain": "内核代码没有“试试看”的余地，写错的 printk 会静默地不工作。",
+            "model": "module_init/module_exit 指定入口出口；printk 带日志级别。",
+            "scope": "只读历史代码并批注。",
+            "judgment": "日志级别按严重程度选；构建依赖对应内核版本的头文件。",
+            "landing": "能写出带 Makefile 的可加载模块。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "同一个内核模块练习的两代代码：`B1_Hello`（有头文件、日志宏）和更早的 `01-HelloWorld`。内核模块只能在 Linux 里加载，Windows 上只读；两份都有真问题，第二份的 `printk` 甚至根本打印不出消息。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_kernel_b1hello",
+                "run": "read-only",
+                "summary": "B1_Hello：头文件里有 PINFO/PDEBUG/PERR 日志宏，模块带许可证与作者声明。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "Driver/B1_Hello/KERN_SRC",
+                  "first_commit": "2022-11-30",
+                  "duplicates": [],
+                  "note": "较新的一代（2022-11-30）。"
+                },
+                "notes": [
+                  {
+                    "file": "B1_Hello.c",
+                    "line": 27,
+                    "kind": "design",
+                    "text": "卸载时的告别语用 `KERN_EMERG`（级别 0，“系统不可用”）：它会广播到所有终端。这只是一句普通提示，应当用 `KERN_INFO`；下面第 20 行的 `KERN_DEBUG` 又太低，默认控制台不显示。头文件里已经定义了 `PINFO`/`PDEBUG`/`PERR`，却没用它们。"
+                  },
+                  {
+                    "file": "B1_Hello.h",
+                    "line": 2,
+                    "kind": "style",
+                    "text": "头文件没有包含守卫（`#ifndef`），被两处 `#include` 会重复定义宏；宏 `PINFO` 等也直接拼接 `DRIVER_NAME`，是个好做法，但应加 `do { } while (0)` 之类的防护，免得遇到 `if/else` 时出错。"
+                  },
+                  {
+                    "file": "B1_Hello.c",
+                    "line": 12,
+                    "kind": "design",
+                    "text": "声明了 `MODULE_LICENSE(\"GPL\")` 和作者，这是内核模块必做的一步，写对了；缺了许可证声明模块会“污染”内核并拒绝使用 GPL 符号。"
+                  },
+                  {
+                    "file": "B1_Hello.c",
+                    "line": 17,
+                    "kind": "style",
+                    "text": "`/* TODO Auto-generated Function Stub */` 是 IDE 生成的占位注释，写完函数体后应删掉。"
+                  },
+                  {
+                    "file": "B1_Hello.c",
+                    "line": 20,
+                    "kind": "other",
+                    "text": "仓库里只有 `.c` 和 `.h`，没有 `Makefile`（`obj-m` 方式）和加载、卸载、查看日志的说明（`insmod`/`rmmod`/`dmesg`），别人拿到这份代码没法直接构建。内核模块的构建依赖对应版本的内核头文件，应把版本写下来。"
+                  }
+                ],
+                "run_note": "需要 Linux 内核头文件与 obj-m Makefile，应用内只读"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_kernel_hello",
+                "run": "read-only",
+                "summary": "01-HelloWorld：更早的实现，printk 写法有误。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "Driver/01-HelloWorld",
+                  "first_commit": "2022-11-30",
+                  "duplicates": [],
+                  "note": "较早的一代，同日提交；留作对照。"
+                },
+                "notes": [
+                  {
+                    "file": "hello.c",
+                    "line": 21,
+                    "kind": "design",
+                    "text": "⚠ `printk(KERN_EMERG, \"...\")` 在级别宏后面多写了一个逗号。`KERN_EMERG` 是字符串宏，逗号把它变成了**格式串**，真正的消息成了被忽略的参数——这句话不会按预期打印出来（编译器会提示格式串之外还有多余参数）。应写成 `printk(KERN_EMERG \"...\")`（中间没有逗号），并且这条也不该用 EMERG 级别。"
+                  },
+                  {
+                    "file": "hello.c",
+                    "line": 20,
+                    "kind": "portability",
+                    "text": "`static int __init hello_init()` 空括号定义：较新的内核构建带 `-Wstrict-prototypes`，会对这种写法告警；规范写法是 `(void)`。`hello_exit()` 同样（第 25 行）。"
+                  },
+                  {
+                    "file": "hello.c",
+                    "line": 9,
+                    "kind": "style",
+                    "text": "第 9–17 行是被注释掉的上一版实现（连 `cleanup_module` 也在里面）；与 `B1_Hello` 目录是同一个练习的两代，保留的这一代反而更差。归档时留这一份是为了对照改进。"
+                  }
+                ],
+                "run_note": "同上"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线的「进程与线程」「进程间通信」等章节尚未编写，这里的批注先行；写主线时可以直接引用这些条目作为“常见错误”的素材。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linux.arc.cgi_programs",
+          "title": "用 C++ 写 CGI 程序",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[CGI] 用 cout 手写 HTTP 响应头与 HTML：hello.cpp 输出固定页面，variable.cpp 列出 CGI 环境变量，get.cpp 用 cgicc 读表单。",
+          "weight": "了解",
+          "outline": {
+            "promise": "理解 CGI 的基本协议（响应头、空行、正文），并找出回显用户输入造成的 XSS。",
+            "pain": "CGI 简单到几行代码就能跑，也简单到忘了转义。",
+            "model": "Web 服务器把请求放进环境变量和标准输入，程序把响应写到标准输出。",
+            "scope": "只读历史代码并批注；本机没有 Web 服务器，只运行到输出 HTML 为止。",
+            "judgment": "凡是从客户端来的字符串，输出到 HTML 前都转义。",
+            "landing": "能为 get.cpp 补上转义和迭代器判断顺序的修正。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "三个 CGI 小程序：Hello World、打印环境变量、读取表单。能在命令行里直接运行并看到它们输出的 HTML。重点是安全：它们原样回显客户端可控的数据。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_cgi",
+                "run": "cli",
+                "summary": "用 cout 手写 HTTP 响应头与 HTML：hello.cpp 输出固定页面，variable.cpp 列出 CGI 环境变量，get.cpp 用 cgicc 读表单。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "CPlusPlus/33-cgi",
+                  "first_commit": "2023-02-06",
+                  "duplicates": [
+                    "Practice/CGI"
+                  ],
+                  "note": "Practice/CGI 与这里是同一份源码；两处目录里另有提交进仓库的编译产物（*.cgi，ELF 可执行文件），没有收。"
+                },
+                "notes": [
+                  {
+                    "file": "hello.cpp",
+                    "line": 7,
+                    "kind": "design",
+                    "text": "响应头与正文之间用 `\\r\\n\\r\\n` 隔开，这是 CGI 约定的写法，对了。整个文件是“能跑通第一个 CGI”的最小程序，作为入门没问题。"
+                  }
+                ],
+                "sources": [
+                  "hello.cpp"
+                ],
+                "std": "c++17",
+                "run_note": "hello.cpp 与 variable.cpp 都可在命令行直接运行，会把 HTML 输出到终端；get.cpp 需要 cgicc 库，应用内只读"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_cgi",
+                "run": "cli",
+                "summary": "variable.cpp：打印 24 个 CGI 环境变量。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "CPlusPlus/33-cgi",
+                  "first_commit": "2023-02-06",
+                  "duplicates": [
+                    "Practice/CGI"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "variable.cpp",
+                    "line": 34,
+                    "kind": "design",
+                    "text": "⚠ 环境变量的值原样写进 HTML：`HTTP_USER_AGENT`、`QUERY_STRING`、`HTTP_HOST` 这些都由客户端控制，里面带 `<script>` 就会在页面里执行（反射型 XSS）。输出到 HTML 前必须转义 `& < > \"`。`get.cpp` 第 29、39 行把表单字段原样输出，同样的问题。"
+                  },
+                  {
+                    "file": "variable.cpp",
+                    "line": 40,
+                    "kind": "style",
+                    "text": "`\"</table><\\n\"` 末尾多了一个 `<`，输出的是畸形标签（浏览器会宽容地吞掉，所以没被发现）。应该是 `\"</table>\\n\"`。"
+                  },
+                  {
+                    "file": "variable.cpp",
+                    "line": 20,
+                    "kind": "portability",
+                    "text": "响应头只写了 `Content-type:text/html`，没有 `charset=utf-8`，而页面标题（第 23 行）和提示都是中文：浏览器按默认编码猜，容易乱码。头里应写 `Content-Type: text/html; charset=utf-8`，页面也缺 `<!DOCTYPE html>`。"
+                  },
+                  {
+                    "file": "variable.cpp",
+                    "line": 28,
+                    "kind": "style",
+                    "text": "`ENV[24]` 的长度和循环上界 `24` 是两处独立的魔法数字，加减一个变量名就会不一致；用 `std::array` 或 `sizeof(ENV)/sizeof(ENV[0])` 让编译器算。"
+                  }
+                ],
+                "sources": [
+                  "variable.cpp"
+                ],
+                "std": "c++17",
+                "run_note": "hello.cpp 与 variable.cpp 都可在命令行直接运行，会把 HTML 输出到终端；get.cpp 需要 cgicc 库，应用内只读"
+              },
+              {
+                "type": "archive",
+                "case": "arc_linux_cgi",
+                "run": "read-only",
+                "summary": "get.cpp：用 cgicc 读 GET/POST 表单（本机没有 cgicc，只读）。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "CPlusPlus/33-cgi",
+                  "first_commit": "2023-02-06",
+                  "duplicates": [
+                    "Practice/CGI"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "get.cpp",
+                    "line": 27,
+                    "kind": "ownership",
+                    "text": "`!fi->isEmpty() && fi != end`：先解引用 `fi` 再判断它是不是 `end()`。参数缺失时 `fi` 就是 `end()`，`fi->isEmpty()` 是对无效迭代器的解引用，属于未定义行为；两个条件的顺序要反过来（第 37 行同）。"
+                  }
+                ],
+                "run_note": "hello.cpp 与 variable.cpp 都可在命令行直接运行，会把 HTML 输出到终端；get.cpp 需要 cgicc 库，应用内只读"
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "本应用主线的「进程与线程」「进程间通信」等章节尚未编写，这里的批注先行；写主线时可以直接引用这些条目作为“常见错误”的素材。"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
