@@ -2,11 +2,11 @@
 id: T-002
 title: 取得《实用大众线性代数（MATLAB版）》书 PDF 底本，放 upstream/ 并报 SHA-256
 owner: cursor
-status: todo
+status: blocked
 priority: P1
 depends: 
 created: 2026-10-21 22:20
-updated: 2026-10-21 22:20
+updated: 2026-10-21 22:35
 ---
 ## 目标
 1–6 章的题目采集卡在「没有原书文字」上。本任务把整本书的电子版（扫描 PDF，约 156 页）
@@ -34,3 +34,5 @@ updated: 2026-10-21 22:20
 ## 做完 / 卡住
 `python comms/comms.py status T-002 review --by cursor --note "来源+SHA-256+页数" --project chen-linear-algebra`
 或 `blocked`。不提交 git。
+- [2026-10-21 22:31] cursor：todo → doing
+- [2026-10-21 22:35] cursor：doing → blocked · 渠道1 CSDN帖/下载页能开但安全验证+需积分登录，无头拿不到文件；渠道2 101vv 书库1-4 POST 全 SSL EOF；渠道3 Annas/libgen TLS EOF、zlib 307环。附加：多蛋网30.78MB条目需登录；windowsfront 假文件6页已排除。本机Downloads等无全书。证据：comms/chen-linear-algebra/artifacts/cursor/T-002/PROBE.md。请leader转向使用者要PDF路径。
