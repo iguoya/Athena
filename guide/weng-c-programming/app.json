@@ -1,0 +1,70 @@
+{
+ "id": "weng-c-programming",
+ "title": "翁恺 C 语言",
+ "group": "程序设计",
+ "description": "浙江大学翁恺《C语言程序设计》视频课：视频是界面里的一个窗格，课堂区按节拍发预测、填空、上机等任务，掌握度只由作答写入。",
+ "icon": {
+  "type": "theme",
+  "name": "accessories-calculator-symbolic",
+  "symbol": "x.squareroot",
+  "letter": "C",
+  "accent": "#c0552b",
+  "file": "icon.svg",
+  "renders": {
+   "src-tauri/icons/32x32.png": 32,
+   "src-tauri/icons/128x128.png": 128,
+   "src-tauri/icons/128x128@2x.png": 256,
+   "src-tauri/icons/icon.png": 512,
+   "src-tauri/icons/icon.ico": "ico",
+   "src-tauri/icons/icon.icns": "icns",
+   "src-tauri/icons/StoreLogo.png": 50,
+   "src-tauri/icons/Square30x30Logo.png": 30,
+   "src-tauri/icons/Square44x44Logo.png": 44,
+   "src-tauri/icons/Square71x71Logo.png": 71,
+   "src-tauri/icons/Square89x89Logo.png": 89,
+   "src-tauri/icons/Square107x107Logo.png": 107,
+   "src-tauri/icons/Square142x142Logo.png": 142,
+   "src-tauri/icons/Square150x150Logo.png": 150,
+   "src-tauri/icons/Square284x284Logo.png": 284,
+   "src-tauri/icons/Square310x310Logo.png": 310
+  }
+ },
+ "dev": {
+  "env": {
+   "ATHENA_WENG_C_PROGRAMMING_ROOT": "${dir}"
+  },
+  "prepare": [
+   {
+    "when_missing": "node_modules",
+    "run": [
+     "pnpm",
+     "install"
+    ],
+    "label": "安装前端依赖"
+   }
+  ],
+  "run": [
+   "pnpm",
+   "run",
+   "tauri:dev"
+  ],
+  "ready": {
+   "http": "http://localhost:1532"
+  },
+  "match": "src-tauri/target",
+  "binary": "athena-weng-c-programming"
+ },
+ "progress": {
+  "dir": "AthenaWengCProgramming",
+  "tables": {
+   "attempts": {
+    "mode": "append",
+    "key": [
+     "knowledge_id",
+     "item_id",
+     "answered_at"
+    ]
+   }
+  }
+ }
+}
