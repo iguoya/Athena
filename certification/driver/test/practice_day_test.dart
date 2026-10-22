@@ -67,7 +67,10 @@ void main() {
     await tester.tap(inReview(find.byTooltip("多一把")));
     await tester.pump();
     expect(inReview(find.text("第 4 把")), findsOneWidget);
-    await tester.enterText(inReview(find.byType(TextField)), "车尾到库角再打");
+    await tester.enterText(
+      inReview(find.byKey(const ValueKey("review-note-reverse"))),
+      "车尾到库角再打",
+    );
     await tester.tap(find.text("保存今天 4 把"));
     for (var i = 0; i < 300 && find.byType(DayReview).evaluate().isNotEmpty; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));

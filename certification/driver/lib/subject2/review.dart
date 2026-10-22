@@ -24,6 +24,19 @@ class _ItemDraft {
   final hits = <int, String>{};
   final note = TextEditingController();
 
+  /// 每把的用时输入（秒，可不填）。控制器跟着把数增减。
+  final secondsCtrl = <int, TextEditingController>{};
+
+  TextEditingController secondsOf(int round) =>
+      secondsCtrl.putIfAbsent(round, TextEditingController.new);
+
+  /// 这一把超过该项时限（content 里的 limit_text）就提示；没有时限的项不判。
+  bool overLimit(int round) {
+    final limit = item.limitSeconds;
+    final secs = int.tryParse(secondsOf(round).text.trim());
+    return limit != null && secs != null && secs > limit;
+  }
+
   String? hitOf(int round) => hits[round];
 
   /// 再点同一档就取消。不标也可以保存。
@@ -84,6 +97,9 @@ class _DayReviewState extends State<DayReview> {
   void dispose() {
     for (final d in _drafts.values) {
       d.note.dispose();
+      for (final c in d.secondsCtrl.values) {
+        c.dispose();
+      }
     }
     super.dispose();
   }
@@ -101,6 +117,7 @@ class _DayReviewState extends State<DayReview> {
           draft.mistakesOf(r),
           at: at,
           pointHit: draft.hitOf(r),
+          seconds: int.tryParse(draft.secondsOf(r).text.trim()),
         );
         at = at.add(const Duration(milliseconds: 1));
       }
@@ -185,6 +202,7 @@ class _DayReviewState extends State<DayReview> {
                     ? () => setState(() {
                           draft.counts.remove(draft.rounds - 1);
                           draft.hits.remove(draft.rounds - 1);
+                          draft.secondsCtrl.remove(draft.rounds - 1)?.dispose();
                           draft.rounds--;
                         })
                     : null,
@@ -275,6 +293,7 @@ class _DayReviewState extends State<DayReview> {
               child: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: 6,
+                runSpacing: 4,
                 children: [
                   SizedBox(
                     width: 132,
@@ -287,6 +306,28 @@ class _DayReviewState extends State<DayReview> {
                       selected: draft.hitOf(r) == hit,
                       onSelected: (_) => setState(() => draft.setHit(r, hit)),
                     ),
+                  const SizedBox(width: 20),
+                  SizedBox(
+                    width: 104,
+                    child: TextField(
+                      key: ValueKey("review-seconds-${draft.item.id}-$r"),
+                      controller: draft.secondsOf(r),
+                      onChanged: (_) => setState(() {}),
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                        labelText: "用时秒",
+                        hintText: "可不填",
+                      ),
+                    ),
+                  ),
+                  if (draft.overLimit(r))
+                    BsBadge(
+                      key: ValueKey("review-overtime-${draft.item.id}-$r"),
+                      text: "超时 · ${_timeoutLocator[draft.item.id] ?? "超时限"}",
+                      color: Bs.danger,
+                    ),
                 ],
               ),
             ),
@@ -294,6 +335,7 @@ class _DayReviewState extends State<DayReview> {
           SizedBox(
             width: 720,
             child: TextField(
+              key: ValueKey("review-note-${draft.item.id}"),
               controller: draft.note,
               minLines: 2,
               maxLines: 5,
@@ -316,3 +358,10 @@ Color levelColor(Level level) => level.fails
     : level.deduct >= 10
         ? Bs.orange
         : Bs.warning;
+
+/// 单项超时的评判条款（GA 1026—2022）：倒库、侧方超过限时判不合格；
+/// 条款号与 content 里这两项最后一步 caution 引的一致，其余项没有单项时限。
+const _timeoutLocator = {
+  "reverse": "GA 1026—2022 6.2.3.1 d)",
+  "parallel": "GA 1026—2022 6.2.3.4 b)",
+};

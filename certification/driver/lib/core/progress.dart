@@ -121,12 +121,14 @@ class ExamDraft {
 
 /// 练一把车的记录（ADR 0036）：哪一项、出了哪些错（同一个错可以出现多次）。
 /// [pointHit] 是这一把点位的自我标注（准 / 偏早 / 偏晚），可空；不写掌握度。
+/// [seconds] 是手动填的用时（秒），可空；只留本地，不进同步。
 class DrillRun {
   const DrillRun({
     required this.itemId,
     required this.mistakes,
     required this.at,
     this.pointHit,
+    this.seconds,
   });
 
   final String itemId;
@@ -135,6 +137,9 @@ class DrillRun {
 
   /// `on` 准、`early` 偏早、`late` 偏晚。没标就是 null。
   final String? pointHit;
+
+  /// 这一把用了多少秒。没填就是 null。
+  final int? seconds;
 }
 
 /// 点位命中三档的界面文字。不认识的值当没标。
@@ -432,6 +437,7 @@ class ProgressStore {
     }
 
     addColumn("drill_runs", "point_hit", "TEXT");
+    addColumn("drill_runs", "seconds", "INTEGER");
     addColumn("attempts", "chosen", "TEXT");
     addColumn("attempts", "session_id", "TEXT");
     addColumn("attempts", "reason", "TEXT");
@@ -976,18 +982,20 @@ class ProgressStore {
   }
 
   /// 记一把练车。不写掌握度——掌握度只由答题写入（ADR 0036）。
-  /// [pointHit] 只留在本地列上，不进 outbox：中心表没有这一列，不新开同步资源。
+  /// [pointHit] 与 [seconds] 只留在本地列上，不进 outbox：中心表没有这些列，不新开同步资源。
   Future<void> recordDrillRun(
     String itemId,
     List<String> mistakes, {
     DateTime? at,
     String? pointHit,
+    int? seconds,
   }) async {
     final stamp = (at ?? DateTime.now()).toIso8601String();
     final hit = pointHitLabel(pointHit) == null ? null : pointHit;
+    final secs = seconds != null && seconds > 0 ? seconds : null;
     _db.execute(
-      "INSERT OR IGNORE INTO drill_runs (item_id, mistakes, at, point_hit) VALUES (?, ?, ?, ?)",
-      [itemId, mistakes.join(","), stamp, hit],
+      "INSERT OR IGNORE INTO drill_runs (item_id, mistakes, at, point_hit, seconds) VALUES (?, ?, ?, ?, ?)",
+      [itemId, mistakes.join(","), stamp, hit, secs],
     );
     _enqueue("drill-runs", payload: {"item_id": itemId, "mistakes": mistakes.join(","), "at": stamp});
   }
@@ -1005,6 +1013,7 @@ class ProgressStore {
           ],
           at: DateTime.parse(row["at"] as String),
           pointHit: row["point_hit"] as String?,
+          seconds: row["seconds"] as int?,
         ),
     ];
   }

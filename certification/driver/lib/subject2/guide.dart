@@ -328,6 +328,7 @@ class GuideItem {
     required this.topicId,
     required this.title,
     required this.limitText,
+    required this.limitSeconds,
     required this.judgedBy,
     required this.requirementLocator,
     required this.requirementQuote,
@@ -341,6 +342,9 @@ class GuideItem {
   final String topicId;
   final String title;
   final String limitText;
+
+  /// [limitText] 换算成的秒数（「3.5 分钟」→ 210），写「无时限」等就没有。给用时记录判超时用。
+  final int? limitSeconds;
 
   /// 出线看什么：车身、车轮。
   final String judgedBy;
@@ -356,6 +360,7 @@ class GuideItem {
     topicId: topicId,
     title: title,
     limitText: limitText,
+    limitSeconds: limitSeconds,
     judgedBy: judgedBy,
     requirementLocator: requirementLocator,
     requirementQuote: requirementQuote,
@@ -372,6 +377,7 @@ class GuideItem {
       topicId: json["topic_id"] as String,
       title: json["title"] as String,
       limitText: json["limit_text"] as String,
+      limitSeconds: limitSecondsOf(json["limit_text"] as String),
       judgedBy: json["judged_by"] as String,
       requirementLocator: requirement["locator"] as String,
       requirementQuote: requirement["quote"] as String,
@@ -390,6 +396,14 @@ class GuideItem {
       ],
     );
   }
+}
+
+/// 时限文案换算成秒（「3.5 分钟」→ 210、「无时限」→ null）。判超时是仅有的用途。
+int? limitSecondsOf(String text) {
+  final m = RegExp(r"([\d.]+)\s*分钟").firstMatch(text);
+  if (m == null) return null;
+  final value = num.tryParse(m.group(1)!);
+  return value == null || value <= 0 ? null : (value * 60).round();
 }
 
 /// 按考场规则给一把练车打的分。

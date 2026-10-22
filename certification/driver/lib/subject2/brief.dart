@@ -2,6 +2,10 @@ import "guide.dart";
 import "../core/progress.dart";
 /// 练车前简报（ADR 0037）：全部由练车记录推导，没有记录就不给建议。
 
+/// 秒数显示成 m:ss（130 → "2:10"）。用时和默演计时共用这一种写法。
+String fmtClock(int seconds) =>
+    "${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, "0")}";
+
 /// 每项只看最近几把。
 const briefWindow = 5;
 
@@ -31,6 +35,7 @@ class ItemBrief {
     required this.lastAt,
     required this.recurring,
     this.missedSteps = const [],
+    this.times = const [],
   });
 
   final GuideItem item;
@@ -43,6 +48,9 @@ class ItemBrief {
 
   /// 最近一次默演卡住的步骤（下标）。
   final List<int> missedSteps;
+
+  /// 窗口里填了用时的把（秒），新的在前。没填的把不算。
+  final List<int> times;
 
   bool get neverPracticed => recent == 0;
   bool get weak => recent > 0 && passes / recent < briefWeakRate;
@@ -104,6 +112,7 @@ Brief buildBrief(Subject2Guide guide, List<DrillRun> runs, {Map<String, List<int
       lastAt: mine.isEmpty ? null : mine.first.at,
       recurring: recurring,
       missedSteps: missedSteps[item.id] ?? const [],
+      times: [for (final r in mine) if (r.seconds != null) r.seconds!],
     ));
   }
 

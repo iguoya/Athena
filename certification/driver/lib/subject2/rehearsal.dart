@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 
 import "../ui/glyphs.dart";
@@ -5,6 +7,7 @@ import "drill.dart";
 import "guide.dart";
 import "../ui/look.dart";
 import "../core/narration.dart";
+import "brief.dart";
 import "points.dart";
 import "../core/progress.dart";
 /// 默演（ADR 0037）：逐步先口述、再对照。想象演练和看示范能帮新手先在脑子里搭起动作框架，
@@ -59,6 +62,39 @@ class _RehearsalViewState extends State<RehearsalView> {
   var _phase = _Phase.recall;
   final _missed = <int>[];
 
+  /// 可选计时器（T-012）：只计时不催促、没有到点自动结束（ADR 0042 的「只计时不收卷」）。
+  /// 关着就是没开；开着每秒走一格；停住或做完后停在原地，再点从头计。
+  Timer? _ticker;
+  var _elapsed = 0;
+
+  bool get _timing => _ticker != null;
+
+  void _toggleTimer() {
+    setState(() {
+      if (_ticker != null) {
+        _ticker?.cancel();
+        _ticker = null;
+      } else {
+        _elapsed = 0;
+        _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
+          if (mounted) setState(() => _elapsed++);
+        });
+      }
+    });
+  }
+
+  /// 停表（做完时），读数留着给结果页看。
+  void _stopTimer() {
+    _ticker?.cancel();
+    _ticker = null;
+  }
+
+  @override
+  void dispose() {
+    _stopTimer();
+    super.dispose();
+  }
+
   int get _total => widget.item.steps.length;
 
   void _compare() {
@@ -76,7 +112,10 @@ class _RehearsalViewState extends State<RehearsalView> {
       _player.currentState?.jumpTo(_step);
       return;
     }
-    setState(() => _phase = _Phase.done);
+    setState(() {
+      _phase = _Phase.done;
+      _stopTimer();
+    });
     await widget.store.recordRehearsal(widget.item.id, _missed, _total);
     await widget.onChanged();
   }
@@ -90,6 +129,17 @@ class _RehearsalViewState extends State<RehearsalView> {
         title: Text("默演 · ${item.title}"),
         automaticallyImplyLeading: false,
         actions: [
+          TextButton(
+            key: const ValueKey("rehearsal-timer"),
+            onPressed: _toggleTimer,
+            child: Text(
+              _timing
+                  ? fmtClock(_elapsed)
+                  : _elapsed > 0
+                      ? "${fmtClock(_elapsed)} · 再计"
+                      : "计时",
+            ),
+          ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(_phase == _Phase.done),
             child: Text(_phase == _Phase.done ? "完成" : "不做了"),
@@ -130,6 +180,10 @@ class _RehearsalViewState extends State<RehearsalView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("$_total 步里对上 $hit 步", style: theme.textTheme.headlineSmall),
+          if (_elapsed > 0) ...[
+            const SizedBox(height: 6),
+            Text("本次默演用时 ${fmtClock(_elapsed)}", style: theme.textTheme.bodyLarge),
+          ],
           const SizedBox(height: 12),
           if (_missed.isEmpty)
             Text("全对上了。练车时照这个顺序做。", style: theme.textTheme.bodyLarge)

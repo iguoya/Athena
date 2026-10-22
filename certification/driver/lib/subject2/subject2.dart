@@ -1805,6 +1805,14 @@ class _ItemBriefCard extends StatelessWidget {
             : "最近 ${brief.recent} 把能过 ${brief.passes} 把 · 上次练：${_ago(lastAt!)}",
         style: theme.textTheme.bodyLarge,
       ),
+      // 只展示记过的用时事实，不评价快慢（T-012）；时限来自 content 的 limit_text。
+      if (brief.times.isNotEmpty) ...[
+        const SizedBox(height: 4),
+        Text(
+          "最近用时 ${[for (final t in brief.times) fmtClock(t)].join(" / ")} · 限 ${brief.item.limitText}",
+          style: theme.textTheme.bodyMedium,
+        ),
+      ],
       if (brief.recurring.isNotEmpty) ...[
         const SizedBox(height: 8),
         Wrap(

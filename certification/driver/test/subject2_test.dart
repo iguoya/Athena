@@ -307,9 +307,12 @@ void main() {
         );
         expect(step.cautionLocators, isNotEmpty);
         for (final l in step.cautionLocators) {
+          // 场地尺寸的出处是 GB/T 30341—2013 的公式（与 GA 1029 同源），摘录按全条目核对；
+          // 其余条款都是 GA 1026—2022，去掉标准号前缀后按条款号核对。
+          final clause = l.startsWith("GA 1026—2022 ") ? l.substring("GA 1026—2022 ".length) : l;
           expect(
             excerpts,
-            contains("- ${l.substring("GA 1026—2022 ".length)}："),
+            contains("- $clause："),
             reason: "${item.id} 第 ${i + 1} 步 $l",
           );
         }
