@@ -1,0 +1,4047 @@
+[
+  {
+    "unit": "qt5-0-commandcompile",
+    "title": "0-CommandCompile",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/0-CommandCompile"
+    ],
+    "duplicates": [
+      "Linux/QT/0-CommandCompile"
+    ],
+    "first_commit": "2021-04-16",
+    "files": 3,
+    "run": "toolchain",
+    "build": "cmake -S . -B build -DCMAKE_PREFIX_PATH=C:/Qt/6.8.1/msvc2022_64 && cmake --build build",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "main.cpp: using namespace std",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/0-CommandCompile"
+  },
+  {
+    "unit": "qt5-0-commandcompile2",
+    "title": "0-CommandCompile2",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/0-CommandCompile2"
+    ],
+    "duplicates": [
+      "Linux/QT/0-CommandCompile2"
+    ],
+    "first_commit": "2021-04-16",
+    "files": 2,
+    "run": "toolchain",
+    "build": "qmake \"0-CommandCompile2/0-CommandCompile2.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "main.cpp: using namespace std",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/0-CommandCompile2"
+  },
+  {
+    "unit": "qt5-0-commandcompile3",
+    "title": "0-CommandCompile3",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/0-CommandCompile3"
+    ],
+    "duplicates": [
+      "Linux/QT/0-CommandCompile3"
+    ],
+    "first_commit": "2021-04-16",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"0-CommandCompile3/0-CommandCompile3.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/0-CommandCompile3"
+  },
+  {
+    "unit": "qt5-0-commandcompile3-pro",
+    "title": "0-CommandCompile3.pro",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/0-CommandCompile3.pro"
+    ],
+    "duplicates": [
+      "Linux/QT/0-CommandCompile3.pro"
+    ],
+    "first_commit": "2021-04-26",
+    "files": 1,
+    "run": "toolchain",
+    "build": "qmake \"0-CommandCompile3.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/0-CommandCompile3.pro"
+  },
+  {
+    "unit": "qt5-1-hello",
+    "title": "1-Hello",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/1-Hello"
+    ],
+    "duplicates": [
+      "Linux/QT/1-Hello"
+    ],
+    "first_commit": "2021-03-25",
+    "files": 9,
+    "run": "toolchain",
+    "build": "qmake 1-Hello.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/1-Hello"
+  },
+  {
+    "unit": "qt5-10-js",
+    "title": "10-JS",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/10-JS"
+    ],
+    "duplicates": [
+      "Linux/QT/10-JS"
+    ],
+    "first_commit": "2021-12-24",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"10-JS/10-JS.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/10-JS"
+  },
+  {
+    "unit": "qt5-11-helloworld",
+    "title": "11-HelloWorld",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/11-HelloWorld"
+    ],
+    "duplicates": [
+      "Linux/QT/11-HelloWorld"
+    ],
+    "first_commit": "2021-12-24",
+    "files": 12,
+    "run": "toolchain",
+    "build": "qmake 11-HelloWorld.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/11-HelloWorld"
+  },
+  {
+    "unit": "qt5-11-testwidget",
+    "title": "11-TestWidget",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/11-TestWidget"
+    ],
+    "duplicates": [
+      "Linux/QT/11-TestWidget"
+    ],
+    "first_commit": "2021-05-23",
+    "files": 1,
+    "run": "toolchain",
+    "build": "qmake 11-test_widget.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测失败: NMAKE : fatal error U1073:",
+    "build_checked": true,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/11-TestWidget"
+  },
+  {
+    "unit": "qt5-12-syntax",
+    "title": "12-Syntax",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/12-Syntax"
+    ],
+    "duplicates": [
+      "Linux/QT/12-Syntax"
+    ],
+    "first_commit": "2021-12-28",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"12-Syntax/12-Syntax.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/12-Syntax"
+  },
+  {
+    "unit": "qt5-12-test-widget2",
+    "title": "12-test_widget2",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/12-test_widget2"
+    ],
+    "duplicates": [
+      "Linux/QT/12-test_widget2"
+    ],
+    "first_commit": "2021-05-23",
+    "files": 6,
+    "run": "toolchain",
+    "build": "cmake -S . -B build -DCMAKE_PREFIX_PATH=C:/Qt/6.8.1/msvc2022_64 && cmake --build build",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/12-test_widget2"
+  },
+  {
+    "unit": "qt5-16-js",
+    "title": "16-JS",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/16-JS"
+    ],
+    "duplicates": [
+      "Linux/QT/16-JS"
+    ],
+    "first_commit": "2022-01-08",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"16-JS/16-JS.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/16-JS"
+  },
+  {
+    "unit": "qt5-17-datetime",
+    "title": "17-DateTime",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/17-DateTime"
+    ],
+    "duplicates": [
+      "Linux/QT/17-DateTime"
+    ],
+    "first_commit": "2022-01-18",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"17-DateTime/17-DateTime.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/17-DateTime"
+  },
+  {
+    "unit": "qt5-28-textinput",
+    "title": "28-TextInput",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/28-TextInput"
+    ],
+    "duplicates": [
+      "Linux/QT/28-TextInput"
+    ],
+    "first_commit": "2022-03-06",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"28-TextInput/28-TextInput.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/28-TextInput"
+  },
+  {
+    "unit": "qt5-3-qtwidgets",
+    "title": "3-QtWidgets",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/3-QtWidgets"
+    ],
+    "duplicates": [
+      "Linux/QT/3-QtWidgets"
+    ],
+    "first_commit": "2021-04-10",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"3-QtWidgets/3-QtWidgets.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "main.cpp: new 后无 delete",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/3-QtWidgets"
+  },
+  {
+    "unit": "qt5-30-cmake",
+    "title": "30-cmake",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/30-cmake"
+    ],
+    "duplicates": [
+      "Linux/QT/30-cmake"
+    ],
+    "first_commit": "2022-03-06",
+    "files": 6,
+    "run": "toolchain",
+    "build": "cmake -S . -B build -DCMAKE_PREFIX_PATH=C:/Qt/6.8.1/msvc2022_64 && cmake --build build",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/30-cmake"
+  },
+  {
+    "unit": "qt5-30-log",
+    "title": "30-Log",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/30-Log"
+    ],
+    "duplicates": [
+      "Linux/QT/30-Log"
+    ],
+    "first_commit": "2022-05-25",
+    "files": 3,
+    "run": "toolchain",
+    "build": "cmake -S . -B build -DCMAKE_PREFIX_PATH=C:/Qt/6.8.1/msvc2022_64 && cmake --build build",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/30-Log"
+  },
+  {
+    "unit": "qt5-4-qmenu",
+    "title": "4-QMenu",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/4-QMenu"
+    ],
+    "duplicates": [
+      "Linux/QT/4-QMenu"
+    ],
+    "first_commit": "2021-03-25",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"4-QMenu/4-QMenu.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/4-QMenu"
+  },
+  {
+    "unit": "qt5-4-qwidget",
+    "title": "4-QWidget",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/4-QWidget"
+    ],
+    "duplicates": [
+      "Linux/QT/4-QWidget"
+    ],
+    "first_commit": "2021-04-10",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"4-QWidget/4-QWidget.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/4-QWidget"
+  },
+  {
+    "unit": "qt5-5-qwidget",
+    "title": "5-QWidget",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/5-QWidget"
+    ],
+    "duplicates": [
+      "Linux/QT/5-QWidget"
+    ],
+    "first_commit": "2021-04-10",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"5-QWidget/5-QWidget.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/5-QWidget"
+  },
+  {
+    "unit": "qt5-5-texteditor",
+    "title": "5-TextEditor",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/5-TextEditor"
+    ],
+    "duplicates": [
+      "Linux/QT/5-TextEditor"
+    ],
+    "first_commit": "2021-04-10",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"5-TextEditor/5-TextEditor.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/5-TextEditor"
+  },
+  {
+    "unit": "qt5-81-hello",
+    "title": "81-Hello",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/81-Hello"
+    ],
+    "duplicates": [
+      "Linux/QT/81-Hello"
+    ],
+    "first_commit": "2021-04-27",
+    "files": 2,
+    "run": "toolchain",
+    "build": "python main.py  # needs PyQt5/PySide",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/81-Hello"
+  },
+  {
+    "unit": "qt5-91-debugrelease",
+    "title": "91-DebugRelease",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/91-DebugRelease"
+    ],
+    "duplicates": [
+      "Linux/QT/91-DebugRelease"
+    ],
+    "first_commit": "2021-04-10",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"91-DebugRelease/91-DebugRelease.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/91-DebugRelease"
+  },
+  {
+    "unit": "qt5-91-qtchartsbasic",
+    "title": "91-QtChartsBasic",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/91-QtChartsBasic"
+    ],
+    "duplicates": [
+      "Linux/QT/91-QtChartsBasic"
+    ],
+    "first_commit": "2021-03-24",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake 91-QtChartsBasic.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测失败: C:\\Users\\tiger\\AppData\\Local\\Temp\\athena-qt-build-7aokql82\\qt5-91-qtchartsbasic\\91-QtChartsBasic\\mainwindow.h(5): fatal error C1083: �޷��򿪰����ļ�: ��QtCharts��: No such file or directory",
+    "build_checked": true,
+    "topic_hint": "archive.qt.charts",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/91-QtChartsBasic"
+  },
+  {
+    "unit": "qt5-examples-chart",
+    "title": "chart",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/Examples/chart"
+    ],
+    "duplicates": [],
+    "first_commit": "2021-04-29",
+    "files": 8,
+    "run": "toolchain",
+    "build": "qmake chart.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测失败: .\\mainwindow.cpp(137): error C2039: \"SkipEmptyParts\": ���� \"QString\" �ĳ�Ա",
+    "build_checked": true,
+    "topic_hint": "archive.qt.charts",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "qt5-38-designer",
+    "title": "38-Designer",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/38-Designer"
+    ],
+    "duplicates": [
+      "Linux/QT/38-Designer"
+    ],
+    "first_commit": "2022-05-25",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake 38-Designer.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.designer",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/38-Designer"
+  },
+  {
+    "unit": "qt5-49-umldesigner",
+    "title": "49-UMLDesigner",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/49-UMLDesigner"
+    ],
+    "duplicates": [
+      "Linux/QT/49-UMLDesigner"
+    ],
+    "first_commit": "2022-06-13",
+    "files": 3,
+    "run": "toolchain",
+    "build": "qmlscene / qqml (Qt Quick runtime)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.designer",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/49-UMLDesigner"
+  },
+  {
+    "unit": "qt5-20-layout",
+    "title": "20-Layout",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/20-Layout"
+    ],
+    "duplicates": [
+      "Linux/QT/20-Layout"
+    ],
+    "first_commit": "2022-01-18",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake 20-Layout.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/20-Layout"
+  },
+  {
+    "unit": "qt5-21-layoutbinding",
+    "title": "21-LayoutBinding",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/21-LayoutBinding"
+    ],
+    "duplicates": [
+      "Linux/QT/21-LayoutBinding"
+    ],
+    "first_commit": "2022-01-18",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake 21-LayoutBinding.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/21-LayoutBinding"
+  },
+  {
+    "unit": "qt5-23-layoutcolumn",
+    "title": "23-LayoutColumn",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/23-LayoutColumn"
+    ],
+    "duplicates": [
+      "Linux/QT/23-LayoutColumn"
+    ],
+    "first_commit": "2022-01-18",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake 23-LayoutColumn.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/23-LayoutColumn"
+  },
+  {
+    "unit": "qt5-24-layoutgrid",
+    "title": "24-LayoutGrid",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/24-LayoutGrid"
+    ],
+    "duplicates": [
+      "Linux/QT/24-LayoutGrid"
+    ],
+    "first_commit": "2022-01-18",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"24-LayoutGrid/24-LayoutGrid.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/24-LayoutGrid"
+  },
+  {
+    "unit": "qt5-25-layoutflow",
+    "title": "25-LayoutFlow",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/25-LayoutFlow"
+    ],
+    "duplicates": [
+      "Linux/QT/25-LayoutFlow"
+    ],
+    "first_commit": "2022-01-18",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"25-LayoutFlow/25-LayoutFlow.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/25-LayoutFlow"
+  },
+  {
+    "unit": "qt5-26-layoutcolumn",
+    "title": "26-LayoutColumn",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/26-LayoutColumn"
+    ],
+    "duplicates": [
+      "Linux/QT/26-LayoutColumn"
+    ],
+    "first_commit": "2022-03-06",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"26-LayoutColumn/26-LayoutColumn.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/26-LayoutColumn"
+  },
+  {
+    "unit": "qt5-27-layoutstack",
+    "title": "27-LayoutStack",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/27-LayoutStack"
+    ],
+    "duplicates": [
+      "Linux/QT/27-LayoutStack"
+    ],
+    "first_commit": "2022-03-06",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"27-LayoutStack/27-LayoutStack.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/27-LayoutStack"
+  },
+  {
+    "unit": "qt5-31-splitter",
+    "title": "31-Splitter",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/31-Splitter"
+    ],
+    "duplicates": [
+      "Linux/QT/31-Splitter"
+    ],
+    "first_commit": "2021-04-10",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"31-Splitter/31-Splitter.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "main.cpp: new 后无 delete",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/31-Splitter"
+  },
+  {
+    "unit": "qt5-43-checkbox",
+    "title": "43-CheckBox",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/43-CheckBox"
+    ],
+    "duplicates": [
+      "Linux/QT/43-CheckBox"
+    ],
+    "first_commit": "2022-06-11",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"43-CheckBox/43-CheckBox.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/43-CheckBox"
+  },
+  {
+    "unit": "qt5-54-layout",
+    "title": "54-Layout",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/54-Layout"
+    ],
+    "duplicates": [
+      "Linux/QT/54-Layout"
+    ],
+    "first_commit": "2022-06-13",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"54-Layout/54-Layout.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/54-Layout"
+  },
+  {
+    "unit": "qt5-55-layout",
+    "title": "55-Layout",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/55-Layout"
+    ],
+    "duplicates": [
+      "Linux/QT/55-Layout"
+    ],
+    "first_commit": "2022-06-13",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"55-Layout/55-Layout.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/55-Layout"
+  },
+  {
+    "unit": "qt5-59-stackwidget",
+    "title": "59-StackWidget",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/59-StackWidget"
+    ],
+    "duplicates": [
+      "Linux/QT/59-StackWidget"
+    ],
+    "first_commit": "2022-06-26",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"59-StackWidget/59-StackWidget.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/59-StackWidget"
+  },
+  {
+    "unit": "qt5-60-stackwidget",
+    "title": "60-StackWidget",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/60-StackWidget"
+    ],
+    "duplicates": [
+      "Linux/QT/60-StackWidget"
+    ],
+    "first_commit": "2022-06-26",
+    "files": 8,
+    "run": "toolchain",
+    "build": "qmake \"60-StackWidget/60-StackWidget.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/60-StackWidget"
+  },
+  {
+    "unit": "qt-qtapp-app",
+    "title": "app",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/QT/QtApp/app"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 39,
+    "run": "toolchain",
+    "build": "cmake -S . -B build -DCMAKE_PREFIX_PATH=C:/Qt/6.8.1/msvc2022_64 && cmake --build build",
+    "build_checked": false,
+    "topic_hint": "archive.qt.misc-app",
+    "quality_notes": "QtApp 子树体量大、编号混乱，疑似练习堆叠未整理"
+  },
+  {
+    "unit": "qt5-54-studentinfo",
+    "title": "54-StudentInfo",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/54-StudentInfo"
+    ],
+    "duplicates": [
+      "Linux/QT/54-StudentInfo"
+    ],
+    "first_commit": "2022-06-13",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake 54-StudentInfo.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.model-view",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/54-StudentInfo"
+  },
+  {
+    "unit": "qt5-95-qprocesslist",
+    "title": "95-QProcessList",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/95-QProcessList"
+    ],
+    "duplicates": [
+      "Linux/QT/95-QProcessList"
+    ],
+    "first_commit": "2021-04-23",
+    "files": 2,
+    "run": "toolchain",
+    "build": "qmake 95-QProcessList.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.model-view",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/95-QProcessList"
+  },
+  {
+    "unit": "prac-xnode",
+    "title": "XNode（Qt 网络节点：Server/Client/Monitor/Library）",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/XNode"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-05-09",
+    "files": 54,
+    "run": "toolchain",
+    "build": "cmake -S Practice/XNode -B build -DCMAKE_PREFIX_PATH=C:/Qt/6.8.1/msvc2022_64 && cmake --build build",
+    "build_checked": false,
+    "topic_hint": "archive.qt.network",
+    "quality_notes": "多 CMake 子工程（Application/Client/Monitor/NodeLibrary/NodeServer/StandAloneNode）；根目录另有散落 client.cpp/server.cpp/xnode.*，职责边界需整理；网络与 UI 耦合点在 Application/Monitor",
+    "reason": "claude-code FYI（20261021-153742）：按内容归 programming/qt，并为一个工程单元"
+  },
+  {
+    "unit": "qt5-51-imageprocessor",
+    "title": "51-ImageProcessor",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/51-ImageProcessor"
+    ],
+    "duplicates": [
+      "Linux/QT/51-ImageProcessor"
+    ],
+    "first_commit": "2021-04-13",
+    "files": 6,
+    "run": "toolchain",
+    "build": "qmake 51-ImageProcessor.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.network",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/51-ImageProcessor"
+  },
+  {
+    "unit": "qt5-81-networkinformation",
+    "title": "81-NetWorkInformation",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/81-NetWorkInformation"
+    ],
+    "duplicates": [
+      "Linux/QT/81-NetWorkInformation"
+    ],
+    "first_commit": "2021-04-29",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake 81-NetWorkInformation.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.network",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/81-NetWorkInformation"
+  },
+  {
+    "unit": "qt5-82-networkinformation",
+    "title": "82-NetworkInformation",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/82-NetworkInformation"
+    ],
+    "duplicates": [
+      "Linux/QT/82-NetworkInformation"
+    ],
+    "first_commit": "2021-04-29",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake 82-NetworkInformation.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.network",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/82-NetworkInformation"
+  },
+  {
+    "unit": "qt5-83-networkinterface",
+    "title": "83-NetworkInterface",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/83-NetworkInterface"
+    ],
+    "duplicates": [
+      "Linux/QT/83-NetworkInterface"
+    ],
+    "first_commit": "2021-04-30",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"83-NetworkInterface/83-NetworkInterface.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.network",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/83-NetworkInterface"
+  },
+  {
+    "unit": "qt5-94-qprocess",
+    "title": "94-QProcess",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/94-QProcess"
+    ],
+    "duplicates": [
+      "Linux/QT/94-QProcess"
+    ],
+    "first_commit": "2021-04-15",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"94-QProcess/94-QProcess.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.network",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/94-QProcess"
+  },
+  {
+    "unit": "prac-untitled",
+    "title": "untitled",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/untitled"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-05-09",
+    "files": 3,
+    "run": "toolchain",
+    "build": "cmake -S . -B build -DCMAKE_PREFIX_PATH=C:/Qt/6.8.1/msvc2022_64 && cmake --build build",
+    "build_checked": false,
+    "topic_hint": "archive.qt.other",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "qt5-02-normalui",
+    "title": "02-NormalUI",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/02-NormalUI"
+    ],
+    "duplicates": [
+      "Linux/QT/02-NormalUI"
+    ],
+    "first_commit": "2021-12-08",
+    "files": 6,
+    "run": "toolchain",
+    "build": "qmake \"02-NormalUI/02-NormalUI.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.other",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/02-NormalUI"
+  },
+  {
+    "unit": "qt5-48-backend",
+    "title": "48-Backend",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/48-Backend"
+    ],
+    "duplicates": [
+      "Linux/QT/48-Backend"
+    ],
+    "first_commit": "2022-06-11",
+    "files": 6,
+    "run": "toolchain",
+    "build": "qmake \"48-Backend/48-Backend.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.other",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/48-Backend"
+  },
+  {
+    "unit": "qt5-51-circle",
+    "title": "51-circle",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/51-circle"
+    ],
+    "duplicates": [
+      "Linux/QT/51-circle"
+    ],
+    "first_commit": "2021-04-10",
+    "files": 7,
+    "run": "toolchain",
+    "build": "cmake -S . -B build -DCMAKE_PREFIX_PATH=C:/Qt/6.8.1/msvc2022_64 && cmake --build build",
+    "build_checked": false,
+    "topic_hint": "archive.qt.other",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/51-circle"
+  },
+  {
+    "unit": "qt5-52-qtdatetype",
+    "title": "52-QtDateType",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/52-QtDateType"
+    ],
+    "duplicates": [
+      "Linux/QT/52-QtDateType"
+    ],
+    "first_commit": "2021-04-10",
+    "files": 2,
+    "run": "toolchain",
+    "build": "qmake \"52-QtDateType/2-QtDateType.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.other",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/52-QtDateType"
+  },
+  {
+    "unit": "qt5-63-calculatorarea",
+    "title": "63-CalculatorArea",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/63-CalculatorArea"
+    ],
+    "duplicates": [
+      "Linux/QT/63-CalculatorArea"
+    ],
+    "first_commit": "2022-06-26",
+    "files": 11,
+    "run": "toolchain",
+    "build": "qmake \"63-CalculatorArea/63-CalculatorArea.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.other",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/63-CalculatorArea"
+  },
+  {
+    "unit": "qt5-64-circlearea",
+    "title": "64-CircleArea",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/64-CircleArea"
+    ],
+    "duplicates": [
+      "Linux/QT/64-CircleArea"
+    ],
+    "first_commit": "2022-06-26",
+    "files": 11,
+    "run": "toolchain",
+    "build": "qmake \"64-CircleArea/64-CircleArea.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.other",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/64-CircleArea"
+  },
+  {
+    "unit": "qt5-7-background",
+    "title": "7-background",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/7-background"
+    ],
+    "duplicates": [
+      "Linux/QT/7-background"
+    ],
+    "first_commit": "2021-12-08",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"7-background/7-background.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.other",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/7-background"
+  },
+  {
+    "unit": "qt5-82-ui",
+    "title": "82-UI",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/82-UI"
+    ],
+    "duplicates": [
+      "Linux/QT/82-UI"
+    ],
+    "first_commit": "2021-04-27",
+    "files": 3,
+    "run": "toolchain",
+    "build": "python main.py  # needs PyQt5/PySide",
+    "build_checked": false,
+    "topic_hint": "archive.qt.other",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/82-UI"
+  },
+  {
+    "unit": "qt5-9-autolarge",
+    "title": "9-AutoLarge",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/9-AutoLarge"
+    ],
+    "duplicates": [
+      "Linux/QT/9-AutoLarge"
+    ],
+    "first_commit": "2021-12-24",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"9-AutoLarge/9-AutoLarge.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.other",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/9-AutoLarge"
+  },
+  {
+    "unit": "qt5-examples-clocks",
+    "title": "clocks",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/Examples/clocks"
+    ],
+    "duplicates": [],
+    "first_commit": "2021-04-29",
+    "files": 14,
+    "run": "toolchain",
+    "build": "qmake \"Examples/clocks/clocks.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.other",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "qt5-examples-examples-pro",
+    "title": "Examples.pro",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/Examples/Examples.pro"
+    ],
+    "duplicates": [],
+    "first_commit": "2021-04-29",
+    "files": 1,
+    "run": "toolchain",
+    "build": "qmake \"Examples/Examples.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.other",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "pyqt-a1-hello",
+    "title": "A1-Hello",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/PyQt/A1-Hello"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-23",
+    "files": 1,
+    "run": "toolchain",
+    "build": "py -3 -m py_compile <main.py>  # needs PyQt5 — 实测失败: PyQt5/PySide6 not importable on this machine",
+    "build_checked": true,
+    "topic_hint": "archive.qt.pyqt",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "pyqt-a2-hello",
+    "title": "A2-Hello",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/PyQt/A2-Hello"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-23",
+    "files": 4,
+    "run": "toolchain",
+    "build": "py -3 -m py_compile <main.py>  # needs PyQt5 — 实测失败: PyQt5/PySide6 not importable on this machine",
+    "build_checked": true,
+    "topic_hint": "archive.qt.pyqt",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "pyqt-a3-hello",
+    "title": "A3-Hello",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/PyQt/A3-Hello"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-23",
+    "files": 5,
+    "run": "toolchain",
+    "build": "py -3 -m py_compile <main.py>  # needs PyQt5 — 实测失败: PyQt5/PySide6 not importable on this machine",
+    "build_checked": true,
+    "topic_hint": "archive.qt.pyqt",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "pyqt-a4-signal",
+    "title": "A4-Signal",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/PyQt/A4-Signal"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-23",
+    "files": 6,
+    "run": "toolchain",
+    "build": "python MainWindow.py  # needs PyQt5/PySide",
+    "build_checked": false,
+    "topic_hint": "archive.qt.pyqt",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "pyqt-a6-dialog",
+    "title": "A6-Dialog",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/PyQt/A6-Dialog"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-23",
+    "files": 8,
+    "run": "toolchain",
+    "build": "python __init__.py  # needs PyQt5/PySide",
+    "build_checked": false,
+    "topic_hint": "archive.qt.pyqt",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "qt5-14-hellopyqt",
+    "title": "14-HelloPyQt",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/14-HelloPyQt"
+    ],
+    "duplicates": [
+      "Linux/QT/14-HelloPyQt"
+    ],
+    "first_commit": "2021-12-28",
+    "files": 3,
+    "run": "toolchain",
+    "build": "python hello.py  # needs PyQt5/PySide",
+    "build_checked": false,
+    "topic_hint": "archive.qt.pyqt",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/14-HelloPyQt"
+  },
+  {
+    "unit": "qt5-16-pythonui",
+    "title": "16-PythonUI",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/16-PythonUI"
+    ],
+    "duplicates": [
+      "Linux/QT/16-PythonUI"
+    ],
+    "first_commit": "2021-12-28",
+    "files": 4,
+    "run": "toolchain",
+    "build": "python main.py  # needs PyQt5/PySide",
+    "build_checked": false,
+    "topic_hint": "archive.qt.pyqt",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/16-PythonUI"
+  },
+  {
+    "unit": "qt5-pyqt5",
+    "title": "PyQt5",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/PyQt5"
+    ],
+    "duplicates": [],
+    "first_commit": "2021-04-26",
+    "files": 1,
+    "run": "toolchain",
+    "build": "qmake \"PyQt5/PyQt5.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.pyqt",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "prac-qt-qmlbook-1-2meetqt5",
+    "title": "1-2MeetQt5",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/QT/QmlBook/1-2MeetQt5"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 8,
+    "run": "toolchain",
+    "build": "qmake MeetQt5.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "prac-qt-qmlbook-2-2helloworldqml",
+    "title": "2-2HelloWorldQML",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/QT/QmlBook/2-2HelloWorldQML"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake HelloWorldQML.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "prac-qt-qmlbook-2-3-1consoleapplication",
+    "title": "2-3-1ConsoleApplication",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/QT/QmlBook/2-3-1ConsoleApplication"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 3,
+    "run": "toolchain",
+    "build": "qmake 2-3-1ConsoleApplication.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测失败: .\\main.cpp(12): error C2065: ��endl��: δ�����ı�ʶ��",
+    "build_checked": true,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "prac-qt-qmlbook-2-3-2basicwidgets",
+    "title": "2-3-2BasicWidgets",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/QT/QmlBook/2-3-2BasicWidgets"
+    ],
+    "duplicates": [
+      "Practice/QT/Qt5开发及实例/2_BasicWidgets"
+    ],
+    "first_commit": "2020-02-22",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"QT/QmlBook/2-3-2BasicWidgets/BasicWidgets.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Practice/QT/Qt5开发及实例/2_BasicWidgets"
+  },
+  {
+    "unit": "prac-qt-qmlbook-4-1qmlsyntax",
+    "title": "4-1QMLSyntax",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/QT/QmlBook/4-1QMLSyntax"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 6,
+    "run": "toolchain",
+    "build": "qmake \"QT/QmlBook/4-1QMLSyntax/QMLSyntax.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "prac-qt-qmlbook-4-2-2rectangle",
+    "title": "4-2-2Rectangle",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/QT/QmlBook/4-2-2Rectangle"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 12,
+    "run": "toolchain",
+    "build": "qmake \"QT/QmlBook/4-2-2Rectangle/BasicElements.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "prac-qt-qmlbook-4-2-3textinput",
+    "title": "4-2-3TextInput",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/QT/QmlBook/4-2-3TextInput"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 9,
+    "run": "toolchain",
+    "build": "qmake \"QT/QmlBook/4-2-3TextInput/TextInput.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "prac-qt-qmlbook-4-5positioningelements",
+    "title": "4-5PositioningElements",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/QT/QmlBook/4-5PositioningElements"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 9,
+    "run": "toolchain",
+    "build": "qmake \"QT/QmlBook/4-5PositioningElements/PositioningElements.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "prac-qt-qt5-1-consoleapplication",
+    "title": "1_ConsoleApplication",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Practice/QT/Qt5开发及实例/1_ConsoleApplication"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 2,
+    "run": "toolchain",
+    "build": "qmake \"QT/Qt5开发及实例/1_ConsoleApplication/ConsoleApplication.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "qml-1-layout",
+    "title": "1-Layout",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/QML/1-Layout"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 6,
+    "run": "toolchain",
+    "build": "qmake \"QML/1-Layout/1-Layout.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "qml-1-material",
+    "title": "1-material",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/QML/1-material"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 3,
+    "run": "toolchain",
+    "build": "python main.py  # needs PyQt5/PySide",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源"
+  },
+  {
+    "unit": "qt5-14-quick",
+    "title": "14-Quick",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/14-Quick"
+    ],
+    "duplicates": [
+      "Linux/QT/14-Quick"
+    ],
+    "first_commit": "2022-01-08",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"14-Quick/14-Quick.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/14-Quick"
+  },
+  {
+    "unit": "qt5-14-quickhello",
+    "title": "14-QuickHello",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/14-QuickHello"
+    ],
+    "duplicates": [
+      "Linux/QT/14-QuickHello"
+    ],
+    "first_commit": "2022-01-08",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"14-QuickHello/14-QuickHello.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/14-QuickHello"
+  },
+  {
+    "unit": "qt5-15-helloqtquick",
+    "title": "15-HelloQtQuick",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/15-HelloQtQuick"
+    ],
+    "duplicates": [
+      "Linux/QT/15-HelloQtQuick"
+    ],
+    "first_commit": "2021-12-28",
+    "files": 4,
+    "run": "toolchain",
+    "build": "python main.py  # needs PyQt5/PySide",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/15-HelloQtQuick"
+  },
+  {
+    "unit": "qt5-15-quick",
+    "title": "15-Quick",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/15-Quick"
+    ],
+    "duplicates": [
+      "Linux/QT/15-Quick"
+    ],
+    "first_commit": "2022-01-08",
+    "files": 6,
+    "run": "toolchain",
+    "build": "qmake \"15-Quick/15-Quick.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/15-Quick"
+  },
+  {
+    "unit": "qt5-18-item",
+    "title": "18-Item",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/18-Item"
+    ],
+    "duplicates": [
+      "Linux/QT/18-Item"
+    ],
+    "first_commit": "2022-01-18",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"18-Item/18-Item.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/18-Item"
+  },
+  {
+    "unit": "qt5-19-qml",
+    "title": "19-QML",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/19-QML"
+    ],
+    "duplicates": [
+      "Linux/QT/19-QML"
+    ],
+    "first_commit": "2022-01-18",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"19-QML/19-QML.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/19-QML"
+  },
+  {
+    "unit": "qt5-22-layoutarchors",
+    "title": "22-LayoutArchors",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/22-LayoutArchors"
+    ],
+    "duplicates": [
+      "Linux/QT/22-LayoutArchors"
+    ],
+    "first_commit": "2022-01-18",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"22-LayoutArchors/22-LayoutArchors.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/22-LayoutArchors"
+  },
+  {
+    "unit": "qt5-32-helloquick",
+    "title": "32-HelloQuick",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/32-HelloQuick"
+    ],
+    "duplicates": [
+      "Linux/QT/32-HelloQuick"
+    ],
+    "first_commit": "2022-05-25",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"32-HelloQuick/32-HelloQuick.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/32-HelloQuick"
+  },
+  {
+    "unit": "qt5-33-quickstack",
+    "title": "33-QuickStack",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/33-QuickStack"
+    ],
+    "duplicates": [
+      "Linux/QT/33-QuickStack"
+    ],
+    "first_commit": "2022-05-25",
+    "files": 8,
+    "run": "toolchain",
+    "build": "qmake \"33-QuickStack/33-QuickStack.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/33-QuickStack"
+  },
+  {
+    "unit": "qt5-34-helloqtquick",
+    "title": "34-HelloQtQuick",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/34-HelloQtQuick"
+    ],
+    "duplicates": [
+      "Linux/QT/34-HelloQtQuick"
+    ],
+    "first_commit": "2022-05-25",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"34-HelloQtQuick/34-HelloQtQuick.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/34-HelloQtQuick"
+  },
+  {
+    "unit": "qt5-35-qml",
+    "title": "35-QML",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/35-QML"
+    ],
+    "duplicates": [
+      "Linux/QT/35-QML"
+    ],
+    "first_commit": "2022-05-25",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"35-QML/35-QML.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/35-QML"
+  },
+  {
+    "unit": "qt5-36-button",
+    "title": "36-Button",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/36-Button"
+    ],
+    "duplicates": [
+      "Linux/QT/36-Button"
+    ],
+    "first_commit": "2022-05-25",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"36-Button/36-Button.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/36-Button"
+  },
+  {
+    "unit": "qt5-37-quick",
+    "title": "37-Quick",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/37-Quick"
+    ],
+    "duplicates": [
+      "Linux/QT/37-Quick"
+    ],
+    "first_commit": "2022-05-25",
+    "files": 8,
+    "run": "toolchain",
+    "build": "qmake \"37-Quick/37-Quick.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/37-Quick"
+  },
+  {
+    "unit": "qt5-39-rectangle",
+    "title": "39-Rectangle",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/39-Rectangle"
+    ],
+    "duplicates": [
+      "Linux/QT/39-Rectangle"
+    ],
+    "first_commit": "2022-05-25",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"39-Rectangle/39-Rectangle.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/39-Rectangle"
+  },
+  {
+    "unit": "qt5-41-quickcontrols",
+    "title": "41-QuickControls",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/41-QuickControls"
+    ],
+    "duplicates": [
+      "Linux/QT/41-QuickControls"
+    ],
+    "first_commit": "2022-06-11",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"41-QuickControls/41-QuickControls.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/41-QuickControls"
+  },
+  {
+    "unit": "qt5-42-controlbutton",
+    "title": "42-ControlButton",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/42-ControlButton"
+    ],
+    "duplicates": [
+      "Linux/QT/42-ControlButton"
+    ],
+    "first_commit": "2022-06-11",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"42-ControlButton/42-ControlButton.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/42-ControlButton"
+  },
+  {
+    "unit": "qt5-44-label",
+    "title": "44-Label",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/44-Label"
+    ],
+    "duplicates": [
+      "Linux/QT/44-Label"
+    ],
+    "first_commit": "2022-06-11",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"44-Label/44-Label.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/44-Label"
+  },
+  {
+    "unit": "qt5-45-panel",
+    "title": "45-Panel",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/45-Panel"
+    ],
+    "duplicates": [
+      "Linux/QT/45-Panel"
+    ],
+    "first_commit": "2022-06-11",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"45-Panel/45-Panel.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/45-Panel"
+  },
+  {
+    "unit": "qt5-46-frame",
+    "title": "46-Frame",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/46-Frame"
+    ],
+    "duplicates": [
+      "Linux/QT/46-Frame"
+    ],
+    "first_commit": "2022-06-11",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"46-Frame/46-Frame.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/46-Frame"
+  },
+  {
+    "unit": "qt5-47-page",
+    "title": "47-Page",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/47-Page"
+    ],
+    "duplicates": [
+      "Linux/QT/47-Page"
+    ],
+    "first_commit": "2022-06-11",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"47-Page/47-Page.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/47-Page"
+  },
+  {
+    "unit": "qt5-50-quickpi",
+    "title": "50-QuickPi",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/50-QuickPi"
+    ],
+    "duplicates": [
+      "Linux/QT/50-QuickPi"
+    ],
+    "first_commit": "2022-06-26",
+    "files": 7,
+    "run": "toolchain",
+    "build": "qmake \"50-QuickPi/50-QuickPi.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/50-QuickPi"
+  },
+  {
+    "unit": "qt5-52-slider",
+    "title": "52-slider",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/52-slider"
+    ],
+    "duplicates": [
+      "Linux/QT/52-slider"
+    ],
+    "first_commit": "2022-06-13",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"52-slider/52-slider.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/52-slider"
+  },
+  {
+    "unit": "qt5-53-canvas",
+    "title": "53-Canvas",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/53-Canvas"
+    ],
+    "duplicates": [
+      "Linux/QT/53-Canvas"
+    ],
+    "first_commit": "2022-06-13",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"53-Canvas/53-Canvas.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/53-Canvas"
+  },
+  {
+    "unit": "qt5-57-materialstyle",
+    "title": "57-MaterialStyle",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/57-MaterialStyle"
+    ],
+    "duplicates": [
+      "Linux/QT/57-MaterialStyle"
+    ],
+    "first_commit": "2022-06-13",
+    "files": 7,
+    "run": "toolchain",
+    "build": "qmake \"57-MaterialStyle/57-MaterialStyle.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/57-MaterialStyle"
+  },
+  {
+    "unit": "qt5-58-material",
+    "title": "58-Material",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/58-Material"
+    ],
+    "duplicates": [
+      "Linux/QT/58-Material"
+    ],
+    "first_commit": "2022-06-13",
+    "files": 7,
+    "run": "toolchain",
+    "build": "qmake \"58-Material/58-Material.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/58-Material"
+  },
+  {
+    "unit": "qt5-6-helloqml",
+    "title": "6-HelloQML",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/6-HelloQML"
+    ],
+    "duplicates": [
+      "Linux/QT/6-HelloQML"
+    ],
+    "first_commit": "2021-12-08",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"6-HelloQML/6-HelloQML.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/6-HelloQML"
+  },
+  {
+    "unit": "qt5-61-helloworldqml",
+    "title": "61-HelloWorldQML",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/61-HelloWorldQML"
+    ],
+    "duplicates": [
+      "Linux/QT/61-HelloWorldQML"
+    ],
+    "first_commit": "2021-04-27",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"61-HelloWorldQML/61-HelloWorldQML.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/61-HelloWorldQML"
+  },
+  {
+    "unit": "qt5-62-quickpi",
+    "title": "62-QuickPi",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/62-QuickPi"
+    ],
+    "duplicates": [
+      "Linux/QT/62-QuickPi"
+    ],
+    "first_commit": "2022-06-26",
+    "files": 8,
+    "run": "toolchain",
+    "build": "qmake \"62-QuickPi/62-QuickPi.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/62-QuickPi"
+  },
+  {
+    "unit": "qt5-62-quickui",
+    "title": "62-QuickUI",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/62-QuickUI"
+    ],
+    "duplicates": [
+      "Linux/QT/62-QuickUI"
+    ],
+    "first_commit": "2021-04-27",
+    "files": 3,
+    "run": "toolchain",
+    "build": "qmlscene / qqml (Qt Quick runtime)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/62-QuickUI"
+  },
+  {
+    "unit": "qt5-65-gridquick",
+    "title": "65-GridQuick",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/65-GridQuick"
+    ],
+    "duplicates": [
+      "Linux/QT/65-GridQuick"
+    ],
+    "first_commit": "2022-06-26",
+    "files": 9,
+    "run": "toolchain",
+    "build": "qmake \"65-GridQuick/65-GridQuick.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/65-GridQuick"
+  },
+  {
+    "unit": "qt5-8-qmlsignal",
+    "title": "8-QMLSignal",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/8-QMLSignal"
+    ],
+    "duplicates": [
+      "Linux/QT/8-QMLSignal"
+    ],
+    "first_commit": "2021-12-24",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"8-QMLSignal/8-QMLSignal.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/8-QMLSignal"
+  },
+  {
+    "unit": "qt5-qml-1-quickui",
+    "title": "1-QuickUI",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/QML/1-QuickUI"
+    ],
+    "duplicates": [
+      "Linux/QML/1-QuickUI"
+    ],
+    "first_commit": "2021-04-29",
+    "files": 3,
+    "run": "toolchain",
+    "build": "qmlscene / qqml (Qt Quick runtime)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QML/1-QuickUI"
+  },
+  {
+    "unit": "qt5-qml-qml-pro",
+    "title": "QML.pro",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/QML/QML.pro"
+    ],
+    "duplicates": [
+      "Linux/QML/QML.pro"
+    ],
+    "first_commit": "2021-04-29",
+    "files": 1,
+    "run": "toolchain",
+    "build": "qmake \"QML/QML.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.qml-quick",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QML/QML.pro"
+  },
+  {
+    "unit": "qt5-01-signalslot",
+    "title": "01-SignalSlot",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/01-SignalSlot"
+    ],
+    "duplicates": [
+      "Linux/QT/01-SignalSlot"
+    ],
+    "first_commit": "2021-12-08",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake 01-SignalSlot.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.signals-slots",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/01-SignalSlot"
+  },
+  {
+    "unit": "qt5-20-signalandslot",
+    "title": "20-SignalAndSlot",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/20-SignalAndSlot"
+    ],
+    "duplicates": [
+      "Linux/QT/20-SignalAndSlot"
+    ],
+    "first_commit": "2021-09-14",
+    "files": 13,
+    "run": "toolchain",
+    "build": "qmake 20-SignalAndSlot.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.signals-slots",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/20-SignalAndSlot"
+  },
+  {
+    "unit": "qt5-13-embedwidget",
+    "title": "13-EmbedWidget",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/13-EmbedWidget"
+    ],
+    "duplicates": [
+      "Linux/QT/13-EmbedWidget"
+    ],
+    "first_commit": "2021-05-23",
+    "files": 16,
+    "run": "toolchain",
+    "build": "qmake 13-EmbedWidget.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/13-EmbedWidget"
+  },
+  {
+    "unit": "qt5-2-muitiwindow",
+    "title": "2-MuitiWindow",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/2-MuitiWindow"
+    ],
+    "duplicates": [
+      "Linux/QT/2-MuitiWindow"
+    ],
+    "first_commit": "2021-03-25",
+    "files": 8,
+    "run": "toolchain",
+    "build": "qmake 2-MuitiWindow.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/2-MuitiWindow"
+  },
+  {
+    "unit": "qt5-21-twowindow",
+    "title": "21-TwoWindow",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/21-TwoWindow"
+    ],
+    "duplicates": [
+      "Linux/QT/21-TwoWindow"
+    ],
+    "first_commit": "2021-09-14",
+    "files": 8,
+    "run": "toolchain",
+    "build": "qmake 21-TwoWindow.pro -spec win32-msvc && nmake (Qt 6.8.1 msvc2022_64) — 实测通过",
+    "build_checked": true,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/21-TwoWindow"
+  },
+  {
+    "unit": "qt5-3-login",
+    "title": "3-Login",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/3-Login"
+    ],
+    "duplicates": [
+      "Linux/QT/3-Login"
+    ],
+    "first_commit": "2021-03-25",
+    "files": 8,
+    "run": "toolchain",
+    "build": "qmake \"3-Login/3-Login.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/3-Login"
+  },
+  {
+    "unit": "qt5-40-multifile",
+    "title": "40-MultiFile",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/40-MultiFile"
+    ],
+    "duplicates": [
+      "Linux/QT/40-MultiFile"
+    ],
+    "first_commit": "2022-05-25",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"40-MultiFile/40-MultiFile.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/40-MultiFile"
+  },
+  {
+    "unit": "qt5-56-multipage",
+    "title": "56-MultiPage",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/56-MultiPage"
+    ],
+    "duplicates": [
+      "Linux/QT/56-MultiPage"
+    ],
+    "first_commit": "2022-06-13",
+    "files": 7,
+    "run": "toolchain",
+    "build": "qmake \"56-MultiPage/56-MultiPage.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/56-MultiPage"
+  },
+  {
+    "unit": "qt5-92-callapp",
+    "title": "92-CallApp",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/92-CallApp"
+    ],
+    "duplicates": [
+      "Linux/QT/92-CallApp"
+    ],
+    "first_commit": "2021-04-13",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"92-CallApp/92-CallApp.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "mainwindow.cpp: 使用 endl 但可能未正确限定（Qt6/MSVC 易炸）",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/92-CallApp"
+  },
+  {
+    "unit": "qt5-93-qsystemtray",
+    "title": "93-QSystemTray",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/93-QSystemTray"
+    ],
+    "duplicates": [
+      "Linux/QT/93-QSystemTray"
+    ],
+    "first_commit": "2021-04-14",
+    "files": 13,
+    "run": "toolchain",
+    "build": "qmake \"93-QSystemTray/93-QSystemTray.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/93-QSystemTray"
+  },
+  {
+    "unit": "qt5-96-dropfile",
+    "title": "96-DropFile",
+    "target": "programming/qt",
+    "verdict": "keep",
+    "canonical": [
+      "Qt5/96-DropFile"
+    ],
+    "duplicates": [
+      "Linux/QT/96-DropFile"
+    ],
+    "first_commit": "2021-04-23",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"96-DropFile/96-DropFile.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "内容哈希相同，规范版取文件更多/更新者；重复于 Linux/QT/96-DropFile"
+  },
+  {
+    "unit": "qt5-29-qtawesome",
+    "title": "29-QtAwesome",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/29-QtAwesome"
+    ],
+    "duplicates": [
+      "Linux/QT/29-QtAwesome"
+    ],
+    "first_commit": "2022-03-06",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"29-QtAwesome/29-QtAwesome.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.basics",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "QtAwesome icon font (third-party)"
+  },
+  {
+    "unit": "sample-chap01introduction-samp1-1hello",
+    "title": "教材样例 samp1_1Hello",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap01Introduction/samp1_1Hello"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap01Introduction/samp1_1Hello"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap01Introduction/samp1_1Hello/samp1_1.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.book-sample",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap02guibasics-samp2-1hello",
+    "title": "教材样例 samp2_1Hello",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap02GUIbasics/samp2_1Hello"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap02GUIbasics/samp2_1Hello"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 6,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap02GUIbasics/samp2_1Hello/samp2_1.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.book-sample",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap02guibasics-samp2-2visualui",
+    "title": "教材样例 samp2_2VisualUI",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap02GUIbasics/samp2_2VisualUI"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap02GUIbasics/samp2_2VisualUI"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 6,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap02GUIbasics/samp2_2VisualUI/samp2_2.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.book-sample",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap02guibasics-samp2-3codeui",
+    "title": "教材样例 samp2_3CodeUI",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap02GUIbasics/samp2_3CodeUI"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap02GUIbasics/samp2_3CodeUI"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 4,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap02GUIbasics/samp2_3CodeUI/samp2_3.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.book-sample",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap02guibasics-samp2-4app",
+    "title": "教材样例 samp2_4App",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap02GUIbasics/samp2_4App"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap02GUIbasics/samp2_4App"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 17,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap02GUIbasics/samp2_4App/samp2_4.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.book-sample",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap03qtmodules-samp3-1",
+    "title": "教材样例 samp3_1",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap03QtModules/samp3_1"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap03QtModules/samp3_1"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 7,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap03QtModules/samp3_1/samp3_1.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.book-sample",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap04widgets-samp4-1edit",
+    "title": "教材样例 samp4_1Edit",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap04Widgets/samp4_1Edit"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap04Widgets/samp4_1Edit"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap04Widgets/samp4_1Edit/samp4_1.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.book-sample",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap04widgets-samp4-2qstring",
+    "title": "教材样例 samp4_2QString",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap04Widgets/samp4_2QString"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap04Widgets/samp4_2QString"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap04Widgets/samp4_2QString/samp4_2.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.book-sample",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap04widgets-samp4-3spin",
+    "title": "教材样例 samp4_3Spin",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap04Widgets/samp4_3Spin"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap04Widgets/samp4_3Spin"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap04Widgets/samp4_3Spin/samp4_3.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.book-sample",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap04widgets-samp4-4misc",
+    "title": "教材样例 samp4_4Misc",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap04Widgets/samp4_4Misc"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap04Widgets/samp4_4Misc"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 9,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap04Widgets/samp4_4Misc/samp4_4.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.book-sample",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap04widgets-samp4-5datetime",
+    "title": "教材样例 samp4_5DateTime",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap04Widgets/samp4_5DateTime"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap04Widgets/samp4_5DateTime"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap04Widgets/samp4_5DateTime/samp4_5.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.book-sample",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap06forms-samp6-4mdi",
+    "title": "教材样例 samp6_4MDI",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap06Forms/samp6_4MDI"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap06Forms/samp6_4MDI"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 25,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap06Forms/samp6_4MDI/samp6_4.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.book-sample",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap09charts-samp9-1simplechart",
+    "title": "教材样例 samp9_1SimpleChart",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap09Charts/samp9_1SimpleChart"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap09Charts/samp9_1SimpleChart"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap09Charts/samp9_1SimpleChart/samp9_1.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.charts",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap09charts-samp9-2chartconfig",
+    "title": "教材样例 samp9_2ChartConfig",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap09Charts/samp9_2ChartConfig"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap09Charts/samp9_2ChartConfig"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 18,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap09Charts/samp9_2ChartConfig/samp9_2.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.charts",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap09charts-samp9-3allcharts",
+    "title": "教材样例 samp9_3AllCharts",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap09Charts/samp9_3AllCharts"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap09Charts/samp9_3AllCharts"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 16,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap09Charts/samp9_3AllCharts/samp9_3.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.charts",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap09charts-samp9-4rectzoom",
+    "title": "教材样例 samp9_4RectZoom",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap09Charts/samp9_4RectZoom"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap09Charts/samp9_4RectZoom"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 17,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap09Charts/samp9_4RectZoom/samp9_4.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.charts",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap10datavisualization-samp10-1bar3d",
+    "title": "教材样例 samp10_1bar3D",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap10DataVisualization/samp10_1bar3D"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap10DataVisualization/samp10_1bar3D"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap10DataVisualization/samp10_1bar3D/samp10_1.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.charts",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap10datavisualization-samp10-2scatter",
+    "title": "教材样例 samp10_2scatter",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap10DataVisualization/samp10_2scatter"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap10DataVisualization/samp10_2scatter"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap10DataVisualization/samp10_2scatter/samp10_2.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.charts",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap10datavisualization-samp10-3surface",
+    "title": "教材样例 samp10_3surface",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap10DataVisualization/samp10_3surface"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap10DataVisualization/samp10_3surface"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap10DataVisualization/samp10_3surface/samp10_3.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.charts",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap10datavisualization-samp10-4map",
+    "title": "教材样例 samp10_4map",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap10DataVisualization/samp10_4map"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap10DataVisualization/samp10_4map"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 9,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap10DataVisualization/samp10_4map/samp10_4.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.charts",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap11database-samp11-2queryreadonly",
+    "title": "教材样例 samp11_2QueryReadonly",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap11Database/samp11_2QueryReadonly"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap11Database/samp11_2QueryReadonly"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 12,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap11Database/samp11_2QueryReadonly/samp11_2.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.database",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap11database-samp11-3queryedit",
+    "title": "教材样例 samp11_3QueryEdit",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap11Database/samp11_3QueryEdit"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap11Database/samp11_3QueryEdit"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 31,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap11Database/samp11_3QueryEdit/samp11_3.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.database",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap11database-samp11-4relational",
+    "title": "教材样例 samp11_4Relational",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap11Database/samp11_4Relational"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap11Database/samp11_4Relational"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 21,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap11Database/samp11_4Relational/samp11_4.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.database",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap04widgets-samp4-6combobox",
+    "title": "教材样例 samp4_6ComboBox",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap04Widgets/samp4_6ComboBox"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap04Widgets/samp4_6ComboBox"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 8,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap04Widgets/samp4_6ComboBox/samp4_6.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.layout",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "qt-qtapp-qdarkstyle",
+    "title": "qdarkstyle",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Linux/QT/QtApp/qdarkstyle"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 481,
+    "run": "toolchain",
+    "build": "python __init__.py  # needs PyQt5/PySide",
+    "build_checked": false,
+    "topic_hint": "archive.qt.misc-app",
+    "quality_notes": "QtApp 子树体量大、编号混乱，疑似练习堆叠未整理",
+    "reason": "qdarkstyle (third-party Qt stylesheet); upstream https://github.com/ColinDuquesnoy/QDarkStyleSheet"
+  },
+  {
+    "unit": "sample-chap04widgets-samp4-7listwidget",
+    "title": "教材样例 samp4_7ListWidget",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap04Widgets/samp4_7ListWidget"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap04Widgets/samp4_7ListWidget"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 24,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap04Widgets/samp4_7ListWidget/samp4_7.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.model-view",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap04widgets-samp4-8treedock",
+    "title": "教材样例 samp4_8TreeDock",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap04Widgets/samp4_8TreeDock"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap04Widgets/samp4_8TreeDock"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 24,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap04Widgets/samp4_8TreeDock/samp4_8.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.model-view",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap04widgets-samp4-9tablewidget",
+    "title": "教材样例 samp4_9TableWidget",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap04Widgets/samp4_9TableWidget"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap04Widgets/samp4_9TableWidget"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 12,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap04Widgets/samp4_9TableWidget/samp4_9.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.model-view",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap05modelview-samp5-1filesys",
+    "title": "教材样例 samp5_1FileSys",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap05ModelView/samp5_1FileSys"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap05ModelView/samp5_1FileSys"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap05ModelView/samp5_1FileSys/samp5_1.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.model-view",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap05modelview-samp5-2stringlist",
+    "title": "教材样例 samp5_2StringList",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap05ModelView/samp5_2StringList"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap05ModelView/samp5_2StringList"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap05ModelView/samp5_2StringList/samp5_2.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.model-view",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap05modelview-samp5-3standardmodel",
+    "title": "教材样例 samp5_3StandardModel",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap05ModelView/samp5_3StandardModel"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap05ModelView/samp5_3StandardModel"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 19,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap05ModelView/samp5_3StandardModel/samp5_3.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.model-view",
+    "quality_notes": "mainwindow.cpp 使用 QRegExp（Qt6 需改 QRegularExpression）",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap05modelview-samp5-4delegate",
+    "title": "教材样例 samp5_4Delegate",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap05ModelView/samp5_4Delegate"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap05ModelView/samp5_4Delegate"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 25,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap05ModelView/samp5_4Delegate/samp5_4.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.model-view",
+    "quality_notes": "mainwindow.cpp 使用 QRegExp（Qt6 需改 QRegularExpression）",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap11database-samp11-1table",
+    "title": "教材样例 samp11_1Table",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap11Database/samp11_1Table"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap11Database/samp11_1Table"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 23,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap11Database/samp11_1Table/samp11_1.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.model-view",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap14network-samp14-1hostinfo",
+    "title": "教材样例 samp14_1HostInfo",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap14Network/samp14_1HostInfo"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap14Network/samp14_1HostInfo"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap14Network/samp14_1HostInfo/samp14_1.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.network",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap14network-samp14-2tcp",
+    "title": "教材样例 samp14_2TCP",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap14Network/samp14_2TCP"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap14Network/samp14_2TCP"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 23,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap14Network/samp14_2TCP/TCPClient/TCPClient.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.network",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap14network-samp14-3udp",
+    "title": "教材样例 samp14_3UDP",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap14Network/samp14_3UDP"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap14Network/samp14_3UDP"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 11,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap14Network/samp14_3UDP/samp14_3UDPTrans.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.network",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap14network-samp14-5http",
+    "title": "教材样例 samp14_5HTTP",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap14Network/samp14_5HTTP"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap14Network/samp14_5HTTP"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap14Network/samp14_5HTTP/samp14_5.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.network",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap06forms-samp6-1standarddialogs",
+    "title": "教材样例 samp6_1StandardDialogs",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap06Forms/samp6_1StandardDialogs"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap06Forms/samp6_1StandardDialogs"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 5,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap06Forms/samp6_1StandardDialogs/samp6_1.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap06forms-samp6-2customdialogs",
+    "title": "教材样例 samp6_2CustomDialogs",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap06Forms/samp6_2CustomDialogs"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap06Forms/samp6_2CustomDialogs"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 22,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap06Forms/samp6_2CustomDialogs/samp6_2.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap06forms-samp6-3multiwindow",
+    "title": "教材样例 samp6_3MultiWindow",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap06Forms/samp6_3MultiWindow"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap06Forms/samp6_3MultiWindow"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 40,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap06Forms/samp6_3MultiWindow/samp6_3.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap14network-samp14-4udpmulticast",
+    "title": "教材样例 samp14_4UDPMulticast",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap14Network/samp14_4UDPMulticast"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap14Network/samp14_4UDPMulticast"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 11,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap14Network/samp14_4UDPMulticast/samp14_4UDPMulticast.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap15multimedia-samp15-1audioplayer",
+    "title": "教材样例 samp15_1AudioPlayer",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap15Multimedia/samp15_1AudioPlayer"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap15Multimedia/samp15_1AudioPlayer"
+    ],
+    "first_commit": "2021-05-23",
+    "files": 1,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap15Multimedia/samp15_1AudioPlayer/samp15_1AudioPlayer.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap15multimedia-samp15-2sound",
+    "title": "教材样例 samp15_2Sound",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap15Multimedia/samp15_2Sound"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap15Multimedia/samp15_2Sound"
+    ],
+    "first_commit": "2021-05-23",
+    "files": 1,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap15Multimedia/samp15_2Sound/samp15_2Sound.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap15multimedia-samp15-3recorder",
+    "title": "教材样例 samp15_3Recorder",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap15Multimedia/samp15_3Recorder"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap15Multimedia/samp15_3Recorder"
+    ],
+    "first_commit": "2021-05-23",
+    "files": 1,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap15Multimedia/samp15_3Recorder/samp15_3Recorder.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap15multimedia-samp15-4audioinput",
+    "title": "教材样例 samp15_4AudioInput",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap15Multimedia/samp15_4AudioInput"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap15Multimedia/samp15_4AudioInput"
+    ],
+    "first_commit": "2021-05-23",
+    "files": 1,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap15Multimedia/samp15_4AudioInput/samp15_4AudioInput.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap15multimedia-samp15-5videoplayer",
+    "title": "教材样例 samp15_5VideoPlayer",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap15Multimedia/samp15_5VideoPlayer"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap15Multimedia/samp15_5VideoPlayer"
+    ],
+    "first_commit": "2021-05-23",
+    "files": 1,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap15Multimedia/samp15_5VideoPlayer/samp15_5VideoPlayer.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap15multimedia-samp15-6videoitem",
+    "title": "教材样例 samp15_6VideoItem",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap15Multimedia/samp15_6VideoItem"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap15Multimedia/samp15_6VideoItem"
+    ],
+    "first_commit": "2021-05-23",
+    "files": 1,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap15Multimedia/samp15_6VideoItem/samp15_6VideoItem.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "sample-chap15multimedia-samp15-7cameraubuntu",
+    "title": "教材样例 samp15_7CameraUbuntu",
+    "target": "programming/qt",
+    "verdict": "drop-third-party",
+    "canonical": [
+      "Qt5/Sample/chap15Multimedia/samp15_7CameraUbuntu"
+    ],
+    "duplicates": [
+      "Linux/Sample/chap15Multimedia/samp15_7CameraUbuntu"
+    ],
+    "first_commit": "2021-05-23",
+    "files": 1,
+    "run": "toolchain",
+    "build": "qmake \"Sample/chap15Multimedia/samp15_7CameraUbuntu/samp15_7Camera.pro\" && nmake/mingw32-make (Qt 6.8.1 msvc2022_64)",
+    "build_checked": false,
+    "topic_hint": "archive.qt.windows-dialogs",
+    "quality_notes": "练习级工程：缺测试、命名口语化、.pro 未分 debug/release 资源",
+    "reason": "Likely 《Qt5.9 C++开发指南》(王英) companion samples (chap*/samp* layout)；与 Linux/Sample 或 Qt5/Sample 对照为整套拷贝，未见使用者改动痕迹"
+  },
+  {
+    "unit": "junk-prac-qt-qmlbook",
+    "title": "构建/IDE 垃圾 Practice/QT/QmlBook",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Practice/QT/QmlBook"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-prac-qt-qt5",
+    "title": "构建/IDE 垃圾 Practice/QT/Qt5开发及实例",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Practice/QT/Qt5开发及实例"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 5,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-pyqt-a2-hello",
+    "title": "构建/IDE 垃圾 Linux/PyQt/A2-Hello",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/PyQt/A2-Hello"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-pyqt-a3-hello",
+    "title": "构建/IDE 垃圾 Linux/PyQt/A3-Hello",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/PyQt/A3-Hello"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qml-1-material",
+    "title": "构建/IDE 垃圾 Linux/QML/1-material",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/QML/1-material"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt-11-helloworld",
+    "title": "构建/IDE 垃圾 Linux/QT/11-HelloWorld",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/QT/11-HelloWorld"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt-14-hellopyqt",
+    "title": "构建/IDE 垃圾 Linux/QT/14-HelloPyQt",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/QT/14-HelloPyQt"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt-15-helloqtquick",
+    "title": "构建/IDE 垃圾 Linux/QT/15-HelloQtQuick",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/QT/15-HelloQtQuick"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt-16-pythonui",
+    "title": "构建/IDE 垃圾 Linux/QT/16-PythonUI",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/QT/16-PythonUI"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt-30-cmake",
+    "title": "构建/IDE 垃圾 Linux/QT/30-cmake",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/QT/30-cmake"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt-30-log",
+    "title": "构建/IDE 垃圾 Linux/QT/30-Log",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/QT/30-Log"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt-49-umldesigner",
+    "title": "构建/IDE 垃圾 Linux/QT/49-UMLDesigner",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/QT/49-UMLDesigner"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt-51-circle",
+    "title": "构建/IDE 垃圾 Linux/QT/51-circle",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/QT/51-circle"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt-qtapp",
+    "title": "构建/IDE 垃圾 Linux/QT/QtApp",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/QT/QtApp"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt5-02-normalui-02-normalui-pro-user",
+    "title": "构建/IDE 垃圾 Qt5/02-NormalUI/02-NormalUI.pro.user",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/02-NormalUI/02-NormalUI.pro.user"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt5-11-helloworld-showcase-qmlproject-user",
+    "title": "构建/IDE 垃圾 Qt5/11-HelloWorld/showcase.qmlproject.user",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/11-HelloWorld/showcase.qmlproject.user"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt5-14-hellopyqt-hello-pyproject-user",
+    "title": "构建/IDE 垃圾 Qt5/14-HelloPyQt/hello.pyproject.user",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/14-HelloPyQt/hello.pyproject.user"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt5-15-helloqtquick-main-pyproject-user",
+    "title": "构建/IDE 垃圾 Qt5/15-HelloQtQuick/main.pyproject.user",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/15-HelloQtQuick/main.pyproject.user"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt5-16-pythonui-main-pyproject-user",
+    "title": "构建/IDE 垃圾 Qt5/16-PythonUI/main.pyproject.user",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/16-PythonUI/main.pyproject.user"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt5-30-cmake-cmakelists-txt-user",
+    "title": "构建/IDE 垃圾 Qt5/30-cmake/CMakeLists.txt.user",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/30-cmake/CMakeLists.txt.user"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt5-30-log-cmakelists-txt-user",
+    "title": "构建/IDE 垃圾 Qt5/30-Log/CMakeLists.txt.user",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/30-Log/CMakeLists.txt.user"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt5-49-umldesigner-49-umldesigner-qmlproject-user",
+    "title": "构建/IDE 垃圾 Qt5/49-UMLDesigner/49-UMLDesigner.qmlproject.user",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/49-UMLDesigner/49-UMLDesigner.qmlproject.user"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt5-51-circle-cmakelists-txt-user",
+    "title": "构建/IDE 垃圾 Qt5/51-circle/CMakeLists.txt.user",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/51-circle/CMakeLists.txt.user"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt5-qt5-pro-user",
+    "title": "构建/IDE 垃圾 Qt5/Qt5.pro.user",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/Qt5.pro.user"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt5-qt5-pro-user-477ae2f",
+    "title": "构建/IDE 垃圾 Qt5/Qt5.pro.user.477ae2f",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/Qt5.pro.user.477ae2f"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "junk-qt5-qt5-pro-user-e6ee2bd",
+    "title": "构建/IDE 垃圾 Qt5/Qt5.pro.user.e6ee2bd",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/Qt5.pro.user.e6ee2bd"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": ".pro.user / 构建输出等",
+    "reason": "IDE/构建生成物，任务书要求 drop-junk"
+  },
+  {
+    "unit": "qml-readme-md",
+    "title": "孤立资源 README.md",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/QML/README.md"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "无源码，仅有位图/二进制",
+    "reason": "孤立二进制资源，条目不依赖则 drop-junk"
+  },
+  {
+    "unit": "qt5-root-gitignore",
+    "title": "元数据 .gitignore",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/__root__/.gitignore"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-03-06",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "仓库级 .pro / .gitignore / Sample 汇总工程文件",
+    "reason": "非子工程练习单元，属容器元数据"
+  },
+  {
+    "unit": "qt5-root-qt5-pro",
+    "title": "元数据 Qt5.pro",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/__root__/Qt5.pro"
+    ],
+    "duplicates": [
+      "Linux/QT/__junk__/pro-user"
+    ],
+    "first_commit": "2021-03-24",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "仓库级 .pro / .gitignore / Sample 汇总工程文件",
+    "reason": "非子工程练习单元，属容器元数据"
+  },
+  {
+    "unit": "sample-meta",
+    "title": "元数据 __meta__",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Qt5/Sample/__meta__"
+    ],
+    "duplicates": [
+      "Linux/Sample/__meta__"
+    ],
+    "first_commit": "2021-05-16",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "仓库级 .pro / .gitignore / Sample 汇总工程文件",
+    "reason": "非子工程练习单元，属容器元数据"
+  },
+  {
+    "unit": "prac-cgi-aaa-cgi",
+    "title": "CGI（非 Qt）aaa.cgi",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Practice/CGI/aaa.cgi"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a — CGI, not Qt",
+    "build_checked": false,
+    "topic_hint": "out-of-scope",
+    "quality_notes": "Practice/CGI 与 Qt 无关，不归本清单入库",
+    "reason": "任务书：Practice/CGI 若与 Qt 无关则不归 Qt 领域；显式 drop 以满足零遗漏"
+  },
+  {
+    "unit": "prac-cgi-abc-cgi",
+    "title": "CGI（非 Qt）abc.cgi",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Practice/CGI/abc.cgi"
+    ],
+    "duplicates": [
+      "Practice/CGI/hello_world.cgi"
+    ],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a — CGI, not Qt",
+    "build_checked": false,
+    "topic_hint": "out-of-scope",
+    "quality_notes": "Practice/CGI 与 Qt 无关，不归本清单入库",
+    "reason": "任务书：Practice/CGI 若与 Qt 无关则不归 Qt 领域；显式 drop 以满足零遗漏"
+  },
+  {
+    "unit": "prac-cgi-cgidemo-cgi",
+    "title": "CGI（非 Qt）cgidemo.cgi",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Practice/CGI/cgidemo.cgi"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a — CGI, not Qt",
+    "build_checked": false,
+    "topic_hint": "out-of-scope",
+    "quality_notes": "Practice/CGI 与 Qt 无关，不归本清单入库",
+    "reason": "任务书：Practice/CGI 若与 Qt 无关则不归 Qt 领域；显式 drop 以满足零遗漏"
+  },
+  {
+    "unit": "prac-cgi-get-cpp",
+    "title": "CGI（非 Qt）get.cpp",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Practice/CGI/get.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a — CGI, not Qt",
+    "build_checked": false,
+    "topic_hint": "out-of-scope",
+    "quality_notes": "Practice/CGI 与 Qt 无关，不归本清单入库",
+    "reason": "任务书：Practice/CGI 若与 Qt 无关则不归 Qt 领域；显式 drop 以满足零遗漏"
+  },
+  {
+    "unit": "prac-cgi-hello-cpp",
+    "title": "CGI（非 Qt）hello.cpp",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Practice/CGI/hello.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a — CGI, not Qt",
+    "build_checked": false,
+    "topic_hint": "out-of-scope",
+    "quality_notes": "Practice/CGI 与 Qt 无关，不归本清单入库",
+    "reason": "任务书：Practice/CGI 若与 Qt 无关则不归 Qt 领域；显式 drop 以满足零遗漏"
+  },
+  {
+    "unit": "prac-cgi-test-cgi",
+    "title": "CGI（非 Qt）test.cgi",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Practice/CGI/test.cgi"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a — CGI, not Qt",
+    "build_checked": false,
+    "topic_hint": "out-of-scope",
+    "quality_notes": "Practice/CGI 与 Qt 无关，不归本清单入库",
+    "reason": "任务书：Practice/CGI 若与 Qt 无关则不归 Qt 领域；显式 drop 以满足零遗漏"
+  },
+  {
+    "unit": "prac-cgi-variable-cpp",
+    "title": "CGI（非 Qt）variable.cpp",
+    "target": "programming/qt",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Practice/CGI/variable.cpp"
+    ],
+    "duplicates": [],
+    "first_commit": "2020-02-22",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a — CGI, not Qt",
+    "build_checked": false,
+    "topic_hint": "out-of-scope",
+    "quality_notes": "Practice/CGI 与 Qt 无关，不归本清单入库",
+    "reason": "任务书：Practice/CGI 若与 Qt 无关则不归 Qt 领域；显式 drop 以满足零遗漏"
+  }
+]

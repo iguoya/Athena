@@ -1,0 +1,21 @@
+archive_check gtkmm-lab: OK (0 problems)
+archive_check gtk-c: OK (0 problems)
+
+gtkmm-lab: topics=5 (hello, glade, box_glade, box_wip, evolution)
+  drop-trivial/merge rows=3 (3-frame/4-paned/5-asspectframe → arc_gtkmmlab_glade)
+  ids prefix=gtkmmlab.arc.* ; requires=[] ; run=toolchain|read-only
+  DesignEvolutionCpp included (first_commit via git); missing mainwindow.ui → read-only
+
+gtk-c: topics=17
+  drop-trivial/merge rows=63 (of 80 keep; Anjuta 同构合并进 anjuta_skeleton / multiwindow / grid_pack)
+  ids prefix=gtk.arc.* ; requires=[] ; run=toolchain|read-only
+  精选含：hboxvbox/callback/drawing/grid_pack/glade_signals/dialog_* 等
+
+commands:
+  python -c "import sys; sys.path.insert(0,'scripts'); import archive_check as a; from pathlib import Path; print(a.check_app(Path('comms/legacy-archive/artifacts/cursor/staging/gtkmm-lab')))"
+  python -c "import sys; sys.path.insert(0,'scripts'); import archive_check as a; from pathlib import Path; print(a.check_app(Path('comms/legacy-archive/artifacts/cursor/staging/gtk-c')))"
+  python comms/legacy-archive/artifacts/cursor/staging/_build_t104_staging.py
+
+产物:
+  comms/legacy-archive/artifacts/cursor/staging/gtkmm-lab/content/{archive.json,archive-dropped.md,cases/arc_gtkmmlab_*}
+  comms/legacy-archive/artifacts/cursor/staging/gtk-c/content/{archive.json,archive-dropped.md,cases/arc_gtk_*}

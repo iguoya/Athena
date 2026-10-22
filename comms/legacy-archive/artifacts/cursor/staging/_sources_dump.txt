@@ -1,0 +1,2400 @@
+
+===== Linux/GTK/10-HBoxAndVBox/main.c exists=True =====
+#include <stdlib.h>
+#include <gtk/gtk.h>
+
+static void helloWorld (GtkWidget *wid, GtkWidget *win)
+{
+  GtkWidget *dialog = NULL;
+
+  dialog = gtk_message_dialog_new (GTK_WINDOW (win), GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, "Hello World!");
+  gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
+  gtk_dialog_run (GTK_DIALOG (dialog));
+  gtk_widget_destroy (dialog);
+}
+
+int main (int argc, char *argv[])
+{
+  GtkWidget *button = NULL;
+  GtkWidget *win = NULL;
+  GtkWidget *vbox = NULL;
+
+  /* Initialize GTK+ */
+  g_log_set_handler ("Gtk", G_LOG_LEVEL_WARNING, (GLogFunc) gtk_false, NULL);
+  gtk_init (&argc, &argv);
+  g_log_set_handler ("Gtk", G_LOG_LEVEL_WARNING, g_log_default_handler, NULL);
+
+  /* Create the main window */
+  win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_container_set_border_width (GTK_CONTAINER (win), 8);
+  gtk_window_set_title (GTK_WINDOW (win), "Hello World");
+  gtk_window_set_position (GTK_WINDOW (win), GTK_WIN_POS_CENTER);
+  gtk_widget_realize (win);
+  g_signal_connect (win, "destroy", gtk_main_quit, NULL);
+
+  /* Create a vertical box with buttons */
+  vbox = gtk_vbox_new (TRUE, 6);
+  gtk_container_add (GTK_CONTAINER (win), vbox);
+
+  button = gtk_button_new_from_stock (GTK_STOCK_DIALOG_INFO);
+  g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (helloWorld), (gpointer) win);
+  gtk_box_pack_start (GTK_BOX (vbox), button, TRUE, TRUE, 0);
+
+  button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
+  g_signal_connect (button, "clicked", gtk_main_quit, NULL);
+  gtk_box_pack_start (GTK_BOX (vbox), button, TRUE, TRUE, 0);
+
+  /* Enter the main loop */
+  gtk_widget_show_all (win);
+  gtk_main ();
+  return 0;
+}
+
+===== Linux/GTK/23-CallBack/main.c exists=True =====
+#include <gtk/gtk.h>
+
+
+
+void hello(GtkButton *button, gpointer user_data)
+{
+        const char *text = gtk_button_get_label(button);
+ 
+        printf("%s----%s\n",(char *)user_data,  text );
+ 
+        return;
+}
+
+void guoya(GtkButton *button, gpointer user_data)
+{
+        const char *text = gtk_button_get_label(button);
+ 
+        printf("%s----%s\n",(char *)user_data,  text );
+ 
+        return;
+}
+
+
+
+
+int main(int argc, char *argv[])
+{
+	GtkWidget *window;
+
+	gtk_init (&argc, &argv);
+
+	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+
+
+        //3.1创建一个水平容器
+        GtkWidget *hbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,  50);
+        //3.2将水平容器加入到窗口中
+        gtk_container_add(GTK_CONTAINER(window), hbox);
+ 
+	GtkWidget *button = gtk_button_new_with_label("你好");
+	GtkWidget *button2 = gtk_button_new_with_label("郭雅");
+	GtkWidget *button3 = gtk_button_new_with_label("旅行");
+	GtkWidget *button4 = gtk_button_new_with_label("开心");
+	
+	
+	gtk_container_add(GTK_CONTAINER(hbox), button);
+	gtk_container_add(GTK_CONTAINER(hbox), button2);
+	gtk_container_add(GTK_CONTAINER(hbox), button3);
+	gtk_container_add(GTK_CONTAINER(hbox), button4);
+	
+	     g_signal_connect(button, "pressed", G_CALLBACK( hello ),  "World");
+	  g_signal_connect(button2, "pressed", G_CALLBACK( guoya ),  "喜欢你");
+//	  g_signal_connect(button2, "pressed", G_CALLBACK( travel ),  "喜欢你");
+
+        gtk_widget_show_all(window);
+//	gtk_widget_show (win {dow);
+
+	gtk_main ();
+
+	return 0;
+}
+===== Linux/GTK/g30-app/src/main.c exists=True =====
+#include <gtk/gtk.h>
+
+/* Surface to store current scribbles */
+static cairo_surface_t *surface = NULL;
+
+static void
+clear_surface (void)
+{
+  cairo_t *cr;
+
+  cr = cairo_create (surface);
+
+  cairo_set_source_rgb (cr, 1, 1, 1);
+  cairo_paint (cr);
+
+  cairo_destroy (cr);
+}
+
+/* Create a new surface of the appropriate size to store our scribbles */
+static gboolean
+configure_event_cb (GtkWidget         *widget,
+                    GdkEventConfigure *event,
+                    gpointer           data)
+{
+  if (surface)
+    cairo_surface_destroy (surface);
+
+  surface = gdk_window_create_similar_surface (gtk_widget_get_window (widget),
+                                               CAIRO_CONTENT_COLOR,
+                                               gtk_widget_get_allocated_width (widget),
+                                               gtk_widget_get_allocated_height (widget));
+
+  /* Initialize the surface to white */
+  clear_surface ();
+
+  /* We've handled the configure event, no need for further processing. */
+  return TRUE;
+}
+
+/* Redraw the screen from the surface. Note that the ::draw
+ * signal receives a ready-to-be-used cairo_t that is already
+ * clipped to only draw the exposed areas of the widget
+ */
+static gboolean
+draw_cb (GtkWidget *widget,
+         cairo_t   *cr,
+         gpointer   data)
+{
+  cairo_set_source_surface (cr, surface, 0, 0);
+  cairo_paint (cr);
+
+  return FALSE;
+}
+
+/* Draw a rectangle on the surface at the given position */
+static void
+draw_brush (GtkWidget *widget,
+            gdouble    x,
+            gdouble    y)
+{
+  cairo_t *cr;
+
+  /* Paint to the surface, where we store our state */
+  cr = cairo_create (surface);
+
+  cairo_rectangle (cr, x - 3, y - 3, 6, 6);
+  cairo_fill (cr);
+
+  cairo_destroy (cr);
+
+  /* Now invalidate the affected region of the drawing area. */
+  gtk_widget_queue_draw_area (widget, x - 3, y - 3, 6, 6);
+}
+
+/* Handle button press events by either drawing a rectangle
+ * or clearing the surface, depending on which button was pressed.
+ * The ::button-press signal handler receives a GdkEventButton
+ * struct which contains this information.
+ */
+static gboolean
+button_press_event_cb (GtkWidget      *widget,
+                       GdkEventButton *event,
+                       gpointer        data)
+{
+  /* paranoia check, in case we haven't gotten a configure event */
+  if (surface == NULL)
+    return FALSE;
+
+  if (event->button == GDK_BUTTON_PRIMARY)
+    {
+      draw_brush (widget, event->x, event->y);
+    }
+  else if (event->button == GDK_BUTTON_SECONDARY)
+    {
+      clear_surface ();
+      gtk_widget_queue_draw (widget);
+    }
+
+  /* We've handled the event, stop processing */
+  return TRUE;
+}
+
+/* Handle motion events by continuing to draw if button 1 is
+ * still held down. The ::motion-notify signal handler receives
+ * a GdkEventMotion struct which contains this information.
+ */
+static gboolean
+motion_notify_event_cb (GtkWidget      *widget,
+                        GdkEventMotion *event,
+                        gpointer        data)
+{
+  /* paranoia check, in case we haven't gotten a configure event */
+  if (surface == NULL)
+    return FALSE;
+
+  if (event->state & GDK_BUTTON1_MASK)
+    draw_brush (widget, event->x, event->y);
+
+  /* We've handled it, stop processing */
+  return TRUE;
+}
+
+static void
+close_window (void)
+{
+  if (surface)
+    cairo_surface_destroy (surface);
+}
+
+static void
+activate (GtkApplication *app,
+          gpointer        user_data)
+{
+  GtkWidget *window;
+  GtkWidget *frame;
+  GtkWidget *drawing_area;
+
+  window = gtk_application_window_new (app);
+  gtk_window_set_title (GTK_WINDOW (window), "Drawing Area");
+
+  g_signal_connect (window, "destroy", G_CALLBACK (close_window), NULL);
+
+  gtk_container_set_border_width (GTK_CONTAINER (window), 8);
+
+  frame = gtk_frame_new (NULL);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
+  gtk_container_add (GTK_CONTAINER (window), frame);
+
+  drawing_area = gtk_drawing_area_new ();
+  /* set a minimum size */
+  gtk_widget_set_size_request (drawing_area, 100, 100);
+
+  gtk_container_add (GTK_CONTAINER (frame), drawing_area);
+
+  /* Signals used to handle the backing surface */
+  g_signal_connect (drawing_area, "draw",
+                    G_CALLBACK (draw_cb), NULL);
+  g_signal_connect (drawing_area,"configure-event",
+                    G_CALLBACK (configure_event_cb), NULL);
+
+  /* Event signals */
+  g_signal_connect (drawing_area, "motion-notify-event",
+                    G_CALLBACK (motion_notify_event_cb), NULL);
+  g_signal_connect (drawing_area, "button-press-event",
+                    G_CALLBACK (button_press_event_cb), NULL);
+
+  /* Ask to receive events the drawing area doesn't normally
+   * subscribe to. In particular, we need to ask for the
+   * button press and motion notify events that want to handle.
+   */
+  gtk_widget_set_events (drawing_area, gtk_widget_get_events (drawing_area)
+                                     | GDK_BUTTON_PRESS_MASK
+                                     | GDK_POINTER_MOTION_MASK);
+
+  gtk_widget_show_all (window);
+}
+
+int
+main (int    argc,
+      char **argv)
+{
+  GtkApplication *app;
+  int status;
+
+  app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
+}
+===== Linux/GTK/g28-pack/src/main.c exists=True =====
+#include <gtk/gtk.h>
+
+static void
+print_hello (GtkWidget *widget,
+             gpointer   data)
+{
+	g_print ("Hello World\n");
+}
+
+static void
+activate (GtkApplication *app,
+          gpointer        user_data)
+{
+	GtkWidget *window;
+	GtkWidget *grid;
+	GtkWidget *button;
+
+	/* create a new window, and set its title */
+	window = gtk_application_window_new (app);
+	gtk_window_set_title (GTK_WINDOW (window), "Window");
+	gtk_container_set_border_width (GTK_CONTAINER (window), 10);
+
+	/* Here we construct the container that is going pack our buttons */
+	grid = gtk_grid_new ();
+
+	/* Pack the container in the window */
+	gtk_container_add (GTK_CONTAINER (window), grid);
+
+	button = gtk_button_new_with_label ("Button 1");
+	g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+	/* Place the first button in the grid cell (0, 0), and make it fill
+		* just 1 cell horizontally and vertically (ie no spanning)
+		*/
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 0, 1, 1);
+
+	button = gtk_button_new_with_label ("Button 2");
+	g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+	/* Place the second button in the grid cell (1, 0), and make it fill
+		* just 1 cell horizontally and vertically (ie no spanning)
+		*/
+	gtk_grid_attach (GTK_GRID (grid), button, 1, 0, 1, 1);
+
+
+	
+	button = gtk_button_new_with_label ("Button 3");
+	g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 2, 0, 1, 1);
+
+
+	button = gtk_button_new_with_label ("Button 3");
+	g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 1, 1, 1);
+	button = gtk_button_new_with_label ("Button 3");
+	g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 1, 1, 1, 1);
+	button = gtk_button_new_with_label ("Button 3");
+	g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 2, 1, 1, 1);
+
+	button = gtk_button_new_with_label ("Quit");
+	g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_widget_destroy), window);
+
+	/* Place the Quit button in the grid cell (0, 1), and make it
+		* span 2 columns.
+	 */
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 2, 3, 1);
+
+	/* Now that we are done packing our widgets, we show them all
+	 * in one go, by calling gtk_widget_show_all() on the window.
+		 * This call recursively calls gtk_widget_show() on all widgets
+			 * that are contained in the window, directly or indirectly.
+	 */
+	gtk_widget_show_all (window);
+
+}
+
+int
+main (int    argc,
+      char **argv)
+{
+	GtkApplication *app;
+	int status;
+
+	app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
+	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+	status = g_application_run (G_APPLICATION (app), argc, argv);
+	g_object_unref (app);
+
+	return status;
+}
+===== Linux/GTK/g28-pack/src/g28-pack.c exists=True =====
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
+/*
+ * g28-pack.c
+ * Copyright (C) 2022 tiger <tiger@loongnix>
+ * 
+ * g28-pack is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * g28-pack is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include "g28-pack.h"
+
+#include <glib/gi18n.h>
+
+
+
+
+G_DEFINE_TYPE (G28pack, g28_pack, GTK_TYPE_APPLICATION);
+
+/* ANJUTA: Macro G28_PACK_APPLICATION gets G28pack - DO NOT REMOVE */
+
+/* Create a new window loading a file */
+static void
+g28_pack_new_window (GApplication *app,
+                           GFile        *file)
+{
+	GtkWidget *window;
+
+	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title (GTK_WINDOW (window), "g28-pack");
+	
+	
+	gtk_window_set_application (GTK_WINDOW (window), GTK_APPLICATION (app));
+	if (file != NULL)
+	{
+		/* TODO: Add code here to open the file in the new window */
+	}
+
+	gtk_widget_show_all (GTK_WIDGET (window));
+}
+
+
+/* GApplication implementation */
+static void
+g28_pack_activate (GApplication *application)
+{
+	g28_pack_new_window (application, NULL);
+}
+
+static void
+g28_pack_open (GApplication  *application,
+                     GFile        **files,
+                     gint           n_files,
+                     const gchar   *hint)
+{
+	gint i;
+
+	for (i = 0; i < n_files; i++)
+		g28_pack_new_window (application, files[i]);
+}
+
+static void
+g28_pack_init (G28pack *object)
+{
+}
+
+static void
+g28_pack_finalize (GObject *object)
+{
+	G_OBJECT_CLASS (g28_pack_parent_class)->finalize (object);
+}
+
+static void
+g28_pack_class_init (G28packClass *klass)
+{
+	G_APPLICATION_CLASS (klass)->activate = g28_pack_activate;
+	G_APPLICATION_CLASS (klass)->open = g28_pack_open;
+
+	G_OBJECT_CLASS (klass)->finalize = g28_pack_finalize;
+}
+
+G28pack *
+g28_pack_new (void)
+{
+	return g_object_new (g28_pack_get_type (),
+	                     "application-id", "org.gnome.g28_pack",
+	                     "flags", G_APPLICATION_HANDLES_OPEN,
+	                     NULL);
+}
+
+
+===== Linux/GTK/g32-grid/src/g32-grid.c exists=True =====
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
+/*
+ * g32-grid.c
+ * Copyright (C) 2022 tiger <tiger@loongnix>
+ * 
+ * g32-grid is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * g32-grid is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include "g32-grid.h"
+#include "dialog.h"
+#include <glib/gi18n.h>
+
+
+
+/* For testing propose use the local (not installed) ui file */
+/* #define UI_FILE PACKAGE_DATA_DIR"/ui/g32_grid.ui" */
+#define UI_FILE "src/g32_grid.ui"
+#define TOP_WINDOW "window"
+
+
+G_DEFINE_TYPE (G32grid, g32_grid, GTK_TYPE_APPLICATION);
+
+/* ANJUTA: Macro G32_GRID_APPLICATION gets G32grid - DO NOT REMOVE */
+struct _G32gridPrivate
+{
+	/* ANJUTA: Widgets declaration for g32_grid.ui - DO NOT REMOVE */
+};
+
+/* Create a new window loading a file */
+static void
+g32_grid_new_window (GApplication *app,
+                           GFile        *file)
+{
+	GtkWidget *window;
+
+	GtkBuilder *builder;
+	GError* error = NULL;
+
+	G32gridPrivate *priv = G32_GRID_APPLICATION(app)->priv;
+
+	/* Load UI from file */
+	builder = gtk_builder_new ();
+	if (!gtk_builder_add_from_file (builder, UI_FILE, &error))
+	{
+		g_critical ("Couldn't load builder file: %s", error->message);
+		g_error_free (error);
+	}
+
+	/* Auto-connect signal handlers */
+	gtk_builder_connect_signals (builder, app);
+
+	/* Get the window object from the ui file */
+	window = GTK_WIDGET (gtk_builder_get_object (builder, TOP_WINDOW));
+        if (!window)
+        {
+		g_critical ("Widget \"%s\" is missing in file %s.",
+				TOP_WINDOW,
+				UI_FILE);
+        }
+
+	
+	/* ANJUTA: Widgets initialization for g32_grid.ui - DO NOT REMOVE */
+
+	g_object_unref (builder);
+	
+	
+	gtk_window_set_application (GTK_WINDOW (window), GTK_APPLICATION (app));
+	if (file != NULL)
+	{
+		/* TODO: Add code here to open the file in the new window */
+	}
+
+	gtk_widget_show_all (GTK_WIDGET (window));
+}
+
+
+/* GApplication implementation */
+static void
+g32_grid_activate (GApplication *application)
+{
+	g32_grid_new_window (application, NULL);
+}
+
+static void
+g32_grid_open (GApplication  *application,
+                     GFile        **files,
+                     gint           n_files,
+                     const gchar   *hint)
+{
+	gint i;
+
+	for (i = 0; i < n_files; i++)
+		g32_grid_new_window (application, files[i]);
+}
+
+static void
+g32_grid_init (G32grid *object)
+{
+	object->priv = G_TYPE_INSTANCE_GET_PRIVATE (object, G32_GRID_TYPE_APPLICATION, G32gridPrivate);
+}
+
+static void
+g32_grid_finalize (GObject *object)
+{
+	G_OBJECT_CLASS (g32_grid_parent_class)->finalize (object);
+}
+
+static void
+g32_grid_class_init (G32gridClass *klass)
+{
+	G_APPLICATION_CLASS (klass)->activate = g32_grid_activate;
+	G_APPLICATION_CLASS (klass)->open = g32_grid_open;
+
+	g_type_class_add_private (klass, sizeof (G32gridPrivate));
+
+	G_OBJECT_CLASS (klass)->finalize = g32_grid_finalize;
+}
+
+G32grid *
+g32_grid_new (void)
+{
+	return g_object_new (g32_grid_get_type (),
+	                     "application-id", "org.gnome.g32_grid",
+	                     "flags", G_APPLICATION_HANDLES_OPEN,
+	                     NULL);
+}
+
+
+===== Linux/GTK/g32-grid/src/dialog.c exists=True =====
+/***************************************************************************
+ *            dialog.c
+ *
+ *  二 五月 17 22:52:21 2022
+ *  Copyright  2022  tiger
+ *  <user@host>
+ ****************************************************************************/
+#include "gtk/gtk.h"
+
+static void
+print_hello (GtkWidget *widget,
+             gpointer   data)
+{
+	g_print ("Hello World\n");
+}
+// Function to open a dialog box with a message
+void
+quick_message (GtkWindow *parent, gchar *message)
+{
+	GtkBuilder *builder;
+	GObject *window;
+
+	builder = gtk_builder_new ();
+	gtk_builder_add_from_file (builder, "src/dialog.ui", NULL);
+	/* Connect signal handlers to the constructed widgets. */
+	window = gtk_builder_get_object (builder, "window");
+/*	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+	button = gtk_builder_get_object (builder, "button1");
+	g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+	button = gtk_builder_get_object (builder, "button2");
+	g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+	button = gtk_builder_get_object (builder, "quit");
+	g_signal_connect (button, "clicked", G_CALLBACK (gtk_main_quit), NULL);*/
+	gtk_widget_show_all(window);
+}
+===== Linux/GTK/g29-grid/src/g29-grid.c exists=True =====
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
+/*
+ * g29-grid.c
+ * Copyright (C) 2022 tiger <tiger@loongnix>
+ * 
+ * g29-grid is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * g29-grid is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include "g29-grid.h"
+
+#include <glib/gi18n.h>
+
+
+
+/* For testing propose use the local (not installed) ui file */
+/* #define UI_FILE PACKAGE_DATA_DIR"/ui/g29_grid.ui" */
+#define UI_FILE "src/g29_grid.ui"
+#define TOP_WINDOW "window"
+
+
+G_DEFINE_TYPE (G29grid, g29_grid, GTK_TYPE_APPLICATION);
+
+/* ANJUTA: Macro G29_GRID_APPLICATION gets G29grid - DO NOT REMOVE */
+struct _G29gridPrivate
+{
+	/* ANJUTA: Widgets declaration for g29_grid.ui - DO NOT REMOVE */
+};
+void hello (GtkWidget *widget,
+             gpointer   data)
+{
+  g_print ("Hello World\n");
+}
+
+
+void guoya (GtkWidget *widget,
+             gpointer   data)
+{
+  g_print (" 郭雅 郭雅\n");
+}
+
+
+/* Create a new window loading a file */
+static void
+g29_grid_new_window (GApplication *app,
+                           GFile        *file)
+{
+	GtkWidget *window;
+
+	GtkBuilder *builder;
+	GError* error = NULL;
+
+	G29gridPrivate *priv = G29_GRID_APPLICATION(app)->priv;
+
+	/* Load UI from file */
+	builder = gtk_builder_new ();
+	if (!gtk_builder_add_from_file (builder, UI_FILE, &error))
+	{
+		g_critical ("Couldn't load builder file: %s", error->message);
+		g_error_free (error);
+	}
+
+	/* Auto-connect signal handlers */
+	gtk_builder_connect_signals (builder, app);
+
+	/* Get the window object from the ui file */
+	window = GTK_WIDGET (gtk_builder_get_object (builder, TOP_WINDOW));
+        if (!window)
+        {
+		g_critical ("Widget \"%s\" is missing in file %s.",
+				TOP_WINDOW,
+				UI_FILE);
+        }
+
+/*		g_signal_connect (button, "clicked", G_CALLBACK (hello), NULL);*/
+
+
+	
+	/* ANJUTA: Widgets initialization for g29_grid.ui - DO NOT REMOVE */
+
+	g_object_unref (builder);
+	
+	
+	gtk_window_set_application (GTK_WINDOW (window), GTK_APPLICATION (app));
+	if (file != NULL)
+	{
+		/* TODO: Add code here to open the file in the new window */
+	}
+
+	gtk_widget_show_all (GTK_WIDGET (window));
+}
+
+
+/* GApplication implementation */
+static void
+g29_grid_activate (GApplication *application)
+{
+	g29_grid_new_window (application, NULL);
+}
+
+static void
+g29_grid_open (GApplication  *application,
+                     GFile        **files,
+                     gint           n_files,
+                     const gchar   *hint)
+{
+	gint i;
+
+	for (i = 0; i < n_files; i++)
+		g29_grid_new_window (application, files[i]);
+}
+
+static void
+g29_grid_init (G29grid *object)
+{
+	object->priv = G_TYPE_INSTANCE_GET_PRIVATE (object, G29_GRID_TYPE_APPLICATION, G29gridPrivate);
+}
+
+static void
+g29_grid_finalize (GObject *object)
+{
+	G_OBJECT_CLASS (g29_grid_parent_class)->finalize (object);
+}
+
+static void
+g29_grid_class_init (G29gridClass *klass)
+{
+	G_APPLICATION_CLASS (klass)->activate = g29_grid_activate;
+	G_APPLICATION_CLASS (klass)->open = g29_grid_open;
+
+	g_type_class_add_private (klass, sizeof (G29gridPrivate));
+
+	G_OBJECT_CLASS (klass)->finalize = g29_grid_finalize;
+}
+
+G29grid *
+g29_grid_new (void)
+{
+	return g_object_new (g29_grid_get_type (),
+	                     "application-id", "org.gnome.g29_grid",
+	                     "flags", G_APPLICATION_HANDLES_OPEN,
+	                     NULL);
+}
+
+
+===== Linux/GTK/g34-dialog/src/g34-dialog.c exists=True =====
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
+/*
+ * g34-dialog.c
+ * Copyright (C) 2022 tiger <tiger@loongnix>
+ * 
+ * g34-dialog is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * g34-dialog is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include "g34-dialog.h"
+
+#include <glib/gi18n.h>
+
+
+
+/* For testing propose use the local (not installed) ui file */
+/* #define UI_FILE PACKAGE_DATA_DIR"/ui/g34_dialog.ui" */
+#define UI_FILE "src/g34_dialog.ui"
+#define TOP_WINDOW "window"
+
+
+G_DEFINE_TYPE (G34dialog, g34_dialog, GTK_TYPE_APPLICATION);
+
+/* ANJUTA: Macro G34_DIALOG_APPLICATION gets G34dialog - DO NOT REMOVE */
+struct _G34dialogPrivate
+{
+	/* ANJUTA: Widgets declaration for g34_dialog.ui - DO NOT REMOVE */
+};
+static int num = 0;
+void hello() {
+	g_print("郭雅 %d \n", num);
+	++num;
+}
+void about_dialog_show() {
+/*	gtk_button_released(p_widget);*/
+    GtkWidget *p_window;
+    GtkWidget *p_v_box;
+    GtkWidget *p_entry;
+
+    p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_title(GTK_WINDOW(p_window), "Create DB");
+    gtk_window_set_default_size(GTK_WINDOW(p_window), 320, 200);
+
+    p_v_box = gtk_vbox_new(TRUE, 0);
+    gtk_container_add(GTK_CONTAINER(p_window), p_v_box);
+
+    p_entry = gtk_entry_new();
+    gtk_box_pack_start(GTK_BOX(p_v_box), p_entry, TRUE, FALSE, 0);
+    gtk_widget_show_all(p_window);
+}
+
+
+/* Create a new window loading a file */
+static void
+g34_dialog_new_window (GApplication *app,
+                           GFile        *file)
+{
+	GtkWidget *window;
+
+	GtkBuilder *builder;
+	GError* error = NULL;
+
+	G34dialogPrivate *priv = G34_DIALOG_APPLICATION(app)->priv;
+
+	/* Load UI from file */
+	builder = gtk_builder_new ();
+	if (!gtk_builder_add_from_file (builder, UI_FILE, &error))
+	{
+		g_critical ("Couldn't load builder file: %s", error->message);
+		g_error_free (error);
+	}
+
+	/* Auto-connect signal handlers */
+	gtk_builder_connect_signals (builder, app);
+
+	/* Get the window object from the ui file */
+	window = GTK_WIDGET (gtk_builder_get_object (builder, TOP_WINDOW));
+        if (!window)
+        {
+		g_critical ("Widget \"%s\" is missing in file %s.",
+				TOP_WINDOW,
+				UI_FILE);
+        }
+
+	
+	/* ANJUTA: Widgets initialization for g34_dialog.ui - DO NOT REMOVE */
+
+	g_object_unref (builder);
+	
+	
+	gtk_window_set_application (GTK_WINDOW (window), GTK_APPLICATION (app));
+	if (file != NULL)
+	{
+		/* TODO: Add code here to open the file in the new window */
+	}
+
+	gtk_widget_show_all (GTK_WIDGET (window));
+}
+
+
+/* GApplication implementation */
+static void
+g34_dialog_activate (GApplication *application)
+{
+	g34_dialog_new_window (application, NULL);
+}
+
+static void
+g34_dialog_open (GApplication  *application,
+                     GFile        **files,
+                     gint           n_files,
+                     const gchar   *hint)
+{
+	gint i;
+
+	for (i = 0; i < n_files; i++)
+		g34_dialog_new_window (application, files[i]);
+}
+
+static void
+g34_dialog_init (G34dialog *object)
+{
+	object->priv = G_TYPE_INSTANCE_GET_PRIVATE (object, G34_DIALOG_TYPE_APPLICATION, G34dialogPrivate);
+}
+
+static void
+g34_dialog_finalize (GObject *object)
+{
+	G_OBJECT_CLASS (g34_dialog_parent_class)->finalize (object);
+}
+
+static void
+g34_dialog_class_init (G34dialogClass *klass)
+{
+	G_APPLICATION_CLASS (klass)->activate = g34_dialog_activate;
+	G_APPLICATION_CLASS (klass)->open = g34_dialog_open;
+
+	g_type_class_add_private (klass, sizeof (G34dialogPrivate));
+
+	G_OBJECT_CLASS (klass)->finalize = g34_dialog_finalize;
+}
+
+G34dialog *
+g34_dialog_new (void)
+{
+	return g_object_new (g34_dialog_get_type (),
+	                     "application-id", "org.gnome.g34_dialog",
+	                     "flags", G_APPLICATION_HANDLES_OPEN,
+	                     NULL);
+}
+
+
+===== Linux/GTK/g36-multiwindow/src/g36-multiwindow.c exists=True =====
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
+/*
+ * g36-multiwindow.c
+ * Copyright (C) 2022 tiger <tiger@loongnix>
+ * 
+ * g36-MultiWindow is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * g36-MultiWindow is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include "g36-multiwindow.h"
+
+#include <glib/gi18n.h>
+/*#include "g37-conponent.h"*/
+
+
+/* For testing propose use the local (not installed) ui file */
+/* #define UI_FILE PACKAGE_DATA_DIR"/ui/g36_multiwindow.ui" */
+#define UI_FILE "src/g36_multiwindow.ui"
+#define TOP_WINDOW "window"
+
+
+G_DEFINE_TYPE (G36multiwindow, g36_multiwindow, GTK_TYPE_APPLICATION);
+
+/* ANJUTA: Macro G36_MULTIWINDOW_APPLICATION gets G36multiwindow - DO NOT REMOVE */
+struct _G36multiwindowPrivate
+{
+	/* ANJUTA: Widgets declaration for g36_multiwindow.ui - DO NOT REMOVE */
+};
+
+/* Create a new window loading a file */
+static void
+g36_multiwindow_new_window (GApplication *app,
+                           GFile        *file)
+{
+	GtkWidget *window;
+
+	GtkBuilder *builder;
+	GError* error = NULL;
+
+	G36multiwindowPrivate *priv = G36_MULTIWINDOW_APPLICATION(app)->priv;
+
+	/* Load UI from file */
+	builder = gtk_builder_new ();
+	if (!gtk_builder_add_from_file (builder, UI_FILE, &error))
+	{
+		g_critical ("Couldn't load builder file: %s", error->message);
+		g_error_free (error);
+	}
+
+	/* Auto-connect signal handlers */
+	gtk_builder_connect_signals (builder, app);
+
+	/* Get the window object from the ui file */
+	window = GTK_WIDGET (gtk_builder_get_object (builder, TOP_WINDOW));
+        if (!window)
+        {
+		g_critical ("Widget \"%s\" is missing in file %s.",
+				TOP_WINDOW,
+				UI_FILE);
+        }
+
+	
+	/* ANJUTA: Widgets initialization for g36_multiwindow.ui - DO NOT REMOVE */
+
+	g_object_unref (builder);
+	
+	
+	gtk_window_set_application (GTK_WINDOW (window), GTK_APPLICATION (app));
+	if (file != NULL)
+	{
+		/* TODO: Add code here to open the file in the new window */
+	}
+
+	gtk_widget_show_all (GTK_WIDGET (window));
+}
+
+
+/* GApplication implementation */
+static void
+g36_multiwindow_activate (GApplication *application)
+{
+	g36_multiwindow_new_window (application, NULL);
+}
+
+static void
+g36_multiwindow_open (GApplication  *application,
+                     GFile        **files,
+                     gint           n_files,
+                     const gchar   *hint)
+{
+	gint i;
+
+	for (i = 0; i < n_files; i++)
+		g36_multiwindow_new_window (application, files[i]);
+}
+
+static void
+g36_multiwindow_init (G36multiwindow *object)
+{
+	object->priv = G_TYPE_INSTANCE_GET_PRIVATE (object, G36_MULTIWINDOW_TYPE_APPLICATION, G36multiwindowPrivate);
+}
+
+static void
+g36_multiwindow_finalize (GObject *object)
+{
+	G_OBJECT_CLASS (g36_multiwindow_parent_class)->finalize (object);
+}
+
+static void
+g36_multiwindow_class_init (G36multiwindowClass *klass)
+{
+	G_APPLICATION_CLASS (klass)->activate = g36_multiwindow_activate;
+	G_APPLICATION_CLASS (klass)->open = g36_multiwindow_open;
+
+	g_type_class_add_private (klass, sizeof (G36multiwindowPrivate));
+
+	G_OBJECT_CLASS (klass)->finalize = g36_multiwindow_finalize;
+}
+
+G36multiwindow *
+g36_multiwindow_new (void)
+{
+	return g_object_new (g36_multiwindow_get_type (),
+	                     "application-id", "org.gnome.g36_multiwindow",
+	                     "flags", G_APPLICATION_HANDLES_OPEN,
+	                     NULL);
+}
+
+
+===== Linux/GTK/g25-box/src/main.c exists=True =====
+#include <gtk/gtk.h>
+
+static void
+print_hello (GtkWidget *widget,
+             gpointer   data)
+{
+  g_print ("Hello World\n");
+}
+
+static void
+activate (GtkApplication *app,
+          gpointer        user_data)
+{
+  GtkWidget *window;
+  GtkWidget *grid;
+  GtkWidget *button;
+
+  /* create a new window, and set its title */
+  window = gtk_application_window_new (app);
+  gtk_window_set_title (GTK_WINDOW (window), "Window");
+  gtk_container_set_border_width (GTK_CONTAINER (window), 10);
+
+  /* Here we construct the container that is going pack our buttons */
+  grid = gtk_grid_new ();
+
+  /* Pack the container in the window */
+  gtk_container_add (GTK_CONTAINER (window), grid);
+
+  button = gtk_button_new_with_label ("Button 1");
+  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+  /* Place the first button in the grid cell (0, 0), and make it fill
+   * just 1 cell horizontally and vertically (ie no spanning)
+   */
+  gtk_grid_attach (GTK_GRID (grid), button, 0, 0, 1, 1);
+
+  button = gtk_button_new_with_label ("Button 2");
+  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+  /* Place the second button in the grid cell (1, 0), and make it fill
+   * just 1 cell horizontally and vertically (ie no spanning)
+   */
+  gtk_grid_attach (GTK_GRID (grid), button, 1, 0, 1, 1);
+
+  button = gtk_button_new_with_label ("Quit");
+  g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_widget_destroy), window);
+
+  /* Place the Quit button in the grid cell (0, 1), and make it
+   * span 2 columns.
+   */
+  gtk_grid_attach (GTK_GRID (grid), button, 0, 1, 2, 1);
+
+  /* Now that we are done packing our widgets, we show them all
+   * in one go, by calling gtk_widget_show_all() on the window.
+   * This call recursively calls gtk_widget_show() on all widgets
+   * that are contained in the window, directly or indirectly.
+   */
+  gtk_widget_show_all (window);
+
+}
+
+int
+main (int    argc,
+      char **argv)
+{
+  GtkApplication *app;
+  int status;
+
+  app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
+}
+===== Linux/GTK/02-CSS/main.c exists=True =====
+
+#include <stdio.h>
+#include <gtk/gtk.h>
+#include <stdlib.h>
+ 
+void setCss(GtkWidget *widget, const gchar *data)
+{
+    GtkCssProvider *provider = gtk_css_provider_new ();
+    GtkStyleContext *context = gtk_widget_get_style_context(widget);
+    gtk_css_provider_load_from_data(provider, data, -1, NULL);
+    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+    g_object_unref (provider);
+}
+ 
+int main(int  argc, char *argv[]) {
+    GtkWidget *window;
+    gtk_init(&argc, &argv);
+    window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_title(GTK_WINDOW(window), "hello, ubuntu gtk");
+    g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    gtk_widget_show(window);
+    setCss (window, "window{border-radius:50px;background-color:green}");
+    gtk_main();
+    return 0;
+}
+===== Linux/GTK/24-Glade/main.c exists=True =====
+#include <gtk/gtk.h>
+
+void say(GtkButton *button, gpointer user_data)
+{
+	const char *text = gtk_button_get_label(button);
+
+	printf("Hello, --->%s\n",(char *)user_data,  text );
+
+	return;
+}
+
+
+
+int main(int argc, char *argv[])
+{
+
+
+	gtk_init (&argc, &argv);
+
+//	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+//
+//	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+//
+//	gtk_widget_show (window);
+	GtkBuilder *builder = gtk_builder_new();
+	if ( !gtk_builder_add_from_file(builder,"../tiger.glade", NULL)) {
+		printf("connot load file!");
+	}
+
+	GtkWidget *window  = GTK_WIDGET(gtk_builder_get_object(builder,"window"));
+	GtkButton *buttonA = GTK_BUTTON(gtk_builder_get_object(builder, "me"));
+	GtkButton *buttonB = GTK_BUTTON(gtk_builder_get_object(builder, "you"));
+	GtkButton *buttonC = GTK_BUTTON(gtk_builder_get_object(builder, "love"));
+	GtkButton *buttonD = GTK_BUTTON(gtk_builder_get_object(builder, "guoya"));
+
+
+
+	const char *text = gtk_button_get_label(buttonD);
+
+	printf("text=%s\n", text);
+
+
+	g_signal_connect(buttonA, "pressed", G_CALLBACK( say ),   gtk_button_get_label(buttonA));
+	g_signal_connect(buttonB, "pressed", G_CALLBACK( say ),   gtk_button_get_label(buttonB));
+	g_signal_connect(buttonC, "pressed", G_CALLBACK( say ),   gtk_button_get_label(buttonC));
+	g_signal_connect(buttonD, "pressed", G_CALLBACK( say ),   gtk_button_get_label(buttonD));
+
+
+	gtk_widget_show_all(window);
+
+	gtk_main ();
+
+	return 0;
+}
+
+===== Linux/GTK/01-Hello/main.c exists=True =====
+#include <gtk/gtk.h>
+#include <glib/gstdio.h>
+
+static void
+print_hello (GtkWidget *widget,
+             gpointer   data)
+{
+  g_print ("Hello World\n");
+}
+
+static void
+quit_cb (GtkWindow *window)
+{
+  gtk_window_close (window);
+}
+
+static void
+activate (GtkApplication *app,
+          gpointer        user_data)
+{
+  /* Construct a GtkBuilder instance and load our UI description */
+  GtkBuilder *builder = gtk_builder_new ();
+  gtk_builder_add_from_file (builder, "01-hello.ui", NULL);
+
+  /* Connect signal handlers to the constructed widgets. */
+  GObject *window = gtk_builder_get_object (builder, "window");
+  gtk_window_set_application (GTK_WINDOW (window), app);
+
+//  GObject *button = gtk_builder_get_object (builder, "button1");
+//  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+//  button = gtk_builder_get_object (builder, "button2");
+//  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+//  button = gtk_builder_get_object (builder, "quit");
+//  g_signal_connect_swapped (button, "clicked", G_CALLBACK (quit_cb), window);
+
+  gtk_widget_show (GTK_WIDGET (window));
+
+  /* We do not need the builder any more */
+  g_object_unref (builder);
+}
+
+int
+main (int   argc,
+      char *argv[])
+{
+#ifdef GTK_SRCDIR
+  g_chdir (GTK_SRCDIR);
+#endif
+
+  GtkApplication *app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+
+  int status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
+}
+
+===== Linux/GTK/28-GtkLayout/main.c exists=True =====
+#include <gtk/gtk.h>
+void print_hello() {
+	g_print("china");
+}
+int main(int argc, char *argv[])
+{
+	GtkWidget *window;
+	GtkBuilder *builder;
+	builder = gtk_builder_new ();
+	gtk_init (&argc, &argv);
+
+//	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+//
+//	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+//
+//	gtk_widget_show (window);
+
+	gtk_builder_add_from_file (builder, "../layout.ui", NULL);
+	window = gtk_builder_get_object (builder, "window");
+	
+	GtkButton *button = gtk_builder_get_object (builder, "button1");
+	g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+	gtk_widget_show_all(window);
+
+
+	gtk_main ();
+
+	return 0;
+}
+
+===== Linux/GTK/g33-grid1/src/main.c exists=True =====
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
+/*
+ * main.c
+ * Copyright (C) 2022 tiger <tiger@loongnix>
+ * 
+ * g33-grid is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * g33-grid is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <config.h>
+#include <gtk/gtk.h>
+
+
+#include <glib/gi18n.h>
+
+#include "hello.h"
+
+typedef struct _Private Private;
+struct _Private
+{
+	/* ANJUTA: Widgets declaration for g33_grid.ui - DO NOT REMOVE */
+};
+
+static Private* priv = NULL;
+
+/* For testing purpose, define TEST to use the local (not installed) ui file */
+#define TEST
+#ifdef TEST
+#define UI_FILE "src/g33_grid.ui"
+#else
+#define UI_FILE PACKAGE_DATA_DIR"/ui/g33_grid.ui"
+#endif
+#define TOP_WINDOW "window"
+
+/* Signal handlers */
+/* Note: These may not be declared static because signal autoconnection
+ * only works with non-static methods
+ */
+
+/* Called when the window is closed */
+void
+on_window_destroy (GtkWidget *widget, gpointer data)
+{
+	gtk_main_quit ();
+}
+
+
+static GtkWidget*
+create_window (void)
+{
+	GtkWidget *window;
+	GtkBuilder *builder;
+	GError* error = NULL;
+
+	/* Load UI from file */
+	builder = gtk_builder_new ();
+	if (!gtk_builder_add_from_file (builder, UI_FILE, &error))
+	{
+		g_critical ("Couldn't load builder file: %s", error->message);
+		g_error_free (error);
+	}
+
+	/* Auto-connect signal handlers */
+	gtk_builder_connect_signals (builder, NULL);
+
+	/* Get the window object from the ui file */
+	window = GTK_WIDGET (gtk_builder_get_object (builder, TOP_WINDOW));
+        if (!window)
+        {
+                g_critical ("Widget \"%s\" is missing in file %s.",
+				TOP_WINDOW,
+				UI_FILE);
+        }
+
+	priv = g_malloc (sizeof (struct _Private));
+	/* ANJUTA: Widgets initialization for g33_grid.ui - DO NOT REMOVE */
+
+	g_object_unref (builder);
+
+	
+	return window;
+}
+
+int
+main (int argc, char *argv[])
+{
+ 	GtkWidget *window;
+
+
+
+#ifdef ENABLE_NLS
+
+	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
+#endif
+	
+	gtk_init (&argc, &argv);
+
+	window = create_window ();
+	gtk_widget_show (window);
+
+	gtk_main ();
+
+
+	g_free (priv);
+
+
+	return 0;
+}
+
+
+===== Linux/GTK/g17-anjuta/src/g17-anjuta.c exists=True =====
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
+/*
+ * g17-anjuta.c
+ * Copyright (C) 2022 tiger <tiger@msi>
+ * 
+ * G17-Anjuta is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * G17-Anjuta is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include "g17-anjuta.h"
+
+#include <glib/gi18n.h>
+
+
+
+/* For testing propose use the local (not installed) ui file */
+/* #define UI_FILE PACKAGE_DATA_DIR"/ui/g17_anjuta.ui" */
+#define UI_FILE "src/g17_anjuta.ui"
+#define TOP_WINDOW "window"
+
+
+G_DEFINE_TYPE (G17anjuta, g17_anjuta, GTK_TYPE_APPLICATION);
+
+/* ANJUTA: Macro G17_ANJUTA_APPLICATION gets G17anjuta - DO NOT REMOVE */
+struct _G17anjutaPrivate
+{
+	/* ANJUTA: Widgets declaration for g17_anjuta.ui - DO NOT REMOVE */
+};
+
+/* Create a new window loading a file */
+static void
+g17_anjuta_new_window (GApplication *app,
+                           GFile        *file)
+{
+	GtkWidget *window;
+
+	GtkBuilder *builder;
+	GError* error = NULL;
+
+	G17anjutaPrivate *priv = G17_ANJUTA_APPLICATION(app)->priv;
+
+	/* Load UI from file */
+	builder = gtk_builder_new ();
+	if (!gtk_builder_add_from_file (builder, UI_FILE, &error))
+	{
+		g_critical ("Couldn't load builder file: %s", error->message);
+		g_error_free (error);
+	}
+
+	/* Auto-connect signal handlers */
+	gtk_builder_connect_signals (builder, app);
+
+	/* Get the window object from the ui file */
+	window = GTK_WIDGET (gtk_builder_get_object (builder, TOP_WINDOW));
+        if (!window)
+        {
+		g_critical ("Widget \"%s\" is missing in file %s.",
+				TOP_WINDOW,
+				UI_FILE);
+        }
+
+	
+	/* ANJUTA: Widgets initialization for g17_anjuta.ui - DO NOT REMOVE */
+
+	g_object_unref (builder);
+	
+	
+	gtk_window_set_application (GTK_WINDOW (window), GTK_APPLICATION (app));
+	if (file != NULL)
+	{
+		/* TODO: Add code here to open the file in the new window */
+	}
+
+	gtk_widget_show_all (GTK_WIDGET (window));
+}
+
+
+/* GApplication implementation */
+static void
+g17_anjuta_activate (GApplication *application)
+{
+	g17_anjuta_new_window (application, NULL);
+}
+
+static void
+g17_anjuta_open (GApplication  *application,
+                     GFile        **files,
+                     gint           n_files,
+                     const gchar   *hint)
+{
+	gint i;
+
+	for (i = 0; i < n_files; i++)
+		g17_anjuta_new_window (application, files[i]);
+}
+
+static void
+g17_anjuta_init (G17anjuta *object)
+{
+	object->priv = G_TYPE_INSTANCE_GET_PRIVATE (object, G17_ANJUTA_TYPE_APPLICATION, G17anjutaPrivate);
+}
+
+static void
+g17_anjuta_finalize (GObject *object)
+{
+	G_OBJECT_CLASS (g17_anjuta_parent_class)->finalize (object);
+}
+
+static void
+g17_anjuta_class_init (G17anjutaClass *klass)
+{
+	G_APPLICATION_CLASS (klass)->activate = g17_anjuta_activate;
+	G_APPLICATION_CLASS (klass)->open = g17_anjuta_open;
+
+	g_type_class_add_private (klass, sizeof (G17anjutaPrivate));
+
+	G_OBJECT_CLASS (klass)->finalize = g17_anjuta_finalize;
+}
+
+G17anjuta *
+g17_anjuta_new (void)
+{
+	return g_object_new (g17_anjuta_get_type (),
+	                     "application-id", "org.gnome.g17_anjuta",
+	                     "flags", G_APPLICATION_HANDLES_OPEN,
+	                     NULL);
+}
+
+
+===== Linux/GTK/GtkApp/main.c exists=True =====
+#include <gtk/gtk.h>
+#include <gtk/gtkapplication.h>
+#include <gtk/gtkwidget.h>
+
+#include "public.h"
+#include "system.h"
+#include "process.h"
+#include "thread.h"
+#include "language.h"
+
+//
+void on_system_clicked(GtkButton* button, gpointer data) {
+	g_print("hello");
+	//	GtkBox* container = GTK_WIDGET(data);
+
+	//	GtkWidget* buttonA = gtk_button_new_with_label("My button");
+	////
+	////	//连接信号，让点击按钮后，便调用 print_msg 函数
+	////	g_signal_connect(button , "clicked" , G_CALLBACK( print_msg ) , NULL);
+	////
+	////	//将按钮放入盒容器中
+	//	gtk_container_add(GTK_CONTAINER(data) , buttonA);
+	//
+	//	gtk_widget_show(buttonA);
+}
+
+//static void activate (GtkApplication* app, gpointer user_data)
+//{
+//	GtkBuilder* builder = gtk_builder_new_from_file("ui/window.glade");
+////	 GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
+////	  gtk_widget_class_set_template_from_resource (widget_class,
+////	                                               "/ui/window.glade");
+//
+//	//	if (gtk_builder_add_from_file (builder, "ui/window.glade", &error) == 0)
+//	//	{
+//	//		g_printerr ("Error loading file: %s\n", error->message);
+//	//		g_clear_error (&error);
+//	//		return 1;
+//	//	}
+//	/* Connect signal handlers to the constructed widgets. */
+//	GtkWidget* window = GTK_WIDGET(gtk_builder_get_object (builder, "window"));
+//
+//	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+//
+//	GtkWidget* container = GTK_WIDGET(gtk_builder_get_object (builder, "container"));
+//
+//
+//
+//	gtk_builder_connect_signals (builder, NULL);//连接响应事件
+//	g_object_unref(G_OBJECT(builder));
+//
+//	gtk_widget_show_all(window);
+////
+////	int i = 100;
+//	gtk_main ();
+//
+//}
+//
+//int main (int argc, char **argv)
+//{
+//
+//	GtkApplication* app = gtk_application_new ("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS);
+//	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+//	int status = g_application_run (G_APPLICATION (app), argc, argv);
+//	g_object_unref (app);
+//
+//	return status;
+//}
+
+
+
+///*
+// ============================================================================
+// Name        : LinuxProgramming.c
+// Author      : tiger
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in GTK+
+// ============================================================================
+// */
+//#include <gtk/gtk.h>
+//#include "public.h"
+//#include "system.h"
+//#include "process.h"
+//#include "thread.h"
+//
+//
+////static void activate (GtkApplication *app, gpointer user_data)
+////{
+////	GError *error = NULL;
+////	GtkBuilder* builder = gtk_builder_new ();
+////	if (gtk_builder_add_from_file (builder, "interface/window.glade", &error) == 0)
+////	{
+////		g_printerr ("Error loading file: %s\n", error->message);
+////		g_clear_error (&error);
+////	}
+////	/* Connect signal handlers to the constructed widgets. */
+////	GtkWidget* window = GTK_WIDGET(gtk_builder_get_object (builder, "window"));
+////	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+////
+////	gtk_builder_connect_signals (builder, NULL);//连接响应事件
+////	g_object_unref(builder);
+////
+////	gtk_widget_show_all(window);
+////	gtk_main ();
+////
+////	//	app = gtk_builder_get_application (builder);
+////	////	gtk_application_window_new(app);
+////	//	GtkWidget *window = GTK_WIDGET (gtk_builder_get_object (builder, "window"));//获取window串口使用权
+////	////
+////	//	gtk_builder_connect_signals (builder, NULL);//连接响应事件
+////	//	g_object_unref(G_OBJECT(builder));
+////	//
+////	//	gtk_widget_show_all (window);
+////	//	gtk_main();
+////}
+//
+
+void app_exit() {
+
+	pthread_mutex_destroy(&lock);
+	gtk_main_quit();
+}
+
+static void apply_css (GtkWidget *widget, GtkStyleProvider *provider)
+{
+	gtk_style_context_add_provider (gtk_widget_get_style_context (widget), provider, G_MAXUINT);
+	if (GTK_IS_CONTAINER (widget)) {
+		gtk_container_forall (GTK_CONTAINER (widget), (GtkCallback) apply_css, provider);
+	}
+}
+
+int main (int argc, char **argv)
+{
+
+	//	GtkApplication *app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
+	//	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+	//	int status = g_application_run (G_APPLICATION (app), argc, argv);
+	//	g_object_unref (app);
+	//	GError *error = NULL;
+
+	gtk_init (&argc, &argv);
+
+	pthread_mutex_init(&lock, NULL);
+
+	//	GtkBuilder* builder = gtk_builder_new ();
+
+	//	GtkBuilder* builder = gtk_builder_new_from_resource ("/ui/integration.glade");
+
+	GtkBuilder* builder = gtk_builder_new_from_file("ui/integration.glade");
+	//	if (gtk_builder_add_from_file (builder, "ui/window.glade", &error) == 0)
+	//	{
+	//		g_printerr ("Error loading file: %s\n", error->message);
+	//		g_clear_error (&error);
+	//		return 1;
+	//	}
+
+	/* Connect signal handlers to the constructed widgets. */
+	GtkWidget* window = GTK_WIDGET(gtk_builder_get_object (builder, "window"));
+
+	GtkStyleProvider* provider = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
+	gtk_css_provider_load_from_resource (GTK_CSS_PROVIDER (provider), "/style/gtk.css");
+
+	apply_css (window, provider);
+
+	g_signal_connect (window, "destroy", G_CALLBACK (app_exit), NULL);
+
+	gtk_builder_connect_signals (builder, NULL);//连接响应事件
+	g_object_unref(G_OBJECT(builder));
+
+	gtk_widget_show_all(window);
+	gtk_main ();
+
+
+	return 0;
+}
+
+===== Linux/GTK/GtkApp3/main.c exists=True =====
+/*
+ ============================================================================
+ Name        : LinuxProgramming.c
+ Author      : tiger
+ Version     :
+ Copyright   : Your copyright notice
+ Description : Hello World in GTK+
+ ============================================================================
+ */
+#include <gtk/gtk.h>
+#include "public.h"
+#include "system.h"
+#include "process.h"
+#include "thread.h"
+
+
+//static void activate (GtkApplication *app, gpointer user_data)
+//{
+//	GError *error = NULL;
+//	GtkBuilder* builder = gtk_builder_new ();
+//	if (gtk_builder_add_from_file (builder, "interface/window.glade", &error) == 0)
+//	{
+//		g_printerr ("Error loading file: %s\n", error->message);
+//		g_clear_error (&error);
+//	}
+//	/* Connect signal handlers to the constructed widgets. */
+//	GtkWidget* window = GTK_WIDGET(gtk_builder_get_object (builder, "window"));
+//	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+//
+//	gtk_builder_connect_signals (builder, NULL);//连接响应事件
+//	g_object_unref(builder);
+//
+//	gtk_widget_show_all(window);
+//	gtk_main ();
+//
+//	//	app = gtk_builder_get_application (builder);
+//	////	gtk_application_window_new(app);
+//	//	GtkWidget *window = GTK_WIDGET (gtk_builder_get_object (builder, "window"));//获取window串口使用权
+//	////
+//	//	gtk_builder_connect_signals (builder, NULL);//连接响应事件
+//	//	g_object_unref(G_OBJECT(builder));
+//	//
+//	//	gtk_widget_show_all (window);
+//	//	gtk_main();
+//}
+
+int main (int argc, char **argv)
+{
+
+	//	GtkApplication *app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
+	//	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+	//	int status = g_application_run (G_APPLICATION (app), argc, argv);
+	//	g_object_unref (app);
+	//	GError *error = NULL;
+
+	gtk_init (&argc, &argv);
+
+	//	GtkBuilder* builder = gtk_builder_new ();
+
+	GtkBuilder* builder = gtk_builder_new_from_file("ui/mainwindow.glade");
+	//	if (gtk_builder_add_from_file (builder, "ui/window.glade", &error) == 0)
+	//	{
+	//		g_printerr ("Error loading file: %s\n", error->message);
+	//		g_clear_error (&error);
+	//		return 1;
+	//	}
+
+	/* Connect signal handlers to the constructed widgets. */
+	GtkWidget* window = GTK_WIDGET(gtk_builder_get_object (builder, "window"));
+	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+
+	gtk_builder_connect_signals (builder, NULL);//连接响应事件
+	g_object_unref(G_OBJECT(builder));
+
+	gtk_widget_show_all(window);
+	gtk_main ();
+
+	return 0;
+}
+
+===== Linux/GTK/13-CodeBlocksTest/main.c exists=True =====
+#include <stdlib.h>
+#include <gtk/gtk.h>
+
+static void helloWorld (GtkWidget *wid, GtkWidget *win)
+{
+  GtkWidget *dialog = NULL;
+
+  dialog = gtk_message_dialog_new (GTK_WINDOW (win), GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, "Hello World 郭雅!");
+  gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
+  gtk_dialog_run (GTK_DIALOG (dialog));
+  gtk_widget_destroy (dialog);
+}
+
+int main (int argc, char *argv[])
+{
+  GtkWidget *button = NULL;
+  GtkWidget *win = NULL;
+  GtkWidget *vbox = NULL;
+
+  /* Initialize GTK+ */
+  g_log_set_handler ("Gtk", G_LOG_LEVEL_WARNING, (GLogFunc) gtk_false, NULL);
+  gtk_init (&argc, &argv);
+  g_log_set_handler ("Gtk", G_LOG_LEVEL_WARNING, g_log_default_handler, NULL);
+
+  /* Create the main window */
+  win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_container_set_border_width (GTK_CONTAINER (win), 8);
+  gtk_window_set_title (GTK_WINDOW (win), "Hello World ");
+  gtk_window_set_position (GTK_WINDOW (win), GTK_WIN_POS_CENTER);
+  gtk_widget_realize (win);
+  g_signal_connect (win, "destroy", gtk_main_quit, NULL);
+
+  /* Create a vertical box with buttons */
+  vbox = gtk_vbox_new (TRUE, 6);
+  gtk_container_add (GTK_CONTAINER (win), vbox);
+
+  button = gtk_button_new_from_stock (GTK_STOCK_DIALOG_INFO);
+  g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (helloWorld), (gpointer) win);
+  gtk_box_pack_start (GTK_BOX (vbox), button, TRUE, TRUE, 0);
+
+  button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
+  g_signal_connect (button, "clicked", gtk_main_quit, NULL);
+  gtk_box_pack_start (GTK_BOX (vbox), button, TRUE, TRUE, 0);
+
+  /* Enter the main loop */
+  gtk_widget_show_all (win);
+  gtk_main ();
+  return 0;
+}
+
+===== Linux/GTK/g23-hello/src/main.c exists=True =====
+#include <gtk/gtk.h>
+
+static void
+print_hello (GtkWidget *widget,
+             gpointer   data)
+{
+  g_print ("Hello World\n");
+}
+
+static void
+activate (GtkApplication *app,
+          gpointer        user_data)
+{
+  GtkWidget *window;
+  GtkWidget *grid;
+  GtkWidget *button;
+
+  /* create a new window, and set its title */
+  window = gtk_application_window_new (app);
+  gtk_window_set_title (GTK_WINDOW (window), "Window");
+
+  /* Here we construct the container that is going pack our buttons */
+  grid = gtk_grid_new ();
+
+  /* Pack the container in the window */
+  gtk_window_set_child (GTK_WINDOW (window), grid);
+
+  button = gtk_button_new_with_label ("Button 1");
+  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+  /* Place the first button in the grid cell (0, 0), and make it fill
+   * just 1 cell horizontally and vertically (ie no spanning)
+   */
+  gtk_grid_attach (GTK_GRID (grid), button, 0, 0, 1, 1);
+
+  button = gtk_button_new_with_label ("Button 2");
+  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+  /* Place the second button in the grid cell (1, 0), and make it fill
+   * just 1 cell horizontally and vertically (ie no spanning)
+   */
+  gtk_grid_attach (GTK_GRID (grid), button, 1, 0, 1, 1);
+
+  button = gtk_button_new_with_label ("Quit");
+/*  g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_window_destroy), window);*/
+
+  /* Place the Quit button in the grid cell (0, 1), and make it
+   * span 2 columns.
+   */
+  gtk_grid_attach (GTK_GRID (grid), button, 0, 1, 2, 1);
+
+  gtk_widget_show (window);
+
+}
+
+int
+main (int    argc,
+      char **argv)
+{
+  GtkApplication *app;
+  int status;
+
+  app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
+}
+===== Linux/GTK/04-GtkBox/main.c exists=True =====
+#include <gtk/gtk.h>
+
+int main(int argc, char *argv[])
+{
+	GtkWidget *window;
+
+	gtk_init (&argc, &argv);
+
+	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+    
+    
+    GtkBox *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    
+    GtkButton *btn = gtk_button_new();
+    gtk_button_set_label(btn, "唱歌");
+    gtk_box_pack_start(box, btn, FALSE, FALSE, 0);
+    gtk_widget_show(btn);
+    
+    GtkButton *btn2 = gtk_button_new();
+    gtk_button_set_label(btn2, "跳舞");
+    gtk_box_pack_start(box, btn2, FALSE, FALSE, 0);
+    gtk_widget_show(btn2);
+    
+    GtkEntry *entry = gtk_entry_new();
+    gtk_box_pack_start(box, entry, FALSE, FALSE, 0);  
+    gtk_widget_show(entry);
+    
+    gtk_widget_show(box);
+    gtk_container_add(window, box);
+
+	gtk_widget_show (window);
+
+	gtk_main ();
+
+	return 0;
+}
+===== Linux/GTK/18-Message/main.c exists=True =====
+#include <gtk/gtk.h>
+
+GtkWidget *label;
+int main(int argc, char *argv[])
+{
+	GtkWidget *window;
+
+	gtk_init (&argc, &argv);
+
+
+	GtkBuilder *builder = gtk_builder_new();
+	gtk_builder_add_from_file (builder, "ui.glade", NULL);
+
+	window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
+	gtk_builder_connect_signals(builder, NULL);
+
+	label = GTK_WIDGET(gtk_builder_get_object(builder, "label"));
+//	g_lbl_count = GTK_WIDGET(gtk_builder_get_object(builder, "label_name"));
+
+
+
+	gtk_widget_show (window);
+
+	gtk_main ();
+
+	return 0;
+}
+
+void welcome()
+{
+//    static unsigned int count = 0;
+//    char str_count[30] = {0};
+
+	gtk_label_set_text(GTK_LABEL(label), "Hello, world!");
+//    count++;
+//    sprintf(str_count, "%d", count);
+//    gtk_label_set_text(GTK_LABEL(g_lbl_count), str_count);
+}
+
+===== Linux/GTK/32-Control/main.c exists=True =====
+#include <gtk/gtk.h>
+
+int main(int argc, char *argv[])
+{
+
+
+    gtk_init (&argc, &argv);
+
+//	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+//
+//	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+//
+//	gtk_widget_show (window);
+    
+	GtkBuilder* builder = gtk_builder_new_from_file("../control.glade");
+
+	GtkWidget* window = GTK_WIDGET(gtk_builder_get_object (builder, "window"));
+
+	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+
+	gtk_builder_connect_signals (builder, NULL);//连接响应事件
+	g_object_unref(G_OBJECT(builder));
+
+	gtk_widget_show_all(window);
+
+    gtk_main ();
+
+    return 0;
+}
+
+===== Linux/GTK/g05-legacygtk/src/main.c exists=True =====
+/* main.c
+ *
+ * Copyright 2022 tiger
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <glib/gi18n.h>
+
+#include "g05_legacygtk-config.h"
+#include "g05_legacygtk-window.h"
+
+static void
+on_activate (GtkApplication *app)
+{
+	GtkWindow *window;
+
+	/* It's good practice to check your parameters at the beginning of the
+	 * function. It helps catch errors early and in development instead of
+	 * by your users.
+	 */
+	g_assert (GTK_IS_APPLICATION (app));
+
+	/* Get the current window or create one if necessary. */
+	window = gtk_application_get_active_window (app);
+	if (window == NULL)
+		window = g_object_new (G05_LEGACYGTK_TYPE_WINDOW,
+		                       "application", app,
+		                       "default-width", 600,
+		                       "default-height", 300,
+		                       NULL);
+
+	/* Ask the window manager/compositor to present the window. */
+	gtk_window_present (window);
+}
+
+int
+main (int   argc,
+      char *argv[])
+{
+	g_autoptr(GtkApplication) app = NULL;
+	int ret;
+
+	/* Set up gettext translations */
+	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
+
+	/*
+	 * Create a new GtkApplication. The application manages our main loop,
+	 * application windows, integration with the window manager/compositor, and
+	 * desktop features such as file opening and single-instance applications.
+	 */
+	app = gtk_application_new ("org.example.App", G_APPLICATION_FLAGS_NONE);
+
+	/*
+	 * We connect to the activate signal to create a window when the application
+	 * has been launched. Additionally, this signal notifies us when the user
+	 * tries to launch a "second instance" of the application. When they try
+	 * to do that, we'll just present any existing window.
+	 *
+	 * Because we can't pass a pointer to any function type, we have to cast
+	 * our "on_activate" function to a GCallback.
+	 */
+	g_signal_connect (app, "activate", G_CALLBACK (on_activate), NULL);
+
+	/*
+	 * Run the application. This function will block until the application
+	 * exits. Upon return, we have our exit code to return to the shell. (This
+	 * is the code you see when you do `echo $?` after running a command in a
+	 * terminal.
+	 *
+	 * Since GtkApplication inherits from GApplication, we use the parent class
+	 * method "run". But we need to cast, which is what the "G_APPLICATION()"
+	 * macro does.
+	 */
+	ret = g_application_run (G_APPLICATION (app), argc, argv);
+
+	return ret;
+}
+
+===== Linux/DesignEvolutionCpp/CMakeLists.txt exists=True =====
+cmake_minimum_required(VERSION 3.5)
+
+project(DesignEvolutionCpp LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS " -Wno-error=deprecated-declarations -Wno-deprecated-declarations ")
+
+find_package(PkgConfig REQUIRED)
+find_package(Boost REQUIRED COMPONENTS)
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIR})
+endif()
+include_directories(/usr/include/gtk-4.0/)
+pkg_check_modules(GTKMM REQUIRED gtkmm-4.0) # look into FindPkgConfig.cmake,
+
+include_directories(${GTKMM_INCLUDE_DIRS})
+#link_directories(${GTKMM_LIBRARY_DIRS})
+
+
+include_directories (basic)
+
+aux_source_directory (basic src_basic)
+
+set(sources
+        main.cpp
+        ${src_basic}
+)
+
+add_executable(DesignEvolutionCpp ${sources} )
+target_include_directories(DesignEvolutionCpp PRIVATE basic)
+target_link_libraries(DesignEvolutionCpp ${GTKMM_LIBRARIES} ${Boost_LIBRARIES}  )
+
+install(TARGETS DesignEvolutionCpp
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+
+===== Linux/DesignEvolutionCpp/main.cpp exists=True =====
+#include <gtkmm.h>
+#include <iostream>
+
+namespace
+{
+Gtk::Window* pDialog = nullptr;
+Glib::RefPtr<Gtk::Application> app;
+
+void on_button_clicked()
+{
+    if (pDialog)
+        pDialog->set_visible(false); // set_visible(false) will cause Gtk::Application::run() to end.
+}
+
+void on_app_activate()
+{
+    // Load the GtkBuilder file and instantiate its widgets:
+    auto refBuilder = Gtk::Builder::create();
+    try
+    {
+        refBuilder->add_from_file("../mainwindow.ui");
+    }
+    catch(const Glib::FileError& ex)
+    {
+        std::cerr << "FileError: " << ex.what() << std::endl;
+        return;
+    }
+    catch(const Glib::MarkupError& ex)
+    {
+        std::cerr << "MarkupError: " << ex.what() << std::endl;
+        return;
+    }
+    catch(const Gtk::BuilderError& ex)
+    {
+        std::cerr << "BuilderError: " << ex.what() << std::endl;
+        return;
+    }
+
+    // Get the GtkBuilder-instantiated dialog:
+    pDialog = refBuilder->get_widget<Gtk::Window>("window");
+    if (!pDialog)
+    {
+        std::cerr << "Could not get the dialog" << std::endl;
+        return;
+    }
+
+    // Get the GtkBuilder-instantiated button, and connect a signal handler:
+    auto pButton = refBuilder->get_widget<Gtk::Button>("quit");
+    if (pButton)
+        pButton->signal_clicked().connect([] () { on_button_clicked(); });
+
+    // It's not possible to delete widgets after app->run() has returned.
+    // Delete the dialog with its child widgets before app->run() returns.
+    pDialog->signal_hide().connect([] () { delete pDialog; });
+
+    app->add_window(*pDialog);
+    pDialog->set_visible(true);
+}
+} // anonymous namespace
+
+int main(int argc, char** argv)
+{
+    app = Gtk::Application::create("org.gtkmm.example");
+
+    // Instantiate a dialog when the application has been activated.
+    // This can only be done after the application has been registered.
+    // It's possible to call app->register_application() explicitly, but
+    // usually it's easier to let app->run() do it for you.
+    app->signal_activate().connect([] () { on_app_activate(); });
+
+    return app->run(argc, argv);
+}
+
+===== Linux/GTKMM/7-box/mainwindow.h exists=True =====
+#ifndef GTKMM_MAINWINDOW_H
+#define GTKMM_MAINWINDOW_H
+
+#include <gtkmm/button.h>
+#include <gtkmm/window.h>
+#include <gtkmm.h>
+
+class MainWindow : public Gtk::Window
+{
+
+public:
+  MainWindow();
+  virtual ~MainWindow();
+
+protected:
+  //Signal handlers:
+  void on_button_clicked();
+
+  //Member widgets:
+  Gtk::Button m_button;
+  Fixed fixed;
+  ScrolledWindow scrollWindow;
+  Label label;
+};
+
+#endif // GTKMM_MAINWINDOW_H
+===== Linux/GTKMM/7-box/mainwindow.cpp exists=True =====
+#include "mainwindow.h"
+#include <iostream>
+
+MainWindow::MainWindow()
+: m_button("Hello World")   // creates a new button with label "Hello World".
+{
+//  // Sets the border width of the window.
+//  set_border_width(10);
+//
+//  // When the button receives the "clicked" signal, it will call the
+//  // on_button_clicked() method defined below.
+//  m_button.signal_clicked().connect(sigc::mem_fun(*this,
+//              &MainWindow::on_button_clicked));
+//
+//  // This packs the button into the Window (a container).
+//  add(m_button);
+//  
+////  Fi
+//
+//  // The final step is to display this newly created widget...
+//  m_button.show();
+
+
+
+}
+
+MainWindow::~MainWindow()
+{
+}
+
+void MainWindow::on_button_clicked()
+{
+  std::cout << "Hello World ####" << std::endl;
+}

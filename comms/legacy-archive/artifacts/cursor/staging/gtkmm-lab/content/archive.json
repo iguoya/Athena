@@ -1,0 +1,423 @@
+{
+  "tracks": [
+    {
+      "id": "archive",
+      "title": "历史归档",
+      "color": "#6a8f7b"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "archive",
+      "title": "历史归档 · 早年 gtkmm 练习的整理与批注",
+      "track": "archive",
+      "layer": "archive",
+      "summary": "从旧 Linux 仓库里的 GTK / gtkmm 练习中精选而来（ADR 0176）：代码原样保留，应用内只读（run=toolchain 或 read-only），另有行级批注指出写法与程序组织上的不足（含 GTK2/3→4、gtkmm3→4 可移植性）。本章不属于主线，不计入进度，留待人工审视后决定并入、保留或删除。",
+      "topics": [
+        {
+          "id": "gtkmmlab.arc.hello",
+          "title": "Hello（手写 Window + Button）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[基础] 手写 Window/Button，批注抓 gtkmm3→4。",
+          "weight": "了解",
+          "outline": {
+            "promise": "看懂 gtkmm3 手写窗口 + 按钮信号的最小闭环。",
+            "pain": "能跑不等于可迁移：`create(argc,argv,…)`、`add`、`set_border_width` 在 gtkmm4 都已变。",
+            "model": "`MainWindow` 持有 `Gtk::Button`，构造里 connect 并 `add`。",
+            "scope": "单窗口单按钮，无布局管理器。",
+            "judgment": "作「手写控件」入门样例保留；迁 4 时先改窗口父子关系。",
+            "landing": "能指出至少三处 gtkmm3→4 差异，并说出信号连接本身没问题。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "点按钮应在控制台打印 `Hello World`；对照批注看哪些 API 在 gtkmm4 已改。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_gtkmmlab_hello",
+                "sources": [
+                  "main.cpp",
+                  "mainwindow.cpp",
+                  "mainwindow.h",
+                  "CMakeLists.txt"
+                ],
+                "std": "c++17",
+                "run": "toolchain",
+                "run_note": "需要 gtkmm-3.0（pkg-config）或本机已装的 gtkmm3；旧 API，gtkmm4 中已改（勿对照 guide/gtkmm 正文）",
+                "summary": "gtkmm3 风格 Hello：`Application::create(argc,argv,id)` + 窗口 `add(button)`。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "GTKMM/1-Hello",
+                  "first_commit": "2023-01-28",
+                  "duplicates": [
+                    "Linux/GTKMM/9-gtkmm"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 6,
+                    "kind": "portability",
+                    "text": "`Gtk::Application::create(argc, argv, id)` 是 gtkmm3 风格；gtkmm4 改为无 argc/argv 的 `create(id)`，再 `app->run(argc, argv)`。旧 API，4 中已改。"
+                  },
+                  {
+                    "file": "mainwindow.cpp",
+                    "line": 8,
+                    "kind": "portability",
+                    "text": "`set_border_width(10)` 在 gtkmm4 / GTK4 已移除，边距改用 CSS 或 `set_margin_*`。旧 API，4 中已改。"
+                  },
+                  {
+                    "file": "mainwindow.cpp",
+                    "line": 16,
+                    "kind": "portability",
+                    "text": "`add(m_button)` 把按钮直接塞进 `Gtk::Window` 是 gtkmm3 写法；gtkmm4 窗口不再是容器，要用 `set_child`。旧 API，4 中已改。"
+                  },
+                  {
+                    "file": "mainwindow.cpp",
+                    "line": 12,
+                    "end": 13,
+                    "kind": "design",
+                    "text": "`signal_clicked().connect(sigc::mem_fun(...))` 连接正确；回调只 `cout`，适合当「信号进成员函数」的最小样例，但没有把业务从窗口类拆出去。"
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "新建应用 `programming/gtkmm-lab` 主线尚未落定；批注只标旧 API 事实，不引用 guide/gtkmm 正文。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "gtkmmlab.arc.glade",
+          "title": "Glade + Gtk::Builder 加载（Anjuta）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[Glade] Anjuta 空壳加载器，批注抓 Gtk::Main 与路径。",
+          "weight": "了解",
+          "outline": {
+            "promise": "看清 Anjuta 生成的「只加载 .ui」最小程序。",
+            "pain": "同构脚手架复制多份，看起来像多个项目，实际没有业务回调。",
+            "model": "`Gtk::Main` + `Builder::create_from_file` + `get_widget` + `kit.run`。",
+            "scope": "无信号连接；UI 差异见同主题 duplicates。",
+            "judgment": "保留一条作脚手架标本，其余路径进 duplicates / dropped。",
+            "landing": "能说明为何不能把每个 Anjuta 工程都当独立教学内容。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "能启动出空窗口即可；注意工作目录与 `UI_FILE` 相对路径。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_gtkmmlab_glade",
+                "sources": [
+                  "src/main.cc",
+                  "src/2_glade.ui"
+                ],
+                "std": "c++17",
+                "run": "toolchain",
+                "run_note": "需要 gtkmm-3.0（pkg-config）或本机已装的 gtkmm3；旧 API，gtkmm4 中已改（勿对照 guide/gtkmm 正文）",
+                "summary": "Anjuta gtkmm3 Glade 加载器；3/4/5 同构已合并进 duplicates。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "GTKMM/2-glade",
+                  "first_commit": "2023-01-28",
+                  "duplicates": [
+                    "Linux/GTKMM/3-frame",
+                    "Linux/GTKMM/4-paned",
+                    "Linux/GTKMM/5-asspectframe"
+                  ]
+                },
+                "notes": [
+                  {
+                    "file": "src/main.cc",
+                    "line": 41,
+                    "kind": "portability",
+                    "text": "`Gtk::Main kit(argc, argv)` 是 gtkmm2/3 的全局主循环封装；gtkmm4 用 `Gtk::Application`。旧 API，4 中已改。"
+                  },
+                  {
+                    "file": "src/main.cc",
+                    "line": 35,
+                    "kind": "portability",
+                    "text": "`UI_FILE` 写死相对路径 `src/2_glade.ui`，工作目录不在工程根时 `create_from_file` 必失败；应相对可执行文件或用资源嵌入。"
+                  },
+                  {
+                    "file": "src/main.cc",
+                    "line": 59,
+                    "kind": "ownership",
+                    "text": "`get_widget(\"main_window\", main_win)` 取出裸指针后未设删除策略；`kit.run(*main_win)` 结束时谁 delete 窗口不清晰，依赖 Builder 持有期。"
+                  },
+                  {
+                    "file": "src/main.cc",
+                    "line": 48,
+                    "end": 55,
+                    "kind": "design",
+                    "text": "只加载 UI、不连接任何信号，等于 Anjuta/Glade 向导空壳；3-frame/4-paned/5-asspectframe 的 `main.cc` 同构，仅 UI 文件名不同，故合并为本条。"
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "新建应用 `programming/gtkmm-lab` 主线尚未落定；批注只标旧 API 事实，不引用 guide/gtkmm 正文。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "gtkmmlab.arc.box_glade",
+          "title": "Glade Box（未连接的点击回调）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[Glade] 未连接的点击回调。",
+          "weight": "了解",
+          "outline": {
+            "promise": "识别「写了回调却没连接」的半成品 Glade 练习。",
+            "pain": "读代码以为点按钮会打印 hello，运行却无反应。",
+            "model": "Builder 加载窗口 + 游离的 `on_button_clicked`。",
+            "scope": "在 2-glade 之上多一个未使用函数。",
+            "judgment": "单独成条，专门批「断线回调」。",
+            "landing": "能指出应用 `get_widget` 取按钮再 `connect`，或在 Glade 里填 handler 名。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "若 UI 里有按钮，点击前请先确认是否已 connect；本例默认不会打印。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_gtkmmlab_box_glade",
+                "sources": [
+                  "src/main.cc",
+                  "src/6_box.ui"
+                ],
+                "std": "c++17",
+                "run": "toolchain",
+                "run_note": "需要 gtkmm-3.0（pkg-config）或本机已装的 gtkmm3；旧 API，gtkmm4 中已改（勿对照 guide/gtkmm 正文）",
+                "summary": "与 2-glade 同构，额外有一个从未连接的 `on_button_clicked`。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "GTKMM/6-box",
+                  "first_commit": "2023-01-28",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "src/main.cc",
+                    "line": 37,
+                    "end": 39,
+                    "kind": "design",
+                    "text": "定义了 `on_button_clicked` 却从未 `signal_clicked().connect`，也未交给 Builder 自动连；按钮点了不会进这个函数。"
+                  },
+                  {
+                    "file": "src/main.cc",
+                    "line": 44,
+                    "kind": "portability",
+                    "text": "仍用 `Gtk::Main`；与 2-glade 同属 gtkmm3 主循环，gtkmm4 应换 `Gtk::Application`。旧 API，4 中已改。"
+                  },
+                  {
+                    "file": "src/main.cc",
+                    "line": 59,
+                    "kind": "coupling",
+                    "text": "界面全在 `.ui`，回调却写在 `main.cc` 且未挂上——UI 与逻辑「看起来分开」实际断线，比完全没回调更误导。"
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "新建应用 `programming/gtkmm-lab` 主线尚未落定；批注只标旧 API 事实，不引用 guide/gtkmm 正文。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "gtkmmlab.arc.box_wip",
+          "title": "Box 半成品（未限定命名空间的控件）",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[基础] 半成品 Box，批注抓命名空间与空构造。",
+          "weight": "了解",
+          "outline": {
+            "promise": "把「半成品 / 写到一半编不过」当作可教材料。",
+            "pain": "类型名缺命名空间、构造被掏空，比 Hello 更接近真实练习现场。",
+            "model": "声明了 Fixed/ScrolledWindow/Label，但构造未装配。",
+            "scope": "不能当可运行范例；`run` 仍 toolchain，依赖本机 gtkmm3 时也过不了编译。",
+            "judgment": "保留以展示常见半成品错误。",
+            "landing": "能说出至少两处导致无法成型的原因。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "预期难以干净编译：先看 `mainwindow.h` 的类型名与被注释的构造。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_gtkmmlab_box_wip",
+                "sources": [
+                  "main.cpp",
+                  "mainwindow.cpp",
+                  "mainwindow.h",
+                  "CMakeLists.txt"
+                ],
+                "std": "c++17",
+                "run": "read-only",
+                "run_note": "原代码声明 `Fixed`/`ScrolledWindow`/`Label` 未加 `Gtk::`，构造又被注释，预期无法按现状编译通过；需要 gtkmm3 头文件方可对照阅读。",
+                "summary": "未完成的 Box 试验：缺 `Gtk::` 限定，构造逻辑被注释。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "GTKMM/7-box",
+                  "first_commit": "2023-01-28",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "mainwindow.h",
+                    "line": 21,
+                    "end": 23,
+                    "kind": "naming",
+                    "text": "成员写成 `Fixed fixed`、`ScrolledWindow scrollWindow`、`Label label`，未加 `Gtk::` 前缀；在未 `using` 的情况下不能通过编译（应 `Gtk::Fixed` 等）。"
+                  },
+                  {
+                    "file": "mainwindow.cpp",
+                    "line": 7,
+                    "end": 22,
+                    "kind": "design",
+                    "text": "构造函数里原先 Hello 逻辑整段注释掉，窗口为空；`on_button_clicked` 仍保留却无连接，属于未完成试验。"
+                  },
+                  {
+                    "file": "mainwindow.h",
+                    "line": 6,
+                    "kind": "style",
+                    "text": "同时 `#include <gtkmm/button.h>` 与 `#include <gtkmm.h>`，后者已拉全库，前者冗余；头文件应只留需要的声明。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 6,
+                    "kind": "portability",
+                    "text": "与 1-Hello 相同的 gtkmm3 `Application::create(argc, argv, id)`；迁 4 时同样要改。旧 API，4 中已改。"
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "新建应用 `programming/gtkmm-lab` 主线尚未落定；批注只标旧 API 事实，不引用 guide/gtkmm 正文。"
+              }
+            ]
+          }
+        },
+        {
+          "id": "gtkmmlab.arc.evolution",
+          "title": "DesignEvolutionCpp（官方示例跟练 + Basic）",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "archive",
+          "guide_line": "[演进] DesignEvolutionCpp，批注抓缺 UI 与 gtkmm4 API。",
+          "weight": "了解",
+          "outline": {
+            "promise": "读一份偏 gtkmm4 的 Builder 激活写法，并看清缺 UI、死代码类。",
+            "pain": "官方跟练骨架在，关键 `.ui` 不在本目录；`Basic` 类未接入。",
+            "model": "`signal_activate` → Builder → `get_widget<T>` → `add_window`。",
+            "scope": "含 CMake 与 basic/，无可用 UI。",
+            "judgment": "保留作「演进中的跟练」；批注重点是路径与所有权。",
+            "landing": "能说明缺 UI 时运行失败点，以及 `Basic` 为何算未完成集成。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "按现状会因找不到 `../mainwindow.ui` 失败；阅读时对照 `get_widget<T>` 与 1-Hello 的 gtkmm3 写法。"
+              },
+              {
+                "type": "archive",
+                "case": "arc_gtkmmlab_evolution",
+                "sources": [
+                  "main.cpp",
+                  "basic/basic.cpp",
+                  "basic/basic.h",
+                  "CMakeLists.txt"
+                ],
+                "std": "c++17",
+                "run": "read-only",
+                "run_note": "需要 gtkmm-4.0；本目录缺 mainwindow.ui，按路径无法加载；旧练习勿对照 guide/gtkmm 正文",
+                "summary": "gtkmm4 风格 Application+Builder 跟练；缺 UI；自有 Basic 未调用。",
+                "origin": {
+                  "repo": "Linux",
+                  "path": "DesignEvolutionCpp",
+                  "first_commit": "2023-04-09",
+                  "duplicates": []
+                },
+                "notes": [
+                  {
+                    "file": "main.cpp",
+                    "line": 21,
+                    "kind": "portability",
+                    "text": "`add_from_file(\"../mainwindow.ui\")`：本目录没有 `mainwindow.ui`，相对上级的路径在仓库里也对不上——运行必进 `FileError`。应把 UI 放进工程并改相对可执行文件的路径。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 40,
+                    "kind": "portability",
+                    "text": "`get_widget<Gtk::Window>(\"window\")` 是 gtkmm4 模板取值写法；与 GTKMM/1-Hello 的 gtkmm3 `get_widget(name, ptr)` 不同代。旧练习混代时不要当同一套 API。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 12,
+                    "kind": "portability",
+                    "text": "`set_visible(false)` 结束 `Application::run` 是 gtkmm4 习惯；gtkmm3 常见 `hide()`/`Gtk::Main::quit()`。旧 API 对照要分清代数。"
+                  },
+                  {
+                    "file": "main.cpp",
+                    "line": 54,
+                    "kind": "ownership",
+                    "text": "`signal_hide` 里 `delete pDialog`：窗口由 `new` 隐含？实际来自 Builder，再 `delete` 易与 Builder/Application 所有权冲突；更稳妥是让 Application 管理窗口生命周期。"
+                  },
+                  {
+                    "file": "basic/basic.cpp",
+                    "line": 8,
+                    "end": 11,
+                    "kind": "design",
+                    "text": "自写 `Basic::hello()` 只打印 `hello`，且 `main.cpp` 完全未包含/调用 `Basic`——CMake 若链上它也是死代码，说明「跟练官方示例」与「自有类」未接上。"
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "info",
+                "title": "对照现行讲解",
+                "text": "新建应用 `programming/gtkmm-lab` 主线尚未落定；批注只标旧 API 事实，不引用 guide/gtkmm 正文。"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

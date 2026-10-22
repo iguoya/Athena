@@ -1,0 +1,320 @@
+[
+ {
+  "unit": "alg-basic-c",
+  "title": "C 编程基础九题（哥德巴赫/回调/文件/魔方阵/π/结构体/体积/函数指针/check 单测）",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "algorithm/21-basic"
+  ],
+  "duplicates": [
+   "Linux/Algorithm/21-basic"
+  ],
+  "first_commit": "2020-10-05",
+  "files": 28,
+  "run": "cli",
+  "build": "gcc/g++ -std=c11|c++20 各子目录单独编译（9 题入口 7 过；function_pointer 运行段错误；goldbach 15s 不退出）",
+  "build_checked": true,
+  "topic_hint": "新增（C 语言基础杂集，非算法范式；与 linux 应用的 C 内容有交叠，归处待裁决）",
+  "quality_notes": "function_pointer/ 提交了 .bc/.bc.s/.ll/.ll.s/.o 五个编译产物；check/ 用第三方 Check 框架写 C 单元测试（本机无 check.h，test 入口无法验证）——是本批唯一成体系的 C 单测实践；magic_square 含 matrix.c 矩阵支撑与 unit_test_main.c（同样依赖 Check）；function_pointer 运行即段错误（Windows 0xC0000005）；struct 题输出中文姓名年龄（Hello, World! 皇甫珍竹(13)）。",
+  "exclude": [
+   "function_pointer/main.bc、main.bc.s、main.ll、main.ll.s、main.o（编译产物）"
+  ]
+ },
+ {
+  "unit": "alg-recursion-suite",
+  "title": "递归十题（fib/脚步/汉诺/因数分解/进制/排列/皇后/极值/均值）",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "algorithm/22-recursion"
+  ],
+  "duplicates": [
+   "Linux/Algorithm/22-recursion"
+  ],
+  "first_commit": "2020-10-05",
+  "files": 23,
+  "run": "cli",
+  "build": "gcc/g++ 各子目录单独编译：10 题入口 9 过；average_value 编译过但运行堆损坏（0xC0000374）",
+  "build_checked": true,
+  "topic_hint": "algo.paradigm.divide、algo.paradigm.backtrack",
+  "quality_notes": "fibonacci/footstep/queen 各有 v1（C）与 v2（C++）演进对，同题两种语言写法并排；queen 与 23-divide 的 queen8、Practice 的 ds-recursion Queen 三处同主题不同实现，宜在归档里互链；average_value 运行堆损坏、输出部分结果后崩溃。",
+  "exclude": [
+   "5 个 CMakeLists.txt.user"
+  ]
+ },
+ {
+  "unit": "alg-divide-suite",
+  "title": "分治四题（二分/金块/归并/八皇后）",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "algorithm/23-divide_and_conconquer"
+  ],
+  "duplicates": [
+   "Linux/Algorithm/23-divide_and_conconquer"
+  ],
+  "first_commit": "2020-10-07",
+  "files": 8,
+  "run": "cli",
+  "build": "g++ -std=c++20 各子目录单独编译：4 题全过；binary_search 运行时 std::vector 越界异常终止",
+  "build_checked": true,
+  "topic_hint": "algo.paradigm.divide",
+  "quality_notes": "binary_search 在新标准库上运行触发越界断言（当年平台未暴露的 bug，归档批注现成案例）；目录名 conconquer 拼写错误（应为 conquer），改目录名还是保留历史，待裁决；gold（金块问题）与 Linux/Algorithm/DivideConquer/gold 同题不同实现。"
+ },
+ {
+  "unit": "alg-backtrack-substring",
+  "title": "回溯求子串",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "algorithm/backtracking/substring"
+  ],
+  "duplicates": [],
+  "first_commit": "2020-10-22",
+  "files": 2,
+  "run": "cli",
+  "build": "g++ -std=c++20 main.cpp（实测通过，输出 Hello World!）",
+  "build_checked": true,
+  "topic_hint": "algo.paradigm.backtrack",
+  "quality_notes": "与 Linux/Algorithm/Backtrack/substring（Qt 版）同名同题不同实现，演进关系；cmake_install.cmake 与 .user 是产物不入库。",
+  "exclude": [
+   "CMakeLists.txt.user",
+   "cmake_install.cmake"
+  ]
+ },
+ {
+  "unit": "alg-dacidian-c",
+  "title": "速学速用大辞典 C 练习六题（背包/回溯/串/枚举/迭代/排序）",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "algorithm/1-速学速用大辞典"
+  ],
+  "duplicates": [
+   "Linux/Algorithm/1-速学速用大辞典"
+  ],
+  "first_commit": "2020-10-03",
+  "files": 17,
+  "run": "cli",
+  "build": "gcc -std=c11 各子目录：6 题 3 过（backtrack/iterative/enum 编译过）；cstring 编译错（atol 未声明 + char** 与 char(*)[11] 不兼容）；backpack/sort 断链 ../stack、../list",
+  "build_checked": true,
+  "topic_hint": "新增（混合：背包/回溯近 algo.paradigm.backtrack，sort 近 ds.sort.basic）",
+  "quality_notes": "README 仅一句「数据结构和算法相关练习」，代码为本人跟练原创（书目即目录名《速学速用大辞典》，无原文录入），按 ADR 0176 书籍跟练按原创处理；sort/backpack include 的 ../list/list.h、../stack/stack.h 不在仓库（当年有公共目录未提交或已删）；cstring 的 implicit declaration 在 C11 下即编译错误，是讲「头文件与声明」的现成反例。"
+ },
+ {
+  "unit": "alg-qt-shell",
+  "title": "算法可视化 Qt 工程壳（自建展示基类的宿主）",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "Linux/Algorithm/main.cpp",
+   "Linux/Algorithm/mainwindow.cpp",
+   "Linux/Algorithm/mainwindow.h",
+   "Linux/Algorithm/mainwindow.ui",
+   "Linux/Algorithm/resource.qrc",
+   "Linux/Algorithm/style.css",
+   "Linux/Algorithm/Algorithm_zh_CN.ts",
+   "Linux/Algorithm/CMakeLists.txt"
+  ],
+  "duplicates": [],
+  "first_commit": "2022-12-31",
+  "files": 8,
+  "run": "toolchain",
+  "build": "需 Qt5 + qdarkstyle（main.cpp 内嵌加载 :/qdarkstyle/dark/darkstyle.qss）",
+  "build_checked": false,
+  "topic_hint": "新增（工程壳）",
+  "quality_notes": "六个算法子条目的宿主：展示基类（setHeader/display/displayTable）应在此壳或公共头里；qdarkstyle 是第三方库（见 drop 条目），搬运时引用要去掉或改本机样式。",
+  "exclude": [
+   "CMakeLists.txt.user"
+  ]
+ },
+ {
+  "unit": "alg-qt-recursion",
+  "title": "Qt 递归可视化（汉诺塔/数位/兔子/斐波那契壳）",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "Linux/Algorithm/Recursion"
+  ],
+  "duplicates": [],
+  "first_commit": "2023-02-02",
+  "files": 8,
+  "run": "toolchain",
+  "build": "需 Qt5（QObject 子类，挂 alg-qt-shell 壳）",
+  "build_checked": false,
+  "topic_hint": "algo.paradigm.divide",
+  "quality_notes": "hanoitower.cpp 61 行有完整实现与表格输出；fibonacci.cpp/.h 是空壳类（Q_OBJECT 只有构造器）；numberdigit/rabbit 待搬运时核对实现度。"
+ },
+ {
+  "unit": "alg-qt-binsearch",
+  "title": "Qt 二分查找可视化（BinSearch）",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "Linux/Algorithm/DivideConquer"
+  ],
+  "duplicates": [],
+  "first_commit": "2023-02-05",
+  "files": 4,
+  "run": "toolchain",
+  "build": "需 Qt5；binsearch.cpp 实现完整（排序去重→二分→表格展示，qRegisterMetaType 注册）",
+  "build_checked": false,
+  "topic_hint": "algo.paradigm.divide",
+  "quality_notes": "本批 Qt 工程里完成度最高的单元：run() 有排序/去重/查找全流程与表格渲染；gold.cpp 18 行偏薄，与 23-divide 的 gold 同题。"
+ },
+ {
+  "unit": "alg-qt-backtrack",
+  "title": "Qt 回溯求子串",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "Linux/Algorithm/Backtrack"
+  ],
+  "duplicates": [],
+  "first_commit": "2023-02-02",
+  "files": 2,
+  "run": "toolchain",
+  "build": "需 Qt5",
+  "build_checked": false,
+  "topic_hint": "algo.paradigm.backtrack",
+  "quality_notes": "与 algorithm/backtracking/substring 同题不同实现（Qt 版 2023 重写）；cmake_install.cmake/.user 产物不入库。",
+  "exclude": [
+   "CMakeLists.txt.user",
+   "cmake_install.cmake"
+  ]
+ },
+ {
+  "unit": "alg-qt-exhaustion",
+  "title": "Qt 枚举法可视化",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "Linux/Algorithm/Exhaustion"
+  ],
+  "duplicates": [],
+  "first_commit": "2023-02-02",
+  "files": 4,
+  "run": "toolchain",
+  "build": "需 Qt5（含 exhaustion.ui 表单）",
+  "build_checked": false,
+  "topic_hint": "新增（枚举法无现有知识点）",
+  "quality_notes": "带 .ui 表单，是六个 Qt 子目录里唯一走 QWidget 表单的。"
+ },
+ {
+  "unit": "alg-qt-deduction",
+  "title": "Qt 推理（rabbita 兔子问题）",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "Linux/Algorithm/Deduction"
+  ],
+  "duplicates": [],
+  "first_commit": "2023-02-02",
+  "files": 2,
+  "run": "toolchain",
+  "build": "需 Qt5",
+  "build_checked": false,
+  "topic_hint": "新增",
+  "quality_notes": "rabbita.cpp 30 行；与 Recursion/rabbit 同主题。"
+ },
+ {
+  "unit": "alg-qt-abstract",
+  "title": "Qt 抽象/任务（Task 工具类）",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "Linux/Algorithm/Abstract"
+  ],
+  "duplicates": [],
+  "first_commit": "2023-02-02",
+  "files": 2,
+  "run": "toolchain",
+  "build": "需 Qt5",
+  "build_checked": false,
+  "topic_hint": "新增",
+  "quality_notes": "task.cpp 32 行，主体是 vectorToString 工具；完成度低，搬运时可并入 alg-qt-shell 或降为 read-only，待裁决。"
+ },
+ {
+  "unit": "alg-notes",
+  "title": "算法学习笔记（vuepress 站点稿，与代码系列一一对应）",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "algorithm/docs"
+  ],
+  "duplicates": [],
+  "first_commit": "2020-10-03",
+  "files": 28,
+  "run": "read-only",
+  "build": "无可编译内容",
+  "build_checked": false,
+  "topic_hint": "新增（转 algo.paradigm.* 各章批注素材）",
+  "quality_notes": "按方法分章（算法常识/减治/分治/贪婪/回溯/枚举/动态规划/线性表/树/排序查找），与 21/22/23、11/12 代码系列对应，是现成批注素材；docs/.vuepress/config.js 是站点导航配置不入库。",
+  "exclude": [
+   "docs/.vuepress/config.js"
+  ]
+ },
+ {
+  "unit": "alg-qdarkstyle",
+  "title": "QDarkStyleSheet 第三方 Qt 样式库（481 文件）",
+  "target": "postgraduate/algorithms",
+  "verdict": "drop-third-party",
+  "canonical": [
+   "Linux/Algorithm/qdarkstyle"
+  ],
+  "duplicates": [],
+  "first_commit": "2022-12-31",
+  "files": 481,
+  "run": "read-only",
+  "build": "-",
+  "build_checked": false,
+  "topic_hint": "",
+  "reason": "第三方库 QDarkStyleSheet（Colin Duquesnoy），依据：__init__.py 模块文档串自述「The most complete dark/light style sheet for Qt applications」并指向 qdarkstylesheet.readthedocs.io，目录结构（dark/light/qss/svg/example/palette.py）与上游一致；上游 https://github.com/ColinDuquesnoy/QDarkStyleSheet 。alg-qt-shell 的 main.cpp 引用它，搬运时改本机样式即可。"
+ },
+ {
+  "unit": "alg-qt-build-artifacts",
+  "title": "Qt 工程编译产物与个人配置",
+  "target": "postgraduate/algorithms",
+  "verdict": "drop-junk",
+  "canonical": [
+   "Linux/Algorithm/Algorithm",
+   "Linux/Algorithm/images",
+   "Linux/Algorithm/.cmake",
+   "Linux/Algorithm/CMakeLists.txt.user",
+   "Linux/Algorithm/.gitignore"
+  ],
+  "duplicates": [],
+  "first_commit": "2022-12-31",
+  "files": 39,
+  "run": "read-only",
+  "build": "-",
+  "build_checked": false,
+  "topic_hint": "",
+  "reason": "Algorithm 无扩展名二进制、images/ 27 张界面截图与图标（随壳生成）、.cmake/ 10 个 CMake 生成物、IDE 个人状态；ADR 0176 大二进制与产物不收。"
+ },
+ {
+  "unit": "alg-site-misc",
+  "title": "站点杂项（Markdown 语法笔记、Vue 入门笔记、构建配置）",
+  "target": "postgraduate/algorithms",
+  "verdict": "drop-junk",
+  "canonical": [
+   "algorithm/markdown",
+   "algorithm/vuepress",
+   "algorithm/5-LineChart.md",
+   "algorithm/package.json",
+   "algorithm/yarn.lock",
+   "algorithm/.travis.yml",
+   "algorithm/.gitignore",
+   "algorithm/README.md"
+  ],
+  "duplicates": [],
+  "first_commit": "2020-10-03",
+  "files": 22,
+  "run": "read-only",
+  "build": "-",
+  "build_checked": false,
+  "topic_hint": "",
+  "reason": "markdown/ 是 Markdown 语法学习笔记（标题/表格/流程图/甘特图），vuepress/ 是 Vue 入门笔记（模板语法/基础/本地/网络应用），5-LineChart.md 为图表笔记——均与数据结构/算法两目标应用无关，属 ADR 0176「杂项逐项评估」：建议不入库（Vue 部分若将来建前端类应用可回头取）；构建配置无归档价值。"
+ }
+]

@@ -1,0 +1,629 @@
+[
+  {
+    "case": "arc_qt_qmlsignal",
+    "summary": "标准 QQmlApplicationEngine 启动模板，QML 侧仅用 MouseArea 的 onClicked 改 Window 背景色，没有自定义 signal 或 C++ 类型注册。",
+    "lead": "对照清单标题「QML 信号与 C++/QML 交互」：实际只有 QML 内置信号处理器，C++ 未暴露任何对象到 QML。",
+    "outline": {
+      "promise": "展示 qrc 加载 QML 与加载失败时 exit(-1) 的脚手架。",
+      "pain": "案例名暗示 signal/C++ 桥接，但源码未实现。",
+      "model": "QGuiApplication + QQmlApplicationEngine + qrc:/main.qml。",
+      "scope": "单文件 main.qml，无 .h 后端。",
+      "judgment": "适合批注「模板与教学目标错位」和 Qt5 高 DPI 开关。",
+      "landing": "运行后点击窗口应随机变色；无跨对象 signal 演示。"
+    },
+    "guide_line": "[qml-quick] 名为 QML 信号，实为 Engine 模板 + onClicked 改色",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 13,
+        "end": 16,
+        "kind": "design",
+        "text": "仅 `MouseArea.onClicked` 内联改 `wd.color`，没有 `signal`/`Connections` 或 C++ `Q_PROPERTY`，与条目名「QML 信号交互」不符。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 6,
+        "end": 8,
+        "kind": "portability",
+        "text": "Qt5 下调用 `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)`；Qt6 已默认高 DPI，该属性移除后此分支可删。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 14,
+        "end": 18,
+        "kind": "design",
+        "text": "`objectCreated` 回调在根 QML 创建失败时 `exit(-1)`，比 `engine.rootObjects().isEmpty()` 更早失败，适合作为 Engine 脚手架批注点。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "qml.qrc"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_layoutanchors",
+    "summary": "QML Window 内用 anchors 链式定位 Text 与两个 Rectangle，并保留注释掉的对照写法。",
+    "lead": "读 main.qml 里 anchors 相对关系与注释行，理解锚点相对 baseline/center 的差异。",
+    "outline": {
+      "promise": "演示 anchors.top、left、bottom 组合定位。",
+      "pain": "混用注释掉的实验锚点，初学者易误删有效行。",
+      "model": "外层 Rectangle fill + margins，子项锚到 sibling。",
+      "scope": "纯 QML，无 Controls。",
+      "judgment": "批注锚点冲突与工程名拼写即可。",
+      "landing": "运行应见黄底、居中「Hello world! 郭雅」及绿/金方块相对排列。"
+    },
+    "guide_line": "[qml-quick] QML Anchors 链式定位与注释对照",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 25,
+        "end": 27,
+        "kind": "design",
+        "text": "注释掉的 `anchors.bottom: text.baseline` 与生效的 `anchors.top: text.bottom` 并存，说明作者曾对比 baseline 与 bottom 锚点，归档时保留注释便于对照。"
+      },
+      {
+        "file": "main.qml",
+        "line": 35,
+        "end": 36,
+        "kind": "design",
+        "text": "第二个 Rectangle 用 `anchors.left: rect1.right` 与 `anchors.bottom: rect1.bottom` 贴齐，未设宽高时依赖 implicit size，换主题字体可能导致布局漂移。"
+      },
+      {
+        "file": "22-LayoutArchors.pro",
+        "line": 1,
+        "kind": "naming",
+        "text": "工程文件名 `22-LayoutArchors.pro` 中 Archors 为 Anchors 拼写错误，与目录 slug layoutanchors 不一致，检索时需注意。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "qml.qrc"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_quickstack",
+    "summary": "Qt Quick Controls 2 的 ApplicationWindow + Drawer + StackView 页面栈导航模板。",
+    "lead": "关注 StackView push/pop、Drawer 选页，以及 ToolBar 标题绑定 currentItem.title。",
+    "outline": {
+      "promise": "多页 QML 用 StackView 管理深度与返回键。",
+      "pain": "页面以字符串 URL push，无类型检查。",
+      "model": "initialItem 为 HomeForm，Drawer 推 Page1/2。",
+      "scope": "Controls 2.5 + 三个 ui.qml 页。",
+      "judgment": "批注字符串路由与 title 属性依赖。",
+      "landing": "菜单打开 Drawer，选页后栈加深，← 可 pop。"
+    },
+    "guide_line": "[qml-quick] StackView + Drawer 页面栈导航",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 45,
+        "end": 46,
+        "kind": "coupling",
+        "text": "`stackView.push(\"Page1Form.ui.qml\")` 用裸字符串指向 qrc 内文件，改名或漏打包 qrc 时运行期才失败，无编译期检查。"
+      },
+      {
+        "file": "main.qml",
+        "line": 28,
+        "end": 29,
+        "kind": "coupling",
+        "text": "ToolBar `Label.text` 绑定 `stackView.currentItem.title`；若 push 的页面未定义 `title` 属性，标题为空且不易静态发现。"
+      },
+      {
+        "file": "HomeForm.ui.qml",
+        "line": 8,
+        "end": 8,
+        "kind": "design",
+        "text": "Home 页显式声明 `title: qsTr(\"Home\")`，与 main.qml 第 28 行绑定配套，是 Stack 模板里少数带 title 的页面。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "HomeForm.ui.qml", "Page1Form.ui.qml", "Page2Form.ui.qml", "qml.qrc"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_quick",
+    "summary": "与 quickstack 同构的 StackView/Drawer 模板（main.qml 内容一致），作为 Qt Quick 综合小例保留。",
+    "lead": "与 arc_qt_quickstack 对照：同一导航骨架，批注可强调重复模板与维护成本。",
+    "outline": {
+      "promise": "Quick Controls 多页壳。",
+      "pain": "与 quickstack 代码重复，演进时易分叉。",
+      "model": "StackView + Drawer + ToolBar。",
+      "scope": "37-Quick.pro 工程。",
+      "judgment": "重点写重复与字符串 push。",
+      "landing": "交互与 quickstack 相同。"
+    },
+    "guide_line": "[qml-quick] Qt Quick 综合壳（与 quickstack 同构）",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 60,
+        "end": 63,
+        "kind": "design",
+        "text": "`StackView` 的 `initialItem: \"HomeForm.ui.qml\"` 与 `anchors.fill: parent` 是 Qt Creator 向导常见组合，业务逻辑全在子 QML 文件。"
+      },
+      {
+        "file": "main.qml",
+        "line": 19,
+        "end": 23,
+        "kind": "design",
+        "text": "ToolBar 按钮在 `stackView.depth > 1` 时 pop，否则 open Drawer，深度与导航 UX 绑在同一 handler，扩展第三层行为需改此处。"
+      },
+      {
+        "file": "main.qml",
+        "line": 53,
+        "end": 54,
+        "kind": "coupling",
+        "text": "Page2 同样以字符串 push，与 Page1 相同模式，整例依赖 qrc 中三个 Form 文件名固定。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "HomeForm.ui.qml", "Page1Form.ui.qml", "Page2Form.ui.qml", "qml.qrc"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_quickpi",
+    "summary": "SwipeView + TabBar 双页壳；Page1 含半径输入与「计算」按钮但未接 π 面积逻辑，并 import 已废弃的 Desktop Styles。",
+    "lead": "Page1Form 是 Designer 式绝对坐标 + 部分 anchors，批注未完成逻辑与 Qt6 不兼容 import。",
+    "outline": {
+      "promise": "Quick 自定义页 + π 计算 UI 骨架。",
+      "pain": "按钮无 handler，Styles.Desktop 在 Qt6 移除。",
+      "model": "SwipeView 与 TabBar 双向 currentIndex。",
+      "scope": "Page1Form.ui.qml 含表单控件。",
+      "judgment": "批注半成品 UI 与 portability。",
+      "landing": "可切换 Tab，点击计算无效果。"
+    },
+    "guide_line": "[qml-quick] Quick π 页：表单控件在，计算逻辑缺失",
+    "notes": [
+      {
+        "file": "Page1Form.ui.qml",
+        "line": 3,
+        "end": 3,
+        "kind": "portability",
+        "text": "`import QtQuick.Controls.Styles.Desktop 1.0` 属于 Qt5 Quick Controls 1 风格模块，Qt6 Quick Controls 2 已移除，迁移需删 import 并重写样式。"
+      },
+      {
+        "file": "Page1Form.ui.qml",
+        "line": 23,
+        "end": 28,
+        "kind": "design",
+        "text": "`Button` id `button` 无 `onClicked` 或绑定，`TextInput`/`Text` 也未关联，π 面积计算教学意图未落地。"
+      },
+      {
+        "file": "Page1Form.ui.qml",
+        "line": 24,
+        "end": 26,
+        "kind": "style",
+        "text": "按钮同时用 `x/y` 绝对坐标，Label 又用 `anchors.centerIn` 加 offset，混用两种布局方式，窗口缩放时控件不会一起自适应。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "Page1Form.ui.qml", "Page2Form.ui.qml", "qml.qrc"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_canvas",
+    "summary": "QML Canvas 在 onPaint 里用 2D context 画矩形、椭圆与圆弧的静态示例。",
+    "lead": "看 onPaint 内路径 API 用法，以及 anchors 是否冲突、是否需要 requestPaint。",
+    "outline": {
+      "promise": "Canvas 2D 基础绘图。",
+      "pain": "fill 与 centerIn 同设、无重绘触发。",
+      "model": "Window 内单 Canvas。",
+      "scope": "53-Canvas.pro。",
+      "judgment": "批注锚点与绘图 API 误用。",
+      "landing": "启动即见灰色块与形状， resize 可能不刷新。"
+    },
+    "guide_line": "[qml-quick] QML Canvas 2D 静态 onPaint 示例",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 12,
+        "end": 13,
+        "kind": "design",
+        "text": "同一 `Canvas` 同时 `anchors.fill: parent` 与 `anchors.centerIn: parent`，centerIn 在 fill 已确定几何后多余且易误导读者。"
+      },
+      {
+        "file": "main.qml",
+        "line": 20,
+        "end": 21,
+        "kind": "style",
+        "text": "`fillRect` 前调用 `beginPath()` 对矩形填充无必要，且 `fillStyle` 赋值缺少分号（QML JS 通常仍能解析）。"
+      },
+      {
+        "file": "main.qml",
+        "line": 15,
+        "end": 43,
+        "kind": "design",
+        "text": "仅在 `onPaint` 绘制，未在 `Component.onCompleted` 或尺寸变化时 `requestPaint()`，窗口缩放后 Canvas 可能不重绘。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "qml.qrc"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_materialstyle",
+    "summary": "SwipeView/TabBar 双页模板；qtquickcontrols2.conf 仅有注释，未配置 Material 风格。",
+    "lead": "对照条目名 Material：检查 conf 与 Controls 版本，实际 UI 为默认 Fusion/Universal 取决于平台。",
+    "outline": {
+      "promise": "Material 主题 Quick 例。",
+      "pain": "配置文件空，main.qml 与 quickpi 同构。",
+      "model": "TabBar + SwipeView。",
+      "scope": "57-MaterialStyle.pro。",
+      "judgment": "批注名实不符与 conf 缺失。",
+      "landing": "外观非 Material，除非系统默认碰巧接近。"
+    },
+    "guide_line": "[qml-quick] 名为 Material，conf 未设 Style，UI 为 Tab 模板",
+    "notes": [
+      {
+        "file": "qtquickcontrols2.conf",
+        "line": 1,
+        "end": 3,
+        "kind": "design",
+        "text": "文件只有注释，缺少 `[Controls]` 段与 `Style=Material`（或 Material 变体），运行时不会启用 Material 主题。"
+      },
+      {
+        "file": "main.qml",
+        "line": 10,
+        "end": 20,
+        "kind": "other",
+        "text": "结构与 arc_qt_quickpi 的 SwipeView/TabBar 相同，未使用 Material 特有控件（如 RoundButton、Elevation）。"
+      },
+      {
+        "file": "Page1Form.ui.qml",
+        "line": 8,
+        "end": 12,
+        "kind": "style",
+        "text": "页眉用普通 `Label` 而非 `ToolBar`/Material header 模板，无法体现 Material 排版与内边距规范。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "Page1Form.ui.qml", "Page2Form.ui.qml", "qtquickcontrols2.conf", "qml.qrc"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_gridquick",
+    "summary": "暂存包内 main.qml 实为 StackView/Drawer 导航（与 quickstack 同），Page1 写死 1920×1080；与「Grid 布局」标题不符。",
+    "lead": "批注标题与内容错位，以及 Page1Form 固定大屏尺寸在笔记本上的显示问题。",
+    "outline": {
+      "promise": "Grid + Quick Controls（清单意图）。",
+      "pain": "主 QML 无 Grid，Page1 尺寸过大。",
+      "model": "当前为 Stack 模板 + 三 Form。",
+      "scope": "65-GridQuick.pro。",
+      "judgment": "优先写 manifest 与文件不一致。",
+      "landing": "行为像 Stack 应用，非 Grid 演示。"
+    },
+    "guide_line": "[qml-quick] 清单写 Grid，暂存 main 却是 StackView 壳",
+    "notes": [
+      {
+        "file": "Page1Form.ui.qml",
+        "line": 5,
+        "end": 6,
+        "kind": "portability",
+        "text": "`Page` 固定 `width: 1920` `height: 1080`，小屏或 StackView 640×480 窗口内会裁剪或滚动异常。"
+      },
+      {
+        "file": "main.qml",
+        "line": 60,
+        "end": 64,
+        "kind": "design",
+        "text": "根布局为 `StackView` 而非 `GridLayout`/`Grid`，与 KEEP 表 title「Grid 布局与 Quick Controls」不匹配，归档批注应点明拷贝/选型错误。"
+      },
+      {
+        "file": "main.qml",
+        "line": 45,
+        "end": 54,
+        "kind": "coupling",
+        "text": "Drawer 仍用字符串 push Page Form，与 quickstack 相同耦合模式。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "HomeForm.ui.qml", "Page1Form.ui.qml", "Page2Form.ui.qml", "qml.qrc"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_qmllayout",
+    "summary": "Qt Widgets 空 MainWindow（centralwidget 无子控件），工程名 1-Layout 但无 QML 或 Layout 代码。",
+    "lead": "对照 qml-1-layout 来源：当前仅为 Designer 生成壳，教学布局内容缺失。",
+    "outline": {
+      "promise": "QML Layout 或 Widgets 布局练习。",
+      "pain": "UI 空、无 layout 逻辑。",
+      "model": "QApplication + MainWindow。",
+      "scope": "1-Layout.pro widgets。",
+      "judgment": "批注空壳与命名。",
+      "landing": "仅空窗口。"
+    },
+    "guide_line": "[qml-quick] 名为 Layout，Widgets 空窗无 QML",
+    "notes": [
+      {
+        "file": "mainwindow.ui",
+        "line": 16,
+        "end": 16,
+        "kind": "design",
+        "text": "`centralwidget` 为空 QWidget，无 `QVBoxLayout`/QML `QuickWidget`，与条目「QML Layout」无对应实现。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 4,
+        "end": 9,
+        "kind": "design",
+        "text": "构造函数仅 `setupUi`，无加载 QML、无 layout 代码，属于未完成的 Linux/QML 布局实验壳。"
+      },
+      {
+        "file": "mainwindow.h",
+        "line": 19,
+        "end": 19,
+        "kind": "ownership",
+        "text": "`Ui::MainWindow *ui` 在析构 `delete ui`，符合 Qt Widgets 惯例；除此无其它资源所有权问题。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_qmlsyntax",
+    "summary": "QML Book 语法跟练：Rectangle+Image+Text 与键盘计数 Text，结构在 Window 下混排并含大量注释块。",
+    "lead": "逐段读 property、alias、Keys、信号处理器；注意 QML 树层级是否合法。",
+    "outline": {
+      "promise": "覆盖 id、绑定、attached property、Keys。",
+      "pain": "注释打断结构，部分属性顺序混乱。",
+      "model": "单 Window 多段教学片段。",
+      "scope": "含 assets 图片 qrc。",
+      "judgment": "批注结构与 Qt5 DPI。",
+      "landing": "空格计数、ESC 清零、三角形图显示。"
+    },
+    "guide_line": "[qml-quick] QML Book 语法片段合辑",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 55,
+        "end": 57,
+        "kind": "design",
+        "text": "第二个 `Text`（id `thisLabel`）直接作为 `Window` 子项，上方 `Rectangle` 块被注释截断，树结构依赖注释状态，初学者易复制出非法 QML。"
+      },
+      {
+        "file": "main.qml",
+        "line": 69,
+        "end": 70,
+        "kind": "design",
+        "text": "`property alias anotherTimes: thisLabel.times` 与 `property int times: 0` 同元素内，alias 指向自身 times，演示 alias 但几乎无实际 indirection 价值。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 6,
+        "end": 6,
+        "kind": "portability",
+        "text": "无条件 `setAttribute(Qt::AA_EnableHighDpiScaling)`，未像其它案例用 `#if QT_VERSION < 6` 包裹，Qt6 编译会有弃用警告。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "qml.qrc"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_qmlpositioning",
+    "summary": "Column/Row/Grid/Flow/Repeater 多种定位与布局元素同屏演示，含随机色 Repeater 网格。",
+    "lead": "对照 Red/Green/BlueSquare 组件与 main.qml 各 Item 分区。",
+    "outline": {
+      "promise": "QML Book 定位元素练习。",
+      "pain": "手动 y/x 与 anchors 混用；随机色不可复现。",
+      "model": "多个 Item 分区排布。",
+      "scope": "PositioningElements.pro。",
+      "judgment": "批注版本混用与布局一致性。",
+      "landing": "多色方块按 Column/Row/Grid/Flow 排列。"
+    },
+    "guide_line": "[qml-quick] Column/Row/Grid/Flow 定位跟练",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 27,
+        "end": 28,
+        "kind": "design",
+        "text": "`row` Item 用 `y: column.height` 手动叠放，而非单列 Column 包裹，改 column 高度需同步改 row，维护成本高。"
+      },
+      {
+        "file": "RedSquare.qml",
+        "line": 1,
+        "end": 1,
+        "kind": "portability",
+        "text": "组件 `import QtQuick 2.0` 而 main.qml 为 2.9，混用 minor 版本通常能跑，但不利于统一升级到 Qt6 单一代入版本。"
+      },
+      {
+        "file": "main.qml",
+        "line": 110,
+        "end": 111,
+        "kind": "style",
+        "text": "`Repeater` 内 `Math.floor(Math.random()*3)` 赋 `colorIndex`，每次重建颜色随机，无法做稳定截图对比或回归测试。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "RedSquare.qml", "GreenSquare.qml", "BlueSquare.qml", "qml.qrc"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_pyqtsignal",
+    "summary": "main.py 用 PySide2 QUiLoader 加载 MainWindow.ui，但仓库另含 PyQt5 生成的 ui_MainWindow.py 且未连接任何 signal。",
+    "lead": "对照 .ui 与 main.py：信号槽教学未完成，且 PySide2/PyQt5 混用。",
+    "outline": {
+      "promise": "PyQt 信号与槽 + UI 文件。",
+      "pain": "无 connect；绑定库不一致。",
+      "model": "QUiLoader 或 pyuic 二选一未统一。",
+      "scope": "MainWindow.ui + main.py。",
+      "judgment": "批注依赖与半成品。",
+      "landing": "空窗或 UI 显示，按钮无逻辑。"
+    },
+    "guide_line": "[pyqt] PyQt 信号条目：PySide2 加载 UI，无槽连接",
+    "notes": [
+      {
+        "file": "main.py",
+        "line": 3,
+        "end": 5,
+        "kind": "coupling",
+        "text": "运行时 `from PySide2` 加载 UI，而 `ui_MainWindow.py` 头注释为 PyQt5 5.15.4 生成，两套绑定混在同一案例目录。"
+      },
+      {
+        "file": "main.py",
+        "line": 7,
+        "end": 11,
+        "kind": "design",
+        "text": "`class main(QMainWindow)` 的 `__init__` 为空，注释掉的 `QUiLoader` 与下方全局 load 重复，没有任何 `connect` 演示 signal/slot。"
+      },
+      {
+        "file": "main.py",
+        "line": 17,
+        "end": 17,
+        "kind": "coupling",
+        "text": "`QUiLoader().load('MainWindow.ui')` 依赖当前工作目录存在 ui 文件，从其它 cwd 启动会加载失败。"
+      }
+    ],
+    "sources": ["main.py", "MainWindow.ui", "ui_MainWindow.py"],
+    "std": "python3",
+    "run_note": "需要 PyQt5"
+  },
+  {
+    "case": "arc_qt_pyqtdialog",
+    "summary": "main.py 仅创建空 QMainWindow 并 show，对话框与 ui 代码全部注释，Eric7 工程文件仍在。",
+    "lead": "批注「对话框」条目与空 main 的差距，以及遗留 .epj 路径。",
+    "outline": {
+      "promise": "PyQt 对话框示例。",
+      "pain": "无 QDialog、无 ui 加载。",
+      "model": "最小 QApplication 循环。",
+      "scope": "main.py + Eric 元数据。",
+      "judgment": "半成品 read-only 批注。",
+      "landing": "空白主窗口。"
+    },
+    "guide_line": "[pyqt] 对话框案例仅剩空 QMainWindow 壳",
+    "notes": [
+      {
+        "file": "main.py",
+        "line": 7,
+        "end": 7,
+        "kind": "design",
+        "text": "只 `QtWidgets.QMainWindow()` 无 central widget、无 `QDialog`，与 pyqt-a6-dialog 清单标题不符。"
+      },
+      {
+        "file": "main.py",
+        "line": 9,
+        "end": 11,
+        "kind": "other",
+        "text": "`ui_mainwindow` 与 `setupUi` 整段注释，说明作者曾走 pyuic 路线但未完成对话框迁移。"
+      },
+      {
+        "file": "main.py",
+        "line": 15,
+        "end": 15,
+        "kind": "style",
+        "text": "使用 `app.exec_()`（PyQt5 旧写法），PyQt6 改为 `exec()`，迁移时需一并改入口。"
+      }
+    ],
+    "sources": ["main.py"],
+    "std": "python3",
+    "run_note": "需要 PyQt5"
+  },
+  {
+    "case": "arc_qt_qtapp",
+    "summary": "多模块 OS 教学宿主：MainWindow 嵌入 System/Thread 子窗切换，工具栏重复添加 thread 动作，main 尝试加载未随案例打包的 qdarkstyle。",
+    "lead": "读 mainwindow 的 replaceWidget 切换、system 表格模型、以及 CMake 对外部 qss 的引用。",
+    "outline": {
+      "promise": "Qt Widgets 整合多主题子页。",
+      "pain": "缺 qdarkstyle 资源、槽未实现、模型泄漏。",
+      "model": "QMainWindow + 成员 System/Thread。",
+      "scope": "含大量 svg qrc。",
+      "judgment": "批注 UI 切换与资源缺失。",
+      "landing": "可切 system/thread 页，process 菜单空。"
+    },
+    "guide_line": "[misc-app] QtApp 宿主：子窗切换与资源/模型问题",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 13,
+        "end": 15,
+        "kind": "other",
+        "text": "工具栏连续两次 `addAction(ui->action_thread)`（中间仅 separator），重复入口无不同行为，属复制粘贴错误。"
+      },
+      {
+        "file": "system.cpp",
+        "line": 15,
+        "end": 19,
+        "kind": "ownership",
+        "text": "先 `model = new QStandardItemModel()` 并 `setModel`，随后又 `model = new QStandardItemModel` 覆盖指针，前一个 model 泄漏且 table 仍指向旧实例。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 11,
+        "end": 18,
+        "kind": "portability",
+        "text": "从 `:/qdarkstyle/dark/style.qss` 读样式，但暂存 cases 目录无 `qdarkstyle/`，CMakeLists 却引用外部 qrc，本包单独构建时样式加载失败仅打印提示。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 82,
+        "end": 85,
+        "kind": "design",
+        "text": "`on_action_process_triggered` 空实现，菜单/process 相关 UI 与 resource 中 process 图标未接入切换逻辑。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "system.cpp", "thread.cpp", "resource.qrc"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_dpshell",
+    "summary": "DesignPattern 的 Qt 壳：按钮槽里实例化 Strategy/Facade/TemplateMethod 演示，QSvgRenderer 成员未用，StrategyContext 裸 new 策略与排序器。",
+    "lead": "读 mainwindow 三个 pushButton 槽、resource.qrc 的 UML svg 与 StrategyContext::run 所有权。",
+    "outline": {
+      "promise": "用 GUI 展示三种模式输出与 UML 图。",
+      "pain": "UI 与模式代码紧耦合；内存泄漏。",
+      "model": "MainWindow + 栈上 Context + border-image qrc。",
+      "scope": "Strategy/Facade/TemplateMethod 子目录。",
+      "judgment": "批注 coupling、ownership、qrc 路径。",
+      "landing": "点按钮应在 textEdit 见字符串输出，frame 换 UML 背景。"
+    },
+    "guide_line": "[misc-app] 设计模式 Qt 壳：MainWindow 驱动演示 + UML qrc",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 16,
+        "end": 16,
+        "kind": "ownership",
+        "text": "`render = new QSvgRenderer` 成员从未用于绘制或 `delete`，每次构造泄漏一个 renderer（析构也未释放）。"
+      },
+      {
+        "file": "Strategy/StrategyContext.cpp",
+        "line": 10,
+        "end": 19,
+        "kind": "ownership",
+        "text": "`setStrategy(new ConcreteStrategyA/B)` 与 `sort = new BubbleSort/QuickSort` 替换指针时不释放旧对象，Context 析构也不 delete，策略与排序器全部泄漏。"
+      },
+      {
+        "file": "Strategy/StrategyContext.h",
+        "line": 11,
+        "end": 12,
+        "kind": "design",
+        "text": "`Strategy* strategy` 与 `SortAlgorithm* sort` 为 public 裸指针，所有权规则未文档化，外部可随意替换导致双重释放或泄漏。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 27,
+        "end": 35,
+        "kind": "coupling",
+        "text": "`on_pushButton_clicked` 内直接构造 `StrategyContext`、改 `frame` 的 stylesheet 并 append 文本，演示逻辑与 Widgets UI 同文件，无法单独测 Strategy。"
+      },
+      {
+        "file": "resource.qrc",
+        "line": 3,
+        "end": 5,
+        "kind": "other",
+        "text": "qrc 前缀 `/` 注册 `UML/strategy.svg`、`facade.svg`、`templatemethod.svg`，mainwindow 用 `url(:/UML/strategy.svg)` 等 border-image，路径必须与 qrc file 条目一致。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 30,
+        "end": 30,
+        "kind": "coupling",
+        "text": "`setStyleSheet(\"QFrame{border-image:url(:/UML/strategy.svg)}\")` 把模式选择与 UML 资源绑定，换图或改 prefix 需同时改 qrc 与字符串。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "resource.qrc", "Strategy/StrategyContext.cpp", "Strategy/StrategyContext.h"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  }
+]

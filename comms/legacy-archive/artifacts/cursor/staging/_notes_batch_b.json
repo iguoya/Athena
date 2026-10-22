@@ -1,0 +1,721 @@
+[
+  {
+    "case": "arc_qt_studentinfo",
+    "summary": "QML 壳工程仅展示 12 个占位按钮，未实现清单标题中的 Model/View 学生信息表。",
+    "lead": "对照条目名预期会看到 ListView/TableView 与 C++ 模型；实际只有 Designer 式按钮网格，适合批注「名实不符」与 QML 模板残留。",
+    "outline": {
+      "promise": "用 QML 做结构化信息展示并接入模型。",
+      "pain": "main.qml 全是重复 Button，没有模型、角色与 delegate。",
+      "model": "应为 C++ QAbstractItemModel 或 ListModel 驱动视图。",
+      "scope": "仅 main.cpp 加载 qrc:/main.qml，无后端类型注册。",
+      "judgment": "归档价值在提醒：目录名与 UI 内容要一致，否则无法写教学批注。",
+      "landing": "要么补 Model/View，要么在 archive 标题里改回「QML 布局占位」。"
+    },
+    "guide_line": "[model-view] 学生信息表条目与 QML 内容严重错位，批注应点出缺失的数据层。",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 10,
+        "end": 10,
+        "kind": "design",
+        "text": "窗口标题仍为 `qsTr(\"Hello World\")`，与「学生信息」主题无关，说明文件未从向导模板改完。"
+      },
+      {
+        "file": "main.qml",
+        "line": 17,
+        "end": 75,
+        "kind": "design",
+        "text": "12 个 `Button` 仅重复 `text: qsTr(\"Button\")`，无 `ListView`/`TableView`、无 `model`/`delegate`，谈不上 Model/View。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 12,
+        "end": 19,
+        "kind": "coupling",
+        "text": "只创建 `QQmlApplicationEngine` 并 `load` QML，未 `qmlRegisterType` 任何 C++ 模型，UI 与数据层完全脱节。"
+      },
+      {
+        "file": "main.qml",
+        "line": 17,
+        "end": 24,
+        "kind": "naming",
+        "text": "`id` 从 `button` 到 `button11` 无语义，维护时无法对应字段（姓名/学号等）。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "qml.qrc", "54-StudentInfo.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt 5/6 Quick；qmake 构建后运行见占位按钮窗口"
+  },
+  {
+    "case": "arc_qt_qprocesslist",
+    "summary": "控制台程序用 QProcess 调用 `ps` 列出进程并 qDebug 逐行输出，无表格模型。",
+    "lead": "运行后终端会刷进程命令行；批注应抓 Unix 命令硬编码、同步阻塞与「进程列表模型」名不副实。",
+    "outline": {
+      "promise": "展示系统进程列表并可用于 Model/View 练习。",
+      "pain": "只有字符串 split 与 qDebug，没有 QAbstractTableModel。",
+      "model": "QProcess 异步/同步读 stdout，再填模型。",
+      "scope": "单文件 main.cpp + console .pro。",
+      "judgment": "可保留为 QProcess 最小示例，但标题应降级为「读 ps 输出」。",
+      "landing": "若要表格 UI，需另建 Widgets 工程并封装模型。"
+    },
+    "guide_line": "[model-view] 进程列表示例实际是无 GUI 的 QProcess 调用，批注对齐平台与模型缺失。",
+    "notes": [
+      {
+        "file": "main.cpp",
+        "line": 10,
+        "end": 10,
+        "kind": "portability",
+        "text": "`process.start(\"ps -ax -ocmd \")` 依赖 Unix `ps` 参数，Windows 无此命令，跨平台会直接启动失败。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 12,
+        "end": 16,
+        "kind": "design",
+        "text": "`waitForFinished()` 在 `main` 里同步阻塞，进程列表大时会卡住整个控制台程序，未设超时或错误分支读 stderr。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 17,
+        "end": 25,
+        "kind": "design",
+        "text": "输出用 `QByteArray::split('\\n')` 后手动迭代 `qDebug`，没有 `QStringListModel`/`QAbstractTableModel`，与「列表模型」条目名不符。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 29,
+        "end": 29,
+        "kind": "style",
+        "text": "数据处理结束后仍 `return a.exec()` 进入事件循环，console 程序通常 `return 0` 即可，否则空转直到外部退出。"
+      }
+    ],
+    "sources": ["main.cpp", "95-QProcessList.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt Core；Linux/macOS 上 qmake 控制台目标，Windows 需改 ps 命令"
+  },
+  {
+    "case": "arc_qt_imageprocessor",
+    "summary": "ShowWidget 搭了 QLabel+QTextEdit 布局，但 MainWindow 空壳且未接网络/图像处理逻辑。",
+    "lead": "编译只会看到空主窗或未使用 ShowWidget；批注集中在空类、未实现处理链与控件所有权写法。",
+    "outline": {
+      "promise": "从网络取图并在界面处理展示。",
+      "pain": "MainWindow 构造函数体为空，ShowWidget 未被实例化。",
+      "model": "QNetworkAccessManager + QImage 解码 + 自定义 Widget。",
+      "scope": "Widgets 工程，showwidget 有布局代码。",
+      "judgment": "骨架可教布局，但「处理器」名过誉。",
+      "landing": "要在 MainWindow 中 centralWidget 设为 ShowWidget 并补下载槽函数。"
+    },
+    "guide_line": "[network] 网络图片处理条目只剩控件布局骨架，批注 UI 与业务断链。",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 3,
+        "end": 6,
+        "kind": "design",
+        "text": "`MainWindow` 构造/析构函数体为空，未 `setCentralWidget(new ShowWidget)`，整个「处理器」未接入界面。"
+      },
+      {
+        "file": "showwidget.h",
+        "line": 16,
+        "end": 18,
+        "kind": "coupling",
+        "text": "把 `QImage img` 与 `QLabel`/`QTextEdit` 指针设为 public 成员，破坏封装，外部可随意改 UI 状态。"
+      },
+      {
+        "file": "showwidget.cpp",
+        "line": 6,
+        "end": 13,
+        "kind": "ownership",
+        "text": "imageLabel = new QLabel 与 text = new QTextEdit 未写 parent，仅靠 addWidget 隐式 reparent；若以后改布局易泄漏。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 8,
+        "end": 9,
+        "kind": "testing",
+        "text": "只 `show()` 空 MainWindow，无任何网络 URL、加载或图像变换可测路径，回归无法验证「处理」行为。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "showwidget.cpp", "mainwindow.h", "showwidget.h", "51-ImageProcessor.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt Widgets + qmake；运行为空主窗口"
+  },
+  {
+    "case": "arc_qt_networkinformation",
+    "summary": "带 QHostInfo 头文件的 MainWindow，但主机名/IP 查询实现整段注释掉，按钮槽为空。",
+    "lead": "界面可能在 .ui 里，但逻辑未启用；批注「注释掉的正确 API」与 magic index。",
+    "outline": {
+      "promise": "显示本机主机名与 IP 列表。",
+      "pain": "getHostInformation 与按钮槽无有效代码。",
+      "model": "QHostInfo::localHostName / addresses + QNetworkInterface。",
+      "scope": "Widgets + ui 文件。",
+      "judgment": "适合作为「半成品」归档，强调 finish 槽函数。",
+      "landing": "恢复查询并在 UI 线编辑框展示，避免写死 addresses 下标。"
+    },
+    "guide_line": "[network] 网络信息查询 UI 在而逻辑被注释，批注 API 用法与下标风险。",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 8,
+        "end": 9,
+        "kind": "design",
+        "text": "构造里 `getHostInfomation()` 调用被注释且函数名拼写不一致，启动时永远不会拉取网络信息。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 21,
+        "end": 28,
+        "kind": "portability",
+        "text": "注释代码用 `listAddress.at(2)` 取 IP，假定地址列表至少 3 项且第 3 个是期望族，换机器/IPv6 会错或越界。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 33,
+        "end": 37,
+        "kind": "design",
+        "text": "`on_pushButtonDetail_clicked` 槽体为空，仅留错误赋值注释，按钮点击无任何用户可见反馈。"
+      },
+      {
+        "file": "mainwindow.h",
+        "line": 11,
+        "end": 12,
+        "kind": "coupling",
+        "text": "头文件引入 `QHostInfo`/`QNetworkInterface`，但 .cpp 未使用，形成「看起来会做网络」的假象。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui", "81-NetWorkInformation.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt Widgets + qmake；运行仅有空逻辑界面"
+  },
+  {
+    "case": "arc_qt_qprocess",
+    "summary": "三个按钮分别 detached 调用 shutdown/killall 或以错误参数 start cheese，混有调试输出。",
+    "lead": "切勿在生产机乱点；批注 detached 与成员 process 无关、Linux 命令与参数错误。",
+    "outline": {
+      "promise": "演示 QProcess 启动外部程序。",
+      "pain": "shutdown/killall 参数与平台绑定，cheese 启动参数类型错误。",
+      "model": "QProcess::startDetached 与 start 的区别。",
+      "scope": "单 MainWindow 三个槽。",
+      "judgment": "教学价值在「API 误用对比」，非实用工具。",
+      "landing": "改用 start + 错误处理，并区分 Windows/Linux 命令。"
+    },
+    "guide_line": "[network] QProcess 示例混用 detached 与 start，批注平台命令与参数表。",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 28,
+        "end": 28,
+        "kind": "portability",
+        "text": "`QProcess::startDetached(\"shutdown\", argument)` 依赖 Linux shutdown 语义，Windows 上无同名行为，且 `-t -s 3600` 会真的预约关机。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 39,
+        "end": 39,
+        "kind": "design",
+        "text": "`killall` 的 `argument` 含 `-i cheese`，把 killall 选项与进程名混在 `QStringList` 里，与 `cheese` 进程无关，行为不可预期。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 50,
+        "end": 50,
+        "kind": "design",
+        "text": "`tigerProcess.start(\"cheese\", qstrList, 0)` 把 `QStringList` 当进程参数传入，而上面列表是调试字符串非 CLI 参数，启动必失败。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 24,
+        "end": 26,
+        "kind": "style",
+        "text": "槽函数里 `QStringListIterator` 仅 `qDebug` 字符串，与按钮功能无关，属于遗留调试代码。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui", "94-QProcess.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt Widgets；Linux 上 qmake，慎点关机/杀进程按钮"
+  },
+  {
+    "case": "arc_qt_xnode",
+    "summary": "多子目录 UDP 节点练习：阻塞式 socket 循环、detach 线程、GUI 硬编码本机路径与 8887 端口。",
+    "lead": "从 StandAloneNode 与 Application 分看：网络线程模型、QProcess 误用与 config 端口常量。",
+    "outline": {
+      "promise": "多节点 UDP 通信与监控界面。",
+      "pain": "server.run 死循环阻塞；GUI 写死路径；Client recv 用未初始化地址。",
+      "model": "线程跑阻塞 IO，GUI 仅发 QProcess。",
+      "scope": "Practice 多 CMake 目标 + 根目录 xnode 封装。",
+      "judgment": "适合批注并发与平台路径，不宜直接当生产框架。",
+      "landing": "阻塞 recv 放工作线程；配置读 config.json；QProcess 用相对路径或 QStandardPaths。"
+    },
+    "guide_line": "[network] XNode 多工程 UDP 与 Qt 控制台耦合，批注所有权、阻塞 GUI 与硬编码端口/路径。",
+    "notes": [
+      {
+        "file": "xnode.h",
+        "line": 25,
+        "end": 26,
+        "kind": "ownership",
+        "text": "`XNode` 内嵌单个 `Server` 与 `Client` 成员，`main.cpp` 用 detached 线程同时调 `service`/`contact`，对象无同步，生命周期与线程退出也未 join。"
+      },
+      {
+        "file": "server.cpp",
+        "line": 24,
+        "end": 36,
+        "kind": "design",
+        "text": "`Server::run` 中 `while(1)` + 阻塞 `recvfrom`，若在 GUI 或主线程调用会卡死；`NodeServer/main.cpp` 直接在 main 调 `run()`。"
+      },
+      {
+        "file": "Application/mainwindow.cpp",
+        "line": 31,
+        "end": 41,
+        "kind": "portability",
+        "text": "`startDetached` 使用绝对路径 `/home/tiger/MultiNode/build-...` 与固定参数 `127.0.0.1`/`8887`，换机器或端口即失效。"
+      },
+      {
+        "file": "config.json",
+        "line": 6,
+        "end": 16,
+        "kind": "coupling",
+        "text": "节点 A/B/C 的 `port` 10001–10003 写死在 JSON，但 Application 启动参数用 8887，配置与 GUI  launcher 未统一。"
+      },
+      {
+        "file": "client.cpp",
+        "line": 36,
+        "end": 36,
+        "kind": "design",
+        "text": "`recvfrom` 写入 `server_address`，但 `connect()` 只初始化 `m_address`，首次回复可能来自未定义源地址字段。"
+      },
+      {
+        "file": "Application/mainwindow.h",
+        "line": 26,
+        "end": 26,
+        "kind": "ownership",
+        "text": "单个成员 `QProcess process` 却连续四次 `startDetached`（不经过该对象），`readStatus` 绑定的 `readyRead` 几乎不会从 detached 子进程收到输出。"
+      }
+    ],
+    "sources": ["Application/main.cpp", "Application/mainwindow.cpp", "main.cpp", "server.cpp", "client.cpp", "xnode.cpp", "config.json"],
+    "std": "c++11",
+    "run_note": "需 Qt Widgets（Application）与 POSIX socket；Linux 上 CMake 多目标，GUI 路径需本机修改"
+  },
+  {
+    "case": "arc_qt_qtchartsbasic",
+    "summary": "mainwindow.h 包含 QtCharts 但 .pro 未链接 charts 模块，createChart 为空函数。",
+    "lead": "无法在当前 .pro 下通过编译含 `<QtCharts>` 的翻译单元；批注模块依赖与 Qt6 迁移清单。",
+    "outline": {
+      "promise": "用 Qt Charts 画基础曲线/柱图。",
+      "pain": "缺 QT += charts，实现为空。",
+      "model": "QChart + QChartView + QLineSeries 等。",
+      "scope": "Widgets 模板 + 空头文件。",
+      "judgment": "归档说明「缺模块」比强行 patch 更有教益。",
+      "landing": "补 `QT += charts` 并实现 createChart；Qt6 另装 QtCharts 包。"
+    },
+    "guide_line": "[charts] Qt Charts 基础课未链 charts 模块，批注构建配置与 Qt6 字符串 API。",
+    "notes": [
+      {
+        "file": "91-QtChartsBasic.pro",
+        "line": 1,
+        "end": 3,
+        "kind": "portability",
+        "text": "`.pro` 仅 `QT += core gui widgets`，未 `QT += charts`，与 `mainwindow.h` 的 `#include <QtCharts>` 矛盾，默认 qmake 配置下链接失败。"
+      },
+      {
+        "file": "mainwindow.h",
+        "line": 5,
+        "end": 5,
+        "kind": "portability",
+        "text": "头文件直接 `#include <QtCharts>`，在未安装/未启用 Charts 的 Qt 构建中找不到模块，需与 .pro 同步声明依赖。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 11,
+        "end": 14,
+        "kind": "portability",
+        "text": "`createChart()` 仍为空；若按姊妹示例 `arc_qt_chart` 的 `loadFile` 复制 CSV 解析，Qt6 须把 `QString::SkipEmptyParts` 改为 `Qt::SkipEmptyParts`（`Qt::SplitBehaviorFlags`），当前树未改。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 11,
+        "end": 14,
+        "kind": "design",
+        "text": "图表创建逻辑被注释为 `// QChart`，UI 已 setup 但无任何 `QChartView` 加入布局，运行只有空窗口。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui", "91-QtChartsBasic.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt Widgets + Qt Charts 模块；当前 .pro 缺 charts，构建预期失败"
+  },
+  {
+    "case": "arc_qt_chart",
+    "summary": "Qt 官方 PieView 示例：自定义 QAbstractItemView 画饼图，loadFile 仍用 Qt5 的 SkipEmptyParts。",
+    "lead": "运行见表格+饼图联动；批注 Qt6 字符串 split 枚举与 chart.pro 未声明 charts（示例仅 Widgets）。",
+    "outline": {
+      "promise": "表格数据驱动自定义饼图视图。",
+      "pain": "Qt6 下 SkipEmptyParts 编译失败；rubberBand 懒创建。",
+      "model": "QStandardItemModel 共享给 QTableView 与 PieView。",
+      "scope": "mainwindow + pieview 大文件。",
+      "judgment": "官方示例质量高，归档批注聚焦 API 迁移点。",
+      "landing": "split 改 Qt::SkipEmptyParts；确认是否需要 Qt Charts 或纯 QWidget 绘制。"
+    },
+    "guide_line": "[charts] 官方 chart 示例的 Model/View 饼图，批注 Qt6 split 标志与视图实现细节。",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 137,
+        "end": 137,
+        "kind": "portability",
+        "text": "`line.split(',', QString::SkipEmptyParts)` 使用 Qt5 枚举；Qt6 应改为 `Qt::SkipEmptyParts`（`Qt::SplitBehaviorFlags`），未补丁时 Qt6 编译不过。"
+      },
+      {
+        "file": "chart.pro",
+        "line": 1,
+        "end": 1,
+        "kind": "portability",
+        "text": "`.pro` 只有 `QT += widgets`，本示例用自绘 `PieView` 不依赖 QtCharts 模块；勿与 `QT += charts` 混淆，但 CMake/qmake 仍需 widgets 与 filedialog。"
+      },
+      {
+        "file": "pieview.cpp",
+        "line": 255,
+        "end": 257,
+        "kind": "ownership",
+        "text": "`mousePressEvent` 里 `rubberBand = new QRubberBand(..., viewport())` 懒创建且无 reset，多次按下会泄漏旧 band 或重复分配。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 103,
+        "end": 105,
+        "kind": "design",
+        "text": "表格与饼图共用 `QItemSelectionModel`，选中联动设计正确，是条目里值得保留的 Model/View 实践。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "pieview.cpp", "mainwindow.h", "pieview.h", "chart.qrc", "chart.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt Widgets；qmake 后运行加载 :/Charts/qtdata.cht；Qt6 需改 split 枚举"
+  },
+  {
+    "case": "arc_qt_designer",
+    "summary": "QML 多个绝对定位 Button，与「Designer .ui 加载」标题不符，无 Loader 或 uic 代码。",
+    "lead": "窗口标题为 Scroll；批注 QML 绝对坐标与条目主题的错位。",
+    "outline": {
+      "promise": "演示 Qt Designer 生成 .ui 并加载。",
+      "pain": "实际是手写 QML，无 .ui 文件。",
+      "model": "QUiLoader 或 Widgets + ui 类。",
+      "scope": "main.cpp + main.qml。",
+      "judgment": "若归档保留，标题应改为 QML 布局练习。",
+      "landing": "要么引入 .ui + QUiLoader，要么删绝对坐标改 Layout。"
+    },
+    "guide_line": "[designer] Designer 条目却是 QML 绝对布局，批注名实与可维护布局。",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 8,
+        "end": 8,
+        "kind": "design",
+        "text": "标题 `qsTr(\"Scroll\")` 与 38-Designer/条目「.ui 加载」不一致，且无 ScrollView/ListView 实现滚动。"
+      },
+      {
+        "file": "main.qml",
+        "line": 28,
+        "end": 54,
+        "kind": "style",
+        "text": "四个 `Button` 用硬编码 `x`/`y` 定位，分辨率变化即重叠，违背 Designer/Layout 要教的响应式布局。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 12,
+        "end": 19,
+        "kind": "coupling",
+        "text": "入口与 datetime 等课相同，仅 `engine.load(qrc:/main.qml)`，没有任何 `QUiLoader` 或 Widgets `setupUi` 路径。"
+      },
+      {
+        "file": "main.qml",
+        "line": 10,
+        "end": 26,
+        "kind": "naming",
+        "text": "第一个 Button 文本写死「郭雅」，与其余 qsTr(\"Button\") 混用，国际化与一致性差。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "qml.qrc", "38-Designer.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt Quick；qmake 运行见绝对定位按钮"
+  },
+  {
+    "case": "arc_qt_qmenu",
+    "summary": "菜单与动作均在 mainwindow.ui 定义，C++ 未 connect 任何 action，按钮无槽。",
+    "lead": "运行可见菜单栏与 QTextEdit；批注 UI 与逻辑分离但未完成连接。",
+    "outline": {
+      "promise": "QMenu 与 QAction 驱动编辑器行为。",
+      "pain": "mainwindow.cpp 只有 setupUi。",
+      "model": "菜单栏在 .ui，槽在 MainWindow 类。",
+      "scope": "Widgets + ui。",
+      "judgment": "适合作为「补全 connect 列表」练习。",
+      "landing": "为 action_new/save 等添加槽并操作 textEdit。"
+    },
+    "guide_line": "[basics] QMenu 课菜单已在 .ui，批注缺 C++ 槽连接。",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 4,
+        "end": 9,
+        "kind": "coupling",
+        "text": "构造仅 `ui->setupUi(this)`，未对 .ui 中 `action_N`/`action_S` 等 `QAction` 做 `connect`，菜单点击无响应。"
+      },
+      {
+        "file": "mainwindow.ui",
+        "line": 62,
+        "end": 77,
+        "kind": "design",
+        "text": "`menubar` 下 `menu_F`/`menu_E` 已挂动作，但 C++ 侧无对应 `on_action_*` 槽或显式连接，UI/逻辑半完成。"
+      },
+      {
+        "file": "mainwindow.ui",
+        "line": 21,
+        "end": 54,
+        "kind": "design",
+        "text": "五个 `QPushButton` 未在 .ui 设 `signal` 连接，`.h` 也无槽声明，与 QTextEdit 无交互。"
+      },
+      {
+        "file": "mainwindow.h",
+        "line": 18,
+        "end": 19,
+        "kind": "testing",
+        "text": "类内只有 `Ui::MainWindow *ui`，无业务方法可单测，菜单行为无法自动化验证。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui", "4-QMenu.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt Widgets + qmake；菜单可见但动作空转"
+  },
+  {
+    "case": "arc_qt_texteditor",
+    "summary": ".ui 含完整文件/编辑/帮助菜单与 central QTextEdit，C++ 未实现任何编辑功能。",
+    "lead": "界面像编辑器；批注 action 未连接与缺文件 IO。",
+    "outline": {
+      "promise": "简易文本编辑器。",
+      "pain": "无 open/save/find 槽。",
+      "model": "QTextEdit + QFileDialog + QAction。",
+      "scope": "标准 MainWindow 模板。",
+      "judgment": "典型「先画 UI 后补逻辑」半成品。",
+      "landing": "实现 action_new/save 与 document 修改标志。"
+    },
+    "guide_line": "[basics] 文本编辑器壳完整而逻辑空缺，批注 QAction 与文档状态。",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 4,
+        "end": 9,
+        "kind": "coupling",
+        "text": "与 QMenu 课相同，仅 setupUi；`action_save`/`action_find` 等未连接，用户无法保存或查找。"
+      },
+      {
+        "file": "mainwindow.ui",
+        "line": 32,
+        "end": 38,
+        "kind": "design",
+        "text": "「文件」菜单声明 new/save/exit 三个 action，但无 `QShortcut`、无 statusBar 提示，退出也不 `qApp->quit()`。"
+      },
+      {
+        "file": "mainwindow.ui",
+        "line": 19,
+        "end": 19,
+        "kind": "design",
+        "text": "central 仅单个 `textEdit`，未设 `acceptRichText`、编码或 `document()->setModified` 跟踪，距离「编辑器」差文件层。"
+      },
+      {
+        "file": "mainwindow.ui",
+        "line": 59,
+        "end": 59,
+        "kind": "style",
+        "text": "有 `statusbar` 控件但 C++ 从未 `showMessage`，与常见 QMainWindow 编辑器范例不一致。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui", "5-TextEditor.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt Widgets + qmake；可输入但菜单无功能"
+  },
+  {
+    "case": "arc_qt_datetime",
+    "summary": "main.qml 根 Item 无 Window，仅在 Component.onCompleted 打 console 日志演示 Date/数组。",
+    "lead": "引擎能加载但可能无可见窗口；批注 QML 根类型选择与日期 API。",
+    "outline": {
+      "promise": "日期时间控件交互演示。",
+      "pain": "无 DateTimePicker 等控件，根不是 Window。",
+      "model": "QML Date + Qt.labs 或 Controls 日期控件。",
+      "scope": "Quick 单 QML 文件。",
+      "judgment": "更像 JS Date _snippet_ 而非 Qt 控件课。",
+      "landing": "改用 ApplicationWindow 并放 DatePicker/Timer。"
+    },
+    "guide_line": "[basics] 日期时间课只有 console 输出，批注 QML 根对象与控件缺失。",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 5,
+        "end": 5,
+        "kind": "design",
+        "text": "根元素是 `Item` 而非 `Window`/`ApplicationWindow`，无 `visible: true`，用户可能看不到任何界面，只剩控制台日志。"
+      },
+      {
+        "file": "main.qml",
+        "line": 9,
+        "end": 13,
+        "kind": "design",
+        "text": "`Component.onCompleted` 仅 `console.log` 打印 `theDate.toUTCString()`，未绑定任何日期时间控件到 UI。"
+      },
+      {
+        "file": "main.qml",
+        "line": 7,
+        "end": 7,
+        "kind": "portability",
+        "text": "`property var theDate: new Date()` 用的是 QML 内建 JS Date，与 C++ `QDateTime` 时区/DST 行为不一致，教学上应显式对比。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 13,
+        "end": 13,
+        "kind": "coupling",
+        "text": "C++ 未向 QML 暴露 `QDateTime` 或 `QTimer`，日期能力完全停留在 QML JS 层，无法演示信号/属性绑定。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "qml.qrc", "17-DateTime.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt Quick；运行可能无窗口，仅 stderr/console 有日志"
+  },
+  {
+    "case": "arc_qt_cmake",
+    "summary": "标准 Qt Creator CMake 模板，find_package Qt5/6 Widgets，MainWindow 空实现。",
+    "lead": "批注 CMake 版本、qt_add_executable 分支与 AUTOUIC 即可。",
+    "outline": {
+      "promise": "用 CMake 构建 Qt Widgets 程序。",
+      "pain": "业务代码为空，build_checked_pass 为 false。",
+      "model": "CMake find_package + target_link_libraries。",
+      "scope": "CMakeLists + 空 mainwindow。",
+      "judgment": "构建脚本比应用逻辑更有归档价值。",
+      "landing": "在本机验证 configure 并记录失败点（若有）。"
+    },
+    "guide_line": "[basics] CMake 构建 Qt 的模板工程，批注 CMake/Qt6 分支而非业务。",
+    "notes": [
+      {
+        "file": "CMakeLists.txt",
+        "line": 27,
+        "end": 28,
+        "kind": "portability",
+        "text": "`find_package(QT NAMES Qt6 Qt5 ...)` 先找 Qt6 再找 Qt5，同一仓库在未装 Qt6 的机器需保证 Qt5 路径可见，否则 configure 失败。"
+      },
+      {
+        "file": "CMakeLists.txt",
+        "line": 37,
+        "end": 50,
+        "kind": "design",
+        "text": "Qt6 走 `qt_add_executable`，Qt5 走 `add_executable`+ANDROID 分支，模板正确但项目名 `30-cmake` 含连字符，部分工具链对 target 名敏感。"
+      },
+      {
+        "file": "CMakeLists.txt",
+        "line": 7,
+        "end": 9,
+        "kind": "style",
+        "text": "开启 `CMAKE_AUTOUIC/AUTOMOC/AUTORCC` 是 Widgets 工程常规做法，与 .ui 配套；但未列出 `CMAKE_CXX_EXTENSIONS OFF` 等 stricter 选项。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 4,
+        "end": 9,
+        "kind": "testing",
+        "text": "`MainWindow` 无自定义逻辑，CMake 课无法通过行为测试验证「构建成功即可」，需靠外部 build 日志。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui", "CMakeLists.txt"],
+    "std": "c++11",
+    "run_note": "需要 CMake 3.5+ 与 Qt5 或 Qt6 Widgets；元数据标记 build_checked_pass false"
+  },
+  {
+    "case": "arc_qt_backend",
+    "summary": "BackEnd QObject 暴露 userName 属性，QML TextField 双向绑定并 console 打印变更。",
+    "lead": "运行输入框可见 Label 同步；批注 Q_PROPERTY 命名与 qmlRegisterType 拼写。",
+    "outline": {
+      "promise": "QML 与 C++ 属性绑定。",
+      "pain": "信号名大小写不规范；类名多空格。",
+      "model": "Q_PROPERTY + NOTIFY + qmlRegisterType。",
+      "scope": "单 backend 类型 + 短 QML。",
+      "judgment": "最小可用 backend 示范，批注命名即可。",
+      "landing": "信号改为 userNameChanged，去掉类名多余空格。"
+    },
+    "guide_line": "[other] QML/C++ Backend 属性绑定最小例，批注 Q_PROPERTY 与注册宏。",
+    "notes": [
+      {
+        "file": "backend.h",
+        "line": 9,
+        "end": 9,
+        "kind": "naming",
+        "text": "`Q_PROPERTY` 的 NOTIFY 为 `UserNameChanged`（大写 U），与 Qt 惯例 `userNameChanged` 不一致，QML 生成连接时易混淆。"
+      },
+      {
+        "file": "backend.h",
+        "line": 6,
+        "end": 6,
+        "kind": "style",
+        "text": "类名写为 `class  BackEnd` 双空格，与文件/类型 `BackEnd` 及 QML `BackEnd` 一致但风格不统一（Backend vs BackEnd）。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 13,
+        "end": 13,
+        "kind": "coupling",
+        "text": "`qmlRegisterType <BackEnd>` 宏参数含多余空格，虽多数编译器接受，但与模块 URI `io.qt.examples.backend` 绑定，改 URI 需同步 QML import。"
+      },
+      {
+        "file": "main.qml",
+        "line": 20,
+        "end": 20,
+        "kind": "design",
+        "text": "TextField `onTextChanged: backend.userName = text` 在每次 keystroke 写 C++ 属性并 emit，无 debounce/校验，大表单会频繁跨语言调用。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "backend.cpp", "backend.h", "qml.qrc", "48-Backend.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt Quick + qmlRegisterType；qmake 运行可测属性联动"
+  },
+  {
+    "case": "arc_qt_calculatorarea",
+    "summary": "StackView+Drawer 多页 QML，Page1 通过 Circle 类型算圆面积，硬编码 3.14。",
+    "lead": "运行从 Drawer 进 Page1 输入半径点按钮；批注 M_PI、QML 绝对坐标与 setArea 信号。",
+    "outline": {
+      "promise": "多页面积计算器（圆等）。",
+      "pain": "Circle 用 3.14；Page 布局大量 x/y。",
+      "model": "C++ QObject 注册给 QML + StackView 导航。",
+      "scope": "main.qml + Page1Form + circle.cpp。",
+      "judgment": "导航结构完整，计算层宜改用 qreal/M_PI。",
+      "landing": "用 `M_PI` 或 `QML double` 常量；Page 改 Layout。"
+    },
+    "guide_line": "[other] 面积计算器 StackView 壳 + Circle 后端，批注精度与 QML 布局。",
+    "notes": [
+      {
+        "file": "circle.cpp",
+        "line": 12,
+        "end": 13,
+        "kind": "design",
+        "text": "`setArea` 用字面量 `3.14` 计算 `m_r*m_r`，精度与 `double` 不符，应使用 `M_PI` 或 `QMath`。"
+      },
+      {
+        "file": "circle.cpp",
+        "line": 10,
+        "end": 14,
+        "kind": "coupling",
+        "text": "参数为 `QString r` 再 `toDouble()`，无效输入变 0 无错误提示，QML 侧 TextEdit 也无 validator。"
+      },
+      {
+        "file": "Page1Form.ui.qml",
+        "line": 25,
+        "end": 33,
+        "kind": "style",
+        "text": "半径输入 `TextEdit` 用固定 `x`/`y`，不同 DPI 下与 Label 不对齐，应改用 `ColumnLayout`/`GridLayout`。"
+      },
+      {
+        "file": "main.qml",
+        "line": 60,
+        "end": 63,
+        "kind": "design",
+        "text": "`StackView.initialItem` 与 `push(\"Page1Form.ui.qml\")` 用相对路径字符串，依赖 QML 导入路径，重命名文件易断链。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "circle.cpp", "circle.h", "Page1Form.ui.qml", "HomeForm.ui.qml", "qml.qrc", "63-CalculatorArea.pro"],
+    "std": "c++11",
+    "run_note": "需要 Qt Quick Controls 2 + qmlRegisterType Circle；qmake 运行"
+  }
+]

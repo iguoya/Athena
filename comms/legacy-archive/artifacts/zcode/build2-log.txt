@@ -1,0 +1,216 @@
+# 编译器：gcc (GCC) 15.2.0
+
+== ds-linear（algorithm/DataStructure/linear，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\ds-linear.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\DataStructure\linear\main.cpp C:\Users\tiger\Athena\.cache\legacy-src\algorithm\DataStructure\linear\linear.cpp C:\Users\tiger\Athena\.cache\legacy-src\algorithm\DataStructure\linear\list.cpp
+!! 编译失败（退出码 1）:
+   C:\Users\tiger\Athena\.cache\legacy-src\algorithm\DataStructure\linear\linear.cpp:3:1: error: 'linear' does not name a type; did you mean 'Linear'?
+       3 | linear::linear()
+         | ^~~~~~
+         | Linear
+
+== ds-recursion-cpp（algorithm/DataStructure/recursion，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\ds-recursion-cpp.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\DataStructure\recursion\main.cpp C:\Users\tiger\Athena\.cache\legacy-src\algorithm\DataStructure\recursion\recursion.cpp
+运行退出码 0，输出首行: Hello World!
+
+== ds-search-cpp（algorithm/DataStructure/search，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\ds-search-cpp.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\DataStructure\search\main.cpp
+运行退出码 0，输出首行: Hello World!
+
+== ds-sort-cpp（algorithm/DataStructure/sort，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\ds-sort-cpp.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\DataStructure\sort\main.cpp
+运行退出码 0，输出首行: Hello World!
+
+== ds-tree-cpp（algorithm/DataStructure/tree，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\ds-tree-cpp.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\DataStructure\tree\main.cpp
+运行退出码 0，输出首行: Hello World!
+
+== c-array（algorithm/11-linner/1-array，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\c-array.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\11-linner\1-array\main.c
+运行退出码 0，输出首行: **********查找前N个最大值*****************
+
+== c-list（algorithm/11-linner/2-list，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\c-list.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\11-linner\2-list\main.c
+!! 编译失败（退出码 1）:
+   C:\Users\tiger\Athena\.cache\legacy-src\algorithm\11-linner\2-list\main.c: In function 'main':
+   C:\Users\tiger\Athena\.cache\legacy-src\algorithm\11-linner\2-list\main.c:11:14: error: implicit declaration of function 'init_List'; did you mean 'init_list'? [-Wimplicit-function-declaration]
+      11 |     List l = init_List();
+         |              ^~~~~~~~~
+         |              init_list
+
+== c-stack（algorithm/11-linner/3-stack，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\c-stack.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\11-linner\3-stack\main.c
+运行退出码 0，输出首行: 单链表逆序
+
+== c-queue（algorithm/11-linner/4-queue，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\c-queue.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\11-linner\4-queue\main.c
+运行退出码 0，输出首行: 1
+
+== c-string（algorithm/11-linner/5-string，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\c-string.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\11-linner\5-string\main.c
+运行退出码 0，输出首行: Hello, World!
+
+== c-tree（algorithm/12-tree/1-tree，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\c-tree.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\12-tree\1-tree\main.c C:\Users\tiger\Athena\.cache\legacy-src\algorithm\12-tree\1-tree\advance.c
+!! 编译失败（退出码 1）:
+   In file included from C:\Users\tiger\Athena\.cache\legacy-src\algorithm\12-tree\1-tree\main.c:10:
+   C:\Users\tiger\Athena\.cache\legacy-src\algorithm\12-tree\1-tree\btree.h:23:10: fatal error: ../stack/stack.h: No such file or directory
+      23 | #include "../stack/stack.h"
+         |          ^~~~~~~~~~~~~~~~~~
+   compilation terminated.
+
+== b-goldbach（algorithm/21-basic/Goldbach，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\b-goldbach.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\Goldbach\main.c
+运行超时（疑似等待 stdin 输入）
+
+== b-callback（algorithm/21-basic/callback，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\b-callback.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\callback\main.cpp
+运行退出码 0，输出首行: Hello, World!
+
+== b-check-main（algorithm/21-basic/check，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\b-check-main.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\check\main.c C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\check\sub.c
+运行退出码 0，输出首行: Hello, World!
+
+== b-check-test（algorithm/21-basic/check，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\b-check-test.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\check\test_main.c C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\check\test_sub.c C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\check\sub.c
+!! 编译失败（退出码 1）:
+   In file included from C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\check\test_main.c:5:
+   C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\check\unit_test.h:7:10: fatal error: check.h: No such file or directory
+       7 | #include "check.h"
+         |          ^~~~~~~~~
+   compilation terminated.
+
+== b-file（algorithm/21-basic/file，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\b-file.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\file\main.c
+运行退出码 0，输出首行: Hello, World!
+
+== b-funcptr（algorithm/21-basic/function_pointer，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\b-funcptr.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\function_pointer\main.c
+运行退出码 0，输出首行: 加法函数add被调用: 1+2=3
+
+== b-magic（algorithm/21-basic/magic_square，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\b-magic.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\magic_square\main.c C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\magic_square\matrix.c
+运行退出码 0，输出首行: Hello, World!
+
+== b-magic-test（algorithm/21-basic/magic_square，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\b-magic-test.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\magic_square\unit_test_main.c C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\magic_square\matrix.c
+!! 编译失败（退出码 1）:
+   C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\magic_square\unit_test_main.c:5:10: fatal error: check.h: No such file or directory
+       5 | #include <check.h>
+         |          ^~~~~~~~~
+   compilation terminated.
+
+== b-pi（algorithm/21-basic/pi，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\b-pi.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\pi\main.c
+运行退出码 0，输出首行: i = 1, remainder = 1.000000, pi = 4.000000
+
+== b-struct（algorithm/21-basic/struct，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\b-struct.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\struct\main.c
+运行退出码 0，输出首行: Hello, World! 皇甫珍竹(13)
+
+== b-volume（algorithm/21-basic/volume，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\b-volume.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\21-basic\volume\main.c
+运行退出码 0，输出首行: 输入长宽高，逗号分割
+
+== r-average（algorithm/22-recursion/average_value，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\r-average.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\22-recursion\average_value\main.cpp
+运行退出码 3221226356，输出首行: Hello, World!
+
+== r-fib-v2（algorithm/22-recursion/fibnonacciv2，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\r-fib-v2.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\22-recursion\fibnonacciv2\main.cpp
+运行退出码 0，输出首行: Hello, World!
+
+== r-fib（algorithm/22-recursion/fibonacci，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\r-fib.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\22-recursion\fibonacci\main.c
+运行退出码 0，输出首行: 1         1         2         3         5
+
+== r-footstep（algorithm/22-recursion/footstep，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\r-footstep.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\22-recursion\footstep\main.c
+运行退出码 0，输出首行: 1:-1--1--1--1-
+
+== r-footstep-v2（algorithm/22-recursion/footstepv2，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\r-footstep-v2.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\22-recursion\footstepv2\main.cpp
+运行退出码 0，输出首行: Hello, World!
+
+== r-hanoi（algorithm/22-recursion/hanoi，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\r-hanoi.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\22-recursion\hanoi\main.c
+运行退出码 0，输出首行: 前期计划：准备将编号5（含）以上的盘从A通过C移动到B
+
+== r-int-factor（algorithm/22-recursion/integer_factorization，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\r-int-factor.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\22-recursion\integer_factorization\main.c
+运行退出码 0，输出首行: -------整数分解--------
+
+== r-max（algorithm/22-recursion/max_value，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\r-max.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\22-recursion\max_value\main.cpp
+运行退出码 0，输出首行: Hello, World!
+
+== r-numeral（algorithm/22-recursion/numeral_system，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\r-numeral.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\22-recursion\numeral_system\main.c
+运行退出码 0，输出首行: 6, 2, 3
+
+== r-permutation（algorithm/22-recursion/permutation，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\r-permutation.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\22-recursion\permutation\main.cpp
+运行退出码 0，输出首行: Hello, World!
+
+== r-queen（algorithm/22-recursion/queen，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\r-queen.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\22-recursion\queen\main.c
+运行退出码 0，输出首行: 0	0	0	0	
+
+== d-binsearch（algorithm/23-divide_and_conconquer/binary_search，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\d-binsearch.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\23-divide_and_conconquer\binary_search\main.cpp
+运行退出码 3，输出首行: Hello, World!
+
+== d-gold（algorithm/23-divide_and_conconquer/gold，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\d-gold.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\23-divide_and_conconquer\gold\main.cpp
+运行退出码 0，输出首行: Hello, World!
+
+== d-mergesort（algorithm/23-divide_and_conconquer/merge_sort，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\d-mergesort.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\23-divide_and_conconquer\merge_sort\main.cpp
+运行退出码 0，输出首行: Hello, World!
+
+== d-queen（algorithm/23-divide_and_conconquer/queen，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\d-queen.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\23-divide_and_conconquer\queen\main.cpp
+运行退出码 0，输出首行: Hello, World!
+
+== bt-substring（algorithm/backtracking/substring，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\bt-substring.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\backtracking\substring\main.cpp
+运行退出码 0，输出首行: Hello World!
+
+== dict-backpack（algorithm/1-速学速用大辞典/backpack，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\dict-backpack.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\backpack\main.c
+!! 编译失败（退出码 1）:
+   C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\backpack\main.c:2:10: fatal error: ../stack/stack.h: No such file or directory
+       2 | #include "../stack/stack.h"
+         |          ^~~~~~~~~~~~~~~~~~
+   compilation terminated.
+
+== dict-backtrack（algorithm/1-速学速用大辞典/backtrack，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\dict-backtrack.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\backtrack\main.c
+运行退出码 0，输出首行: 1-n集合中, 取出r个数的所有组合
+
+== dict-cstring（algorithm/1-速学速用大辞典/c_string，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\dict-cstring.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\c_string\main.c
+!! 编译失败（退出码 1）:
+   C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\c_string\main.c: In function 'main':
+   C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\c_string\main.c:15:34: error: implicit declaration of function 'atol' [-Wimplicit-function-declaration]
+      15 |     printf("转换后数字是：%d\n", atol(s1));
+         |                                  ^~~~
+   C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\c_string\main.c:45:11: error: assignment to 'char **' from incompatible pointer type 'char (*)[11]' [-Wincompatible-pointer-types]
+
+== dict-enum（algorithm/1-速学速用大辞典/enum，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\dict-enum.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\enum\main.c
+运行超时（疑似等待 stdin 输入）
+
+== dict-iterative（algorithm/1-速学速用大辞典/iterative，C）==
+$ -std=c17 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\dict-iterative.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\iterative\main.c
+运行退出码 0，输出首行: 100, 20的最大公约数:20, 最小公约数:100
+
+== dict-sort（algorithm/1-速学速用大辞典/sort，C++）==
+$ -std=c++20 -o C:\Users\tiger\AppData\Local\Temp\athena-t002\dict-sort.exe C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\sort\main.c C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\sort\sort.h
+!! 编译失败（退出码 1）:
+   C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\sort\main.c:5:10: fatal error: ../list/list.h: No such file or directory
+       5 | #include "../list/list.h"
+         |          ^~~~~~~~~~~~~~~~
+   compilation terminated.
+   C:\Users\tiger\Athena\.cache\legacy-src\algorithm\1-速学速用大辞典\sort\sort.h:8:10: fatal error: ../list/list.h: No such file or directory
+
+# 小计：编译通过 36、失败 8、通过但运行等输入 2，共 44

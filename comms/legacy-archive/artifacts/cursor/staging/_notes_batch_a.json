@@ -1,0 +1,618 @@
+[
+  {
+    "case": "arc_qt_signalslot",
+    "summary": "Qt Designer 模板：按钮通过 .ui 里的连接直接触发主窗口 `close()`。`mainwindow.cpp` 里的 `say()` 从未被连接，属于遗留死代码。",
+    "lead": "运行后点按钮会立刻关窗而非打印调试信息；对照 .ui 的 `<connections>` 与 C++ 里未使用的 `say()`，理解 Designer 自动连线和代码连线的分工。",
+    "outline": {
+      "promise": "演示在 Qt Designer 里用图形化方式把按钮 `clicked()` 连到槽。",
+      "pain": "读者容易以为 `say()` 会执行，实际行为完全由 .ui 决定。",
+      "model": "信号/槽：发送者在 .ui，接收者是 `MainWindow` 的内建槽 `close()`。",
+      "scope": "单窗口、单按钮，无业务逻辑。",
+      "judgment": "适合看 Designer 连接 XML；不适合作为现代 `connect` 语法范例。",
+      "landing": "改连 `say()` 需把槽放进 `slots` 并在 Designer 或代码里重新 connect。"
+    },
+    "guide_line": "[信号与槽] Designer 自动连接与 C++ 死代码并存的入门窗体。",
+    "notes": [
+      {
+        "file": "mainwindow.ui",
+        "line": 45,
+        "end": 49,
+        "kind": "coupling",
+        "text": "`<connection>` 把 `pushButton` 的 `clicked()` 接到 `MainWindow::close()`，UI 行为与 `say()` 解耦到看不见 C++ 实现。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 17,
+        "end": 19,
+        "kind": "other",
+        "text": "`say()` 是普通成员函数且工程内无 `connect`，点击按钮永远不会进 `qDebug()`，容易误导读者。"
+      },
+      {
+        "file": "mainwindow.ui",
+        "line": 17,
+        "end": 24,
+        "kind": "style",
+        "text": "中央区用固定 `geometry` 摆 `pushButton`，窗口缩放时按钮位置不随布局变化，违背 Widgets 布局惯例。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_signalandslot",
+    "summary": "多文件演示 signal/slot，但 `Teacher`/`Student`/`Hello` 示例被注释，仅保留一行 `connect` 到临时 `Tiger`。`Hello` 头源声明不一致。",
+    "lead": "点按钮应在控制台看到 `hello world !!!`；同时打开被注释块，理解为何 `new Tiger()` 作 receiver 会埋所有权坑。",
+    "outline": {
+      "promise": "展示函数指针式 `connect` 与自定义 `QObject` 槽。",
+      "pain": "有效示例只剩一行，课堂用的师生类未接入 UI。",
+      "model": "`QPushButton::clicked` → `Tiger::testHello` 跨线程默认直连。",
+      "scope": "单按钮 + 多个未使用的 QObject 类文件。",
+      "judgment": "保留作「连接写法 + 注释掉的完整课」对照，不宜当最终架构。",
+      "landing": "receiver 应持成员指针或带 parent 的堆对象，并恢复 `Teacher`/`Student` 或删掉冗余文件。"
+    },
+    "guide_line": "[信号与槽] 新式 connect 与注释掉的经典示例、泄漏式 receiver。",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 14,
+        "kind": "ownership",
+        "text": "`connect(ui->pushButton, …, new Tiger(), &Tiger::testHello)` 创建无 parent 的 `Tiger`，除 Qt 连接引用外无明确归属，重复连或换窗易泄漏。"
+      },
+      {
+        "file": "hello.h",
+        "line": 9,
+        "kind": "design",
+        "text": "头文件声明 `static void say()`，而 `hello.cpp` 实现为非静态成员，按头文件编译会链接/语义不一致。"
+      },
+      {
+        "file": "hello.h",
+        "line": 5,
+        "end": 10,
+        "kind": "design",
+        "text": "`Hello` 未继承 `QObject`、无 `Q_OBJECT`，即便取消注释也无法参与队列式 signal/slot，与 `Tiger` 用法不对齐。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 11,
+        "end": 15,
+        "kind": "other",
+        "text": "大段 `Teacher`/`Student`/`Hello` 连接被注释，读者看不到完整信号链，维护者也不易判断该删还是该恢复。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "tiger.cpp", "tiger.h", "hello.cpp", "hello.h", "teacher.cpp", "teacher.h", "student.cpp", "student.h"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_layout",
+    "summary": "Qt Quick 窗口里用绝对坐标叠两个 `Rectangle`，注释里留着另一版 `Window` 尺寸。入口 `main.cpp` 为 Qt5 高 DPI 模板。",
+    "lead": "运行可见绿块与黄块部分重叠；体会无 `Layout` 时靠 `x`/`y` 手工排布的限制。",
+    "outline": {
+      "promise": "用最少的 QML 画出两块色块。",
+      "pain": "改窗口大小不会自动重排，重叠区域依赖手写坐标。",
+      "model": "顶层 `Window` + 子项绝对定位。",
+      "scope": "纯 QML 视觉，无 C++ 业务。",
+      "judgment": "适合引出 `anchors`/`Row`/`Column`；不宜当产品 UI 结构。",
+      "landing": "下一课应换成锚点或布局容器，去掉 magic number 坐标。"
+    },
+    "guide_line": "[Qt Quick 布局] 绝对坐标叠放矩形的最小 QML 示例。",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 16,
+        "end": 30,
+        "kind": "style",
+        "text": "两个 `Rectangle` 仅用 `x`/`y`/`width`/`height` 定位，第二块与第一块 intentionally 重叠，缩放窗口时相对关系不变。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 6,
+        "end": 8,
+        "kind": "portability",
+        "text": "Qt5 下设置 `Qt::AA_EnableHighDpiScaling`，Qt6 已默认处理高 DPI，这段条件编译迁移时要整段删除或改写。"
+      },
+      {
+        "file": "main.qml",
+        "line": 4,
+        "end": 9,
+        "kind": "other",
+        "text": "注释掉的 `Window` 为 640×480，现行 200×200，说明作者曾改尺寸但未清理旧块，读者易混淆哪版为准。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "qml.qrc"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_layoutgrid",
+    "summary": "QML `Grid` 五列排 25 个圆角 `Rectangle`，大量复制粘贴同色块。C++ 启动器与同系列其它 QML 案例相同。",
+    "lead": "运行看网格居中与列间距；改 `columns` 或 `spacing` 观察换行规则。",
+    "outline": {
+      "promise": "演示 `Grid` 的列数与自动换行。",
+      "pain": "25 段几乎相同的 `Rectangle` 声明，改样式要改多处。",
+      "model": "`Grid` + `anchors.centerIn` 居中整个网格。",
+      "scope": "纯展示，无交互。",
+      "judgment": "理解 `Grid` 够用；生产应用应 `Repeater` 或模型驱动。",
+      "landing": "用数据模型 + `Repeater` 可删掉重复 QML 并统一配色。"
+    },
+    "guide_line": "[Qt Quick 布局] Grid 多单元格重复声明的静态网格。",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 13,
+        "end": 14,
+        "kind": "design",
+        "text": "`columns: 5` 与 `spacing: 6` 写死，项目数变化时不会自动重算列宽，仅适合固定演示。"
+      },
+      {
+        "file": "main.qml",
+        "line": 16,
+        "end": 24,
+        "kind": "style",
+        "text": "连续四个 `Rectangle` 仅 `color` 不同、尺寸相同，属于复制粘贴布局，维护成本高。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 13,
+        "kind": "coupling",
+        "text": "`qrc:/main.qml` 路径与 `objectCreated` 失败即 `exit(-1)` 绑定在一起，换 QML 入口文件名必须同步改 C++。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "qml.qrc"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_layoutstack",
+    "summary": "`StackLayout` 叠两页色块，`MouseArea` 盖满窗口点击切换 `currentIndex`。初始索引为 1（ plum ）。",
+    "lead": "运行后点击窗口在 teal/plum 两页间切换；注意 `MouseArea` 与布局的层级关系。",
+    "outline": {
+      "promise": "用 `StackLayout` 一次只显示一个子项。",
+      "pain": "全屏 `MouseArea` 拦截点击，子项内未来难以再放按钮。",
+      "model": "布局管可见页，鼠标区域管切换逻辑。",
+      "scope": "两页纯色块，无文字。",
+      "judgment": "适合理解 `currentIndex`；交互方式不宜照搬到复杂界面。",
+      "landing": "应把切换逻辑放到可见控件或状态机，缩小 `MouseArea` 命中范围。"
+    },
+    "guide_line": "[Qt Quick 布局] StackLayout 与全屏 MouseArea 切页。",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 14,
+        "kind": "design",
+        "text": "`currentIndex: 1` 启动即显示第二页，若未告知读者会以为第一页缺失或加载失败。"
+      },
+      {
+        "file": "main.qml",
+        "line": 29,
+        "end": 36,
+        "kind": "coupling",
+        "text": "顶层 `MouseArea` `anchors.fill: parent` 覆盖 `StackLayout`，所有点击都用于切页，与内层控件事件竞争。"
+      },
+      {
+        "file": "main.qml",
+        "line": 33,
+        "end": 35,
+        "kind": "style",
+        "text": "用三元表达式在 `onClicked` 里切换索引，缺少 `if/else` 块，扩展多页时可读性急剧下降。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "qml.qrc"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_splitter",
+    "summary": "在 `main.cpp` 里手写嵌套 `QSplitter` 与三个 `QTextEdit`，未使用同目录的 `MainWindow` 类。字体硬编码为 `ZYSong18030`。",
+    "lead": "运行拖动分割条观察水平/垂直嵌套；在无该字体的系统上看 fallback 行为。",
+    "outline": {
+      "promise": "展示 `QSplitter` 嵌套与 `setStretchFactor`。",
+      "pain": "UI 全在 `main` 里，无法 Designer 维护；字体名绑定中文 Windows 环境。",
+      "model": "顶层水平 splitter 左文本、右再垂直 splitter 上下文本。",
+      "scope": "单窗口演示，无菜单/状态栏。",
+      "judgment": "适合理解 splitter API；结构应迁回 Widget 类或 .ui。",
+      "landing": "用 `QApplication::font()` 或样式表，并把构建 UI 的代码移出 `main`。"
+    },
+    "guide_line": "[Qt Widgets 布局] main 函数内嵌套 QSplitter 的分割窗 demo。",
+    "notes": [
+      {
+        "file": "main.cpp",
+        "line": 10,
+        "kind": "portability",
+        "text": "`QFont font(\"ZYSong18030\", 16)` 依赖特定中文字体，在 macOS/Linux 常 fallback，界面尺寸与预期不符。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 12,
+        "kind": "ownership",
+        "text": "`new QSplitter(Qt::Horizontal, 0)`  parent 为 `0` 即顶层窗口，子 `QTextEdit` 虽挂到 splitter，但整棵 UI 树生命周期仅依赖事件循环结束。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 21,
+        "kind": "naming",
+        "text": "变量名 `textBotton` 拼写错误（应为 Bottom），搜索/重构时易漏。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 33,
+        "end": 34,
+        "kind": "other",
+        "text": "`MainWindow w` 展示路径被注释，工程仍编译 `mainwindow.cpp`，形成 dead 模块增加链接体积与困惑。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_stackwidget",
+    "summary": "主窗 `QStackedWidget` 首页 + 运行时 `addWidget` 的 `AFrame` 子页，子页按钮发 `signalReturn` 回主页。",
+    "lead": "点主界面按钮进子页，子页「返回」应回到 index 0；对照 `connect` 与 `on_pushButton_clicked` 自动连接。",
+    "outline": {
+      "promise": "Widgets 版多页切换，子页为独立 .ui 类。",
+      "pain": "子页在代码里 `new AFrame` 而非 Designer 预置，索引顺序依赖运行顺序。",
+      "model": "主页按钮改 index；子页自定义 signal → 主窗 slot。",
+      "scope": "两页 + 一个自定义 signal。",
+      "judgment": "比纯 Designer 连接多一步 C++，适合练 stacked 导航。",
+      "landing": "子页列表可改为 Designer 预加载或工厂注册，避免硬编码 index 1。"
+    },
+    "guide_line": "[Qt Widgets 布局] QStackedWidget 与自定义 signal 返回主页。",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 10,
+        "end": 11,
+        "kind": "design",
+        "text": "`AFrame *af = new AFrame` 无 parent 即 `addWidget`，依赖 `QStackedWidget` 接管所有权，若忘记 `addWidget` 会泄漏。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 13,
+        "kind": "coupling",
+        "text": "`connect(af, &AFrame::signalReturn, this, &MainWindow::returnMain)` 把导航逻辑绑死在主窗，子页复用到别的容器需改连接。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 27,
+        "end": 29,
+        "kind": "design",
+        "text": "`on_pushButton_clicked` 假定子页恒为 index 1，若 Designer 调整 stacked 页顺序或再 add 页，导航会静默指错页。"
+      },
+      {
+        "file": "aframe.cpp",
+        "line": 16,
+        "end": 18,
+        "kind": "style",
+        "text": "槽函数仅 `emit signalReturn()`，可用 Designer 信号直连代替自定义 signal，当前写法为显式 C++ 示范。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui", "aframe.cpp", "aframe.h", "aframe.ui"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_muitiwindow",
+    "summary": "启动先 `LoginDialog::exec()`，`.ui` 里按钮直接 `accept()` 无校验；主窗「新窗口」用 `new QDialog` 非模态弹出。",
+    "lead": "取消登录应直接退出；登录后进主窗点「新窗口」会多出一个空对话框。",
+    "outline": {
+      "promise": "多窗口/多对话框流程：登录门闸 + 主界面开子窗。",
+      "pain": "登录无凭证逻辑，与 `arc_qt_login` 相比更像流程壳子。",
+      "model": "模态 `exec` 门闸 → 主窗非模态 `show` 子对话框。",
+      "scope": "LoginDialog + MainWindow，子窗无内容。",
+      "judgment": "适合讲 `exec`/`accept` 与父子 window 关系。",
+      "landing": "子对话框应设 `WA_DeleteOnClose` 或智能指针，登录应复用校验或明确标注「演示用直接 accept」。"
+    },
+    "guide_line": "[多窗口] 模态登录与主窗动态 new QDialog 的子窗。",
+    "notes": [
+      {
+        "file": "logindialog.ui",
+        "line": 32,
+        "end": 36,
+        "kind": "design",
+        "text": "Designer 把「登录到主界面」按钮 `clicked()` 直连 `LoginDialog::accept()`，任意点击即可进主窗，无用户名密码。"
+      },
+      {
+        "file": "main.cpp",
+        "line": 14,
+        "end": 18,
+        "kind": "design",
+        "text": "仅 `QDialog::Accepted` 时 `w.show()` 并 `exec()`，Rejected 直接 `return 0`，流程正确但未处理「主窗关闭后是否再显登录」。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 21,
+        "end": 22,
+        "kind": "ownership",
+        "text": "`QDialog *dlg = new QDialog(this)` 只 `show()` 未设 `WA_DeleteOnClose`，反复点开 unless 用户关窗否则对象堆积（parent 为主窗时关闭子窗才析构）。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui", "logindialog.cpp", "logindialog.h", "logindialog.ui"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_twowindow",
+    "summary": "含 `LoginDlg` 与主窗 `.ui`，但 `main.cpp` 只显示主窗，未实例化登录框；主窗「new window」按钮无槽实现。",
+    "lead": "当前运行仅见空主窗，按钮无反应；对照 `logindlg.ui` 里 `QDialogButtonBox` 的标准 accept/reject 连接。",
+    "outline": {
+      "promise": "两窗口/登录对话框结构的文件骨架。",
+      "pain": "入口未串起 LoginDlg，主按钮无逻辑，案例不完整。",
+      "model": "预期为 LoginDlg 模态 + 主窗；实际未接线。",
+      "scope": "MainWindow + LoginDlg 源文件均在，流程断在 main。",
+      "judgment": "归档价值在「半成品 + .ui 连接范例」，运行预期 read-only 说明。",
+      "landing": "应对齐 `arc_qt_muitiwindow`/`arc_qt_login` 的 main 流程或删未用类。"
+    },
+    "guide_line": "[多窗口] 登录对话框文件齐全但未接入 main 的断链示例。",
+    "notes": [
+      {
+        "file": "main.cpp",
+        "line": 8,
+        "end": 9,
+        "kind": "other",
+        "text": "只构造 `MainWindow w` 并 `show()`，同目录 `LoginDlg` 从未弹出，与案例名「两窗口」不符。"
+      },
+      {
+        "file": "mainwindow.ui",
+        "line": 17,
+        "end": 28,
+        "kind": "coupling",
+        "text": "`pushButton` 文案为 new window，但 `mainwindow.cpp` 无 `on_pushButton_clicked` 或 connect，UI 与逻辑脱节。"
+      },
+      {
+        "file": "logindlg.ui",
+        "line": 35,
+        "end": 39,
+        "kind": "design",
+        "text": "`QDialogButtonBox` 的 `accepted()`→`accept()` 是标准模态用法，可作为修复 main 时的参考模板。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui", "logindlg.cpp", "logindlg.h", "logindlg.ui"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_login",
+    "summary": "模态登录校验硬编码用户名 `tiger`、密码 `guoya`；失败弹 `QMessageBox` 并清空输入。退出按钮在 .ui 里连 `close()` 而非 `reject()`。",
+    "lead": "用正确/错误凭证各试一次；观察 `exec` 返回值与退出按钮是否等价于取消。",
+    "outline": {
+      "promise": "Widgets 登录对话框 + 简单字符串比对。",
+      "pain": "凭证写死在源码，无哈希、无后端；UI 退出语义不标准。",
+      "model": "`on_loginBtn_clicked` 内联校验 → `accept()` 或 warning。",
+      "scope": "单对话框门闸 + 空主窗。",
+      "judgment": "仅适合讲对话框返回值，不可当安全登录参考。",
+      "landing": "凭证应外置配置；`exitBtn` 应 `reject()` 以便 main 区分取消与成功。"
+    },
+    "guide_line": "[多窗口] 硬编码账号密码的模态 LoginDialog。",
+    "notes": [
+      {
+        "file": "logindialog.cpp",
+        "line": 21,
+        "end": 22,
+        "kind": "design",
+        "text": "明文比较 `ui->userLineEdit->text() == \"tiger\"` 与 `\"guoya\"`，源码即泄露凭证，无法轮换密码。"
+      },
+      {
+        "file": "logindialog.cpp",
+        "line": 3,
+        "kind": "style",
+        "text": "重复 `#include \"logindialog.h\"` 两次，无功能影响但反映拷贝编辑痕迹。"
+      },
+      {
+        "file": "logindialog.ui",
+        "line": 95,
+        "end": 98,
+        "kind": "design",
+        "text": "`exitBtn` 连接 `close()` 而非 `reject()`，`main` 里 `exec()` 返回值可能仍为非 Accepted，语义与「取消登录」不一致。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "logindialog.cpp", "logindialog.h", "logindialog.ui"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_embedwidget",
+    "summary": "主窗预留 `pHBoxLayout`，提供 `putwidget(QWidget*)` 但构造函数未调用；`form1`/`form2`/`form3` 未嵌入。`ui` 成员被设为 public。",
+    "lead": "运行只见空 horizontal layout；需在代码里手动 `putwidget(new Form1)` 才能看到嵌入效果。",
+    "outline": {
+      "promise": "演示把自定义 QWidget 塞进主窗已有 layout。",
+      "pain": "嵌入逻辑未接好，读者打开是空壳。",
+      "model": "`MainWindow::putwidget` → `ui->pHBoxLayout->addWidget`。",
+      "scope": "一个 layout 槽位 + 三个独立 form 类。",
+      "judgment": "API 意图清楚，缺一行演示调用。",
+      "landing": "在构造函数或示例 slot 里 add 三个 form，并把 `ui` 改回 private。"
+    },
+    "guide_line": "[Qt Widgets 布局] QHBoxLayout 嵌入子窗体但未接线的骨架。",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 16,
+        "end": 19,
+        "kind": "other",
+        "text": "`putwidget` 已实现但全工程无调用，`form1/2/3` 从未 `addWidget`，案例默认不可见嵌入效果。"
+      },
+      {
+        "file": "mainwindow.h",
+        "line": 21,
+        "kind": "style",
+        "text": "`Ui::MainWindow *ui` 放在 public 区且无 `private` 保护，破坏封装，外部可随意改 UI 指针。"
+      },
+      {
+        "file": "mainwindow.ui",
+        "line": 17,
+        "end": 26,
+        "kind": "design",
+        "text": "`horizontalLayoutWidget` 仍用绝对 geometry 包 layout，外层窗口缩放时 layout 区域不随 central widget 拉伸。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui", "form1.cpp", "form1.h", "form1.ui", "form2.cpp", "form2.h", "form2.ui", "form3.cpp", "form3.h", "form3.ui", "mywidget.cpp", "mywidget.h"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_multifile",
+    "summary": "QML 主窗引用同目录 `Hello.qml` 组件；`Button` 内嵌套 `MouseArea` 处理点击，与 Controls 事件模型重叠。",
+    "lead": "运行看中心按钮与底部 Hello 条；点任一点击区域应 `Qt.quit()`。",
+    "outline": {
+      "promise": "多 QML 文件通过组件名组合界面。",
+      "pain": "Button+MouseArea 双重点击处理，anchors 写法可疑。",
+      "model": "`main.qml` 根 Window + `Hello` 自定义矩形组件。",
+      "scope": "两个 QML 文件 + 标准 engine 启动。",
+      "judgment": "适合讲 qrc 多文件；交互写法需 modernization。",
+      "landing": "Button 用 `onClicked`，Hello 单独定位用合法 anchor 或 `Item` 容器。"
+    },
+    "guide_line": "[Qt Quick] 多 QML 文件组件化与 Button 内嵌 MouseArea。",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 11,
+        "end": 16,
+        "kind": "design",
+        "text": "在 `Button` 子节点再包 `MouseArea` 抢点击，与 `Button` 自带点击重复，易导致焦点/键盘激活行为异常。"
+      },
+      {
+        "file": "main.qml",
+        "line": 19,
+        "end": 20,
+        "kind": "other",
+        "text": "`anchors.centerIn: bottom` 中 `bottom` 未定义为中心项，依赖隐式或报错行为，可移植性差。"
+      },
+      {
+        "file": "Hello.qml",
+        "line": 10,
+        "end": 14,
+        "kind": "coupling",
+        "text": "组件内 `MouseArea` 直接 `Qt.quit()`，复用到非顶层场景也会结束整个应用，副作用过大。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "Hello.qml", "qml.qrc"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_multipage",
+    "summary": "`SwipeView` + `TabBar` 双页；Page1 按钮调用未定义的 `Circle.getArea()`，运行点按钮会 QML 报错。",
+    "lead": "切换 Tab 正常；在 Page1 点 Button 触发脚本错误，这是归档批注的重点。",
+    "outline": {
+      "promise": "Qt Quick Controls 2 多页 Tab 导航。",
+      "pain": "Page1 点击处理器引用不存在的 `Circle` 对象。",
+      "model": "`tabBar.currentIndex` 与 `swipeView.currentIndex` 双向同步。",
+      "scope": "两页 Form + footer TabBar。",
+      "judgment": "导航结构可用，Page1 逻辑为未完成片段。",
+      "landing": "补 C++ 或 QML singleton 暴露面积计算，或删错误 handler。"
+    },
+    "guide_line": "[Qt Quick] SwipeView/TabBar 多页与断裂的 Circle 调用。",
+    "notes": [
+      {
+        "file": "main.qml",
+        "line": 16,
+        "end": 18,
+        "kind": "other",
+        "text": "`Circle.getArea()` 在全工程无 `Circle` 类型或 import，点击 Page1 按钮必 runtime error。"
+      },
+      {
+        "file": "Page1Form.ui.qml",
+        "line": 7,
+        "end": 8,
+        "kind": "style",
+        "text": "`property alias button: button` 连续声明两行完全重复，后一行冗余，像合并冲突残留。"
+      },
+      {
+        "file": "Page1Form.ui.qml",
+        "line": 23,
+        "end": 27,
+        "kind": "style",
+        "text": "Page 内 `Button` 仍用固定 `x`/`y`，与 `SwipeView` 全屏手势并存，旋转/resize 体验差。"
+      }
+    ],
+    "sources": ["main.cpp", "main.qml", "Page1Form.ui.qml", "Page2Form.ui.qml", "qml.qrc", "qtquickcontrols2.conf"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_qsystemtray",
+    "summary": "主窗构造局部 `QSystemTrayIcon`，用旧式 `SIGNAL`/`SLOT` 连接 `activated`；图标来自 qrc。",
+    "lead": "运行后任务栏托盘出现图标，单击应 `activateWindow`；关主窗时注意应用是否仍驻留托盘。",
+    "outline": {
+      "promise": "最小系统托盘 + 点击恢复主窗。",
+      "pain": "宏连接与未配置的退出策略；托盘指针未存成员但对象有 parent。",
+      "model": "托盘 `activated(Trigger)` → `setWindowState` + `activateWindow`。",
+      "scope": "单主窗 + 托盘，无菜单。",
+      "judgment": "适合对照 Qt6 新式 connect 与 `QSystemTrayIcon` 文档。",
+      "landing": "改用函数指针 connect，并设置 `QApplication::setQuitOnLastWindowClosed(false)` 若需托盘常驻。"
+    },
+    "guide_line": "[Qt Widgets 系统集成] QSystemTrayIcon 与 SIGNAL/SLOT 宏连接。",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 11,
+        "end": 12,
+        "kind": "portability",
+        "text": "`connect(trayIcon,SIGNAL(activated(...)),this,SLOT(iconActivated(...)))` 走字符串元对象，Qt5 风格，Qt6 仍可用但失去编译期检查。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 9,
+        "kind": "design",
+        "text": "`trayIcon` 仅为构造函数局部指针，未存成员，后续无法在菜单/设置里换图标或隐藏托盘。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 27,
+        "end": 29,
+        "kind": "design",
+        "text": "仅处理 `QSystemTrayIcon::Trigger`，双击、MiddleClick 等忽略，也未提供托盘上下文菜单退出入口。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui", "app.qrc", "myApp.rc"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  },
+  {
+    "case": "arc_qt_dropfile",
+    "summary": "主窗跟踪鼠标并在状态栏显示坐标；`textEdit` 接受拖放，`dropEvent` 用未打开的 `QFile` 读全文。",
+    "lead": "拖文件到文本区观察路径是否进 lineEdit、内容是否进 textEdit；注意未 open 时内容为空。",
+    "outline": {
+      "promise": "鼠标事件 + 拖放 URI 到控件。",
+      "pain": "drop 逻辑有 bug；dragEnter 未校验 mime 类型。",
+      "model": "主窗 mouse 跟踪 + 子控件 acceptDrops + 重写 drop。",
+      "scope": "状态栏 + lineEdit + textEdit。",
+      "judgment": "适合讲事件重写；读文件部分需批注修正。",
+      "landing": "`QFile::open(ReadOnly)` 并处理多 URL；dragEnter 应检查 `hasUrls()`。"
+    },
+    "guide_line": "[Qt Widgets 交互] 鼠标跟踪与拖放读文件的组合窗体。",
+    "notes": [
+      {
+        "file": "mainwindow.cpp",
+        "line": 78,
+        "end": 79,
+        "kind": "other",
+        "text": "`QFile file(fileName)` 未调用 `open()` 即 `readAll()`，文本区通常始终为空，拖放看似成功实则失败。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 67,
+        "end": 68,
+        "kind": "design",
+        "text": "`dragEnterEvent` 里 mime 格式判断被注释，任意 drag 都 `acceptProposedAction()`，非文件拖入也会进 `dropEvent` 可能越界。"
+      },
+      {
+        "file": "mainwindow.cpp",
+        "line": 75,
+        "kind": "portability",
+        "text": "`e->mimeData()->urls().first()` 在空 URL 列表时未防护，某些平台拖纯文本会触发未定义访问。"
+      },
+      {
+        "file": "mainwindow.h",
+        "line": 20,
+        "end": 25,
+        "kind": "coupling",
+        "text": "同一 `MainWindow` 既重写鼠标事件又处理 drag/drop，职责堆叠，难单独测试拖放而不触发 statusbar 逻辑。"
+      }
+    ],
+    "sources": ["main.cpp", "mainwindow.cpp", "mainwindow.h", "mainwindow.ui"],
+    "std": "c++17",
+    "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+  }
+]

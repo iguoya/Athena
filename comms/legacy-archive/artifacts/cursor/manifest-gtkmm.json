@@ -1,0 +1,283 @@
+[
+  {
+    "unit": "gtkmm-1-hello",
+    "title": "1-Hello",
+    "target": "programming/gtkmm-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTKMM/1-Hello"
+    ],
+    "duplicates": [
+      "Linux/GTKMM/9-gtkmm"
+    ],
+    "first_commit": "2023-01-28",
+    "files": 5,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtkmm-3.0  # detected gtkmm3; Windows: do not install for this task",
+    "build_checked": false,
+    "topic_hint": "archive.gtkmm.basics",
+    "quality_notes": "静态判断工具链版本≈gtkmm3",
+    "gtk_version": "gtkmm3",
+    "reason": "内容哈希相同的脚手架重复 1 处；规范版取文件更多者"
+  },
+  {
+    "unit": "gtkmm-2-glade",
+    "title": "2-glade",
+    "target": "programming/gtkmm-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTKMM/2-glade"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 16,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtkmm-3.0  # detected gtkmm3; Windows: do not install for this task",
+    "build_checked": false,
+    "topic_hint": "archive.gtkmm.glade",
+    "quality_notes": "静态判断工具链版本≈gtkmm3；含 Anjuta 工程痕迹",
+    "gtk_version": "gtkmm3"
+  },
+  {
+    "unit": "gtkmm-3-frame",
+    "title": "3-frame",
+    "target": "programming/gtkmm-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTKMM/3-frame"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 15,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtkmm-3.0  # detected gtkmm3; Windows: do not install for this task",
+    "build_checked": false,
+    "topic_hint": "archive.gtkmm.layout",
+    "quality_notes": "静态判断工具链版本≈gtkmm3；含 Anjuta 工程痕迹",
+    "gtk_version": "gtkmm3"
+  },
+  {
+    "unit": "gtkmm-4-paned",
+    "title": "4-paned",
+    "target": "programming/gtkmm-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTKMM/4-paned"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 15,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtkmm-3.0  # detected gtkmm3; Windows: do not install for this task",
+    "build_checked": false,
+    "topic_hint": "archive.gtkmm.layout",
+    "quality_notes": "静态判断工具链版本≈gtkmm3；含 Anjuta 工程痕迹",
+    "gtk_version": "gtkmm3"
+  },
+  {
+    "unit": "gtkmm-5-asspectframe",
+    "title": "5-asspectframe",
+    "target": "programming/gtkmm-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTKMM/5-asspectframe"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 15,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtkmm-3.0  # detected gtkmm3; Windows: do not install for this task",
+    "build_checked": false,
+    "topic_hint": "archive.gtkmm.layout",
+    "quality_notes": "静态判断工具链版本≈gtkmm3；含 Anjuta 工程痕迹",
+    "gtk_version": "gtkmm3"
+  },
+  {
+    "unit": "gtkmm-6-box",
+    "title": "6-box",
+    "target": "programming/gtkmm-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTKMM/6-box"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 15,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtkmm-3.0  # detected gtkmm3; Windows: do not install for this task",
+    "build_checked": false,
+    "topic_hint": "archive.gtkmm.layout",
+    "quality_notes": "静态判断工具链版本≈gtkmm3；含 Anjuta 工程痕迹",
+    "gtk_version": "gtkmm3"
+  },
+  {
+    "unit": "gtkmm-7-box",
+    "title": "7-box",
+    "target": "programming/gtkmm-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTKMM/7-box"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 5,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtkmm-3.0  # detected gtkmm3; Windows: do not install for this task",
+    "build_checked": false,
+    "topic_hint": "archive.gtkmm.layout",
+    "quality_notes": "静态判断工具链版本≈gtkmm3",
+    "gtk_version": "gtkmm3"
+  },
+  {
+    "unit": "gtkmm-gtkmm-workspace",
+    "title": "gtkmm.workspace",
+    "target": "programming/gtkmm-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTKMM/gtkmm.workspace"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 1,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtkmm-3.0  # detected gtkmm-unknown; Windows: do not install for this task",
+    "build_checked": false,
+    "topic_hint": "archive.gtkmm.other",
+    "quality_notes": "静态判断工具链版本≈gtkmm-unknown",
+    "gtk_version": "gtkmm-unknown",
+    "reason": "无源码/界面文件，仅残余"
+  },
+  {
+    "unit": "gtkmm-empty-examples-gtkmm",
+    "title": "空目录 Examples_Gtkmm",
+    "target": "programming/gtkmm-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/Examples_Gtkmm"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 0,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "任务书点名，但 git 与磁盘均为 0 文件",
+    "reason": "空目录占位",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "gtkmm-empty-gtkmm-application-template",
+    "title": "空目录 gtkmm-application-template",
+    "target": "programming/gtkmm-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/gtkmm-application-template"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 0,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "任务书点名，但 git 与磁盘均为 0 文件",
+    "reason": "空目录占位",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtkmm-2-glade",
+    "title": "Anjuta/autotools/po 生成物 GTKMM/2-glade",
+    "target": "programming/gtkmm-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTKMM/2-glade"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtkmm-3-frame",
+    "title": "Anjuta/autotools/po 生成物 GTKMM/3-frame",
+    "target": "programming/gtkmm-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTKMM/3-frame"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtkmm-4-paned",
+    "title": "Anjuta/autotools/po 生成物 GTKMM/4-paned",
+    "target": "programming/gtkmm-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTKMM/4-paned"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtkmm-5-asspectframe",
+    "title": "Anjuta/autotools/po 生成物 GTKMM/5-asspectframe",
+    "target": "programming/gtkmm-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTKMM/5-asspectframe"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtkmm-6-box",
+    "title": "Anjuta/autotools/po 生成物 GTKMM/6-box",
+    "target": "programming/gtkmm-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTKMM/6-box"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  }
+]

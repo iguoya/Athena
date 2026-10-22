@@ -1,0 +1,146 @@
+[
+ {
+  "unit": "ds-linear-list",
+  "title": "线性表（自写 Linear/List 与 STL 对照）",
+  "target": "postgraduate/data-structures",
+  "verdict": "keep",
+  "canonical": [
+   "Practice/DataStructure/linear",
+   "Practice/DataStructure/README.md"
+  ],
+  "duplicates": [
+   "algorithm/DataStructure/linear",
+   "Linux/Algorithm/DataStructure/linear",
+   "algorithm/DataStructure/README.md",
+   "Linux/Algorithm/DataStructure/README.md"
+  ],
+  "first_commit": "2020-02-22",
+  "files": 13,
+  "run": "cli",
+  "build": "g++ -std=c++20 main.cpp（实测通过，输出 Hello World!；CMake 单文件入口）",
+  "build_checked": true,
+  "topic_hint": "ds.linear.list、ds.linear.array",
+  "quality_notes": "linear.cpp/linear.h（顺序表）、list.cpp/list.h（链表）与 test_vector/test_map（STL 对照）并存，是三处全同单元的源头（Practice 2020-02-22，早 algorithm 半年）；4 个 GTest 测试本机无 GTest 无法验证；class 内 using namespace std。"
+ },
+ {
+  "unit": "ds-recursion",
+  "title": "递归：斐波那契与 N 皇后（回溯）",
+  "target": "postgraduate/algorithms",
+  "verdict": "keep",
+  "canonical": [
+   "Practice/DataStructure/recursion"
+  ],
+  "duplicates": [
+   "algorithm/DataStructure/recursion",
+   "Linux/Algorithm/DataStructure/recursion"
+  ],
+  "first_commit": "2020-02-22",
+  "files": 6,
+  "run": "cli",
+  "build": "g++ -std=c++20 main.cpp recursion.cpp（实测通过）",
+  "build_checked": true,
+  "topic_hint": "algo.paradigm.backtrack",
+  "quality_notes": "按内容是回溯（N 皇后）与递推（Fibonacci），归 algorithms 更合 ADR 0176 决策 1（任务书原定 data-structures 范围，target 待裁决）；Queen 用值传 vector<Block> 递归，每层拷贝路径；Block::operator== 非常量成员。"
+ },
+ {
+  "unit": "ds-search",
+  "title": "查找：顺序与二分（递归+迭代）",
+  "target": "postgraduate/data-structures",
+  "verdict": "keep",
+  "canonical": [
+   "Practice/DataStructure/search"
+  ],
+  "duplicates": [
+   "algorithm/DataStructure/search",
+   "Linux/Algorithm/DataStructure/search"
+  ],
+  "first_commit": "2020-02-22",
+  "files": 5,
+  "run": "cli",
+  "build": "g++ -std=c++20 main.cpp（实测通过，输出 Hello World!）",
+  "build_checked": true,
+  "topic_hint": "ds.hash.table（查找章）",
+  "quality_notes": "Search<T> 模板接口用 T* 传元素（应 const T&/值），返回 1 基位置、0 表不存在，语义易错；二分递归版边界写法可作 ds.hash.table 的对照素材。"
+ },
+ {
+  "unit": "ds-sort",
+  "title": "排序",
+  "target": "postgraduate/data-structures",
+  "verdict": "keep",
+  "canonical": [
+   "Practice/DataStructure/sort"
+  ],
+  "duplicates": [
+   "algorithm/DataStructure/sort",
+   "Linux/Algorithm/DataStructure/sort"
+  ],
+  "first_commit": "2020-02-22",
+  "files": 4,
+  "run": "cli",
+  "build": "g++ -std=c++20 main.cpp（实测通过，输出 Hello World!）",
+  "build_checked": true,
+  "topic_hint": "ds.sort.basic",
+  "quality_notes": "test_sort.cpp 是 0 字节空文件（三处全同地空着）——测试写了五个目录，唯独排序没写，归档批注的好例子；sort.h 内含多排序算法实现。",
+  "exclude": [
+   "test_sort.cpp（0 B 空文件）"
+  ]
+ },
+ {
+  "unit": "ds-tree-binary",
+  "title": "二叉树（二叉链表，名为 btree）",
+  "target": "postgraduate/data-structures",
+  "verdict": "keep",
+  "canonical": [
+   "Practice/DataStructure/tree"
+  ],
+  "duplicates": [
+   "algorithm/DataStructure/tree",
+   "Linux/Algorithm/DataStructure/tree"
+  ],
+  "first_commit": "2020-02-22",
+  "files": 5,
+  "run": "cli",
+  "build": "g++ -std=c++20 main.cpp（实测通过，输出 Hello World!）",
+  "build_checked": true,
+  "topic_hint": "ds.tree.basics",
+  "quality_notes": "btree.h 实为二叉树非 B 树，命名误导；节点 T* data 裸指针（所有权不清，析构语义含糊）；遍历用 std::stack/queue 辅助，可作 ds.tree.basics 的非递归遍历对照。"
+ },
+ {
+  "unit": "ds-c-linear",
+  "title": "C 语言线性结构五件（数组/链表/栈/队列/串）",
+  "target": "postgraduate/data-structures",
+  "verdict": "keep",
+  "canonical": [
+   "algorithm/11-linner"
+  ],
+  "duplicates": [
+   "Linux/Algorithm/DataStructure/11-linner"
+  ],
+  "first_commit": "2020-10-05",
+  "files": 19,
+  "run": "cli",
+  "build": "gcc -std=c11 各子目录 main.c 单独编译（5 题中 4 题过：array/stack×3入口/queue×2入口/string；2-list 编译失败）",
+  "build_checked": true,
+  "topic_hint": "ds.linear.array、ds.linear.list、ds.linear.stack_queue",
+  "quality_notes": "stack.h/queue.h 用「typedef StackElemType 后再 include」的宏技巧做泛型（number_system_conversion.c、dance_party.c 各自 typedef 独立成程序，一目录多入口）；2-list 的 main.c 调 init_List 而 list.h 定义 init_list，命名不一致是当年遗留 bug，入库即编译失败；4-queue 附 result.md 记录运行结果。"
+ },
+ {
+  "unit": "ds-c-tree",
+  "title": "C 语言二叉树家族（含线索/广义表 flex_array 实验）",
+  "target": "postgraduate/data-structures",
+  "verdict": "keep",
+  "canonical": [
+   "algorithm/12-tree"
+  ],
+  "duplicates": [
+   "Linux/Algorithm/DataStructure/12-tree"
+  ],
+  "first_commit": "2020-10-05",
+  "files": 6,
+  "run": "cli",
+  "build": "gcc -std=c11 main.c：编译失败——#include \"../stack/stack.h\" 指向仓库中不存在的路径（历史断链）",
+  "build_checked": false,
+  "topic_hint": "ds.tree.basics",
+  "quality_notes": "btree.h/advance_tree.h/flex_array.h 三个头推进同一主题；断链的相对 include 说明当年目录布局靠约定、无构建校验——批注可讲「跨目录依赖应进构建系统」。"
+ }
+]

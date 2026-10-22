@@ -1,0 +1,20 @@
+Read REAL source files under C:\Users\tiger\Athena\comms\legacy-archive\artifacts\cursor\staging\qt\content\cases\ for these cases and write concrete line-level archive notes.
+
+Cases: arc_qt_signalslot, arc_qt_signalandslot, arc_qt_layout, arc_qt_layoutgrid, arc_qt_layoutstack, arc_qt_splitter, arc_qt_stackwidget, arc_qt_muitiwindow, arc_qt_twowindow, arc_qt_login, arc_qt_embedwidget, arc_qt_multifile, arc_qt_multipage, arc_qt_qsystemtray, arc_qt_dropfile
+
+Write JSON array to: C:\Users\tiger\Athena\comms\legacy-archive\artifacts\cursor\staging\_notes_batch_a.json
+
+Each element:
+{
+  "case": "arc_qt_signalslot",
+  "summary": "1-2 Chinese sentences",
+  "lead": "Chinese lead text",
+  "outline": {"promise":"","pain":"","model":"","scope":"","judgment":"","landing":""},
+  "guide_line": "[group] one Chinese sentence",
+  "notes": [{"file":"rel.cpp","line":12,"end":14,"kind":"portability|ownership|coupling|naming|style|design|testing|other","text":"concrete Chinese note with `identifiers`"}],
+  "sources": ["main.cpp"],
+  "std": "c++17",
+  "run_note": "需要 Qt 5/6 + qmake 或 CMake"
+}
+
+Rules: >=3 notes per case, >=2 kinds; line numbers must exist (1-based); focus SIGNAL/SLOT macros, parentless new, hardcoded paths, deprecated Qt5 APIs, UI/logic coupling; do not patch code; Chinese; no empty platitudes. Return case count when done.

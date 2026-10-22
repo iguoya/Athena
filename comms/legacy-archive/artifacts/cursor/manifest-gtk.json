@@ -1,0 +1,2351 @@
+[
+  {
+    "unit": "gtk-gtkapp",
+    "title": "GtkApp",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/GtkApp"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 193,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.app",
+    "quality_notes": "main.c 使用 GtkApplication（GTK3+）；静态判断工具链版本≈gtk3；手写源码少（非样板 15 / src 16）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-gtkapp3",
+    "title": "GtkApp3",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/GtkApp3"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 29,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.app",
+    "quality_notes": "main.c 使用 GtkApplication（GTK3+）；静态判断工具链版本≈gtk3；手写源码少（非样板 11 / src 12）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-01-hello",
+    "title": "01-Hello",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/01-Hello"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 5,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.basics",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-01-hellogtk",
+    "title": "01-HelloGTK",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/01-HelloGTK"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.basics",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-12-compile-hello",
+    "title": "12-compile_hello",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/12-compile_hello"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 8,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.basics",
+    "quality_notes": "静态判断工具链版本≈unknown；手写源码少（非样板 0 / src 2）",
+    "gtk_version": "unknown"
+  },
+  {
+    "unit": "gtk-20-simplegtk",
+    "title": "20-simplegtk",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/20-simplegtk"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 16,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.basics",
+    "quality_notes": "静态判断工具链版本≈gtk3；main.c: 旧式 gtk_main 循环；含 Anjuta 工程痕迹；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-21-gtkhello",
+    "title": "21-GTKHello",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/21-GTKHello"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.basics",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-27-hello-c",
+    "title": "27-Hello.c",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/27-Hello.c"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 1,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.basics",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 1 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g01-helloworld",
+    "title": "G01-HelloWorld",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G01-HelloWorld"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 15,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.basics",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g18-hello",
+    "title": "g18-hello",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g18-hello"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 15,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.basics",
+    "quality_notes": "静态判断工具链版本≈gtk3；main.c: 旧式 gtk_main 循环；含 Anjuta 工程痕迹；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g19-basicwindow",
+    "title": "g19-basicwindow",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g19-basicwindow"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 17,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.basics",
+    "quality_notes": "静态判断工具链版本≈gtk3；g19-basicwindow.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g23-hello",
+    "title": "g23-hello",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g23-hello"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 16,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.basics",
+    "quality_notes": "静态判断工具链版本≈gtk3；含 Anjuta 工程痕迹；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g24-hello",
+    "title": "g24-hello",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g24-hello"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 17,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.basics",
+    "quality_notes": "静态判断工具链版本≈gtk3；g24-hello.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g34-dialog",
+    "title": "g34-dialog",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g34-dialog"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 19,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.dialog",
+    "quality_notes": "静态判断工具链版本≈gtk3；g34-dialog.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-04-gtk-glade",
+    "title": "04-GTK_Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/04-GTK_Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 5,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.glade",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-10-glade",
+    "title": "10-glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/10-glade"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 6,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.glade",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-11-glade",
+    "title": "11-glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/11-glade"
+    ],
+    "duplicates": [
+      "Linux/GTK/13-rdynamic"
+    ],
+    "first_commit": "2022-07-14",
+    "files": 5,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.glade",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3",
+    "reason": "内容哈希相同的脚手架重复 1 处；规范版取文件更多者"
+  },
+  {
+    "unit": "gtk-14-glade-only-window",
+    "title": "14-glade_only_window",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/14-glade_only_window"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 5,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.glade",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-24-glade",
+    "title": "24-Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/24-Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 5,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.glade",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-25-glade",
+    "title": "25-glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/25-glade"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 18,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.glade",
+    "quality_notes": "静态判断工具链版本≈gtk3；25-glade.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g10-glade",
+    "title": "G10-Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G10-Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 12,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.glade",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g11-glade",
+    "title": "G11-Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G11-Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 12,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.glade",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g12-glade",
+    "title": "G12-Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G12-Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 15,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.glade",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g14-glade",
+    "title": "G14-Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G14-Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 2,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.glade",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g15-glade",
+    "title": "G15-Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G15-Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 12,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.glade",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g16-glade",
+    "title": "G16-Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G16-Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 16,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.glade",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-04-gtkbox",
+    "title": "04-GtkBox",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/04-GtkBox"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-box",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-10-hboxandvbox",
+    "title": "10-HBoxAndVBox",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/10-HBoxAndVBox"
+    ],
+    "duplicates": [
+      "Linux/GTK/20-HelloBlocks",
+      "Linux/GTK/31-Hello",
+      "Linux/GTK/02-GtkHello"
+    ],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "read-only",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-box",
+    "quality_notes": "静态判断工具链版本≈gtk2；main.c: 偏手工 destroy，缺 g_object_unref 意识；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2",
+    "reason": "内容哈希相同的脚手架重复 3 处；规范版取文件更多者"
+  },
+  {
+    "unit": "gtk-17-frame",
+    "title": "17-Frame",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/17-Frame"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 4,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-box",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-22-gbox",
+    "title": "22-GBox",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/22-GBox"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-box",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-g20-box",
+    "title": "g20-box",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g20-box"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 18,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-box",
+    "quality_notes": "静态判断工具链版本≈gtk3；g20-box.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g21-framework",
+    "title": "g21-framework",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g21-framework"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 18,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-box",
+    "quality_notes": "静态判断工具链版本≈gtk3；g21-framework.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g25-box",
+    "title": "g25-box",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g25-box"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 14,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-box",
+    "quality_notes": "静态判断工具链版本≈gtk3；含 Anjuta 工程痕迹；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g26-box",
+    "title": "g26-box",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g26-box"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 14,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-box",
+    "quality_notes": "静态判断工具链版本≈gtk3；含 Anjuta 工程痕迹；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g28-pack",
+    "title": "g28-pack",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g28-pack"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 16,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-box",
+    "quality_notes": "静态判断工具链版本≈gtk3；g28-pack.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g31-mixbox",
+    "title": "g31-mixbox",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g31-mixbox"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 18,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-box",
+    "quality_notes": "静态判断工具链版本≈gtk3；g31-mixbox.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-15-gtkgrid",
+    "title": "15-gtkgrid",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/15-gtkgrid"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 4,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-grid",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-g29-grid",
+    "title": "g29-grid",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g29-grid"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 17,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-grid",
+    "quality_notes": "静态判断工具链版本≈gtk3；g29-grid.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g32-grid",
+    "title": "g32-grid",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g32-grid"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 20,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-grid",
+    "quality_notes": "静态判断工具链版本≈gtk3；含 Anjuta 工程痕迹；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g33-grid1",
+    "title": "g33-grid1",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g33-grid1"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 19,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.layout-grid",
+    "quality_notes": "静态判断工具链版本≈gtk3；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g36-multiwindow",
+    "title": "g36-multiwindow",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g36-multiwindow"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 21,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.multiwindow",
+    "quality_notes": "静态判断工具链版本≈gtk3；g36-multiwindow.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g37-multi-window",
+    "title": "g37-multi_window",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g37-multi_window"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 19,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.multiwindow",
+    "quality_notes": "静态判断工具链版本≈gtk3；g37-multi_window.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g38-multi-window",
+    "title": "g38-multi_window",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g38-multi_window"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 20,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.multiwindow",
+    "quality_notes": "静态判断工具链版本≈gtk3；g38-multi_window.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-02-css",
+    "title": "02-CSS",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/02-CSS"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-03-gtk-button",
+    "title": "03-GTK_Button",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/03-GTK_Button"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-05-point",
+    "title": "05-Point",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/05-Point"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈unknown；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "unknown"
+  },
+  {
+    "unit": "gtk-06-array",
+    "title": "06-Array",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/06-Array"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈unknown；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "unknown"
+  },
+  {
+    "unit": "gtk-07-datatype",
+    "title": "07-DataType",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/07-DataType"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈unknown；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "unknown"
+  },
+  {
+    "unit": "gtk-08-point",
+    "title": "08-Point",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/08-Point"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈unknown；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "unknown"
+  },
+  {
+    "unit": "gtk-09-struct",
+    "title": "09-Struct",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/09-Struct"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈unknown；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "unknown"
+  },
+  {
+    "unit": "gtk-1-basic-principle",
+    "title": "1-basic_principle",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/1-basic_principle"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 13,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈unknown；手写源码少（非样板 0 / src 3）",
+    "gtk_version": "unknown"
+  },
+  {
+    "unit": "gtk-12-cmakegtk",
+    "title": "12-cmakeGTK",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/12-cmakeGTK"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈unknown；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "unknown"
+  },
+  {
+    "unit": "gtk-13-codeblockstest",
+    "title": "13-CodeBlocksTest",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/13-CodeBlocksTest"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 2,
+    "run": "read-only",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk2；main.c: 偏手工 destroy，缺 g_object_unref 意识；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2"
+  },
+  {
+    "unit": "gtk-13-memory-layout",
+    "title": "13-memory_layout",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/13-memory_layout"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 5,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈unknown；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "unknown"
+  },
+  {
+    "unit": "gtk-16-window",
+    "title": "16-window",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/16-window"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 4,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-18-message",
+    "title": "18-Message",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/18-Message"
+    ],
+    "duplicates": [
+      "Linux/GTK/19-cmake"
+    ],
+    "first_commit": "2022-07-14",
+    "files": 5,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3",
+    "reason": "内容哈希相同的脚手架重复 1 处；规范版取文件更多者"
+  },
+  {
+    "unit": "gtk-23-callback",
+    "title": "23-CallBack",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/23-CallBack"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-26-gtk4-c",
+    "title": "26-Gtk4.c",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/26-Gtk4.c"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 1,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 1 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-28-gtklayout",
+    "title": "28-GtkLayout",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/28-GtkLayout"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 4,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-29-cmake",
+    "title": "29-cmake",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/29-cmake"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-30-codeblocks",
+    "title": "30-CodeBlocks",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/30-CodeBlocks"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 3,
+    "run": "read-only",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk2；main.c: 偏手工 destroy，缺 g_object_unref 意识；main.c: 旧式 gtk_main 循环；手写源码少（非样板 1 / src 2）",
+    "gtk_version": "gtk2"
+  },
+  {
+    "unit": "gtk-32-control",
+    "title": "32-Control",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/32-Control"
+    ],
+    "duplicates": [],
+    "first_commit": "2023-01-28",
+    "files": 4,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；main.c: 旧式 gtk_main 循环；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g02-gtkpicture",
+    "title": "G02-GtkPicture",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G02-GtkPicture"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 16,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g03-buttonlabel",
+    "title": "G03-ButtonLabel",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G03-ButtonLabel"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 15,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g04-buttontest",
+    "title": "G04-ButtonTest",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G04-ButtonTest"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 15,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g05-image",
+    "title": "G05-Image",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G05-Image"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 15,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g05-legacygtk",
+    "title": "G05-LegacyGTK",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G05-LegacyGTK"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 12,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g06-image",
+    "title": "G06-Image",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G06-Image"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 13,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g07-flowlayout",
+    "title": "G07-FlowLayout",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G07-FlowLayout"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 12,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g08-layout",
+    "title": "G08-Layout",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G08-Layout"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 12,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g09-gtk4",
+    "title": "G09-Gtk4",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G09-Gtk4"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 15,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g22-begin",
+    "title": "G22-Begin",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/G22-Begin"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 15,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；手写源码少（非样板 4 / src 5）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g27-button",
+    "title": "g27-button",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g27-button"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 14,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；含 Anjuta 工程痕迹；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g30-app",
+    "title": "g30-app",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g30-app"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 14,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk3；含 Anjuta 工程痕迹；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g35-text",
+    "title": "g35-text",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g35-text"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 11,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈gtk2-or-3；main.c: 旧式 gtk_main 循环；含 Anjuta 工程痕迹；手写源码少（非样板 0 / src 1）",
+    "gtk_version": "gtk2-or-3"
+  },
+  {
+    "unit": "gtk-14-gtk-foobar",
+    "title": "14-gtk-foobar",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/14-gtk-foobar"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 18,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.scaffold",
+    "quality_notes": "静态判断工具链版本≈gtk3；14-gtk-foobar.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-15-gtk-foobar",
+    "title": "15-gtk-foobar",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/15-gtk-foobar"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 17,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.scaffold",
+    "quality_notes": "静态判断工具链版本≈gtk3；gtk-foobar.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g17-anjuta",
+    "title": "g17-anjuta",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g17-anjuta"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 17,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.scaffold",
+    "quality_notes": "静态判断工具链版本≈gtk3；g17-anjuta.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-g37-conponent",
+    "title": "g37-conponent",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/g37-conponent"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 18,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.scaffold",
+    "quality_notes": "静态判断工具链版本≈gtk3；g37-conponent.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-gtk-foobar",
+    "title": "gtk-foobar",
+    "target": "practice/c-gui-lab",
+    "verdict": "keep",
+    "canonical": [
+      "Linux/GTK/gtk-foobar"
+    ],
+    "duplicates": [],
+    "first_commit": "2022-07-14",
+    "files": 18,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-3.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.scaffold",
+    "quality_notes": "静态判断工具链版本≈gtk3；gtk-foobar.c: 含 TODO/FIXME；含 Anjuta 工程痕迹；手写源码少（非样板 2 / src 3）",
+    "gtk_version": "gtk3"
+  },
+  {
+    "unit": "gtk-gtk-workspace",
+    "title": "Gtk.workspace",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/Gtk.workspace"
+    ],
+    "duplicates": [
+      "Linux/GTK/LICENSE",
+      "Linux/GTK/example-0",
+      "Linux/GTK/example-1",
+      "Linux/GTK/gtk.workspace"
+    ],
+    "first_commit": "2023-01-28",
+    "files": 1,
+    "run": "toolchain",
+    "build": "pkg-config --cflags --libs gtk+-2.0",
+    "build_checked": false,
+    "topic_hint": "archive.gtk.other",
+    "quality_notes": "静态判断工具链版本≈unknown",
+    "gtk_version": "unknown",
+    "reason": "无源码/界面文件，仅残余"
+  },
+  {
+    "unit": "junk-gtk-01-hellogtk",
+    "title": "Anjuta/autotools/po 生成物 GTK/01-HelloGTK",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/01-HelloGTK"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-14-gtk-foobar",
+    "title": "Anjuta/autotools/po 生成物 GTK/14-gtk-foobar",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/14-gtk-foobar"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-15-gtk-foobar",
+    "title": "Anjuta/autotools/po 生成物 GTK/15-gtk-foobar",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/15-gtk-foobar"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-20-simplegtk",
+    "title": "Anjuta/autotools/po 生成物 GTK/20-simplegtk",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/20-simplegtk"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-25-glade",
+    "title": "Anjuta/autotools/po 生成物 GTK/25-glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/25-glade"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 22,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g01-helloworld",
+    "title": "Anjuta/autotools/po 生成物 GTK/G01-HelloWorld",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G01-HelloWorld"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g02-gtkpicture",
+    "title": "Anjuta/autotools/po 生成物 GTK/G02-GtkPicture",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G02-GtkPicture"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g03-buttonlabel",
+    "title": "Anjuta/autotools/po 生成物 GTK/G03-ButtonLabel",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G03-ButtonLabel"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g04-buttontest",
+    "title": "Anjuta/autotools/po 生成物 GTK/G04-ButtonTest",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G04-ButtonTest"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g05-image",
+    "title": "Anjuta/autotools/po 生成物 GTK/G05-Image",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G05-Image"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g05-legacygtk",
+    "title": "Anjuta/autotools/po 生成物 GTK/G05-LegacyGTK",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G05-LegacyGTK"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g06-image",
+    "title": "Anjuta/autotools/po 生成物 GTK/G06-Image",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G06-Image"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g07-flowlayout",
+    "title": "Anjuta/autotools/po 生成物 GTK/G07-FlowLayout",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G07-FlowLayout"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g08-layout",
+    "title": "Anjuta/autotools/po 生成物 GTK/G08-Layout",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G08-Layout"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g09-gtk4",
+    "title": "Anjuta/autotools/po 生成物 GTK/G09-Gtk4",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G09-Gtk4"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g10-glade",
+    "title": "Anjuta/autotools/po 生成物 GTK/G10-Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G10-Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g11-glade",
+    "title": "Anjuta/autotools/po 生成物 GTK/G11-Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G11-Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g12-glade",
+    "title": "Anjuta/autotools/po 生成物 GTK/G12-Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G12-Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g15-glade",
+    "title": "Anjuta/autotools/po 生成物 GTK/G15-Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G15-Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g16-glade",
+    "title": "Anjuta/autotools/po 生成物 GTK/G16-Glade",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G16-Glade"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g17-anjuta",
+    "title": "Anjuta/autotools/po 生成物 GTK/g17-anjuta",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g17-anjuta"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 22,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g18-hello",
+    "title": "Anjuta/autotools/po 生成物 GTK/g18-hello",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g18-hello"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 22,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g19-basicwindow",
+    "title": "Anjuta/autotools/po 生成物 GTK/g19-basicwindow",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g19-basicwindow"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 22,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g20-box",
+    "title": "Anjuta/autotools/po 生成物 GTK/g20-box",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g20-box"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 22,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g21-framework",
+    "title": "Anjuta/autotools/po 生成物 GTK/g21-framework",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g21-framework"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 22,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g22-begin",
+    "title": "Anjuta/autotools/po 生成物 GTK/G22-Begin",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/G22-Begin"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 2,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g23-hello",
+    "title": "Anjuta/autotools/po 生成物 GTK/g23-hello",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g23-hello"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 22,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g24-hello",
+    "title": "Anjuta/autotools/po 生成物 GTK/g24-hello",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g24-hello"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g25-box",
+    "title": "Anjuta/autotools/po 生成物 GTK/g25-box",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g25-box"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g26-box",
+    "title": "Anjuta/autotools/po 生成物 GTK/g26-box",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g26-box"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g27-button",
+    "title": "Anjuta/autotools/po 生成物 GTK/g27-button",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g27-button"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g28-pack",
+    "title": "Anjuta/autotools/po 生成物 GTK/g28-pack",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g28-pack"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g29-grid",
+    "title": "Anjuta/autotools/po 生成物 GTK/g29-grid",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g29-grid"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g30-app",
+    "title": "Anjuta/autotools/po 生成物 GTK/g30-app",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g30-app"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g31-mixbox",
+    "title": "Anjuta/autotools/po 生成物 GTK/g31-mixbox",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g31-mixbox"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g32-grid",
+    "title": "Anjuta/autotools/po 生成物 GTK/g32-grid",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g32-grid"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g33-grid1",
+    "title": "Anjuta/autotools/po 生成物 GTK/g33-grid1",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g33-grid1"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g34-dialog",
+    "title": "Anjuta/autotools/po 生成物 GTK/g34-dialog",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g34-dialog"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g35-text",
+    "title": "Anjuta/autotools/po 生成物 GTK/g35-text",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g35-text"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 6,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g36-multiwindow",
+    "title": "Anjuta/autotools/po 生成物 GTK/g36-multiwindow",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g36-multiwindow"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g37-conponent",
+    "title": "Anjuta/autotools/po 生成物 GTK/g37-conponent",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g37-conponent"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g37-multi-window",
+    "title": "Anjuta/autotools/po 生成物 GTK/g37-multi_window",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g37-multi_window"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-g38-multi-window",
+    "title": "Anjuta/autotools/po 生成物 GTK/g38-multi_window",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/g38-multi_window"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-gitignore",
+    "title": "Anjuta/autotools/po 生成物 GTK/.gitignore",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/.gitignore"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-gtk-foobar",
+    "title": "Anjuta/autotools/po 生成物 GTK/gtk-foobar",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/gtk-foobar"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 20,
+    "run": "read-only",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  },
+  {
+    "unit": "junk-gtk-gtkapp",
+    "title": "Anjuta/autotools/po 生成物 GTK/GtkApp",
+    "target": "practice/c-gui-lab",
+    "verdict": "drop-junk",
+    "canonical": [
+      "Linux/GTK/GtkApp"
+    ],
+    "duplicates": [],
+    "first_commit": "n/a",
+    "files": 1,
+    "run": "toolchain",
+    "build": "n/a",
+    "build_checked": false,
+    "topic_hint": "n/a",
+    "quality_notes": "main.c 使用 GtkApplication（GTK3+）；configure.ac / Makefile.in / po / autom4te 等生成物",
+    "reason": "任务书：Anjuta/Glade 工程生成样板 drop-junk",
+    "gtk_version": "n/a"
+  }
+]

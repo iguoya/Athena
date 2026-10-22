@@ -1,0 +1,70 @@
+# 编译器：g++ (GCC) 15.2.0
+
+== abstractfactory（AbstractFactory，3 个 cpp，链接运行）==
+$ g++ -std=c++20 -o C:\Users\tiger\Athena\comms\legacy-archive\artifacts\zcode\build-work\abstractfactory.exe C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\AbstractFactory\abstractfactory.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\AbstractFactory\main.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\AbstractFactory\product.cpp
+OK 编译通过
+运行退出码 0，输出首行: ProductA1...
+
+== adapter（Adapter，10 个 cpp，链接运行）==
+$ g++ -std=c++20 -o C:\Users\tiger\Athena\comms\legacy-archive\artifacts\zcode\build-work\adapter.exe C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\Adaptee.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\Adapter.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\ConcreteProduct2.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\ConcreteProductA.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\ConcreteProductB.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\ConcreteProductC.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\Factory.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\main.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\Product.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\Target.cpp
+!! 失败（退出码 1）:
+   In file included from C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\Adaptee.cpp:1:
+   C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\Adaptee.h:6:10: error: '#include' expects '"FILENAME"' or '<FILENAME>'
+       6 | #include vector
+         |          ^~~~~~
+   In file included from C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\Adapter.h:4,
+                    from C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Adapter\Adapter.cpp:1:
+   -c Facade.cpp OK
+   -c Navigation.cpp OK
+   -c Power.cpp OK
+   -c Rocket.cpp OK
+   -c SubSystemA.cpp OK
+   -c SubSystemB.cpp OK
+OK facade-no-main 目标文件全部编译通过（无 main.cpp，不可链接成程序）
+
+== factory（Factory，3 个 cpp，链接运行）==
+$ g++ -std=c++20 -o C:\Users\tiger\Athena\comms\legacy-archive\artifacts\zcode\build-work\factory.exe C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Factory\factory.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Factory\main.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Factory\product.cpp
+OK 编译通过
+运行退出码 0，输出首行: ConcreteFactory.....
+
+== observer（Observer，3 个 cpp，链接运行）==
+$ g++ -std=c++20 -o C:\Users\tiger\Athena\comms\legacy-archive\artifacts\zcode\build-work\observer.exe C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Observer\main.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Observer\observer.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Observer\subject.cpp
+OK 编译通过
+运行退出码 0，输出首行: ConcreteObserverB observer....old
+
+== simplefactory（SimpleFactory，6 个 cpp，链接运行）==
+$ g++ -std=c++20 -o C:\Users\tiger\Athena\comms\legacy-archive\artifacts\zcode\build-work\simplefactory.exe C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\SimpleFactory\ConcreteProductA.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\SimpleFactory\ConcreteProductB.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\SimpleFactory\ConcreteProductC.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\SimpleFactory\Factory.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\SimpleFactory\main.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\SimpleFactory\Product.cpp
+   warn: In file included from C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\SimpleFactory\Factory.cpp:1:
+   warn: C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\SimpleFactory\Factory.h:7:30: warning: extra tokens at end of '#include' directive
+   warn:     7 | #include "ConcreteProductA.h";
+   warn:       |                              ^
+OK 编译通过
+运行退出码 0，输出首行: Hello World!
+
+== singleton（Singleton，2 个 cpp，链接运行）==
+$ g++ -std=c++20 -o C:\Users\tiger\Athena\comms\legacy-archive\artifacts\zcode\build-work\singleton.exe C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Singleton\main.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\Singleton\singleton.cpp
+OK 编译通过
+运行退出码 0，输出首行: Singleton....
+
+== strategy-v0（StrategyV0，5 个 cpp，链接运行）==
+$ g++ -std=c++20 -o C:\Users\tiger\Athena\comms\legacy-archive\artifacts\zcode\build-work\strategy-v0.exe C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\StrategyV0\ConcreteStrategyA.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\StrategyV0\ConcreteStrategyB.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\StrategyV0\Context.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\StrategyV0\main.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPattern\StrategyV0\Strategy.cpp
+OK 编译通过
+运行退出码 0，输出首行: Hello World
+   -c BubbleSort.cpp OK
+   -c ConcreteStrategyA.cpp OK
+   -c ConcreteStrategyB.cpp OK
+   -c QuickSort.cpp OK
+   -c SortAlgorithm.cpp OK
+   -c Strategy.cpp OK
+   -c StrategyContext.cpp OK
+OK strategy-sort-no-main 目标文件全部编译通过（无 main.cpp，不可链接成程序）
+   -c ConcreteClassA.cpp OK
+   -c ConcreteClassB.cpp OK
+   -c M1A1.cpp OK
+   -c T90.cpp OK
+OK templatemethod-tank-no-main 目标文件全部编译通过（无 main.cpp，不可链接成程序）
+
+== workspace-templatemethod（TemplateMethod，4 个 cpp，链接运行）==
+$ g++ -std=c++20 -o C:\Users\tiger\Athena\comms\legacy-archive\artifacts\zcode\build-work\workspace-templatemethod.exe C:\Users\tiger\Athena\.cache\legacy-src\DesignPatterns\workspace\TemplateMethod\AbstractClass.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPatterns\workspace\TemplateMethod\ConcreteClass1.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPatterns\workspace\TemplateMethod\ConcreteClass2.cpp C:\Users\tiger\Athena\.cache\legacy-src\DesignPatterns\workspace\TemplateMethod\main.cpp
+OK 编译通过
+运行退出码 0，输出首行: Hello World

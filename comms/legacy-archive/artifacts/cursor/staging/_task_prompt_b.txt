@@ -1,0 +1,11 @@
+Read REAL source files under C:\Users\tiger\Athena\comms\legacy-archive\artifacts\cursor\staging\qt\content\cases\ for these cases and write concrete line-level archive notes.
+
+Cases: arc_qt_studentinfo, arc_qt_qprocesslist, arc_qt_imageprocessor, arc_qt_networkinformation, arc_qt_qprocess, arc_qt_xnode, arc_qt_qtchartsbasic, arc_qt_chart, arc_qt_designer, arc_qt_qmenu, arc_qt_texteditor, arc_qt_datetime, arc_qt_cmake, arc_qt_backend, arc_qt_calculatorarea
+
+Write JSON array to: C:\Users\tiger\Athena\comms\legacy-archive\artifacts\cursor\staging\_notes_batch_b.json
+
+Same schema as batch A (case, summary, lead, outline, guide_line, notes, sources, std, run_note).
+
+Special: arc_qt_qtchartsbasic and arc_qt_chart MUST include kind=portability (missing QtCharts; QString::SkipEmptyParts -> Qt::SplitBehaviorFlags in Qt6). Code unpatched. arc_qt_xnode: focus ownership, blocking GUI thread, hardcoded ports.
+
+Rules: >=3 notes, >=2 kinds, real line numbers, Chinese. Return count.

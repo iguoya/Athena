@@ -1,0 +1,289 @@
+# -*- coding: utf-8 -*-
+"""生成 T-001 manifest-design-patterns.json 并做零遗漏校验。
+
+单元判定依据：scan.json 的规范化哈希比对（analyze/diff 输出）与 git 提交日期。
+"""
+import json
+from collections import defaultdict
+from pathlib import Path
+
+BASE = Path(r"C:\Users\tiger\Athena\comms\legacy-archive\artifacts\zcode")
+OUT = BASE / "manifest-design-patterns.json"
+records = json.loads((BASE / "scan.json").read_text(encoding="utf-8"))
+files = [(r["repo"], r["path"]) for r in records]
+
+T = "programming/design-patterns"
+
+# 模式五处重复：Practice 是源头（2020-03），其余三处全同
+FOUR = ["DesignPatterns/workspace", "DesignPattern", "Linux/DesignPattern"]
+units = [
+    {
+        "unit": "dp-adapter", "title": "适配器模式（类适配器 + 产品族实验）", "target": T,
+        "verdict": "keep", "canonical": ["Practice/DesignPatterns/Adapter"],
+        "duplicates": [d + "/Adapter" for d in FOUR],
+        "first_commit": "2020-03-18", "files": 21, "run": "cli",
+        "build": "g++ -std=c++20 main.cpp *.cpp（实测通过，输出 Hello World!）",
+        "build_checked": True, "topic_hint": "dp.adapter",
+        "quality_notes": "main.cpp 只打印 Hello World，Adaptee/Adapter/Target 与 Product 系类没有任何演示调用，练习未完成即被复制传播；CMakeLists 是 cmake 2.8 老语法；无扩展名二进制 adapter 与 CMakeLists.txt.user 一起入了库。",
+        "exclude": ["adapter（编译产物）", "CMakeLists.txt.user", ".gitignore"],
+    },
+    {
+        "unit": "dp-simple-factory", "title": "简单工厂（与工厂方法同目录对比）", "target": T,
+        "verdict": "keep", "canonical": ["Practice/DesignPatterns/SimpleFactory"],
+        "duplicates": [d + "/SimpleFactory" for d in FOUR],
+        "first_commit": "2020-03-18", "files": 14, "run": "cli",
+        "build": "g++ -std=c++20 main.cpp *.cpp（实测通过，输出 Hello World!）",
+        "build_checked": True, "topic_hint": "dp.simple-factory",
+        "quality_notes": "目录里混放 Factory/Product/ConcreteProduct*（工厂方法风格类），简单工厂与工厂方法的边界没分开，恰可作 dp.simple-factory 与 dp.factory-method 辨析素材；main.cpp 同样只打印 Hello World。",
+        "exclude": ["SimpleFactory.xmi", "uml/（目录）", "CMakeLists.txt.user"],
+    },
+    {
+        "unit": "dp-factory-method", "title": "工厂方法模式", "target": T,
+        "verdict": "keep", "canonical": ["Practice/DesignPatterns/Factory"],
+        "duplicates": [d + "/Factory" for d in FOUR],
+        "first_commit": "2020-03-16", "files": 8, "run": "cli",
+        "build": "g++ -std=c++20 main.cpp *.cpp（实测通过，输出 ConcreteFactory.....）",
+        "build_checked": True, "topic_hint": "dp.factory-method",
+        "quality_notes": "输出有实际演示（ConcreteFactory 系列），是六个四处重复单元里少数 main 有内容的；命名 ConcreteFactory1/2 缺语义。",
+    },
+    {
+        "unit": "dp-abstract-factory", "title": "抽象工厂模式", "target": T,
+        "verdict": "keep", "canonical": ["Practice/DesignPatterns/AbstractFactory"],
+        "duplicates": [d + "/AbstractFactory" for d in FOUR],
+        "first_commit": "2020-03-17", "files": 8, "run": "cli",
+        "build": "g++ -std=c++20 main.cpp *.cpp（实测通过，输出 ProductA1...）",
+        "build_checked": True, "topic_hint": "dp.abstract-factory",
+        "quality_notes": "ProductA1/B1、ProductA2/B2 命名可读；同样存在 main 演示单薄的问题。",
+    },
+    {
+        "unit": "dp-singleton", "title": "单例模式（GoF 式 Instance）", "target": T,
+        "verdict": "keep", "canonical": ["Practice/DesignPatterns/Singleton"],
+        "duplicates": [d + "/Singleton" for d in FOUR],
+        "first_commit": "2020-03-17", "files": 3, "run": "cli",
+        "build": "g++ -std=c++20 main.cpp singleton.cpp（实测通过，输出 Singleton....）",
+        "build_checked": True, "topic_hint": "dp.singleton",
+        "quality_notes": "singleton.h 在头文件里写 using namespace std；裸指针静态 _instance 从不释放（内存泄漏）、无线程安全考虑；protected 构造 + 拷贝未禁用——是 dp.singleton 现行讲「现代写法」的绝佳反面教材。",
+        "exclude": ["CMakeLists.txt.user", ".gitignore"],
+    },
+    {
+        "unit": "dp-observer", "title": "观察者模式", "target": T,
+        "verdict": "keep", "canonical": ["Practice/DesignPatterns/Observer"],
+        "duplicates": [d + "/Observer" for d in FOUR],
+        "first_commit": "2020-03-13", "files": 9, "run": "cli",
+        "build": "g++ -std=c++20 main.cpp *.cpp（实测通过，输出 ConcreteObserverB observer....old）",
+        "build_checked": True, "topic_hint": "dp.observer",
+        "quality_notes": "五处重复里本单元在 Practice 有 5 次提交，是迭代最多的模式；Subject/Observer 用原始指针互持，析构顺序敏感。",
+    },
+    {
+        "unit": "dp-strategy-v0", "title": "策略模式·初版（Context + 两具体策略）", "target": T,
+        "verdict": "keep", "canonical": ["DesignPattern/StrategyV0"],
+        "duplicates": ["DesignPatterns/workspace/Strategy", "Linux/DesignPattern/StrategyV0"],
+        "first_commit": "2020-09-16", "files": 10, "run": "cli",
+        "build": "g++ -std=c++20 main.cpp *.cpp（实测通过，输出 Hello World）",
+        "build_checked": True, "topic_hint": "dp.strategy",
+        "quality_notes": "与 dp-strategy-sort 是演进关系不是重复（15 文件逐字节全同于 workspace/Strategy，2022-05-02 更名 StrategyV0 再入库）；CodeLite 工程产物（Debug/.d、Debug/Strategy 二进制、Strategy.mk、.project、.txt）全数入库；ConcreteStrategyA/B 各 1.2KB 却只包装一个排序调用。",
+        "exclude": ["Debug/", "Strategy.mk", "Strategy.project", "Strategy.txt", "Strategy.xmi"],
+    },
+    {
+        "unit": "dp-strategy-sort", "title": "策略模式·排序版（冒泡/快排/选择排序策略族）", "target": T,
+        "verdict": "keep", "canonical": ["DesignPattern/Strategy"],
+        "duplicates": ["Linux/DesignPattern/Strategy"],
+        "first_commit": "2022-05-02", "files": 17, "run": "cli",
+        "build": "g++ -std=c++20 -fsyntax-only *.cpp（语法通过；库形态无 main，由 dp-qt-shell 的 mainwindow 调用）",
+        "build_checked": False,
+        "build_note": "无独立入口不能运行，build_checked 据实为 false；搬运时若配最小 main（// [ARCHIVE] 标注）即可升为可运行",
+        "topic_hint": "dp.strategy",
+        "quality_notes": "StarUML 自动备份 27 份（Strategy.vpp.bak_006d…031f，约 2.6MB）全部提交入库；BubbleSort/QuickSort/SortAlgorithm 与 ConcreteStrategyA/B 两套策略并存（演进层积）；StrategyContext 承担演示组装。",
+        "exclude": ["Strategy.vpp 与 27 份 .bak（StarUML 工程及备份）", "strategy.mdj"],
+    },
+    {
+        "unit": "dp-template-method-basic", "title": "模板方法模式·基础版", "target": T,
+        "verdict": "keep", "canonical": ["DesignPatterns/workspace/TemplateMethod"],
+        "duplicates": [],
+        "first_commit": "2020-09-16", "files": 8, "run": "cli",
+        "build": "g++ -std=c++20 main.cpp *.cpp（实测通过，输出 Hello World）",
+        "build_checked": True, "topic_hint": "dp.template-method",
+        "quality_notes": "ConcreteClass1/2 各 1.2KB+，头文件肥大（实现全塞头文件）；与坦克版是演进关系，两版并排恰好展示同一模式的两次尝试。",
+        "exclude": ["Debug/", "TemplateMethod.mk", "TemplateMethod.project", "TemplateMethod.txt", "TemplateMethod.xmi"],
+    },
+    {
+        "unit": "dp-template-method-tank", "title": "模板方法模式·坦克版（Tank/T90/M1A1）", "target": T,
+        "verdict": "keep", "canonical": ["DesignPattern/TemplateMethod"],
+        "duplicates": ["Linux/DesignPattern/TemplateMethod"],
+        "first_commit": "2022-05-02", "files": 10, "run": "cli",
+        "build": "g++ -std=c++20 -fsyntax-only *.cpp（语法通过；库形态无 main，由 dp-qt-shell 调用）",
+        "build_checked": False,
+        "build_note": "无独立入口；AbstractClass.h 与 Tank.h 两套抽象并存",
+        "topic_hint": "dp.template-method",
+        "quality_notes": "AbstractClass（通用模板方法示例）与 Tank/T90/M1A1（坦克示例）两套类并存于同一目录，主题分散；无独立入口。",
+    },
+    {
+        "unit": "dp-facade", "title": "外观模式（火箭发射子系统）", "target": T,
+        "verdict": "keep", "canonical": ["DesignPattern/Facade"],
+        "duplicates": ["Linux/DesignPattern/Facade"],
+        "first_commit": "2022-05-02", "files": 12, "run": "cli",
+        "build": "g++ -std=c++20 -fsyntax-only *.cpp（语法通过；库形态无 main，由 dp-qt-shell 调用）",
+        "build_checked": False,
+        "build_note": "无独立入口",
+        "topic_hint": "dp.facade",
+        "quality_notes": "Rocket/Navigation/Power/SubSystemA/B 结构完整，是本批里设计最像样的单元；但 StarUML 工程与 21 份 .bak、.lck 锁文件一并入库（约 3MB 垃圾）。",
+        "exclude": ["Facade.vpp 与 21 份 .bak", ".Facade.vpp.lck"],
+    },
+    {
+        "unit": "dp-state", "title": "状态模式（仅 StarUML 工程，无代码）", "target": T,
+        "verdict": "keep", "canonical": ["DesignPattern/State"],
+        "duplicates": ["Linux/DesignPattern/State"],
+        "first_commit": "2022-05-02", "files": 1, "run": "read-only",
+        "build": "无可编译内容",
+        "build_checked": False, "topic_hint": "dp.state",
+        "quality_notes": "10 个文件全是 state.vpp 及 8 份自动备份，当年只画了类图没写代码；建议只收 1 份 .vpp 作图档（或经使用者在 StarUML 导出图后连图带批注收编），8 份备份必删。",
+        "exclude": ["state.vpp.bak_* 8 份备份"],
+    },
+    {
+        "unit": "dp-qt-shell", "title": "DesignPattern 桌面演示壳（模式库的唯一驱动入口）", "target": T,
+        "verdict": "keep",
+        "canonical": ["DesignPattern/main.cpp", "DesignPattern/mainwindow.cpp", "DesignPattern/mainwindow.h",
+                      "DesignPattern/mainwindow.ui", "DesignPattern/resource.qrc", "DesignPattern/DesignPattern.pro",
+                      "DesignPattern/CMakeLists.txt"],
+        "duplicates": ["Linux/DesignPattern/main.cpp", "Linux/DesignPattern/mainwindow.cpp", "Linux/DesignPattern/mainwindow.h",
+                       "Linux/DesignPattern/mainwindow.ui", "Linux/DesignPattern/resource.qrc", "Linux/DesignPattern/DesignPattern.pro",
+                       "Linux/DesignPattern/CMakeLists.txt", "Linux/DesignPattern/CMakeLists.txt.user"],
+        "first_commit": "2022-05-02", "files": 7, "run": "toolchain",
+        "build": "需 Qt（本机 Qt 6.8.1 MSVC，代码为 Qt5，需 // [ARCHIVE] 小改）",
+        "build_checked": False,
+        "topic_hint": "dp.strategy、dp.facade、dp.template-method（按钮驱动三者的 UML 展示与运行输出）",
+        "quality_notes": "点按钮切换 UML 图并运行模式代码，是 strategy-sort/tank/facade 三个库形态单元唯一的入口；ui(new Ui)→delete ui 手工配对；资源内嵌 UML svg。作为归档条目说明「当年如何组织演示」比单独跑更有价值。",
+        "exclude": ["CMakeLists.txt.user"],
+    },
+    {
+        "unit": "dp-book-docs", "title": "设计模式书稿（gitbook/vuepress 旧稿，含三处子集拷贝）", "target": T,
+        "verdict": "keep", "canonical": ["DesignPattern/docs"],
+        "duplicates": ["DesignPatterns/docs", "algorithm/design-patterns/", "Linux/DesignPattern/docs"],
+        "first_commit": "2020-09-16", "files": 78, "run": "read-only",
+        "build": "无可编译内容",
+        "build_checked": False, "topic_hint": "新增（archive 层，转批注素材）",
+        "quality_notes": "45 次提交演化到 2022-02，是最完整版本；目录改名残留（1-principle↔1-design-principles、2-creation↔2-creational-patterns、3-construction↔3-architectural-patterns、4-action↔4-behavior-patterns、auto_gallery↔sample_gallery 共 18 对同内容双份）；三处子集拷贝中 DesignPatterns/docs 有 1 个文件内容更旧（H组件协作/TemplateMethod.md）、algorithm/design-patterns 多 5 个独有笔记（1-观察者模式、2-装饰者模式、Strategy、4-behavior 等中文命名稿）；价值：与现行课程章节一一对应，宜作 dp.* 各章的批注素材而非正文。",
+        "exclude": ["docs/auto_gallery-*/、docs/sample-gallery-*/ 下的 .pickle 与重复 .py（站点构建产物）", "images/thumb/ 缩略图"],
+    },
+    {
+        "unit": "dp-uml-diagrams", "title": "StarUML 图档与工程文件", "target": T,
+        "verdict": "keep",
+        "canonical": ["DesignPattern/UML", "DesignPattern/DesignPattern.mdj", "DesignPattern/Untitled.mdj"],
+        "duplicates": ["Linux/DesignPattern/UML", "Linux/DesignPattern/DesignPattern.mdj", "Linux/DesignPattern/Untitled.mdj"],
+        "first_commit": "2022-05-02", "files": 5, "run": "read-only",
+        "build": "无可编译内容",
+        "build_checked": False, "topic_hint": "dp.uml.class",
+        "quality_notes": "resource.qrc 引用的 UML svg 应在此目录；Untitled.mdj 是未整理的草稿图，可并入正图或弃。",
+    },
+    {
+        "unit": "dp-design-evolution", "title": "gtkmm 入门实验（DesignEvolutionCpp，名实不符）", "target": T,
+        "verdict": "keep", "canonical": ["Linux/DesignEvolutionCpp"],
+        "duplicates": [],
+        "first_commit": "2023-04-09", "files": 5, "run": "toolchain",
+        "build": "需 gtkmm 4（Gtk::Builder 加载 ../mainwindow.ui，相对路径依赖仓库外文件）",
+        "build_checked": False, "topic_hint": "新增（内容实为 gtkmm 窗口模板，待裁决是否改归新建 programming/gtkmm-lab）",
+        "quality_notes": "名为「设计演进」实为 gtkmm 官方模板翻版（builder 载窗 + Basic 类 Hello）；mainwindow.ui 不在本目录（引用 ../mainwindow.ui 断链）；是官方 gtkmm-application-template 的跟练。",
+    },
+    # ---- drop 群 ----
+    {
+        "unit": "dp-xcode-shells", "title": "Xcode 空壳工程 ×3（AAA/CCC/DesignPatterns）", "target": T,
+        "verdict": "drop-junk", "canonical": ["DesignPatterns/AAA", "DesignPatterns/CCC", "DesignPatterns/DesignPatterns"],
+        "duplicates": [], "first_commit": "2021-03-30", "files": 14, "run": "read-only",
+        "build": "-", "build_checked": False, "topic_hint": "",
+        "reason": "2020-09-19 生成的 Xcode 模板工程，main 只打印 Hello World（CCC 是 C 版），xcuserstate/xcschememanagement 是个人 IDE 状态文件；无学习价值，原仓库可取回。",
+    },
+    {
+        "unit": "dp-thirdparty-courseware", "title": "第三方设计模式课件代码包（15 个 zip）", "target": T,
+        "verdict": "drop-third-party", "canonical": ["DesignPatterns/docs/W设计模式课件"],
+        "duplicates": [], "first_commit": "2020-09-16", "files": 15, "run": "read-only",
+        "build": "-", "build_checked": False, "topic_hint": "",
+        "reason": "他人课程的示例代码打包（文件名「C++设计模式代码资源1…24_Vistor_访问器.zip」，缺 14/17 两号），非本人练习；依据：打包命名与课程编号格式、且与本人各仓库代码无同源哈希。出处若需可解包核对文件头。",
+    },
+    {
+        "unit": "dp-site-config", "title": "文档站与构建配置杂项", "target": T,
+        "verdict": "drop-junk",
+        "canonical": [
+            "DesignPattern/README.md", "DesignPattern/README.rst", "DesignPattern/README.en.md", "DesignPattern/SUMMARY.md",
+            "DesignPattern/book.json", "DesignPattern/package.json", "DesignPattern/yarn.lock", "DesignPattern/pyproject.toml",
+            "DesignPattern/deploy.sh", "DesignPattern/.travis.yml", "DesignPattern/.gitlab-ci.yml", "DesignPattern/.readthedocs.yml",
+            "DesignPattern/.gitignore", "DesignPattern/DesignPattern.workspace",
+            "DesignPatterns/package.json", "DesignPatterns/yarn.lock", "DesignPatterns/deploy.sh", "DesignPatterns/.travis.yml",
+            "DesignPatterns/.gitlab-ci.yml", "DesignPatterns/.gitignore", "DesignPatterns/DesignPattern.workspace",
+            "Linux/DesignPattern/README.md", "Linux/DesignPattern/README.rst", "Linux/DesignPattern/README.en.md",
+            "Linux/DesignPattern/SUMMARY.md", "Linux/DesignPattern/book.json", "Linux/DesignPattern/package.json",
+            "Linux/DesignPattern/yarn.lock", "Linux/DesignPattern/pyproject.toml", "Linux/DesignPattern/deploy.sh",
+            "Linux/DesignPattern/.travis.yml", "Linux/DesignPattern/.gitlab-ci.yml", "Linux/DesignPattern/.readthedocs.yml",
+            "Linux/DesignPattern/.gitignore", "Linux/DesignPattern/DesignPattern.workspace",
+        ],
+        "duplicates": [], "first_commit": "2020-09-16", "files": 36, "run": "read-only",
+        "build": "-", "build_checked": False, "topic_hint": "",
+        "reason": "gitbook/readthedocs/CI 与包管理器配置，两份全同互为重复；无归档价值，原仓库可取回。",
+    },
+    {
+        "unit": "dp-build-artifacts", "title": "编译产物与 IDE 个人状态文件", "target": T,
+        "verdict": "drop-junk", "canonical": [
+            "Practice/DesignPatterns/Adapter/adapter",
+            "Practice/DesignPatterns/Adapter/CMakeLists.txt.user", "Practice/DesignPatterns/SimpleFactory/CMakeLists.txt.user",
+            "Practice/DesignPatterns/Observer/CMakeLists.txt.user", "Practice/DesignPatterns/Factory/CMakeLists.txt.user",
+            "Practice/DesignPatterns/AbstractFactory/CMakeLists.txt.user", "Practice/DesignPatterns/Singleton/CMakeLists.txt.user",
+            "Practice/DesignPatterns/Adapter/.gitignore", "Practice/DesignPatterns/SimpleFactory/.gitignore",
+            "Practice/DesignPatterns/Observer/.gitignore", "Practice/DesignPatterns/Factory/.gitignore",
+            "Practice/DesignPatterns/AbstractFactory/.gitignore", "Practice/DesignPatterns/Singleton/.gitignore",
+            "DesignPattern/Adapter/CMakeLists.txt.user", "DesignPattern/Singleton/CMakeLists.txt.user",
+            "DesignPattern/Adapter/.gitignore", "DesignPattern/Singleton/.gitignore",
+            "DesignPattern/DesignPattern.pro.user",
+            "Linux/DesignPattern/CMakeLists.txt.user", "Linux/DesignPattern/DesignPattern.pro.user",
+        ],
+        "duplicates": [], "first_commit": "2020-03-18", "files": 19, "run": "read-only",
+        "build": "-", "build_checked": False, "topic_hint": "",
+        "reason": "二进制与 IDE 个人配置（CMakeLists.txt.user、.gitignore 本身按 ADR 大二进制/产物不收的原则不入库）；.gitignore 若搬运需要可重写。",
+    },
+]
+
+# ---- 零遗漏校验：T-001 范围内每个文件恰好归入一个单元 ----
+T001_PREFIXES = {
+    "DesignPattern": [""], "DesignPatterns": [""], "Practice": ["DesignPatterns/"],
+    "Linux": ["DesignPattern/", "DesignEvolutionCpp/"], "algorithm": ["design-patterns"],
+}
+in_scope = [(r, p) for r, p in files
+            if any(p.startswith(pre) for pre in T001_PREFIXES.get(r, []))]
+def cover_prefixes(u):
+    pats = []
+    for c in u["canonical"]:
+        pats.append(c if c.endswith("/") or "." in c.split("/")[-1] else c + "/")
+    for d in u["duplicates"]:
+        pats.append(d if d.endswith("/") else d + "/")
+    return pats
+
+UNITS = sorted(units, key=lambda u: -max(len(p) for p in cover_prefixes(u)))
+owner = {}
+conflicts = []
+for repo, path in in_scope:
+    full = repo + "/" + path
+    hit = None
+    for u in UNITS:
+        for p in cover_prefixes(u):
+            if full.startswith(p) or full == p.rstrip("/"):
+                hit = (u["unit"], p)
+                break
+        if hit:
+            break
+    if hit:
+        if full in owner:
+            conflicts.append((repo, path, owner[full], hit[0]))
+        owner[full] = hit[0]
+    else:
+        print(f"[未覆盖] {full}")
+
+miss = [(r, p) for r, p in in_scope if r + "/" + p not in owner]
+print(f"T-001 范围 {len(in_scope)} 个文件：覆盖 {len(in_scope) - len(miss)}，未覆盖 {len(miss)}，冲突 {len(conflicts)}")
+for c in conflicts[:10]:
+    print("  [冲突]", c)
+
+stats = defaultdict(int)
+for u in units:
+    stats[u["verdict"]] += 1
+print("verdict 统计:", dict(stats))
+
+OUT.write_text(json.dumps(units, ensure_ascii=False, indent=1), encoding="utf-8")
+print(f"manifest -> {OUT}")

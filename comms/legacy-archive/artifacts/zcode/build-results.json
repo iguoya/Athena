@@ -1,0 +1,711 @@
+{
+ "dp-adapter": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello World!",
+   "note": "",
+   "entry": "main.cpp"
+  }
+ ],
+ "dp-simple-factory": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp",
+    "ConcreteProductA.cpp",
+    "ConcreteProductB.cpp",
+    "ConcreteProductC.cpp",
+    "Factory.cpp",
+    "Product.cpp"
+   ],
+   "out": "Hello World!",
+   "note": "（单编 main.cpp 失败：collect2.exe: error: ld returned 1 exit status；附其余源重试）",
+   "entry": "main.cpp"
+  }
+ ],
+ "dp-factory-method": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp",
+    "factory.cpp",
+    "product.cpp"
+   ],
+   "out": "ConcreteFactory.....",
+   "note": "（单编 main.cpp 失败：collect2.exe: error: ld returned 1 exit status；附其余源重试）",
+   "entry": "main.cpp"
+  }
+ ],
+ "dp-abstract-factory": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp",
+    "abstractfactory.cpp",
+    "product.cpp"
+   ],
+   "out": "ProductA1...",
+   "note": "（单编 main.cpp 失败：collect2.exe: error: ld returned 1 exit status；附其余源重试）",
+   "entry": "main.cpp"
+  }
+ ],
+ "dp-singleton": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp",
+    "singleton.cpp"
+   ],
+   "out": "Singleton....",
+   "note": "（单编 main.cpp 失败：collect2.exe: error: ld returned 1 exit status；附其余源重试）",
+   "entry": "main.cpp"
+  }
+ ],
+ "dp-observer": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp",
+    "observer.cpp",
+    "subject.cpp"
+   ],
+   "out": "ConcreteObserverB observer....old",
+   "note": "（单编 main.cpp 失败：collect2.exe: error: ld returned 1 exit status；附其余源重试）",
+   "entry": "main.cpp"
+  }
+ ],
+ "dp-strategy-v0": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp",
+    "ConcreteStrategyA.cpp",
+    "ConcreteStrategyB.cpp",
+    "Context.cpp",
+    "Strategy.cpp"
+   ],
+   "out": "Hello World",
+   "note": "（单编 main.cpp 失败：collect2.exe: error: ld returned 1 exit status；附其余源重试）",
+   "entry": "main.cpp"
+  }
+ ],
+ "dp-strategy-sort": [
+  {
+   "ok": true,
+   "stage": "syntax-only",
+   "entry": null,
+   "note": "库形态无 main；语法检查通过，独立运行需配入口"
+  }
+ ],
+ "dp-template-method-tank": [
+  {
+   "ok": true,
+   "stage": "syntax-only",
+   "entry": null,
+   "note": "库形态无 main；语法检查通过，独立运行需配入口"
+  }
+ ],
+ "dp-template-method-basic": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp",
+    "AbstractClass.cpp",
+    "ConcreteClass1.cpp",
+    "ConcreteClass2.cpp"
+   ],
+   "out": "Hello World",
+   "note": "（单编 main.cpp 失败：collect2.exe: error: ld returned 1 exit status；附其余源重试）",
+   "entry": "main.cpp"
+  }
+ ],
+ "dp-facade": [
+  {
+   "ok": true,
+   "stage": "syntax-only",
+   "entry": null,
+   "note": "库形态无 main；语法检查通过，独立运行需配入口"
+  }
+ ],
+ "ds-linear": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello World!",
+   "note": "",
+   "entry": "main.cpp"
+  },
+  {
+   "ok": false,
+   "stage": "test-syntax",
+   "entry": "test_linear.cpp",
+   "note": "语法检查失败：compilation terminated."
+  },
+  {
+   "ok": false,
+   "stage": "test-syntax",
+   "entry": "test_list.cpp",
+   "note": "语法检查失败：compilation terminated."
+  },
+  {
+   "ok": false,
+   "stage": "test-syntax",
+   "entry": "test_map.cpp",
+   "note": "语法检查失败：compilation terminated."
+  },
+  {
+   "ok": false,
+   "stage": "test-syntax",
+   "entry": "test_vector.cpp",
+   "note": "语法检查失败：compilation terminated."
+  }
+ ],
+ "ds-recursion": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp",
+    "recursion.cpp"
+   ],
+   "out": "Hello World!",
+   "note": "（单编 main.cpp 失败：collect2.exe: error: ld returned 1 exit status；附其余源重试）",
+   "entry": "main.cpp"
+  },
+  {
+   "ok": false,
+   "stage": "test-syntax",
+   "entry": "test_recursion.cpp",
+   "note": "语法检查失败：compilation terminated."
+  }
+ ],
+ "ds-search": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello World!",
+   "note": "",
+   "entry": "main.cpp"
+  },
+  {
+   "ok": false,
+   "stage": "test-syntax",
+   "entry": "test_search.cpp",
+   "note": "语法检查失败：compilation terminated."
+  }
+ ],
+ "ds-sort": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello World!",
+   "note": "",
+   "entry": "main.cpp"
+  },
+  {
+   "ok": false,
+   "stage": "test-empty",
+   "entry": "test_sort.cpp",
+   "note": "空文件（0 B），当年未写完"
+  }
+ ],
+ "ds-tree": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello World!",
+   "note": "",
+   "entry": "main.cpp"
+  },
+  {
+   "ok": false,
+   "stage": "test-syntax",
+   "entry": "test_btree.cpp",
+   "note": "语法检查失败：compilation terminated."
+  }
+ ],
+ "alg-c-array": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "**********查找前N个最大值*****************",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-c-list": [
+  {
+   "ok": false,
+   "stage": "compile",
+   "note": "      |     ^~~~~",
+   "srcs": [
+    "main.c"
+   ],
+   "entry": "main.c"
+  }
+ ],
+ "alg-c-stack": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "单链表逆序",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-c-queue": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "1",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-c-string": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "Hello, World!",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-c-tree": [
+  {
+   "ok": false,
+   "stage": "compile",
+   "note": "compilation terminated.（单编 main.c 失败：compilation terminated.；附其余源重试）",
+   "srcs": [
+    "main.c",
+    "advance.c"
+   ],
+   "entry": "main.c"
+  }
+ ],
+ "alg-goldbach": [
+  {
+   "ok": true,
+   "stage": "run-timeout",
+   "note": "编译通过；运行 15s 未退出（等待输入或长循环）",
+   "srcs": [
+    "main.c"
+   ],
+   "entry": "main.c"
+  }
+ ],
+ "alg-callback": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello, World!",
+   "note": "",
+   "entry": "main.cpp"
+  }
+ ],
+ "alg-check": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "Hello, World!",
+   "note": "",
+   "entry": "main.c"
+  },
+  {
+   "ok": false,
+   "stage": "test-syntax",
+   "entry": "test_main.c",
+   "note": "语法检查失败：compilation terminated."
+  },
+  {
+   "ok": false,
+   "stage": "test-syntax",
+   "entry": "test_sub.c",
+   "note": "语法检查失败：compilation terminated."
+  }
+ ],
+ "alg-file": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "Hello, World!",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-function-pointer": [
+  {
+   "ok": false,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "",
+   "note": "退出码 3221225477",
+   "entry": "main.c"
+  }
+ ],
+ "alg-magic-square": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c",
+    "matrix.c"
+   ],
+   "out": "Hello, World!",
+   "note": "（单编 main.c 失败：collect2.exe: error: ld returned 1 exit status；附其余源重试）",
+   "entry": "main.c"
+  },
+  {
+   "ok": false,
+   "stage": "compile",
+   "note": "compilation terminated.（单编 unit_test_main.c 失败：compilation terminated.；附其余源重试）",
+   "srcs": [
+    "unit_test_main.c",
+    "matrix.c"
+   ],
+   "entry": "unit_test_main.c"
+  }
+ ],
+ "alg-pi": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "i = 1, remainder = 1.000000, pi = 4.000000",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-struct": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "Hello, World! 皇甫珍竹(13)",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-volume": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "输入长宽高，逗号分割",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-substring": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello World!",
+   "note": "",
+   "entry": "main.cpp"
+  }
+ ],
+ "alg-dacidian-backpack": [
+  {
+   "ok": false,
+   "stage": "compile",
+   "note": "compilation terminated.",
+   "srcs": [
+    "main.c"
+   ],
+   "entry": "main.c"
+  }
+ ],
+ "alg-dacidian-backtrack": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "1-n集合中, 取出r个数的所有组合",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-dacidian-cstring": [
+  {
+   "ok": false,
+   "stage": "compile",
+   "note": "      |           ^",
+   "srcs": [
+    "main.c"
+   ],
+   "entry": "main.c"
+  }
+ ],
+ "alg-dacidian-enum": [
+  {
+   "ok": true,
+   "stage": "run-timeout",
+   "note": "编译通过；运行 15s 未退出（等待输入或长循环）",
+   "srcs": [
+    "main.c"
+   ],
+   "entry": "main.c"
+  }
+ ],
+ "alg-dacidian-iterative": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "100, 20的最大公约数:20, 最小公约数:100",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-dacidian-sort": [
+  {
+   "ok": false,
+   "stage": "compile",
+   "note": "compilation terminated.",
+   "srcs": [
+    "main.c"
+   ],
+   "entry": "main.c"
+  }
+ ],
+ "alg-avg-value": [
+  {
+   "ok": false,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello, World!",
+   "note": "退出码 3221226356",
+   "entry": "main.cpp"
+  }
+ ],
+ "alg-fib-v2": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello, World!",
+   "note": "",
+   "entry": "main.cpp"
+  }
+ ],
+ "alg-fibonacci": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "1         1         2         3         5",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-footstep": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "1:-1--1--1--1-",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-footstep-v2": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello, World!",
+   "note": "",
+   "entry": "main.cpp"
+  }
+ ],
+ "alg-hanoi": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "前期计划：准备将编号5（含）以上的盘从A通过C移动到B",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-int-factorization": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "-------整数分解--------",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-max-value": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello, World!",
+   "note": "",
+   "entry": "main.cpp"
+  }
+ ],
+ "alg-numeral-system": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "6, 2, 3",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-permutation": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello, World!",
+   "note": "",
+   "entry": "main.cpp"
+  }
+ ],
+ "alg-queen": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.c"
+   ],
+   "out": "0\t0\t0\t0",
+   "note": "",
+   "entry": "main.c"
+  }
+ ],
+ "alg-binary-search": [
+  {
+   "ok": false,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello, World!",
+   "note": "C:/Users/tiger/AppData/Local/Programs/GNU Octave/Octave-11.3.0/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/c++/bits/stl_vector.h:1282: constexpr std::vector<_Tp, _Alloc>::const_reference std::ve",
+   "entry": "main.cpp"
+  }
+ ],
+ "alg-gold": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello, World!",
+   "note": "",
+   "entry": "main.cpp"
+  }
+ ],
+ "alg-merge-sort": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello, World!",
+   "note": "",
+   "entry": "main.cpp"
+  }
+ ],
+ "alg-queen8": [
+  {
+   "ok": true,
+   "stage": "run",
+   "srcs": [
+    "main.cpp"
+   ],
+   "out": "Hello, World!",
+   "note": "",
+   "entry": "main.cpp"
+  }
+ ]
+}

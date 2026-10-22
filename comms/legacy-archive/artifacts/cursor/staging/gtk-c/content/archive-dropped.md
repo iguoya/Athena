@@ -1,0 +1,67 @@
+# 未收入历史归档的 keep 单元（drop-trivial）
+
+原仓库归档后仍可取回。格式：旧路径 — 原因。
+
+- `Linux/GTK/GtkApp` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/01-HelloGTK` — drop-trivial：Hello/空窗级或与已收 hello_builder 重复
+- `Linux/GTK/12-compile_hello` — drop-trivial：Hello/空窗级或与已收 hello_builder 重复
+- `Linux/GTK/20-simplegtk` — drop-trivial：Hello/空窗级或与已收 hello_builder 重复
+- `Linux/GTK/21-GTKHello` — drop-trivial：Hello/空窗级或与已收 hello_builder 重复
+- `Linux/GTK/27-Hello.c` — drop-trivial：Hello/空窗级或与已收 hello_builder 重复
+- `Linux/GTK/G01-HelloWorld` — drop-trivial：Hello/空窗级或与已收 hello_builder 重复
+- `Linux/GTK/g18-hello` — drop-trivial：Hello/空窗级或与已收 hello_builder 重复
+- `Linux/GTK/g19-basicwindow` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列
+- `Linux/GTK/g24-hello` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列
+- `Linux/GTK/04-GTK_Glade` — drop-trivial：Glade 向导壳 / 与已收 glade 条目重复且手写逻辑不足
+- `Linux/GTK/10-glade` — drop-trivial：Glade 向导壳 / 与已收 glade 条目重复且手写逻辑不足
+- `Linux/GTK/11-glade` — drop-trivial：Glade 向导壳 / 与已收 glade 条目重复且手写逻辑不足
+- `Linux/GTK/14-glade_only_window` — drop-trivial：Glade 向导壳 / 与已收 glade 条目重复且手写逻辑不足
+- `Linux/GTK/25-glade` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列
+- `Linux/GTK/G10-Glade` — drop-trivial：Glade 向导壳 / 与已收 glade 条目重复且手写逻辑不足
+- `Linux/GTK/G11-Glade` — drop-trivial：Glade 向导壳 / 与已收 glade 条目重复且手写逻辑不足
+- `Linux/GTK/G12-Glade` — drop-trivial：Glade 向导壳 / 与已收 glade 条目重复且手写逻辑不足
+- `Linux/GTK/G14-Glade` — drop-trivial：Glade 向导壳 / 与已收 glade 条目重复且手写逻辑不足
+- `Linux/GTK/G15-Glade` — drop-trivial：Glade 向导壳 / 与已收 glade 条目重复且手写逻辑不足
+- `Linux/GTK/G16-Glade` — drop-trivial：Glade 向导壳 / 与已收 glade 条目重复且手写逻辑不足
+- `Linux/GTK/17-Frame` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/22-GBox` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/g20-box` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列
+- `Linux/GTK/g21-framework` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列
+- `Linux/GTK/g25-box` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列
+- `Linux/GTK/g26-box` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/g31-mixbox` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列
+- `Linux/GTK/15-gtkgrid` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/g33-grid1` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/g37-multi_window` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列
+- `Linux/GTK/g38-multi_window` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列
+- `Linux/GTK/03-GTK_Button` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/05-Point` — drop-trivial：C 语言基础演示，几乎无 GTK 结构可教
+- `Linux/GTK/06-Array` — drop-trivial：C 语言基础演示，几乎无 GTK 结构可教
+- `Linux/GTK/07-DataType` — drop-trivial：C 语言基础演示，几乎无 GTK 结构可教
+- `Linux/GTK/08-Point` — drop-trivial：C 语言基础演示，几乎无 GTK 结构可教
+- `Linux/GTK/09-Struct` — drop-trivial：C 语言基础演示，几乎无 GTK 结构可教
+- `Linux/GTK/1-basic_principle` — drop-trivial：C 语言基础演示，几乎无 GTK 结构可教
+- `Linux/GTK/12-cmakeGTK` — drop-trivial：Hello/空窗级或与已收 hello_builder 重复
+- `Linux/GTK/13-CodeBlocksTest` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/13-memory_layout` — drop-trivial：C 语言基础演示，几乎无 GTK 结构可教
+- `Linux/GTK/16-window` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/26-Gtk4.c` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/29-cmake` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/30-CodeBlocks` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/32-Control` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/G02-GtkPicture` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/G03-ButtonLabel` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/G04-ButtonTest` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/G05-Image` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/G05-LegacyGTK` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/G06-Image` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/G07-FlowLayout` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/G08-Layout` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/G09-Gtk4` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/G22-Begin` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/g27-button` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/g35-text` — drop-trivial：Anjuta/向导样板，手写回调不足（脚手架见 gtk.arc.anjuta_skeleton）
+- `Linux/GTK/14-gtk-foobar` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列
+- `Linux/GTK/15-gtk-foobar` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列
+- `Linux/GTK/g37-conponent` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列
+- `Linux/GTK/gtk-foobar` — merge-into 已收条目（见对应 origin.duplicates）；Anjuta/同构脚手架不单列

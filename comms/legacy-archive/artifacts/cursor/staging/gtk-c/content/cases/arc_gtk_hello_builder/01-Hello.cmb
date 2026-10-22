@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!DOCTYPE cambalache-project SYSTEM "cambalache-project.dtd">
+<cambalache-project version="0.10.3" target_tk="gtk-4.0">
+  <ui>
+	(1,None,"01-hello.ui","01-hello.ui",None,None,None,None,None,None)
+  </ui>
+  <object>
+	(1,1,"GtkWindow","window",None,None,None,None,None),
+	(1,2,"GtkGrid",None,1,None,None,None,-1),
+	(1,3,"GtkButton",None,2,None,None,None,None),
+	(1,4,"GtkButton",None,2,None,None,None,1),
+	(1,5,"GtkButton",None,2,None,None,None,4)
+  </object>
+  <object_layout_property>
+	(1,2,3,"GtkGridLayoutChild","column","0",None,None,None,None),
+	(1,2,3,"GtkGridLayoutChild","column-span","1",None,None,None,None),
+	(1,2,3,"GtkGridLayoutChild","row","0",None,None,None,None),
+	(1,2,3,"GtkGridLayoutChild","row-span","1",None,None,None,None),
+	(1,2,4,"GtkGridLayoutChild","column","1",None,None,None,None),
+	(1,2,4,"GtkGridLayoutChild","column-span","1",None,None,None,None),
+	(1,2,4,"GtkGridLayoutChild","row","1",None,None,None,None),
+	(1,2,4,"GtkGridLayoutChild","row-span","1",None,None,None,None),
+	(1,2,5,"GtkGridLayoutChild","column","2",None,None,None,None),
+	(1,2,5,"GtkGridLayoutChild","column-span","1",None,None,None,None),
+	(1,2,5,"GtkGridLayoutChild","row","2",None,None,None,None),
+	(1,2,5,"GtkGridLayoutChild","row-span","1",None,None,None,None)
+  </object_layout_property>
+</cambalache-project>

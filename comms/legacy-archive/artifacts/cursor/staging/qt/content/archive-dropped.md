@@ -1,0 +1,93 @@
+# Qt 历史归档 · drop-trivial（未进应用）
+
+依据 AUTHORING.md 第一节：模板/Hello World/同主题重复变体/写不出 3 条具体批注的不进。
+原仓库归档后仍可取回。
+
+- `Qt5/0-CommandCompile` — drop-trivial：Hello/向导/空工程级（0-CommandCompile）
+- `Qt5/0-CommandCompile2` — drop-trivial：Hello/向导/空工程级（0-CommandCompile2）
+- `Qt5/0-CommandCompile3` — drop-trivial：Hello/向导/空工程级（0-CommandCompile3）
+- `Qt5/0-CommandCompile3.pro` — drop-trivial：Hello/向导/空工程级（0-CommandCompile3.pro）
+- `Qt5/1-Hello` — drop-trivial：Hello/向导/空工程级（1-Hello）
+- `Qt5/10-JS` — drop-trivial：精选筛除——规模过小或与已收条目重复（10-JS；archive.qt.basics）
+- `Qt5/11-HelloWorld` — drop-trivial：Hello/向导/空工程级（11-HelloWorld）
+- `Qt5/11-TestWidget` — drop-trivial：精选筛除——规模过小或与已收条目重复（11-TestWidget；archive.qt.basics）
+- `Qt5/12-Syntax` — drop-trivial：精选筛除——规模过小或与已收条目重复（12-Syntax；archive.qt.basics）
+- `Qt5/12-test_widget2` — drop-trivial：精选筛除——规模过小或与已收条目重复（12-test_widget2；archive.qt.basics）
+- `Qt5/16-JS` — drop-trivial：精选筛除——规模过小或与已收条目重复（16-JS；archive.qt.basics）
+- `Qt5/28-TextInput` — drop-trivial：精选筛除——规模过小或与已收条目重复（28-TextInput；archive.qt.basics）
+- `Qt5/3-QtWidgets` — drop-trivial：精选筛除——规模过小或与已收条目重复（3-QtWidgets；archive.qt.basics）
+- `Qt5/30-Log` — drop-trivial：精选筛除——规模过小或与已收条目重复（30-Log；archive.qt.basics）
+- `Qt5/4-QWidget` — drop-trivial：精选筛除——规模过小或与已收条目重复（4-QWidget；archive.qt.basics）
+- `Qt5/5-QWidget` — drop-trivial：精选筛除——规模过小或与已收条目重复（5-QWidget；archive.qt.basics）
+- `Qt5/81-Hello` — drop-trivial：Hello/向导/空工程级（81-Hello）
+- `Qt5/91-DebugRelease` — drop-trivial：精选筛除——规模过小或与已收条目重复（91-DebugRelease；archive.qt.basics）
+- `Qt5/49-UMLDesigner` — drop-trivial：精选筛除——规模过小或与已收条目重复（49-UMLDesigner；archive.qt.designer）
+- `Qt5/21-LayoutBinding` — drop-trivial：与已收同主题布局/网络条目重复变体（21-LayoutBinding）
+- `Qt5/23-LayoutColumn` — drop-trivial：与已收同主题布局/网络条目重复变体（23-LayoutColumn）
+- `Qt5/25-LayoutFlow` — drop-trivial：与已收同主题布局/网络条目重复变体（25-LayoutFlow）
+- `Qt5/26-LayoutColumn` — drop-trivial：与已收同主题布局/网络条目重复变体（26-LayoutColumn）
+- `Qt5/43-CheckBox` — drop-trivial：与已收同主题布局/网络条目重复变体（43-CheckBox）
+- `Qt5/54-Layout` — drop-trivial：与已收同主题布局/网络条目重复变体（54-Layout）
+- `Qt5/55-Layout` — drop-trivial：与已收同主题布局/网络条目重复变体（55-Layout）
+- `Qt5/59-StackWidget` — drop-trivial：与已收同主题布局/网络条目重复变体（59-StackWidget）
+- `Qt5/82-NetworkInformation` — drop-trivial：与已收同主题布局/网络条目重复变体（82-NetworkInformation）
+- `Qt5/83-NetworkInterface` — drop-trivial：精选筛除——规模过小或与已收条目重复（83-NetworkInterface；archive.qt.network）
+- `Practice/untitled` — drop-trivial：精选筛除——规模过小或与已收条目重复（untitled；archive.qt.other）
+- `Qt5/02-NormalUI` — drop-trivial：精选筛除——规模过小或与已收条目重复（02-NormalUI；archive.qt.other）
+- `Qt5/51-circle` — drop-trivial：精选筛除——规模过小或与已收条目重复（51-circle；archive.qt.other）
+- `Qt5/52-QtDateType` — drop-trivial：精选筛除——规模过小或与已收条目重复（52-QtDateType；archive.qt.other）
+- `Qt5/64-CircleArea` — drop-trivial：精选筛除——规模过小或与已收条目重复（64-CircleArea；archive.qt.other）
+- `Qt5/7-background` — drop-trivial：精选筛除——规模过小或与已收条目重复（7-background；archive.qt.other）
+- `Qt5/82-UI` — drop-trivial：精选筛除——规模过小或与已收条目重复（82-UI；archive.qt.other）
+- `Qt5/9-AutoLarge` — drop-trivial：精选筛除——规模过小或与已收条目重复（9-AutoLarge；archive.qt.other）
+- `Qt5/Examples/clocks` — drop-trivial：精选筛除——规模过小或与已收条目重复（clocks；archive.qt.other）
+- `Qt5/Examples/Examples.pro` — drop-trivial：Hello/向导/空工程级（Examples.pro）
+- `Linux/PyQt/A1-Hello` — drop-trivial：Hello/向导/空工程级（A1-Hello）
+- `Linux/PyQt/A2-Hello` — drop-trivial：Hello/向导/空工程级（A2-Hello）
+- `Linux/PyQt/A3-Hello` — drop-trivial：Hello/向导/空工程级（A3-Hello）
+- `Qt5/14-HelloPyQt` — drop-trivial：Hello/向导/空工程级（14-HelloPyQt）
+- `Qt5/16-PythonUI` — drop-trivial：精选筛除——规模过小或与已收条目重复（16-PythonUI；archive.qt.pyqt）
+- `Qt5/PyQt5` — drop-trivial：精选筛除——规模过小或与已收条目重复（PyQt5；archive.qt.pyqt）
+- `Practice/QT/QmlBook/1-2MeetQt5` — drop-trivial：QmlBook 跟练与 Qt5/ 自写同主题重复或无实质批注点（1-2MeetQt5）
+- `Practice/QT/QmlBook/2-2HelloWorldQML` — drop-trivial：Hello/向导/空工程级（2-2HelloWorldQML）
+- `Practice/QT/QmlBook/2-3-1ConsoleApplication` — drop-trivial：QmlBook 跟练与 Qt5/ 自写同主题重复或无实质批注点（2-3-1ConsoleApplication）
+- `Practice/QT/QmlBook/2-3-2BasicWidgets` — drop-trivial：QmlBook 跟练与 Qt5/ 自写同主题重复或无实质批注点（2-3-2BasicWidgets）
+- `Practice/QT/QmlBook/4-2-2Rectangle` — drop-trivial：QmlBook 跟练与 Qt5/ 自写同主题重复或无实质批注点（4-2-2Rectangle）
+- `Practice/QT/QmlBook/4-2-3TextInput` — drop-trivial：QmlBook 跟练与 Qt5/ 自写同主题重复或无实质批注点（4-2-3TextInput）
+- `Practice/QT/Qt5开发及实例/1_ConsoleApplication` — drop-trivial：Qt5开发及实例跟练无独立内容（1_ConsoleApplication）
+- `Linux/QML/1-material` — drop-trivial：精选筛除——规模过小或与已收条目重复（1-material；archive.qt.qml-quick）
+- `Qt5/14-Quick` — drop-trivial：精选筛除——规模过小或与已收条目重复（14-Quick；archive.qt.qml-quick）
+- `Qt5/14-QuickHello` — drop-trivial：Hello/向导/空工程级（14-QuickHello）
+- `Qt5/15-HelloQtQuick` — drop-trivial：Hello/向导/空工程级（15-HelloQtQuick）
+- `Qt5/15-Quick` — drop-trivial：精选筛除——规模过小或与已收条目重复（15-Quick；archive.qt.qml-quick）
+- `Qt5/18-Item` — drop-trivial：精选筛除——规模过小或与已收条目重复（18-Item；archive.qt.qml-quick）
+- `Qt5/19-QML` — drop-trivial：精选筛除——规模过小或与已收条目重复（19-QML；archive.qt.qml-quick）
+- `Qt5/32-HelloQuick` — drop-trivial：Hello/向导/空工程级（32-HelloQuick）
+- `Qt5/34-HelloQtQuick` — drop-trivial：Hello/向导/空工程级（34-HelloQtQuick）
+- `Qt5/35-QML` — drop-trivial：精选筛除——规模过小或与已收条目重复（35-QML；archive.qt.qml-quick）
+- `Qt5/36-Button` — drop-trivial：精选筛除——规模过小或与已收条目重复（36-Button；archive.qt.qml-quick）
+- `Qt5/39-Rectangle` — drop-trivial：精选筛除——规模过小或与已收条目重复（39-Rectangle；archive.qt.qml-quick）
+- `Qt5/41-QuickControls` — drop-trivial：精选筛除——规模过小或与已收条目重复（41-QuickControls；archive.qt.qml-quick）
+- `Qt5/42-ControlButton` — drop-trivial：精选筛除——规模过小或与已收条目重复（42-ControlButton；archive.qt.qml-quick）
+- `Qt5/44-Label` — drop-trivial：精选筛除——规模过小或与已收条目重复（44-Label；archive.qt.qml-quick）
+- `Qt5/45-Panel` — drop-trivial：精选筛除——规模过小或与已收条目重复（45-Panel；archive.qt.qml-quick）
+- `Qt5/46-Frame` — drop-trivial：精选筛除——规模过小或与已收条目重复（46-Frame；archive.qt.qml-quick）
+- `Qt5/47-Page` — drop-trivial：精选筛除——规模过小或与已收条目重复（47-Page；archive.qt.qml-quick）
+- `Qt5/52-slider` — drop-trivial：精选筛除——规模过小或与已收条目重复（52-slider；archive.qt.qml-quick）
+- `Qt5/58-Material` — drop-trivial：精选筛除——规模过小或与已收条目重复（58-Material；archive.qt.qml-quick）
+- `Qt5/6-HelloQML` — drop-trivial：Hello/向导/空工程级（6-HelloQML）
+- `Qt5/61-HelloWorldQML` — drop-trivial：Hello/向导/空工程级（61-HelloWorldQML）
+- `Qt5/62-QuickPi` — drop-trivial：精选筛除——规模过小或与已收条目重复（62-QuickPi；archive.qt.qml-quick）
+- `Qt5/62-QuickUI` — drop-trivial：精选筛除——规模过小或与已收条目重复（62-QuickUI；archive.qt.qml-quick）
+- `Qt5/QML/1-QuickUI` — drop-trivial：精选筛除——规模过小或与已收条目重复（1-QuickUI；archive.qt.qml-quick）
+- `Qt5/QML/QML.pro` — drop-trivial：Hello/向导/空工程级（QML.pro）
+- `Qt5/92-CallApp` — drop-trivial：精选筛除——规模过小或与已收条目重复（92-CallApp；archive.qt.windows-dialogs）
+
+## 返工复筛（T-103 呈现统一）
+- `Qt5/17-DateTime` — drop-trivial：仅 Item + console.log 打印 Date/数组，无窗口无控件，批注只能凑根类型与 API 缺失（返工复筛，原条目 qt.arc.datetime）
+- `Qt5/QML/1-Layout` — drop-trivial：名为 QML Layout，实为空白 Widgets MainWindow，无可教的布局代码（返工复筛，原条目 qt.arc.qmllayout）
+- `Linux/PyQt/A6-Dialog` — drop-trivial：对话框案例只剩空 QMainWindow.show()，无 QDialog/无逻辑（返工复筛，原条目 qt.arc.pyqtdialog）
+- `Qt5/8-QMLSignal` — drop-trivial：Engine 模板 + onClicked 改色，无跨对象信号/C++ 桥接，批注只能写名实不符（返工复筛，原条目 qt.arc.qmlsignal）
+- `Qt5/57-MaterialStyle` — drop-trivial：conf 未设 Material Style，UI 与 Quick 多页模板同构，无独立主题内容（返工复筛，原条目 qt.arc.materialstyle）
+- `Qt5/37-Quick` — drop-trivial：与已收 qt.arc.quickstack（33-QuickStack）main.qml/main.cpp/qml.qrc 字节相同的重复变体（返工复筛，原条目 qt.arc.quick）
+
