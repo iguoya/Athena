@@ -99,6 +99,7 @@
 | embedded 嵌入式 | 与 softcert 同构（界面体验刻意不同，前端 React，embedded ADR 0002） | 同上两条，随内容建设推进；硬件实验视图出现后遵守 P1（先预测引脚/时序行为再上板验证） |
 | dsa 数据结构与算法 | trace-player（追踪题）；lab-editor（实验编辑器）；即时编译反馈（P4 ✓） | 节结构模板化为 PRIMM 五段（Predict 段 = 代码 + 预测输入框，运行前必填）；新增 Parsons 拖拽排序题作为「读码 → 写码」的中间题型 |
 | chen-linear-algebra-mooc 大众线性代数·视频课 | P | E | 看前提示先预测 → 课件逐页精读 → 自答 → Octave 上机先预测再运行；首页是周/节时间轴，视频只登记外链 | 输出预测、数值核对、概念选择 |
+| weng-c-programming 翁恺 C 语言·课堂工作台 | P | E | 开场预测 → 视频窗格看一个节拍 → 暂停点任务（预测/追踪、速答）→ 你来做（本机编译运行比对）→ 出口题与要点改写；首页是继续上次的节 | 追踪执行预测、输出预测、速答、骨架实验 |
 | c-plus-plus C++ | lesson → experiment_dock → checkpoint_view（样例→实验→检查点，P3 ✓）；**predict 块已实现**（scored=false 的先猜再验，ValueSemantics 课程已用 5 处） | 实验撤除序列：完整样例 → 缺步 → 空白（P3）；新课程内容沿用 predict 块组织 Predict 段 |
 | mathematics 数学 | diagnostic（诊断）、drills（练习）、graph-view / transform-view（多表征） | drills 组卷改**交错**逻辑（按已学知识点混出，不按章成串，P2 同源）；每题配 Pólya 分级提示按钮（「理解→计划→执行→回顾」逐级展开，P1 的提示梯）；graph-view 与 transform-view 组成同概念多表征联动 |
 | english 磨砚（已并入摘星的考研英语二章节，ADR 0117） | practice.ts 检索练习主体；voice 朗读 | 泛读流（易读材料连续读，P2 的输入侧）；翻译/写作题按 TBLT 任务卡组织（任务 → 尝试 → 对照参考） |

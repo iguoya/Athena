@@ -51,7 +51,8 @@ guide/<id>/     手册类教程：跟随一本外部手册/官方教程精读，
                 sympy-tutorial（「数学」圈，数学工具教程精读，ADR 0163）、chen-linear-algebra
                 （陈怀琛《实用大众线性代数（MATLAB版）》精读，「数学」圈，ADR 0177）、axler-linear-algebra
                 （Axler《线性代数应该这样学（第四版）》官方中文版精读，「数学」圈，ADR 0179）、chen-linear-algebra-mooc
-                （西电慕课《实用大众线性代数》视频课精读，视频课形态，「数学」圈，ADR 0180）
+                （西电慕课《实用大众线性代数》视频课精读，视频课形态，「数学」圈，ADR 0180）、weng-c-programming
+                （翁恺《C语言程序设计》视频课·课堂工作台，视频是界面窗格，「程序设计」圈，ADR 0182）
 mentor/<id>/    导师类（图谱/参考类）：polaris（路线图与指南针）、competitions（「大赛」圈的赛历，
                 ADR 0114）、jiuzhou（「兴趣」圈的九州历史地理图鉴，ADR 0156）、
                 mathematics-compass（数学罗盘，数学学习导引，「数学」圈，ADR 0174）；

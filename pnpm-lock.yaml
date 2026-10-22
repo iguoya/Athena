@@ -972,6 +972,58 @@ importers:
         specifier: 'catalog:'
         version: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)
 
+  guide/weng-c-programming:
+    dependencies:
+      '@athena/app-update':
+        specifier: 'workspace:'
+        version: link:../../packages/app-update
+      '@fontsource/noto-sans-sc':
+        specifier: 'catalog:'
+        version: 5.3.1
+      '@tauri-apps/api':
+        specifier: 'catalog:'
+        version: 2.12.3
+      '@tauri-apps/plugin-process':
+        specifier: 'catalog:'
+        version: 2.4.0
+      '@tauri-apps/plugin-updater':
+        specifier: 'catalog:'
+        version: 2.13.3
+      katex:
+        specifier: ^0.18.2
+        version: 0.18.11
+      lucide-react:
+        specifier: 'catalog:'
+        version: 1.55.0(@types/react@19.3.0)(react@19.3.0)
+      react:
+        specifier: 'catalog:'
+        version: 19.3.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.0(react@19.3.0)
+    devDependencies:
+      '@tauri-apps/cli':
+        specifier: 'catalog:'
+        version: 2.12.2
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.3.0(@types/react@19.3.0)
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 6.1.2(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0))
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vite:
+        specifier: 'catalog:'
+        version: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)
+
   launcher/webui:
     dependencies:
       '@athena/app-update':
