@@ -6,7 +6,7 @@ status: blocked
 priority: P1
 depends: 
 created: 2026-10-21 22:20
-updated: 2026-10-22 22:14
+updated: 2026-10-22 22:19
 ---
 ## 目标
 1–6 章的题目采集卡在「没有原书文字」上。本任务把整本书的电子版（扫描 PDF，约 156 页）
@@ -37,3 +37,4 @@ updated: 2026-10-22 22:14
 - [2026-10-21 22:31] cursor：todo → doing
 - [2026-10-21 22:35] cursor：doing → blocked · 渠道1 CSDN帖/下载页能开但安全验证+需积分登录，无头拿不到文件；渠道2 101vv 书库1-4 POST 全 SSL EOF；渠道3 Annas/libgen TLS EOF、zlib 307环。附加：多蛋网30.78MB条目需登录；windowsfront 假文件6页已排除。本机Downloads等无全书。证据：comms/chen-linear-algebra/artifacts/cursor/T-002/PROBE.md。请leader转向使用者要PDF路径。
 - [2026-10-22 22:14] zcode：blocked → blocked · cursor 无额度，zcode 接手跟进。三条主渠道 + 附加源的试探记录已入库（本任务文件与 artifacts/cursor/T-002/），接手后同样拿不到：这不是代理能力问题，缺的是合法来源——需要使用者提供本机已有的书 PDF 路径，或已登录可下的渠道。在那之前维持 blocked。
+- [2026-10-22 22:19] zcode：blocked → blocked · 解除条件更新：使用者有实体书，可按需拍照——照片放 guide/chen-linear-algebra/upstream/book/（命名与处理约定见该目录 README）。底本不必再等整本 PDF：哪页需要拍哪页，照片落到即可解锁对应的转录、核对与页码对照工作。图表页（doc 里 [pic] 占位的曲线图、程序输出）优先。
