@@ -1,0 +1,205 @@
+{
+ "_meta": {
+  "what": "课堂脚本范例：DESIGN-v2 第 3 节的 beats 结构，按 REVIEW-DESIGN-v2 的意见补了 concept 字段与任务形态",
+  "lesson": "西电 w1s2（文本底本，无本地视频；videoRef 是 MOOC 课程页）",
+  "timestamps": "start/end 全部待边看边标，本范例不编造时间",
+  "task_schema_note": "任务字段沿用 exercises/ 的 stem/sol/check/verify/source_refs，另加 type（任务类型）、scoring（machine=机器核对进掌握度 / none=教学动作不判分）；single/multi/text/order 是建议新增的 check.kind，供定稿参考",
+  "concept_note": "concept 用「节 id#概念短名」占位：curriculum.json 目前节以下无独立知识点 id；若后补知识点层，改挂知识点 id"
+ },
+ "id": "w1s2",
+ "title": "高斯消元法与初等变换",
+ "lesson": {
+  "week": 1,
+  "no": 2,
+  "outline_title": "高斯消元法与初等变换",
+  "video_url": "https://www.icourse163.org/course/XIDIAN-1001775006"
+ },
+ "videoRef": {
+  "kind": "link",
+  "url": "https://www.icourse163.org/course/XIDIAN-1001775006",
+  "note": "中国大学 MOOC 第 1 讲；本节对应区间待播放器适配后用边看边标工具标定"
+ },
+ "opening": {
+  "goal": "知道有哪几种同解变换、阶梯形长什么样，为下周用 rref 解方程组做准备",
+  "tasks": [
+   {
+    "type": "predict",
+    "scoring": "machine",
+    "stem": "笔记上解三元方程组时你做过换位、倍乘、消元。下面哪种操作**不**保证得到同解方程组？",
+    "options": [
+     "互换两个方程的位置",
+     "用一个非零数乘某个方程",
+     "方程两边同加一个非零常数",
+     "消去某个未知量"
+    ],
+    "answer": 2,
+    "sol": "两边同加非零常数改变的是方程本身（x+y=1 变成 x+y=2，解集不同），不是同解变换；课件 p.15 的三种变换都保持解不变。带着这个对比看视频/读课件。",
+    "check": { "kind": "single", "ask": "选一个：", "answer": 2 },
+    "source_refs": [
+     { "relation": "based-on", "locator": "课件 第1章 p.15 三种同解变换", "note": "选项由三种同解变换反设构成" }
+    ]
+   }
+  ]
+ },
+ "beats": [
+  {
+   "id": "w1s2-b1",
+   "start": null,
+   "end": null,
+   "concept": "w1s2#阶数与消元目标",
+   "slides": [ "第1章 p.14" ],
+   "takeaway": "阶数 = max(m,n)；消元法的目标是把方程组化成容易求解的阶梯型同解方程组；要能编成程序执行，就必须借助矩阵。",
+   "pause_tasks": [],
+   "end_task": {
+    "type": "speed",
+    "scoring": "machine",
+    "stem": "课件把 max(m,n)（方程数与未知量数中较大者）叫作方程组的什么？",
+    "answer": "阶数",
+    "sol": "课件 p.14：m 为方程数、n 为未知量数，课件称 max(m,n) 为方程组的阶数。",
+    "check": { "kind": "text", "ask": "两个字：", "accept": ["阶数"], "normalize": "trim" },
+    "source_refs": [
+     { "relation": "verbatim", "locator": "课件 第1章 p.14 阶数", "note": "术语与定义原样取自课件" }
+    ]
+   }
+  },
+  {
+   "id": "w1s2-b2",
+   "start": null,
+   "end": null,
+   "concept": "w1s2#三种同解变换",
+   "slides": [ "第1章 p.15" ],
+   "takeaway": "交换、数乘、消元三种变换都不改变解，所以叫同解变换；得到阶梯结构最主要靠消元变换。",
+   "pause_tasks": [
+    {
+     "type": "predict",
+     "scoring": "machine",
+     "stem": "讲师正要给出三种同解变换的名单。先猜：下面哪些在他的名单上？（多选）",
+     "options": [
+      "互换两个方程的位置",
+      "用一个非零数乘某个方程",
+      "把一个方程的 k 倍加到另一个方程上",
+      "把某个方程两边开平方"
+     ],
+     "answer": [0, 1, 2],
+     "sol": "前三正是课件的交换变换、数乘变换、消元变换；开平方不在其中——它一般会改变解集。",
+     "check": { "kind": "multi", "ask": "多选：", "answer": [0, 1, 2] },
+     "on_wrong": { "rewind": true },
+     "source_refs": [
+      { "relation": "verbatim", "locator": "课件 第1章 p.15 三种同解变换", "note": "三个正确选项是课件三种变换的原名" }
+     ]
+    }
+   ],
+   "end_task": {
+    "type": "find-error",
+    "scoring": "machine",
+    "stem": "「用一个任意数 k 乘某个方程，称为数乘变换。」这句话哪里错了？",
+    "options": [
+     "k 必须是非零数",
+     "只能乘齐次方程",
+     "k 必须是整数",
+     "没有错"
+    ],
+    "answer": 0,
+    "sol": "课件 p.15：用一个**非零**数 k 乘某个方程。k 为零会把方程变成 0=0，丢掉一个方程，不同解。",
+    "check": { "kind": "single", "ask": "选一个：", "answer": 0 },
+    "on_wrong": { "rewind": true },
+    "source_refs": [
+     { "relation": "based-on", "locator": "课件 第1章 p.15 数乘变换", "note": "错句由课件定义改动一处构成" }
+    ]
+   }
+  },
+  {
+   "id": "w1s2-b3",
+   "start": null,
+   "end": null,
+   "concept": "w1s2#前向消元与回代",
+   "slides": [ "第1章 p.16" ],
+   "takeaway": "前向消元用系数矩阵从左上往右下消出阶梯，回代从最后一个方程往上逐个解出未知量；交换变换改善精度，商用程序必不可少，教学程序很少用。",
+   "pause_tasks": [
+    {
+     "type": "predict",
+     "scoring": "machine",
+     "stem": "课件正要用系数矩阵演示前向消元。先猜：前向消元把系数矩阵化成什么形状？",
+     "options": [ "对角矩阵", "行阶梯形", "单位矩阵", "对称矩阵" ],
+     "answer": 1,
+     "sol": "前向消元得到行阶梯形（对应阶梯型方程组）；化到单位矩阵是「化最简形」的事，p.16 的演示止于阶梯形。",
+     "check": { "kind": "single", "ask": "选一个：", "answer": 1 },
+     "on_wrong": { "rewind": true },
+     "source_refs": [
+      { "relation": "based-on", "locator": "课件 第1章 p.16 前向消元与回代", "note": "演示内容取自课件页说明" }
+     ]
+    }
+   ],
+   "end_task": {
+    "type": "fill",
+    "scoring": "machine",
+    "stem": "得到阶梯结构最主要的手段是____变换；交换变换的作用是改善____。",
+    "sol": "消元；精度。课件 p.16：「得到阶梯结构最主要靠消元变换；交换变换用来改善精度，商用程序里必不可少，教学程序为简化过程很少用」。",
+    "check": { "kind": "text", "ask": "两个空，用逗号隔开：", "accept": ["消元,精度"], "normalize": "trim" },
+    "source_refs": [
+     { "relation": "verbatim", "locator": "课件 第1章 p.16", "note": "两句均取自课件原文" }
+    ]
+   }
+  },
+  {
+   "id": "w1s2-b4",
+   "start": null,
+   "end": null,
+   "concept": "w1s2#行阶梯形与最简行阶梯形",
+   "slides": [ "第1章 p.17" ],
+   "takeaway": "行阶梯形：全零行在下方、主元呈阶梯排列；再加「主元都是 1、主元列其余为零」就是最简行阶梯形。",
+   "pause_tasks": [],
+   "end_task": {
+    "type": "speed",
+    "scoring": "machine",
+    "stem": "最简行阶梯形比行阶梯形多出的两条要求，下面哪些在其中？（多选）",
+    "options": [
+     "每行的主元都是 1",
+     "每个主元所在列的其余元素都是零",
+     "非零行的个数等于未知量个数",
+     "矩阵必须是方阵"
+    ],
+    "answer": [0, 1],
+    "sol": "课件 p.17：行最简形另加的两条正是「主元为 1」与「主元列其余为零」；后两个选项跟行最简形无关（有非唯一解的方程组，rref 就不是方阵、非零行也可以少于未知量数）。",
+    "check": { "kind": "multi", "ask": "多选：", "answer": [0, 1] },
+    "on_wrong": { "rewind": true },
+    "source_refs": [
+     { "relation": "verbatim", "locator": "课件 第1章 p.17 行阶梯形与最简行阶梯形", "note": "两条判据原样取自课件" }
+    ]
+   }
+  }
+ ],
+ "closing": {
+  "exit_tasks": [
+   {
+    "type": "speed",
+    "scoring": "machine",
+    "stem": "（不看视频）三种同解变换里，用来改善求解精度的是哪种？",
+    "options": [ "交换变换", "数乘变换", "消元变换" ],
+    "answer": 0,
+    "sol": "交换变换。p.16：交换变换用来改善精度，商用程序里必不可少。",
+    "check": { "kind": "single", "ask": "选一个：", "answer": 0 },
+    "source_refs": [
+     { "relation": "verbatim", "locator": "课件 第1章 p.16", "note": "结论原样取自课件" }
+    ]
+   },
+   {
+    "type": "fill",
+    "scoring": "machine",
+    "stem": "（不看视频）消元法把方程组化成容易求解的____型同解方程组；每个非零行左边第一个非零元素叫____。",
+    "sol": "阶梯；主元。见 p.14、p.17。",
+    "check": { "kind": "text", "ask": "两个空，用逗号隔开：", "accept": ["阶梯,主元"], "normalize": "trim" },
+    "source_refs": [
+     { "relation": "verbatim", "locator": "课件 第1章 p.14、p.17", "note": "两个术语原样取自课件" }
+    ]
+   }
+  ],
+  "takeaway_check": {
+   "type": "takeaway",
+   "scoring": "none",
+   "stem": "用你自己的话写一句：为什么这三种变换可以放心大胆地做？（提示：它们对解做了什么、没做什么）写完对照要点。",
+   "ref": "它们只改变方程的书写形式，不改变解——所以叫同解变换；放心做，最后阶梯形照样给出同样的解。"
+  },
+  "next": "w1s3 是要求清单；下周 w2s1 用 MATLAB/Octave 把消元法真正做出来（rref）。"
+ }
+}
