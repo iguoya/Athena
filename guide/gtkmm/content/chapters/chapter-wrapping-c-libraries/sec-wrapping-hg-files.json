@@ -152,7 +152,7 @@
    "type": "para",
    "text": "For example, if there was a C function that returned a\n  `GtkWidget*` and for some reason, instead of having the C++ method\n  also return the widget, it was desirable to have the C++ method place the\n  widget in a specified output parameter, an initialization macro such as the\n  following would be necessary:",
    "sha": "d7f067fc60a3daf8",
-   "zh": null
+   "zh": "例如，如果有一个 C 函数返回 `GtkWidget*`，并且出于某种原因，不希望 C++ 成员函数也返回该部件，而希望它把该部件放进指定的输出参数，就需要如下这样的初始化宏："
   },
   {
    "type": "code",
@@ -182,13 +182,13 @@
    "type": "para",
    "text": "Other macros, such as `_WRAP_METHOD()` and\n    `_WRAP_SIGNAL()` may only be used after a call to a\n    `_CLASS_*` macro.",
    "sha": "1597d4c366920634",
-   "zh": null
+   "zh": "其他宏，例如 `_WRAP_METHOD()` 和 `_WRAP_SIGNAL()`，只能在调用某个 `_CLASS_*` 宏之后使用。"
   },
   {
    "type": "para",
    "text": "Most class macros take an optional argument, `declaration prefix`.\n    It's typically used for a C preprocessor macro defined as `__declspec(dllexport)`\n    or `__declspec(dllimport)` when building with MSVC on Windows,\n    defined as an empty string otherwise.",
    "sha": "706e86a92440f047",
-   "zh": null
+   "zh": "大多数类宏接受一个可选参数 `declaration prefix`。在 Windows 上用 MSVC 构建时，它通常用于定义为 `__declspec(dllexport)` 或 `__declspec(dllimport)` 的 C 预处理宏；其他情况下则定义为空字符串。"
   },
   {
    "type": "heading",
@@ -212,7 +212,7 @@
    "type": "para",
    "text": "`real C class` and `real C base class`\n    are optional. They are seldom used. For instance, from `adjustment.hg`:",
    "sha": "d54f002cc76adf10",
-   "zh": null
+   "zh": "`real C class` 和 `real C base class` 是可选的，很少使用。例如，来自 `adjustment.hg`："
   },
   {
    "type": "code",
@@ -242,7 +242,7 @@
    "type": "para",
    "text": "`real C class` and `real C base class`\n    are optional. They are seldom used. For instance, from `button.hg`:",
    "sha": "a71255b87a1610c2",
-   "zh": null
+   "zh": "`real C class` 和 `real C base class` 是可选的，很少使用。例如，来自 `button.hg`："
   },
   {
    "type": "code",
@@ -464,7 +464,7 @@
    "type": "para",
    "text": "The `_CTOR_DEFAULT()` and\n    `_WRAP_CTOR()` macros add constructors, wrapping the\n    specified `*_new()` C functions. These macros assume that\n    the C object has properties with the same names as the function parameters,\n    as is usually the case, so that it can supply the parameters directly to a\n    `g_object_new()` call. These constructors never actually\n    call the `*_new()` C functions,\n    because gtkmm must actually instantiate derived GTypes, and the\n    `*_new()` C functions are meant only as convenience\n    functions for C programmers.",
    "sha": "ed1eba1b5546e719",
-   "zh": null
+   "zh": "`_CTOR_DEFAULT()` 和 `_WRAP_CTOR()` 宏添加构造函数，用来封装指定的 `*_new()` C 函数。这些宏假定 C 对象具有与函数参数同名的属性（通常正是如此），从而可以把参数直接提供给 `g_object_new()` 调用。这些构造函数实际上从不调用 `*_new()` C 函数，因为 gtkmm 必须实际实例化派生的 GType，而 `*_new()` C 函数只是给 C 程序员用的便捷函数。"
   },
   {
    "type": "para",
@@ -500,7 +500,7 @@
    "type": "para",
    "text": "This macro creates a constructor with arguments, equivalent to a\n  `*_new()` C function. It won't actually call the\n  `*_new()` function, but will simply create an equivalent\n  constructor with the same argument types. It takes a C++ constructor\n  signature, and a C function name.",
    "sha": "369010d84d210f6c",
-   "zh": null
+   "zh": "这个宏创建一个带参数的构造函数，等价于某个 `*_new()` C 函数。它并不会真正调用该 `*_new()` 函数，只是创建一个参数类型相同的等价构造函数。它接受一个 C++ 构造函数签名和一个 C 函数名。"
   },
   {
    "type": "para",
@@ -513,7 +513,7 @@
    "text": "This tells `gmmproc` that the C `*_new()` has\n            a final `GError**` parameter which should be ignored.",
    "sha": "9f8d65764a9931ba",
    "marker": "errthrow",
-   "zh": null
+   "zh": "这告诉 `gmmproc`：C 的 `*_new()` 有一个末尾的 `GError**` 参数，该参数应被忽略。"
   },
   {
    "type": "heading",
@@ -525,7 +525,7 @@
    "type": "para",
    "text": "When a constructor must be partly hand written because, for instance, the\n    `*_new()` C function's parameters do not correspond\n    directly to object properties, or because the `*_new()` C\n    function does more than call `g_object_new()`, the\n    `_CONSTRUCT()` macro may be used in the\n    .ccg file to save some work. The `_CONSTRUCT` macro takes\n    a series of property names and values. For instance, from\n    `button.ccg`:",
    "sha": "40d0ec6ceea9ed4b",
-   "zh": null
+   "zh": "当构造函数必须部分手写时——例如 `*_new()` C 函数的参数并不直接对应对象属性，或者该 `*_new()` C 函数所做的不只是调用 `g_object_new()`——可以在 .ccg 文件中使用 `_CONSTRUCT()` 宏来省去一部分工作。`_CONSTRUCT` 宏接受一系列属性名和属性值。例如，来自 `button.ccg`："
   },
   {
    "type": "code",
@@ -543,7 +543,7 @@
    "type": "para",
    "text": "Some macros suppress the generation of some code when they are used after\na `_CLASS_*` macro. Some suppress the definition in the\ngenerated .cc file, others suppress both the declaration in the .h file and\nthe definition in the .cc file.",
    "sha": "0cea8d3444c19544",
-   "zh": null
+   "zh": "有些宏在 `_CLASS_*` 宏之后使用时，会抑制一部分代码的生成。有的抑制所生成 .cc 文件中的定义，有的则同时抑制 .h 文件中的声明和 .cc 文件中的定义。"
   },
   {
    "type": "heading",
@@ -693,7 +693,7 @@
    "type": "para",
    "text": "The C function (e.g. `gtk_entry_set_text`) is described\n    more fully in the .defs file, and the `convert*.m4` files\n    contain the necessary conversion from the C++ parameter type to the C\n    parameter type. This macro also generates doxygen documentation comments\n    based on the `*_docs.xml` and\n    `*_docs_override.xml` files.",
    "sha": "a1cf8621953844f5",
-   "zh": null
+   "zh": "该 C 函数（例如 `gtk_entry_set_text`）在 .defs 文件中有更完整的描述，`convert*.m4` 文件包含从 C++ 参数类型到 C 参数类型所需的转换。这个宏还会根据 `*_docs.xml` 和 `*_docs_override.xml` 文件生成 doxygen 文档注释。"
   },
   {
    "type": "para",
@@ -787,13 +787,13 @@
    "type": "listitem",
    "text": "Wrapping `GList*` and\n        `GSList*` parameters: First, you need to discover\n        what objects are contained in the list's data field for each item,\n        usually by reading the documentation for the C function. The list can\n        then be wrapped by a `std::vector` type.\n        For instance, `std::vector<Glib::RefPtr<Gdk::Pixbuf>>`.\n        You may need to define a Traits type to specify how the C\n        and C++ types should be converted.",
    "sha": "8217606c2ca71c6d",
-   "zh": null
+   "zh": "封装 `GList*` 和 `GSList*` 参数：首先需要弄清列表每一项的 data 字段里放的是什么对象，通常要读该 C 函数的文档。然后可以用 `std::vector` 类型来封装这个列表，例如 `std::vector<Glib::RefPtr<Gdk::Pixbuf>>`。你可能需要定义一个 Traits 类型，以指定 C 类型与 C++ 类型应如何转换。"
   },
   {
    "type": "listitem",
    "text": "Wrapping `GList*` and\n        `GSList*` return types: You must discover whether\n        the caller should free the list and whether it should release the items\n        in the list, again by reading the documentation of the C function. With\n        this information you can choose the ownership (none, shallow or deep)\n        for the m4 conversion rule, which you should probably put directly into\n        the .hg file because the ownership depends on the\n        function rather than the type. For instance:",
    "sha": "daaf73f4d4729dc2",
-   "zh": null
+   "zh": "封装 `GList*` 和 `GSList*` 返回类型：必须弄清调用方是否应当释放该列表，以及是否应当释放列表中的项，这同样要读该 C 函数的文档。据此可以为 m4 转换规则选择所有权（none、shallow 或 deep）。这条规则大概应直接写在 .hg 文件里，因为所有权取决于该函数，而不是类型。例如："
   },
   {
    "type": "code",
@@ -1084,7 +1084,7 @@
    "type": "para",
    "text": "The C function (e.g. `get_request_mode`) is described\n    more fully in the `*_vfuncs.defs` file, and the\n    `convert*.m4` files contain the necessary conversion from\n    the C++ parameter type to the C parameter type. Conversions can also be\n    written in the .hg file. Virtual functions often require special conversions\n    that are best kept local to the .hg file where they are used.",
    "sha": "6d847ff31d994923",
-   "zh": null
+   "zh": "该 C 函数（例如 `get_request_mode`）在 `*_vfuncs.defs` 文件中有更完整的描述，`convert*.m4` 文件包含从 C++ 参数类型到 C 参数类型所需的转换。转换也可以写在 .hg 文件中。虚函数常常需要特殊转换，最好就写在使用它们的那个 .hg 文件里。"
   },
   {
    "type": "para",
@@ -1118,7 +1118,7 @@
    "text": "Use the last GError** parameter of the C virtual function (if\n              there is one) to throw an exception.",
    "sha": "0b6ebd2efcc9a629",
    "marker": "errthrow",
-   "zh": null
+   "zh": "使用该 C 虚函数的最后一个 GError** 参数（如果有）来抛出异常。"
   },
   {
    "type": "listitem",
@@ -1273,14 +1273,14 @@
    "text": "Use this option, if the enum is not a `GType`.\n        This is the case when there is no `*_get_type()`\n        function for the C enum, but be careful that you don't just need to\n        include an extra header for that function. You should also file a bug\n        against the C API, because all enums should be registered as GTypes.",
    "sha": "62c8eb3246af7738",
    "marker": "NO_GTYPE",
-   "zh": null
+   "zh": "若该枚举不是 `GType`，则使用此选项。C 枚举没有 `*_get_type()` 函数时就是这种情况；但要小心，也许你只是还需要为该函数多包含一个头文件。你还应当针对该 C API 提交一个 bug，因为所有枚举都应当注册为 GType。"
   },
   {
    "type": "listitem",
    "text": "Specifies the name of the `*_get_type()` function\n        for the C enum. Use this parameter if `gmmproc` can't\n        deduce the correct function name from the name of the C enum type.",
    "sha": "8c45f2c5021ff4eb",
    "marker": "gtype_func <function_name>",
-   "zh": null
+   "zh": "指定该 C 枚举的 `*_get_type()` 函数名。若 `gmmproc` 无法从 C 枚举类型的名字推断出正确的函数名，就使用此参数。"
   },
   {
    "type": "listitem",
@@ -1301,7 +1301,7 @@
    "text": "Typically used for a C preprocessor macro defined as `__declspec(dllexport)`\n        or `__declspec(dllimport)` when building with MSVC on Windows,\n        defined as an empty string otherwise.",
    "sha": "3dc8e28d25358677",
    "marker": "decl_prefix <declaration_prefix>",
-   "zh": null
+   "zh": "在 Windows 上用 MSVC 构建时，通常用于定义为 `__declspec(dllexport)` 或 `__declspec(dllimport)` 的 C 预处理宏；其他情况下则定义为空字符串。"
   },
   {
    "type": "listitem",
@@ -1519,7 +1519,7 @@
    "type": "para",
    "text": "For all the macros that process method signatures, it is possible to\n      specify a different order for the C++ parameters than the existing order\n      in the C function, virtual function or signal.  For example, say that the\n      following C function were being wrapped as a C++ method for the\n      `Gtk::Widget` class:",
    "sha": "a35ef37cbd5959c9",
-   "zh": null
+   "zh": "对所有处理成员函数签名的宏，都可以让 C++ 参数的顺序不同于 C 函数、虚函数或信号中的现有顺序。例如，假设要把下面这个 C 函数封装为 `Gtk::Widget` 类的 C++ 成员函数："
   },
   {
    "type": "code",
@@ -1531,7 +1531,7 @@
    "type": "para",
    "text": "However, changing the order of the C++ method's two parameters is\n      necessary.  Something like the following would wrap the function as a C++\n      method with a different order for the two parameters:",
    "sha": "f2071e524c0326f4",
-   "zh": null
+   "zh": "但是，必须调换该 C++ 成员函数这两个参数的顺序。下面这样就可以把该函数封装成这两个参数顺序不同的 C++ 成员函数："
   },
   {
    "type": "code",
@@ -1543,7 +1543,7 @@
    "type": "para",
    "text": "The `{c_param_name}` following the method parameter\n      names tells `gmmproc` to map the C++ parameter to the\n      specified C parameter within the `{}`.  Since the C++\n      parameter names correspond to the C ones, the above could be re-written\n      as:",
    "sha": "4aae293ee4765c59",
-   "zh": null
+   "zh": "成员函数参数名后面的 `{c_param_name}` 告诉 `gmmproc`：把该 C++ 参数映射到 `{}` 里指定的那个 C 参数。由于这些 C++ 参数名与 C 参数名对应，上面的写法也可以改写成："
   },
   {
    "type": "code",
@@ -1568,7 +1568,7 @@
    "type": "para",
    "text": "For all macros processing method signatures except\n      `_WRAP_SIGNAL()` and\n      `_WRAP_VFUNC()` it is also possible to make the\n      parameters optional so that extra C++ methods are generated without the\n      specified optional parameter.  For example, say that the following\n      `*_new()` function were being wrapped as a constructor\n      in the `Gtk::ToolButton` class:",
    "sha": "f6e1aa071fd0e1b1",
-   "zh": null
+   "zh": "对除 `_WRAP_SIGNAL()` 和 `_WRAP_VFUNC()` 之外、所有处理成员函数签名的宏，还可以把参数设为可选，从而额外生成不含该可选参数的 C++ 成员函数。例如，假设要把下面这个 `*_new()` 函数封装为 `Gtk::ToolButton` 类的构造函数："
   },
   {
    "type": "code",
@@ -1580,7 +1580,7 @@
    "type": "para",
    "text": "Also, say that the C API allowed NULL for the function's\n      `label` parameter so that that parameter is optional.\n      It would be possible to have `gmmproc` generate the\n      original constructor (with all the parameters) along with an additional\n      constructor without that optional parameter by appending a\n      `{?}` to the parameter name like so:",
    "sha": "306ca259c84891d1",
-   "zh": null
+   "zh": "再假设该 C API 允许这个函数的 `label` 参数为 NULL，因此该参数是可选的。可以在参数名后追加 `{?}`，让 `gmmproc` 在生成原来那个带全部参数的构造函数之外，再生成一个不含该可选参数的构造函数，如下："
   },
   {
    "type": "code",
@@ -1592,7 +1592,7 @@
    "type": "para",
    "text": "In this case, two constructors would be generated: One with the optional\n      parameter and one without it.",
    "sha": "6b9fd28c70aa1235",
-   "zh": null
+   "zh": "这种情况下会生成两个构造函数：一个带该可选参数，一个不带。"
   },
   {
    "type": "heading",
@@ -1604,7 +1604,7 @@
    "type": "para",
    "text": "With `_WRAP_METHOD()` it is also possible for the\n      return of the wrapped C function (if it has one) to be placed in an\n      output parameter of the C++ method instead of having the C++ method also\n      return a value like the C function does.  To do that, simply include the\n      output parameter in the C++ method parameter list appending a\n      `{OUT}` to the output parameter name.  For example, if\n      `gtk_widget_get_request_mode()` is declared as the\n      following:",
    "sha": "6d4d1c1d0bf97323",
-   "zh": null
+   "zh": "使用 `_WRAP_METHOD()` 时，还可以把所封装 C 函数的返回值（如果有）放进 C++ 成员函数的输出参数，而不是让 C++ 成员函数也像 C 函数那样返回一个值。做法是把该输出参数写进 C++ 成员函数的参数列表，并在输出参数名后追加 `{OUT}`。例如，若 `gtk_widget_get_request_mode()` 的声明如下："
   },
   {
    "type": "code",
@@ -1616,7 +1616,7 @@
    "type": "para",
    "text": "And having the C++ method set an output parameter is desired instead of\n      returning a `SizeRequestMode`, something like the following\n      could be used:",
    "sha": "8b7be4a0a2472fe6",
-   "zh": null
+   "zh": "如果希望 C++ 成员函数设置一个输出参数，而不是返回 `SizeRequestMode`，可以写成下面这样："
   },
   {
    "type": "code",
@@ -1628,7 +1628,7 @@
    "type": "para",
    "text": "The `{OUT}` appended to the name of the\n      `mode` output parameter tells\n      `gmmproc` to place the return of the C function in that\n      output parameter.  In this case, however, a necessary initialization\n      macro like the following would also have to be specified:",
    "sha": "41fe881b8ebb6cdb",
-   "zh": null
+   "zh": "追加在输出参数名 `mode` 后面的 `{OUT}` 告诉 `gmmproc`：把该 C 函数的返回值放进这个输出参数。不过此例中还必须再指定如下这样的初始化宏："
   },
   {
    "type": "code",
@@ -1640,7 +1640,7 @@
    "type": "para",
    "text": "Which could also be written as:",
    "sha": "1e47ea40a7e74939",
-   "zh": null
+   "zh": "也可以写成："
   },
   {
    "type": "code",
@@ -1652,7 +1652,7 @@
    "type": "para",
    "text": "`_WRAP_METHOD()` also supports setting C++ output\n      parameters from C output parameters if the C function being wrapped has\n      any.  Suppose, for example, that we want to wrap the following C function\n      that returns a value in its C output parameter\n      `out_mime_type`:",
    "sha": "77797d5d9f86ae50",
-   "zh": null
+   "zh": "若所封装的 C 函数带有 C 输出参数，`_WRAP_METHOD()` 也支持用这些 C 输出参数来设置 C++ 输出参数。例如，假设要封装下面这个 C 函数，它在 C 输出参数 `out_mime_type` 里返回一个值："
   },
   {
    "type": "code",
@@ -1664,7 +1664,7 @@
    "type": "para",
    "text": "To have `gmmproc` place the value returned in the C++\n      `out_mime_type` output parameter, something like the\n      following `_WRAP_METHOD()` macro could be used:",
    "sha": "5df2e17c7895ede8",
-   "zh": null
+   "zh": "要让 `gmmproc` 把返回的值放进 C++ 的 `out_mime_type` 输出参数，可以使用如下这样的 `_WRAP_METHOD()` 宏："
   },
   {
    "type": "code",
@@ -1676,7 +1676,7 @@
    "type": "para",
    "text": "The `{>>}` following the `out_mime_type`\n      parameter name indicates that the C++ output parameter should be set from\n      the value returned in the C parameter from the C function.\n      `gmmproc` will generate a declaration of a temporary\n      variable in which to store the value of the C output parameter and a\n      statement that sets the C++ output parameter from the temporary variable.\n      In this case it may be necessary to have an\n      `_INITIALIZATION()` describing how to set a\n      `Glib::ustring&` from a\n      `const char**` such as the following:",
    "sha": "43747729abef0929",
-   "zh": null
+   "zh": "参数名 `out_mime_type` 后面的 `{>>}` 表示：该 C++ 输出参数应当根据 C 函数在这个 C 参数里返回的值来设置。`gmmproc` 会生成一个临时变量声明，用来存放该 C 输出参数的值，以及一条用该临时变量设置 C++ 输出参数的语句。此时可能需要一条 `_INITIALIZATION()`，说明如何从 `const char**` 设置 `Glib::ustring&`，例如："
   },
   {
    "type": "code",
@@ -1694,13 +1694,13 @@
    "type": "para",
    "text": "A string-valued input parameter in a C++ method is usually a\n      `const Glib::ustring&` or a `const std::string&`.\n      In C code it's a `const gchar*`. When an empty string is converted\n      to `const gchar*`, it can be converted either to `nullptr`\n      or to a pointer to an empty string (with c_str()).\n      Some parameters in some C functions accept a `nullptr`, and\n      interpret it in a special way. Other parameters must not be `nullptr`.",
    "sha": "f929afa43e11fce2",
-   "zh": null
+   "zh": "C++ 成员函数里的字符串输入参数通常是 `const Glib::ustring&` 或 `const std::string&`。在 C 代码中它是 `const gchar*`。把空字符串转换成 `const gchar*` 时，既可以转换成 `nullptr`，也可以转换成指向空字符串的指针（用 c_str()）。有些 C 函数的某些参数接受 `nullptr`，并对其作特殊解释；另一些参数则不得为 `nullptr`。"
   },
   {
    "type": "para",
    "text": "The default conversion in `_WRAP_METHOD()` and similar\n      macros is",
    "sha": "a51cb07137839f73",
-   "zh": null
+   "zh": "`_WRAP_METHOD()` 及类似宏中的默认转换是"
   },
   {
    "type": "listitem",
@@ -1736,43 +1736,43 @@
    "type": "listitem",
    "text": "C type → C++ type",
    "sha": "a93efc758c33a1c8",
-   "zh": null
+   "zh": "C 类型 → C++ 类型"
   },
   {
    "type": "listitem",
    "text": "gboolean → bool",
    "sha": "f8e2a00d112e9bef",
-   "zh": null
+   "zh": "gboolean → bool"
   },
   {
    "type": "listitem",
    "text": "gint → int",
    "sha": "ca7cf240a2f5c281",
-   "zh": null
+   "zh": "gint → int"
   },
   {
    "type": "listitem",
    "text": "guint → guint",
    "sha": "1082f1c3bf4c9350",
-   "zh": null
+   "zh": "guint → guint"
   },
   {
    "type": "listitem",
    "text": "gdouble → double",
    "sha": "4ff00fc4794e452d",
-   "zh": null
+   "zh": "gdouble → double"
   },
   {
    "type": "listitem",
    "text": "gunichar → gunichar",
    "sha": "abc1405c1ff3547f",
-   "zh": null
+   "zh": "gunichar → gunichar"
   },
   {
    "type": "listitem",
    "text": "gchar* → Glib::ustring (or std::string for filenames)",
    "sha": "2dd66a3b8504f9ff",
-   "zh": null
+   "zh": "gchar* → Glib::ustring（文件名则用 std::string）"
   }
  ]
 }

@@ -14,7 +14,7 @@
    "type": "para",
    "text": "This section describes primarily what you can expect on a Linux system, when you\nuse [the gdb debugger](http://www.gnu.org/software/gdb/).",
    "sha": "7c264218d272c961",
-   "zh": "本小节组要介绍使用gdb调试器在Linux系统上调试异常。"
+   "zh": "本小节主要介绍在 Linux 系统上使用 gdb 调试器调试这类问题时会出现的情况。"
   },
   {
    "type": "para",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "Here is an excerpt from a `gdb` session. Only the most\ninteresting parts of the output are shown.",
    "sha": "f10bc7181dcfcab7",
-   "zh": "这是gdb会话的摘要。只显示输出中最有趣的部分： 你可以看到在without_signal.cc的第六行抛出了异常(throw \\\"Something\\\";)。"
+   "zh": "下面是一次 gdb 会话的摘录，这里只列出输出中最有意思的部分："
   },
   {
    "type": "code",
@@ -44,7 +44,7 @@
    "type": "para",
    "text": "You can see that the exception was thrown from `without_signal.cc`,\nline 6 (`throw \"Something\";`).",
    "sha": "3a9f735d91374f05",
-   "zh": "这是gdb会话的摘要。只显示输出中最有趣的部分： 你可以看到在without_signal.cc的第六行抛出了异常(throw \"Something\";)。"
+   "zh": "可以看到，异常是从 without_signal.cc 的第 6 行抛出的（throw \"Something\";）。"
   },
   {
    "type": "para",
@@ -62,7 +62,7 @@
    "type": "para",
    "text": "And here's an excerpt from a `gdb` session.",
    "sha": "868400085b67c966",
-   "zh": "使用git版本的gtkmm"
+   "zh": "下面是这一情形下的 gdb 会话摘录。"
   },
   {
    "type": "code",
@@ -74,7 +74,7 @@
    "type": "para",
    "text": "The exception is caught in `glibmm`, and the program\nends with a call to `g_error()`. Other exceptions may result\nin different behavior, but in any case the exception from a signal handler is\ncaught in `glibmm` or gtkmm, and\n`gdb` can't see where it was thrown.",
    "sha": "e8b576f15e434046",
-   "zh": "这是gdb会话的摘录： glibmm将捕获了异常，并调用g_error()结束了程序。其他的异常行为可能不一样，不过所有从信号处理函数中抛出的异常都会被glibmm或gtkmm所捕获，并且gdb将无法看到异常被抛出的具体位置。"
+   "zh": "glibmm 会捕获这个异常，并通过调用 g_error() 结束程序。其他异常可能导致不同的行为，但无论如何，从信号处理函数抛出的异常都会被 glibmm 或 gtkmm 捕获，gdb 看不到它被抛出的位置。"
   },
   {
    "type": "para",
@@ -92,7 +92,7 @@
    "type": "para",
    "text": "If there are many caught exceptions before the interesting uncaught one, this\nmethod can be tedious. It can be automated with the following\n`gdb` commands.",
    "sha": "95de7f9241f118ff",
-   "zh": "如果在感兴趣的未捕获异常之前有多个捕获异常，这个方法将会非常的枯燥。可以使用以下gdb命令自动化进行这个工作。 这些命令将在每次抛出时打印回溯信息并继续。通常最后一个或第一个throw是你所需要的。"
+   "zh": "如果在出现你感兴趣的那个未捕获异常之前已经有很多被捕获的异常，这个办法会非常繁琐。可以用下面这组 gdb 命令把它自动化。"
   },
   {
    "type": "code",
@@ -104,7 +104,7 @@
    "type": "para",
    "text": "These commands will print a backtrace from each `throw` and continue.\nThe backtrace from the last (or possibly the last but one) `throw`\nbefore the program stops, is the interesting one.",
    "sha": "a2f4b577f68f61fe",
-   "zh": "如果在感兴趣的未捕获异常之前有多个捕获异常，这个方法将会非常的枯燥。可以使用以下gdb命令自动化进行这个工作。 这些命令将在每次抛出时打印回溯信息并继续。通常最后一个或第一个throw是你所需要的。"
+   "zh": "这些命令会在每次 throw 时打印回溯信息然后继续。程序停下来之前，最后一个（或者倒数第二个）throw 的回溯通常就是你要找的。"
   }
  ]
 }

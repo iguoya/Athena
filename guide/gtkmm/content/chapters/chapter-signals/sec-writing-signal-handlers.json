@@ -20,13 +20,13 @@
    "type": "para",
    "text": "Other than the signal's name (`focus`), the template arguments are\nimportant to note here. The first argument, `bool`, is the type that\nthe signal handler should return; and the type within parentheses,\n`Gtk::DirectionType`, is the type of this signal's first, and only,\nargument. By looking at the reference documentation, you can\nsee the names of the arguments too.",
    "sha": "0adc39eb2b99b77c",
-   "zh": "除了信号名为focus之外，这里的膜拜参数很重要。第一个参数bool，表示信号处理函数的返回值应该是个bool类型。而括号中的Gtk::DirectionType表示信号所期望调用的函数的第一个也是唯一一个参数的类型。通过查看参考文档你还可以看到参数的名称。"
+   "zh": "除了信号名 focus 之外，这里需要注意的是模板参数：第一个参数 bool 是信号处理函数应当返回的类型；括号里的 Gtk::DirectionType 是该信号第一个也是唯一一个参数的类型。查阅参考文档还能看到参数的名字。"
   },
   {
    "type": "para",
    "text": "The same principles apply for signals which have more arguments. Here's one\nwith three (taken from `<gtkmm/textbuffer.h>`):",
    "sha": "6a0d3031169eee4c",
-   "zh": "对于接受期望调用的函数有更多参数的信号也是一样的阅读规则。以下声明取自<gtkmm/textbuffer.h>："
+   "zh": "参数更多的信号也遵循同样的规则。下面是一个带三个参数的信号（取自 <gtkmm/textbuffer.h>）："
   },
   {
    "type": "code",

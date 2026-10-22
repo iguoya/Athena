@@ -8,7 +8,7 @@
    "type": "para",
    "text": "gtkmm widget classes have signal accessor methods, such as\nGtk::Button::signal_clicked(), which allow you to connect\nyour signal handler. Thanks to the flexibility of\n`libsigc++`, the callback library used by gtkmm, the\nsignal handler can be almost any kind of function, but you will probably want\nto use a class method. Among `GTK` C coders, these\nsignal handlers are often named callbacks.",
    "sha": "9415fcf6d2e37d84",
-   "zh": "gtkmm的部件类拥有信号访问器方法，例如:Gtk::Button::signal_clicked()。这些方法允许你将你的信号处理函数与信号相连接。gtkmm所使用的的libsigc++回调库提供了非常强的灵活性，它几乎允许你使用任何函数作为信号的处理程序，不过通常你会希望使用类的成员函数。在GTK的C代码中，这些信号处理函数被称为回调。"
+   "zh": "gtkmm 的部件类拥有信号访问器方法，例如 Gtk::Button::signal_clicked()，这些方法允许你连接自己的信号处理函数。得益于 gtkmm 所用的 libsigc++ 回调库的灵活性，信号处理函数几乎可以是任何类型的函数，不过你多半会想用类的成员函数。在 GTK 的 C 程序员口中，这类信号处理函数常被称为回调。"
   },
   {
    "type": "para",
@@ -26,7 +26,7 @@
    "type": "para",
    "text": "There's rather a lot to think about in this (non-functional) code.\nFirst let's identify the parties involved:",
    "sha": "1a2868603c2ccbf2",
-   "zh": "在此代码（非功能性）中有很多事情要考虑，首先让我们确定代码的行为："
+   "zh": "这段（不能运行的）代码里有不少值得琢磨的地方。先来认一认其中涉及的各方："
   },
   {
    "type": "listitem",
@@ -74,7 +74,7 @@
    "type": "para",
    "text": "A C++ lambda expression is a functor which can be implicitly converted to a\n`sigc::slot` in the call to connect().\nA lambda expression can be used instead of `sigc::ptr_fun()`.\nIt's also possible to use a lambda expression instead of `sigc::mem_fun()`,\nbut then you won't get automatic disconnection of the signal handler when a\n`sigc::trackable`-derived object goes out of scope.",
    "sha": "c86e4b538588dd62",
-   "zh": null
+   "zh": "C++ lambda 表达式是一种函子，在调用 connect() 时可以被隐式转换成 sigc::slot。lambda 表达式可以代替 sigc::ptr_fun() 使用；也可以用它代替 sigc::mem_fun()，但这样一来，当 sigc::trackable 派生对象离开作用域时，信号处理函数就不会自动断开了。"
   },
   {
    "type": "para",
@@ -98,7 +98,7 @@
    "type": "para",
    "text": "The next is more interesting.\n`sigc::mem_fun()` is called with two arguments. The first\nargument is `*this`, which is the object that our\nnew slot will be pointing at. The second argument is a pointer to one of its\nmethods. This particular version of `sigc::mem_fun()`\ncreates a slot which will, when \"called\", call the pointed-to method of the\nspecified object.",
    "sha": "def66347ce22d139",
-   "zh": null
+   "zh": "第二个更有意思。sigc::mem_fun() 接收两个参数：第一个是 *this，即新槽将要指向的对象；第二个是指向该对象某个成员函数的指针。这一版本的 sigc::mem_fun() 会创建一个槽，它在被「调用」时会执行指定对象的那个成员函数。"
   },
   {
    "type": "para",

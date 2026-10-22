@@ -50,7 +50,7 @@
    "type": "para",
    "text": "or this:",
    "sha": "00e269fe0c17ad9f",
-   "zh": null
+   "zh": "或者是这样："
   },
   {
    "type": "code",
@@ -74,7 +74,7 @@
    "type": "para",
    "text": "By convention, glib/GTK-style objects have `*_new()`\n    functions, such as `example_widget_new()` that do nothing\n    more than call `g_object_new()` and return the result.\n    The input parameters are supplied to `g_object_new()`\n    along with the names of the properties for which they are values. For\n    instance,",
    "sha": "033f83c724a84664",
-   "zh": null
+   "zh": "按照惯例，glib/GTK 风格的对象有 `*_new()` 函数，例如 `example_widget_new()`，它们所做的仅仅是调用 `g_object_new()` 并返回其结果。输入参数会连同它们所对应的属性名一起传给 `g_object_new()`。例如："
   },
   {
    "type": "code",
@@ -86,7 +86,7 @@
    "type": "para",
    "text": "This allows language bindings to implement their own equivalents (such as\n    C++ constructors), without using the `*_new()` function.\n    This is often necessary so that they can actually instantiate a derived\n    GType, to add their own hooks for signal handlers and vfuncs.",
    "sha": "26f918f9ccd419ee",
-   "zh": null
+   "zh": "这样，语言绑定就可以实现自己的等价物（例如 C++ 构造函数），而不使用 `*_new()` 函数。这常常是必要的，以便它们能实际实例化一个派生的 GType，从而为信号处理函数和 vfuncs 加上自己的钩子。"
   },
   {
    "type": "para",
@@ -98,7 +98,7 @@
    "type": "para",
    "text": "Another workaround is to add a `*_construct()` function\n    that the C++ constructor can call after instantiating its own type. For\n    instance,",
    "sha": "b8d77dc1bd48cc41",
-   "zh": null
+   "zh": "另一种变通做法是增加一个 `*_construct()` 函数，让 C++ 构造函数在实例化自己的类型之后调用它。例如："
   },
   {
    "type": "code",
