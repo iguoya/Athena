@@ -17,7 +17,7 @@
 - 播放器页面只被放行**一个命令** `bridge_report`（`capabilities/player.json`，`remote.urls` 只含 `https://player.bilibili.com/*`；命令在 `build.rs` 的应用清单里声明）。
   注入脚本 `src-tauri/src/player_bridge.js` 只读时间/状态、执行 seek/pause/play、判定暂停点，**不下载、不抓取、不改页面内容，只用标准 `<video>`，不依赖 B 站私有 API**。
 - 暂停点按「自然播放跨过」判定，拖动越过按已过处理；页面偶发自己暂停（原因未明）是正常状态，界面显示「已暂停，点这里继续」；播放窗格要保持可见，隐藏时暂停点精度不保证。
-- **登录与清晰度由使用者处理**：「登录 B 站」按钮打开官方登录页的独立窗口，登录状态存在本应用 webview 数据目录；应用不读取、不保存账号与密码。
+- **登录与清晰度由使用者处理**：「登录 B 站」按钮把右侧播放窗格导航到 B 站**官方**登录页（页面不在 capability 放行的域名里，调不了任何应用命令），使用者在窗格里扫码或输入账号，点「登录完成，回到视频」再载入播放器；登录状态存在本应用 webview 数据目录，应用不读取、不保存账号与密码。ADR 0182 决策 4 原写「独立窗口」，实测在同步命令里新建 webview 窗口会得到永远空白的窗口（about:blank），故改为窗格内导航。
 - 视频引用只来自课堂脚本的 `video.{bvid,p}`，Rust 侧逐项校验后才拼 URL（`player_url`），不接受任意地址。
 
 ## 任务与出处（本应用最重的一条规则）
@@ -42,8 +42,8 @@
 
 ## 技术栈（本应用自有，最初复制自 `guide/chen-linear-algebra-mooc` 的壳，此后独立演进）
 
-- **壳**：Tauri 2（Rust）：`get_curriculum` / `get_lesson` / `record_attempt` / `get_attempts` / `open_external`（只放行 https）/ `player_*`（load、seek、play、pause、set_pause_point、set_visible）/
-  `bridge_report`（播放器页面专用）/ `open_login` / `save_marks` / `load_marks`；界面 Vite + React + TypeScript，行内公式 KaTeX。
+- **壳**：Tauri 2（Rust）：`get_curriculum` / `get_lesson` / `record_attempt` / `get_attempts` / `open_external`（只放行 https）/ `player_*`（load、seek、ping、poll、play、pause、set_pause_point、set_visible）/
+  `bridge_report`（播放器页面专用）/ `player_open_login` / `save_marks` / `load_marks`；界面 Vite + React + TypeScript，行内公式 KaTeX。
 - **进度**：SQLite，`AthenaWengCProgramming/learning.db`，不进 git，由启动器同步（主仓库 ADR 0037、0155，`app.json` 的 `progress`）。「边看边标」记录存在同目录 `marks/`。
 - **知识点前缀 `wengc.`**：作答记录的 `knowledge_id` = `wengc.` + 课节 id（如 `wengc.p003`），`item_id` = `<课节 id>.<任务 id>`。
 - dev 端口 **1532**；进程 `athena-weng-c-programming`；环境变量 `ATHENA_WENG_C_PROGRAMMING_ROOT`。

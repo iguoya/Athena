@@ -25,6 +25,7 @@ export default function Workbench({ lesson, attempts, onAttempt }: {
   const [notes, setNotes] = useState<Record<string, string>>(() => JSON.parse(store.get(`wengc.notes.${lesson.id}`) ?? "{}"));
   const [marks, setMarks] = useState<Marks>({ beats: {}, tasks: {} });
   const [marking, setMarking] = useState(false);
+  const [loginMode, setLoginMode] = useState(false);
   const [playerOn, setPlayerOn] = useState(true);
   const [err, setErr] = useState<string | null>(null);
   const statusRef = useRef<PlayerStatus | null>(null);
@@ -127,13 +128,18 @@ export default function Workbench({ lesson, attempts, onAttempt }: {
           <p className="muted">第 {lesson.video.p} 集 · {lesson.video.outline} · {mmss(lesson.video.duration)}</p>
         </div>
         <div className="bench-actions">
-          <button onClick={() => void invoke("open_login").catch((e) => setErr(String(e)))} title="打开 B 站官方登录页；登录与清晰度由你自己处理">登录 B 站</button>
+          {loginMode ? (
+            <button className="on" onClick={() => { setLoginMode(false); setReady(false); void invoke("player_load", { bvid: lesson.video.bvid, p: lesson.video.p }).catch((e) => setErr(String(e))); }}>登录完成，回到视频</button>
+          ) : (
+            <button onClick={() => { setLoginMode(true); void invoke("player_open_login").catch((e) => setErr(String(e))); }} title="右侧窗格会换成 B 站官方登录页；登录与清晰度由你自己处理">登录 B 站</button>
+          )}
           <button onClick={() => { const v = !playerOn; setPlayerOn(v); void invoke("player_set_visible", { visible: v }); }}>{playerOn ? "收起视频" : "展开视频"}</button>
           <button className={marking ? "on" : ""} onClick={() => setMarking((v) => !v)}>边看边标</button>
         </div>
       </header>
       {err && <p className="verdict bad">出错了：{err}</p>}
 
+      {loginMode && <p className="stage-note">右侧已换成 B 站官方登录页：请在那里扫码或输入账号登录。登录后可在播放器里选清晰度；弄好了点上方「登录完成，回到视频」。</p>}
       <div className="statusbar">
         <span className={ready ? "dot on" : "dot"} />
         <span>{ready ? (status?.paused ? "已暂停" : "播放中") : "播放窗格载入中…"} · {mmss(t)} / {mmss(status?.duration || lesson.video.duration)}</span>

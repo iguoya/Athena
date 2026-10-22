@@ -16,7 +16,7 @@ fn main() {
         "player_set_pause_point",
         "player_set_visible",
         "bridge_report",
-        "open_login",
+        "player_open_login",
         "save_marks",
         "load_marks",
     ])))

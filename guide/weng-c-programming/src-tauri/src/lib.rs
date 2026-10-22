@@ -7,7 +7,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 use std::time::{SystemTime, UNIX_EPOCH};
-use tauri::{AppHandle, LogicalPosition, LogicalSize, Manager, State, Url, WebviewUrl, WebviewWindowBuilder};
+use tauri::{AppHandle, LogicalPosition, LogicalSize, Manager, State, Url, WebviewUrl};
 
 struct AppState {
     content_root: PathBuf,
@@ -238,21 +238,20 @@ fn player_poll(state: State<AppState>) -> Value {
     serde_json::json!({ "last": p.last.clone(), "events": std::mem::take(&mut p.events) })
 }
 
-/// 登录 B 站：打开官方登录页的独立窗口。登录状态存在本应用自己的 webview 数据目录，播放窗格共用；
-/// 应用不读取、不保存账号与密码，登录与清晰度由使用者自己处理（ADR 0182 决策 4）。
+/// 登录 B 站：把右侧播放窗格临时导航到 B 站**官方**登录页，使用者在窗格里自己扫码或输入账号；登录完成后点「回到视频」再载入播放器。
+/// 不另开窗口：实测从同步命令里创建新 webview 窗口，在 Windows 上会得到一个永远空白的窗口（about:blank）。
+/// 登录状态存在本应用自己的 webview 数据目录，播放窗格共用；应用不读取、不保存账号与密码（ADR 0182 决策 4）。
+/// 登录页不在 capabilities 放行的域名里，页面调不了任何应用命令。
 #[tauri::command]
-fn open_login(app: AppHandle) -> Result<(), String> {
-    if let Some(w) = app.get_webview_window("login") {
-        let _ = w.show();
-        return w.set_focus().map_err(|e| e.to_string());
-    }
+fn player_open_login(app: AppHandle, state: State<AppState>) -> Result<(), String> {
     let url = Url::parse("https://passport.bilibili.com/login").map_err(|e| e.to_string())?;
-    WebviewWindowBuilder::new(&app, "login", WebviewUrl::External(url))
-        .title("登录 B 站")
-        .inner_size(960.0, 640.0)
-        .build()
-        .map_err(|e| e.to_string())?;
-    Ok(())
+    // 播放窗格被收起时，登录前先展开，否则使用者看不到登录页
+    *state.player_visible.lock().map_err(|e| e.to_string())? = true;
+    if let Some(win) = app.get_window("main") {
+        layout(&win, true);
+    }
+    let pv = app.get_webview("player").ok_or("播放窗格未创建")?;
+    pv.navigate(url).map_err(|e| e.to_string())
 }
 
 /// 「边看边标」的记录：课堂脚本的时间戳由使用者边看边按键产生，先存本机，确认后再写进内容文件。
@@ -359,7 +358,7 @@ pub fn run() {
             player_set_pause_point,
             player_set_visible,
             bridge_report,
-            open_login,
+            player_open_login,
             save_marks,
             load_marks
         ])
