@@ -50,7 +50,8 @@ guide/<id>/     手册类教程：跟随一本外部手册/官方教程精读，
                 、siefken-linear-algebra（「数学」圈，两本线代教材精读，ADR 0162）、octave-manual、
                 sympy-tutorial（「数学」圈，数学工具教程精读，ADR 0163）、chen-linear-algebra
                 （陈怀琛《实用大众线性代数（MATLAB版）》精读，「数学」圈，ADR 0177）、axler-linear-algebra
-                （Axler《线性代数应该这样学（第四版）》官方中文版精读，「数学」圈，ADR 0179）
+                （Axler《线性代数应该这样学（第四版）》官方中文版精读，「数学」圈，ADR 0179）、chen-linear-algebra-mooc
+                （西电慕课《实用大众线性代数》视频课精读，视频课形态，「数学」圈，ADR 0180）
 mentor/<id>/    导师类（图谱/参考类）：polaris（路线图与指南针）、competitions（「大赛」圈的赛历，
                 ADR 0114）、jiuzhou（「兴趣」圈的九州历史地理图鉴，ADR 0156）、
                 mathematics-compass（数学罗盘，数学学习导引，「数学」圈，ADR 0174）；
@@ -171,11 +172,14 @@ archive/        历史归档，不参与构建
 同一个工作区里可能同时有 Claude Code、ZCode、Codex 等代理在干活，彼此没有消息通道，
 约定只能写在这里。分工由使用者在各自的对话里指派。
 
-- **要通讯走 `comms/`**（ADR 0165）：多代理协作的即时通讯与任务沟通用仓库公共服务
+- **要通讯走 `comms/`**（ADR 0165、0181）：多代理协作的即时通讯与任务沟通用仓库公共服务
   [comms/](comms/)——一个协作主题一个舱（`comms/<主题>/`，`config.json` 声明 leader 与
-  worker），每轮开工先 `python comms/comms.py inbox <你的名字> --project <舱>`；
-  leader 拆任务、写任务书、验收 done、裁决，worker 执行、交 review 附证据、建议走
-  消息不改方向。规则全文见 [comms/README.md](comms/README.md)。下面几条是跨舱底线。
+  worker），每轮开工先 `python comms/comms.py triage <你的名字>`（或 `inbox --project <舱>`）
+  查收；hook 自动按会话投递未读全文，未读摘要只作降级兜底。发给使用者本人用
+  `--to operator`（协作中心会弹通知并聚进收件箱）；纯对话会话可声明
+  `session touch --role operator` 静音。leader 拆任务、写任务书、验收 done、裁决，
+  worker 执行、交 review 附证据、建议走消息不改方向。规则全文见
+  [comms/README.md](comms/README.md)。下面几条是跨舱底线。
 - **只提交自己的改动**：`git add` 写明确路径，不整目录添加；工作区里不是自己改的未提交
   改动，不修改、不回退、不顺带提交。
 - **撞到别人的改动先停**：要动的文件里有别人的未提交改动，先停下，在对话里说明，由

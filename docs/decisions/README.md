@@ -159,8 +159,8 @@
 | [0163](0163-math-tool-tutorials-in-guide.md) | 数学工具教程：一本书或一门课对应一个 `guide/` 应用；只做 GitHub 上能逐字入库的源，首批 Octave 官方手册（裁剪）与 SymPy 官方教程；示例用真工具复跑、练习自编并经工具核对；GeoGebra 与 Lachniet 小册拿不到，如实写明 | 已接受（沿用 0143、0162） |
 | [0164](0164-cloud-limits-handoff-and-content-thickness.md) | 云会话做不到的事统一记进 docs/HANDOFF.md（现状、原因、接手步骤、验收）；新应用内容前期要薄（基础/进阶两层，默认折叠进阶）；数学工具多本好书就一本一个应用；阶段性成果及时合并主分支 | 已接受（补充 0162、0163） |
 | [0165](0165-agent-comms-service.md) | 多代理协作通讯抽取为仓库公共服务 comms/（按舱协作：一个主题一个舱、config.json 声明 leader/worker；leader 拆任务与验收、worker 交 review 附证据；正式任务沟通与即时消息双通道）；九州舱暂不迁移照旧运行 | 已接受 |
-| [0166](0166-comms-console-and-projection.md) | 协作观察台 comms-console（tools/，Tauri 2 + React，端口 1521）：文件是唯一权威、PG 是投影、观察台只读；看任务泳道、任务流转与裁决时间线、统一对话流；comms.py 加固原子写与 status 乐观锁 | 已接受 |
-| [0167](0167-multi-session-task-routing.md) | 多会话并行按任务分箱：任务是路由单位（doing 即绑定声明）、inbox/ack/notify 支持 --mine 与 --task、已读游标按箱分文件、认领冲突防护、可选 --as 会话标记 | 已接受；实现派 comms-console 舱 T-102 |
+| [0166](0166-comms-console-and-projection.md) | 协作观察台 comms-console（tools/，Tauri 2 + React，端口 1521）：文件是唯一权威、PG 是投影、观察台只读；看任务泳道、任务流转与裁决时间线、统一对话流；comms.py 加固原子写与 status 乐观锁 | 已接受；「只读」与「实时推送不做」由 0181 收窄 |
+| [0167](0167-multi-session-task-routing.md) | 多会话并行按任务分箱：任务是路由单位（doing 即绑定声明）、inbox/ack/notify 支持 --mine 与 --task、已读游标按箱分文件、认领冲突防护、可选 --as 会话标记 | 已接受；实现派 comms-console 舱 T-102；决策 1「不新造会话注册」由 0181 修订 |
 | [0168](0168-release-mature-apps-uniformly.md) | 相对成熟的应用按同一标准进入发布：取消 0151、0153 对贪吃蛇和中国象棋的发版排除；archived 空壳与仍是 planned 占位的应用不进 | 已接受 |
 | [0169](0169-pocket-cube-solver-app.md) | 新增 `programming/pocket-cube-solver`：象棋同款壳 + 七章独立 gtkmm 程序，按初学者层先法的阶段切章，终点是能解任意状态的程序；旧版 `practice/pocket_cube` 原地保留作参考 | 已接受 |
 | [0170](0170-release-exclusions-launcher-and-legacy-pocket-cube.md) | 启动器（依赖仓库与开发工具链，不是可独立安装的应用）与旧版 pocket_cube（已定为供参考、不再做）不进发布矩阵，理由写明；machine 等迁到 Tauri 后再进，c-gui-lab 先解决 third_party 可复现 | 已接受 |
@@ -174,3 +174,4 @@
 | [0177](0177-chen-linear-algebra.md) | 新增 `guide/chen-linear-algebra`：陈怀琛《实用大众线性代数（MATLAB 版）》精读（「数学」圈），首本进 guide 的中文版权教材；题目 verbatim 取自原书（locator 给页码与题号）是应用级硬门禁、authored 默认不入题库，答案由本机 Octave 复算，慕课视频只登记链接；开 comms 舱把习题采集分给 worker | 已接受 |
 | [0178](0178-probability-statistics-self-study.md) | 立项 `self-study/probability-statistics`（概率论与数理统计·工）：修订 0175 的分期条件（门槛改为本应用自己有首批内容，不再等线代高数）与端口（1526 已被占，改 1529）；划定自考范围（考试范围以考纲为界、习题范围以真题与指定教材习题为界，不向考研看齐）；开 comms 舱派 ZCode 核对教材与采集真题 | 已接受 |
 | [0180](0180-chen-linear-algebra-mooc.md) | 确立「视频课」形态并新增 `guide/chen-linear-algebra-mooc`：西电慕课《实用大众线性代数（MATLAB版）》视频课精读（「数学」圈，端口 1531）；视频是原材料，不做无检索闭环的被动观看；播放三档（文本+外链 / 本地文件 / 在线内嵌），首发只做文本+外链，数据以时间锚点为核心；文本底本取课件与程序集，题源硬门禁沿 0177；与图书应用并存互不引用；首批范围第 1–2 周；翁恺《C 语言》本地播放闭环另议；修订 HANDOFF「视频课」条与 LEARNING-METHODS 措辞 | 已接受 |
+| [0181](0181-agent-comms-sessions-and-daemon.md) | 通讯机制 v4：会话注册表（`comms/sessions/`，hook 自动登记、投递精确到标签页、operator/mute 静音）+ hook 注入即投递（订阅过滤的全文+delivered 标记，无 session_id 自动降级）+ 投递守护 `commsd`（窄四件：监听、心跳、通知请求、紧急且无主时按窄口径 spawn）+ comms-console 扩权为协作中心宿主（开机自启、托盘、保活 commsd、系统通知、operator 收件箱，已处理走 `ack operator`）；`operator` 成保留名；旧舱零迁移 | 已接受；修订 0167 决策 1、收窄 0166「只读」与「实时推送不做」 |
