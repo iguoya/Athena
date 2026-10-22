@@ -167,8 +167,8 @@ def check_lessons(lessons: dict) -> None:
                     if w in s:
                         fail(f"{where0}: 含禁用词「{w}」")
             tr = lesson.get("transcript")
-            if tr and "机器转写" not in str(tr.get("status", "")):
-                fail(f"{where0}: transcript.status 必须标明「机器转写」及校对状态（ADR 0182 决策 8）")
+            if tr and "校对" not in str(tr.get("status", "")):
+                fail(f"{where0}: transcript.status 必须标明来源性质（平台字幕/机器转写）与校对状态（ADR 0182 决策 8）")
 
             beats = lesson["beats"]
             if not 3 <= len(beats) <= 6:
