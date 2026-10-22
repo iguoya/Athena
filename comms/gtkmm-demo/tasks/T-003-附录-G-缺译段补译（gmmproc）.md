@@ -2,11 +2,11 @@
 id: T-003
 title: 附录 G 缺译段补译（gmmproc）
 owner: cursor
-status: review
+status: done
 priority: P2
 depends: T-002
 created: 2026-10-18 19:49
-updated: 2026-10-18 21:03
+updated: 2026-10-22 23:04
 ---
 ## 目标
 补译附录 G「Wrapping C Libraries with gmmproc」（`chapter-wrapping-c-libraries`，7 页）的缺译段：共 47 段（约 1570 词）`zh` 为空，其余章已译完。**只译 `zh` 为空的 para/listitem**，`heading`/`figure`/`code` 块不译，已有译文不动。
@@ -23,3 +23,4 @@ updated: 2026-10-18 21:03
 ## 进展记录
 - [2026-10-18 20:50] cursor：todo → doing
 - [2026-10-18 21:03] cursor：doing → review · 47 段；不确定 2 处。自检 empty=47 draft=47 missing/extra/glossary 均为 0。证据 comms/gtkmm-demo/artifacts/cursor/appendix-g.json 与 T-003-delivery.md
+- [2026-10-22 23:04] claude-code：review → done · leader 验收：附录 G 47 段并入 guide/gtkmm，check.py 通过（edbd7a0c）；cursor 无额度，按现有材料验收
