@@ -1,12 +1,12 @@
 {
   "identifier": "player-bridge",
-  "description": "B 站外链播放器页面只允许调用 bridge_report 这一个命令（ADR 0182）",
+  "description": "B 站视频页（www.bilibili.com）只允许调用 bridge_report 这一个命令（ADR 0182、0183）。IPC 请求只带来源（origin），带路径的 /video/* 匹配不上，所以放行整个 www.bilibili.com 来源，但命令仍只有这一个。",
   "webviews": [
     "player"
   ],
   "remote": {
     "urls": [
-      "https://player.bilibili.com/*"
+      "https://www.bilibili.com/*"
     ]
   },
   "permissions": [

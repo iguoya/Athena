@@ -12,13 +12,13 @@
 
 ## 播放窗格与播放桥（ADR 0182 决策 3，改这里要先读）
 
-- 主窗口由 Rust 创建（`src-tauri/src/lib.rs` 的 `setup`），一个窗口两个 webview：`ui`（应用界面，左）与 `player`（B 站外链播放器页面，右，可收起）。
+- 主窗口由 Rust 创建（`src-tauri/src/lib.rs` 的 `setup`），一个窗口两个 webview：`ui`（应用界面，左）与 `player`（B 站视频页，右，可收起；ADR 0183 把外链播放器页面改成视频页）。
   停靠用 Tauri 多 webview，**需要 `unstable` 特性**；升级 Tauri 时回归。退路：把 `add_child` 换成独立窗口，课堂区不受影响。
-- 播放器页面只被放行**一个命令** `bridge_report`（`capabilities/player.json`，`remote.urls` 只含 `https://player.bilibili.com/*`；命令在 `build.rs` 的应用清单里声明）。
-  注入脚本 `src-tauri/src/player_bridge.js` 只读时间/状态、执行 seek/pause/play、判定暂停点，**不下载、不抓取、不改页面内容，只用标准 `<video>`，不依赖 B 站私有 API**。
+- 播放器页面只被放行**一个命令** `bridge_report`（`capabilities/player.json`，`remote.urls` 为 `https://www.bilibili.com/*`——IPC 请求只带来源、带路径的模式匹配不上；命令在 `build.rs` 的应用清单里声明）。
+  注入脚本 `src-tauri/src/player_bridge.js` 只读时间/状态、执行 seek/pause/play、判定暂停点，**不下载、不抓取、不改页面内容，只用标准 `<video>`，不依赖 B 站私有 API**；控制条出现后点站点自己的「网页全屏」按钮一次，让播放器占满窗格（不修改、不隐藏页面内容）。登录后清晰度由使用者在站点自己的菜单里切换（外链播放器页面登录后也切不了，见 ADR 0183）。
 - 暂停点按「自然播放跨过」判定，拖动越过按已过处理；页面偶发自己暂停（原因未明）是正常状态，界面显示「已暂停，点这里继续」；播放窗格要保持可见，隐藏时暂停点精度不保证。
 - **登录与清晰度由使用者处理**：「登录 B 站」按钮把右侧播放窗格导航到 B 站**官方**登录页（页面不在 capability 放行的域名里，调不了任何应用命令），使用者在窗格里扫码或输入账号，点「登录完成，回到视频」再载入播放器；登录状态存在本应用 webview 数据目录，应用不读取、不保存账号与密码。ADR 0182 决策 4 原写「独立窗口」，实测在同步命令里新建 webview 窗口会得到永远空白的窗口（about:blank），故改为窗格内导航。
-- 视频引用只来自课堂脚本的 `video.{bvid,p}`，Rust 侧逐项校验后才拼 URL（`player_url`），不接受任意地址。
+- 视频引用只来自课堂脚本的 `video.{bvid,p}`，Rust 侧逐项校验后才拼视频页 URL（`player_url`），不接受任意地址。
 
 ## 任务与出处（本应用最重的一条规则）
 

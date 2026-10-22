@@ -129,20 +129,21 @@ fn open_external(url: String) -> Result<(), String> {
 }
 
 // ---------------------------------------------------------------------------------------------
-// 播放窗格与播放桥（ADR 0182 决策 3）：B 站外链播放器页面作为主窗口的第二个 webview 停靠在右侧，
+// 播放窗格与播放桥（ADR 0182 决策 3，播放页改用视频页见 ADR 0183）：B 站视频页作为主窗口的第二个 webview 停靠在右侧，
 // 注入脚本 player_bridge.js 上报播放状态；页面只被放行 bridge_report 这一个命令（capabilities/player.json）。
 // ---------------------------------------------------------------------------------------------
 
 const PLAYER_BRIDGE_JS: &str = include_str!("player_bridge.js");
 const PLAYER_FRACTION: f64 = 0.58;
 
-/// B 站外链播放器页面；bvid 与分集号来自课堂脚本，这里只拼 URL，且逐项校验字符，防止内容文件拼出别的地址。
+/// B 站视频页（ADR 0183：外链播放器页面登录后也不允许切换清晰度，视频页可以）；bvid 与分集号来自课堂脚本，
+/// 这里只拼 URL，且逐项校验字符，防止内容文件拼出别的地址。
 fn player_url(bvid: &str, p: u32) -> Result<Url, String> {
     let ok = bvid.len() == 12 && bvid.starts_with("BV") && bvid.chars().all(|c| c.is_ascii_alphanumeric());
     if !ok || p == 0 || p > 1000 {
         return Err(format!("非法视频引用：{bvid} P{p}"));
     }
-    Url::parse(&format!("https://player.bilibili.com/player.html?bvid={bvid}&p={p}&autoplay=0")).map_err(|e| e.to_string())
+    Url::parse(&format!("https://www.bilibili.com/video/{bvid}/?p={p}")).map_err(|e| e.to_string())
 }
 
 fn layout(win: &tauri::Window, player_visible: bool) {
@@ -390,10 +391,10 @@ mod tests {
     }
 
     #[test]
-    fn player_url_only_builds_the_official_embed_page() {
+    fn player_url_only_builds_the_official_video_page() {
         let u = player_url("BV1dr4y1n7vA", 3).unwrap();
-        assert_eq!(u.host_str(), Some("player.bilibili.com"));
-        assert!(u.as_str().contains("bvid=BV1dr4y1n7vA") && u.as_str().contains("p=3"));
+        assert_eq!(u.host_str(), Some("www.bilibili.com"));
+        assert!(u.path().starts_with("/video/BV1dr4y1n7vA") && u.query() == Some("p=3"));
         for (b, p) in [("BV1dr4y1n7v", 3), ("XX1dr4y1n7vA", 3), ("BV1dr4y1n7vA&x=1", 3), ("BV1dr4y1n7vA", 0), ("BV1dr4y1n7vA", 1001)] {
             assert!(player_url(b, p).is_err(), "{b} P{p} 应当被拒绝");
         }
