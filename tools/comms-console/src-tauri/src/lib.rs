@@ -5,11 +5,20 @@
 //   2. 配了 DSN 就把本地文件 ingest 进路由器 PG（幂等，按内容哈希去重），
 //      再从 PG 查询全量——别的机器投进来的协作史也能看到（多机汇聚）；
 //   3. PG 不可达或未配置就降级用本地文件，界面标明数据来源。
+//
+// ADR 0181 起本应用兼作**协作中心宿主**：拉起并保活 commsd（投递守护）、消费
+// notify-queue 弹系统通知、提供 operator（使用者本人）收件箱。写路径只有一条例外：
+// operator 的「标为已处理」调 `comms.py ack operator`，其余一切写仍走 CLI。
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
+use std::time::Duration;
 
 use serde::Serialize;
+use tauri::menu::{Menu, MenuItem};
+use tauri::tray::TrayIconBuilder;
+use tauri::{AppHandle, Manager, WindowEvent};
+use tauri_plugin_autostart::{ManagerExt as _, MacosLauncher};
 
 #[derive(Serialize, Clone)]
 struct BayInfo {
@@ -682,12 +691,173 @@ fn load_snapshot() -> Result<Snapshot, String> {
     Ok(load_inner())
 }
 
+// ---------------------------------------------------------------- 宿主：commsd 保活、通知、operator（ADR 0181）
+
+/// 宿主与 commsd 的接口只有心跳文件与通知队列（都是 JSON 文件），不做 RPC——
+/// daemon 不在、python 不在、队列损坏，宿主都安静降级，绝不阻塞界面。
+fn daemon_alive(root: &Path) -> bool {
+    // 心跳判活用文件 mtime 而不是解析里面的时间字符串：commsd 每轮原子重写该文件，
+    // mtime 就是最新心跳，还免掉本地时间解析与时区问题。
+    let path = root.join("comms").join("sessions").join(".daemon.json");
+    let Ok(meta) = std::fs::metadata(&path) else {
+        return false;
+    };
+    let Ok(mtime) = meta.modified() else {
+        return false;
+    };
+    std::time::SystemTime::now()
+        .duration_since(mtime)
+        .map(|d| d.as_secs() < 60)
+        .unwrap_or(false)
+}
+
+fn spawn_daemon(root: &Path) {
+    let script = root.join("comms").join("commsd.py");
+    if !script.is_file() {
+        return;
+    }
+    let mut cmd = std::process::Command::new("python");
+    cmd.arg(&script).current_dir(root);
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW：后台守护不闪控制台
+    }
+    let _ = cmd
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .spawn();
+}
+
+/// 消费 notify-queue：commsd 把「需要使用者」的消息写成请求文件，宿主弹系统通知后
+/// 删除请求。损坏的条目直接清掉——宁可少弹一条也不让队列堵死。
+fn consume_notify_queue(app: &AppHandle, root: &Path) {
+    use tauri_plugin_notification::NotificationExt;
+    let queue = root.join("comms").join("sessions").join("notify-queue");
+    let Ok(dir) = std::fs::read_dir(&queue) else {
+        return;
+    };
+    for entry in dir.flatten() {
+        let path = entry.path();
+        if path.extension().and_then(|s| s.to_str()) != Some("json") {
+            continue;
+        }
+        let parsed = std::fs::read_to_string(&path)
+            .ok()
+            .and_then(|raw| serde_json::from_str::<serde_json::Value>(&raw).ok());
+        let Some(v) = parsed else {
+            let _ = std::fs::remove_file(&path);
+            continue;
+        };
+        let project = v.get("project").and_then(|x| x.as_str()).unwrap_or("");
+        let from = v.get("from").and_then(|x| x.as_str()).unwrap_or("");
+        let subject = v.get("subject").and_then(|x| x.as_str()).unwrap_or("");
+        let _ = app
+            .notification()
+            .builder()
+            .title(format!("协作通讯 · {project}"))
+            .body(format!("{from}：{subject}"))
+            .show();
+        let _ = std::fs::remove_file(&path);
+    }
+}
+
+fn keepalive_loop(app: AppHandle, root: PathBuf) {
+    std::thread::spawn(move || loop {
+        if !daemon_alive(&root) {
+            spawn_daemon(&root);
+        }
+        consume_notify_queue(&app, &root);
+        std::thread::sleep(Duration::from_secs(15));
+    });
+}
+
+/// operator 收件箱的「标为已处理」：唯一的写例外，但写路径仍走 CLI（`ack operator`），
+/// 文件语义（read 游标追加）与铁律不变——观察台自己不碰任何 comms/ 文件。
+#[tauri::command(async)]
+fn operator_ack(bay: String) -> Result<String, String> {
+    let root = athena_root().ok_or("仓库根不可见")?;
+    let mut cmd = std::process::Command::new("python");
+    cmd.args(["comms/comms.py", "ack", "operator", "--all", "--project", &bay])
+        .current_dir(&root);
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        cmd.creation_flags(0x08000000);
+    }
+    let out = cmd.output().map_err(|e| format!("无法运行 comms.py：{e}"))?;
+    let text = String::from_utf8_lossy(&out.stdout).into_owned();
+    let err = String::from_utf8_lossy(&out.stderr).into_owned();
+    if out.status.success() {
+        Ok(text)
+    } else {
+        Err(if err.trim().is_empty() { text } else { err })
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-    .plugin(tauri_plugin_updater::Builder::new().build())
-    .plugin(tauri_plugin_process::init())
-        .invoke_handler(tauri::generate_handler![load_snapshot])
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_autostart::init(
+            MacosLauncher::LaunchAgent,
+            Some(vec!["--hidden"]),
+        ))
+        .invoke_handler(tauri::generate_handler![load_snapshot, operator_ack])
+        .on_window_event(|window, event| {
+            // 协作中心常驻：关窗=藏进托盘，退出走托盘菜单。
+            if let WindowEvent::CloseRequested { api, .. } = event {
+                let _ = window.hide();
+                api.prevent_close();
+            }
+        })
+        .setup(|app| {
+            // 开机自启默认开启（ADR 0181）：init 传入的 ["--hidden"] 会写进自启命令，
+            // 登录拉起不弹窗。
+            let _ = app.autolaunch().enable();
+            let hidden = std::env::args().any(|a| a == "--hidden");
+            if let Some(window) = app.get_webview_window("main") {
+                if hidden {
+                    let _ = window.hide();
+                } else {
+                    let _ = window.show();
+                }
+            }
+            let show_item = MenuItem::with_id(app, "show", "显示协作中心", true, None::<&str>)?;
+            let quit_item = MenuItem::with_id(app, "quit", "退出（commsd 留在后台）", true, None::<&str>)?;
+            let menu = Menu::with_items(app, &[&show_item, &quit_item])?;
+            TrayIconBuilder::with_id("main-tray")
+                .icon(app.default_window_icon().expect("app icon").clone())
+                .tooltip("协作中心 · comms-console")
+                .menu(&menu)
+                .show_menu_on_left_click(false)
+                .on_menu_event(|app, event| match event.id.as_ref() {
+                    "show" => {
+                        if let Some(w) = app.get_webview_window("main") {
+                            let _ = w.show();
+                            let _ = w.set_focus();
+                        }
+                    }
+                    "quit" => app.exit(0),
+                    _ => {}
+                })
+                .on_tray_icon_event(|tray, event| {
+                    // 左键单击托盘 = 把窗口叫回来
+                    if let tauri::tray::TrayIconEvent::Click { button: tauri::tray::MouseButton::Left, button_state: tauri::tray::MouseButtonState::Up, .. } = event {
+                        if let Some(w) = tray.app_handle().get_webview_window("main") {
+                            let _ = w.show();
+                            let _ = w.set_focus();
+                        }
+                    }
+                })
+                .build(app)?;
+            if let Some(root) = athena_root() {
+                keepalive_loop(app.handle().clone(), root);
+            }
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running athena-comms-console");
 }

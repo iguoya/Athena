@@ -6,11 +6,13 @@ import TaskView from "./views/TaskView";
 import ChatView from "./views/ChatView";
 import StatsView from "./views/StatsView";
 import MemberView from "./views/MemberView";
+import InboxView from "./views/InboxView";
 import { agentColors } from "./activity";
 
-type View = "board" | "members" | "tasks" | "chat" | "stats";
+type View = "inbox" | "board" | "members" | "tasks" | "chat" | "stats";
 
 const VIEW_LABEL: Record<View, string> = {
+  inbox: "我的收件箱",
   board: "看板",
   members: "成员",
   tasks: "任务与决策",
@@ -24,6 +26,7 @@ export default function App() {
   const [view, setView] = useState<View>("board");
   const [selectedTid, setSelectedTid] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [operatorAcked, setOperatorAcked] = useState<Set<string>>(new Set());
 
   if (snap === null && error === "") {
     invoke<Snapshot>("load_snapshot")
@@ -99,7 +102,7 @@ export default function App() {
           ))}
         </nav>
         <div className="border-t border-line px-4 py-3 text-xs text-ink-300">
-          只读观察：写走 comms.py（ADR 0166）
+          写走 comms.py；收件箱已处理走 ack operator（ADR 0181）
         </div>
       </aside>
 
@@ -118,23 +121,38 @@ export default function App() {
             </span>
           )}
           <nav className="ml-auto flex gap-1">
-            {(Object.keys(VIEW_LABEL) as View[]).map((v) => (
-              <button
-                key={v}
-                onClick={() => setView(v)}
-                className={
-                  "rounded-lg px-3 py-1.5 text-sm " +
-                  (view === v ? "bg-brand-500 text-white" : "text-ink-700 hover:bg-brand-50")
-                }
-              >
-                {VIEW_LABEL[v]}
-              </button>
-            ))}
+            {(Object.keys(VIEW_LABEL) as View[]).map((v) => {
+              const pendingInbox =
+                v === "inbox"
+                  ? snap.msgs.filter(
+                      (m) => m.to_a === "operator" && !operatorAcked.has(`${m.bay}/${m.msg_id}`),
+                    ).length
+                  : 0;
+              return (
+                <button
+                  key={v}
+                  onClick={() => setView(v)}
+                  className={
+                    "rounded-lg px-3 py-1.5 text-sm " +
+                    (view === v ? "bg-brand-500 text-white" : "text-ink-700 hover:bg-brand-50")
+                  }
+                >
+                  {VIEW_LABEL[v]}
+                  {pendingInbox > 0 && (
+                    <span className="ml-1.5 rounded-full bg-rose-500 px-1.5 text-xs text-white">
+                      {pendingInbox}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </nav>
         </header>
         <section className="min-h-0 flex-1 overflow-auto">
-          {bay === "" ? (
+          {bay === "" && view !== "inbox" ? (
             <div className="flex h-full items-center justify-center text-ink-500">选一个舱</div>
+          ) : view === "inbox" ? (
+            <InboxView msgs={snap.msgs} acked={operatorAcked} onAcked={setOperatorAcked} />
           ) : view === "board" ? (
             <BoardView
               snap={snap}
