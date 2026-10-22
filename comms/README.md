@@ -137,7 +137,8 @@ python comms/spawn.py zcode  --project driver --task T-104 [--note "补充说明
 2. **自动投递（hook）**：`comms/hooks/agent-notify.py` 挂在 SessionStart /
    UserPromptSubmit 上，有 session_id 的代理（ZCode、Claude Code）自动登记会话并
    `deliver` 本会话订阅内的未读全文；没有的（Cursor）降级为逐舱摘要。已投递的
-   自动标记，无需 ack。
+   自动标记，无需 ack。另挂 PostToolUse（每 60 秒至多真查一次）：长任务中间
+   也会看到「紧急且尚未投递」的插报。
 3. **投递守护（commsd）**：`python comms/commsd.py`（通常由 comms-console 拉起并
    保活）监听消息落盘：需要使用者的写进 notify-queue 由协作中心弹系统通知；
    紧急且收件方全部会话心跳超时的，30 分钟窗口内自动 spawn 唤醒一次。

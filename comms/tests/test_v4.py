@@ -115,6 +115,17 @@ def checks() -> None:
     out = run(["deliver", "--agent", "zcode", "--sid", SID_A])
     assert "快问快答" not in out, "chat 会话游标应推进"
 
+    # ── deliver --urgent-only：轮内插报只投紧急且未投递的（ADR 0181 第二步）──
+    msg("v4a", "cursor", "zcode", "普通：插报不该带")
+    out = run(["deliver", "--agent", "zcode", "--sid", SID_A, "--urgent-only"])
+    assert out.strip() == "", f"无紧急时插报应静默：{out}"
+    msg("v4a", "cursor", "zcode", "紧急：插报要带这条")
+    out = run(["deliver", "--agent", "zcode", "--sid", SID_A, "--urgent-only"])
+    assert "插报要带这条" in out and "紧急插报" in out, out
+    assert "插报不该带" not in out, "插报不得夹带普通消息"
+    out = run(["deliver", "--agent", "zcode", "--sid", SID_A, "--urgent-only"])
+    assert out.strip() == "", "已投递的紧急消息不得重复插报"
+
     # ── triage：跨舱聚合 + shared delivered ──
     run(["session", "drop", "--agent", "zcode", "--sid", SID_A])
     msg("v4a", "cursor", "zcode", "triage 才能看到")

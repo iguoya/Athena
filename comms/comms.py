@@ -553,7 +553,8 @@ def cmd_session(a):
 
 def cmd_deliver(a):
     """hook 的投递口：按会话订阅过滤，输出应注入的消息全文，并写 delivered 记录
-    （手动 inbox/notify 会把已投递的并入已读，不会重复显示）。operator / mute 会话零注入。"""
+    （手动 inbox/notify 会把已投递的并入已读，不会重复显示）。operator / mute 会话零注入。
+    --urgent-only 只投紧急（PostToolUse 轮内插报用；全量投递仍是 UserPromptSubmit 的活）。"""
     data = session_read(a.agent, a.sid)
     if data is None:
         data = {"agent": a.agent, "sid": _sid8(a.sid), "role": "worker", "projects": [], "mute": False,
@@ -579,6 +580,10 @@ def cmd_deliver(a):
         if a.agent not in cabin_agents(proj):
             continue
         msgs = _with_cabin(proj, collect)
+        if getattr(a, "urgent_only", False):
+            msgs = [x for x in msgs if "紧急" in (x[1].get("subject") or "")]
+            chosen += [(proj, x) for x in msgs[:3]]
+            continue
         subscribed = not want or proj in want
         urgent = [x for x in msgs if "紧急" in (x[1].get("subject") or "")]   # 紧急无视订阅
         ordinary = [x for x in msgs if "紧急" not in (x[1].get("subject") or "")] if subscribed else []
@@ -596,7 +601,10 @@ def cmd_deliver(a):
     chat_items = chat_items[:6]
     if not chosen and not chat_items:
         return 0
-    lines = ["【Athena 协作·会话投递】只含本会话订阅的内容；已自动标记投递，无需 ack。"]
+    header = "【Athena 协作·紧急插报】（长任务轮内提醒，只含紧急且尚未投递的）" \
+        if getattr(a, "urgent_only", False) else \
+        "【Athena 协作·会话投递】只含本会话订阅的内容；已自动标记投递，无需 ack。"
+    lines = [header]
     for proj, (p, m, b) in chosen:
         lines.append(f"『{proj}』--- {p.name}")
         lines.append(f"来自 {m.get('from')} · {m.get('created')} · 主题：{m.get('subject')}"
@@ -1053,7 +1061,7 @@ def main() -> int:
     d3 = ssub.add_parser("drop"); d3.add_argument("--agent", required=True); d3.add_argument("--sid", required=True)
     d3.set_defaults(fn=cmd_session)
     s = sub.add_parser("deliver"); s.add_argument("--agent", required=True); s.add_argument("--sid", required=True)
-    s.set_defaults(fn=cmd_deliver)
+    s.add_argument("--urgent-only", action="store_true"); s.set_defaults(fn=cmd_deliver)
     s = sub.add_parser("triage"); s.add_argument("name"); s.set_defaults(fn=cmd_triage)
     explicit, rest = _extract_project(sys.argv[1:])
     a = ap.parse_args(rest)

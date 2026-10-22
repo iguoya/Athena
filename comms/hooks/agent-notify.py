@@ -34,7 +34,25 @@ if hasattr(sys.stdout, "reconfigure"):
 
 TOOL = Path(__file__).resolve().parents[1] / "comms.py"
 COMMS_ROOT = TOOL.parents[1] / "comms"
+SESSIONS = COMMS_ROOT / "sessions"
 NO_WINDOW = 0x08000000 if os.name == "nt" else 0  # CREATE_NO_WINDOW，子进程不闪控制台窗
+PROBE_MIN_INTERVAL = 60  # 秒；PostToolUse 高频触发，节流到每分钟至多真查一次紧急箱
+
+
+def throttled(sid: str) -> bool:
+    """PostToolUse 节流：probe 标记文件的 mtime 距今不足 60 秒就跳过（写文件即刷新）。"""
+    if not SESSIONS.is_dir():
+        return False
+    probe = SESSIONS / f".probe.{sid}"
+    try:
+        if probe.exists():
+            age = __import__("time").time() - probe.stat().st_mtime
+            if age < PROBE_MIN_INTERVAL:
+                return True
+        probe.write_text("", encoding="utf-8")
+    except OSError:
+        return False
+    return False
 
 
 def comms(args: list[str], timeout: int = 10) -> str:
@@ -69,12 +87,20 @@ def main() -> int:
 
     parts: list[str] = []
     if len(sid) >= 4 and COMMS_ROOT.is_dir():
-        # 会话路径：登记/心跳 + 按订阅投递全文。touch 或 deliver 失败（输出为空且非静音）
-        # 时不阻塞会话——静默即可，代理随时可用 triage 主动查收。
-        comms(["session", "touch", "--agent", agent, "--sid", sid], timeout=15)
-        delivered = comms(["deliver", "--agent", agent, "--sid", sid], timeout=15)
-        if delivered:
-            parts.append(delivered)
+        if event == "PostToolUse":
+            # 轮内插报（ADR 0181 第二步）：长任务中间也能看到紧急消息。只投紧急且
+            # 尚未投递的（全量投递仍是 UserPromptSubmit 的活）；60 秒节流防高频拖慢。
+            if not throttled(sid):
+                urgent = comms(["deliver", "--agent", agent, "--sid", sid, "--urgent-only"], timeout=15)
+                if urgent:
+                    parts.append(urgent)
+        else:
+            # 会话路径：登记/心跳 + 按订阅投递全文。touch 或 deliver 失败（输出为空且非静音）
+            # 时不阻塞会话——静默即可，代理随时可用 triage 主动查收。
+            comms(["session", "touch", "--agent", agent, "--sid", sid], timeout=15)
+            delivered = comms(["deliver", "--agent", agent, "--sid", sid], timeout=15)
+            if delivered:
+                parts.append(delivered)
     elif COMMS_ROOT.is_dir():
         # 降级路径（无会话标识）：逐舱摘要提醒，ADR 0165 行为。
         for cfg in sorted(COMMS_ROOT.glob("*/config.json")):
@@ -85,7 +111,8 @@ def main() -> int:
     out: dict = {}
     if parts:
         text = "\n".join(parts)
-        if not parts[0].startswith("【Athena 协作·会话投递】"):
+        if not parts[0].startswith("【Athena 协作·"):
+            # 只有降级摘要路径才包旧的提醒文案；会话投递/紧急插报自带说明头。
             text = ("【Athena 协作通讯·未读提醒】正式收件箱与即时 chat 并行；"
                     "手头告一段落再处理，标题带「紧急」的才打断。\n" + text +
                     f"\n查看：python comms/comms.py triage {agent}")
