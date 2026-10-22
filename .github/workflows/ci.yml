@@ -302,7 +302,7 @@ jobs:
       "data-structures","deep-learning","design-patterns","earth","edge-ai","embedded","firmware",
       "comms-console","gtkmm","jiuzhou","linux","llm-app","llm-finetune","math-tools","mathematics",
       "machine-learning","microcontroller","network","organization","os","polaris",
-      "pocket-cube-solver","qt","gtkmm-lab","python","rtos","snake","software","octave-manual","selinger-linear-algebra","siefken-linear-algebra","sympy-tutorial","chen-linear-algebra","axler-linear-algebra",
+      "pocket-cube-solver","qt","gtkmm-lab","python","rtos","snake","software","octave-manual","selinger-linear-algebra","siefken-linear-algebra","sympy-tutorial","chen-linear-algebra","chen-linear-algebra-mooc","axler-linear-algebra",
         "linear-algebra","advanced-mathematics"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
@@ -314,7 +314,7 @@ jobs:
           "data-structures","deep-learning","design-patterns","earth","edge-ai","embedded","firmware",
           "comms-console","gtkmm","jiuzhou","linux","llm-app","llm-finetune","math-tools","mathematics",
           "machine-learning","microcontroller","network","organization","os","polaris",
-          "pocket-cube-solver","qt","gtkmm-lab","python","rtos","snake","software","octave-manual","selinger-linear-algebra","siefken-linear-algebra","sympy-tutorial","chen-linear-algebra","axler-linear-algebra",
+          "pocket-cube-solver","qt","gtkmm-lab","python","rtos","snake","software","octave-manual","selinger-linear-algebra","siefken-linear-algebra","sympy-tutorial","chen-linear-algebra","chen-linear-algebra-mooc","axler-linear-algebra",
           "linear-algebra","advanced-mathematics"]' || format('["{0}"]', inputs.app)) }}
         os: [macos-15, windows-latest, ubuntu-26.04]
     # Linux 降级：回归了报出来，但不阻塞整体结论（ADR 0051）
