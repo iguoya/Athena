@@ -120,13 +120,30 @@ class ExamDraft {
 }
 
 /// 练一把车的记录（ADR 0036）：哪一项、出了哪些错（同一个错可以出现多次）。
+/// [pointHit] 是这一把点位的自我标注（准 / 偏早 / 偏晚），可空；不写掌握度。
 class DrillRun {
-  const DrillRun({required this.itemId, required this.mistakes, required this.at});
+  const DrillRun({
+    required this.itemId,
+    required this.mistakes,
+    required this.at,
+    this.pointHit,
+  });
 
   final String itemId;
   final List<String> mistakes;
   final DateTime at;
+
+  /// `on` 准、`early` 偏早、`late` 偏晚。没标就是 null。
+  final String? pointHit;
 }
+
+/// 点位命中三档的界面文字。不认识的值当没标。
+String? pointHitLabel(String? hit) => switch (hit) {
+  "on" => "准",
+  "early" => "偏早",
+  "late" => "偏晚",
+  _ => null,
+};
 
 /// 点位卡某一步的文字（ADR 0037）。只追加，读最新的一行。
 class PointNote {
@@ -138,8 +155,33 @@ class PointNote {
   final DateTime at;
 }
 
+/// 学员照片上的一个参照标记。坐标 0～1，形态对齐步骤素材的 point 标记，不烧进图片。
+class PhotoMark {
+  const PhotoMark({
+    required this.type,
+    required this.label,
+    required this.x,
+    required this.y,
+  });
+
+  final String type;
+  final String label;
+  final double x;
+  final double y;
+
+  factory PhotoMark.fromJson(Map<String, dynamic> json) => PhotoMark(
+    type: json["type"] as String? ?? "point",
+    label: json["label"] as String? ?? "",
+    x: (json["x"] as num?)?.toDouble() ?? 0,
+    y: (json["y"] as num?)?.toDouble() ?? 0,
+  );
+
+  Map<String, Object> toJson() => {"type": type, "label": label, "x": x, "y": y};
+}
+
 /// 点位卡上的一张照片。[file] 相对 [ProgressStore.pointsDir]。登记随仓库走
 /// （photos.json，ADR 0070），file 名里带时间戳，本身就是唯一键。
+/// [marks] 跟照片一起留在清单里，不进事件同步。
 class PointPhoto {
   const PointPhoto({
     required this.itemId,
@@ -147,6 +189,7 @@ class PointPhoto {
     required this.file,
     required this.caption,
     required this.at,
+    this.marks = const [],
   });
 
   final String itemId;
@@ -154,6 +197,7 @@ class PointPhoto {
   final String file;
   final String caption;
   final DateTime at;
+  final List<PhotoMark> marks;
 }
 
 /// 一次默演（ADR 0037）：[missed] 是卡住的步骤下标。自评，不写掌握度。
@@ -387,6 +431,7 @@ class ProgressStore {
       if (!existing.contains(column)) db.execute("ALTER TABLE $table ADD COLUMN $column $type");
     }
 
+    addColumn("drill_runs", "point_hit", "TEXT");
     addColumn("attempts", "chosen", "TEXT");
     addColumn("attempts", "session_id", "TEXT");
     addColumn("attempts", "reason", "TEXT");
@@ -931,11 +976,18 @@ class ProgressStore {
   }
 
   /// 记一把练车。不写掌握度——掌握度只由答题写入（ADR 0036）。
-  Future<void> recordDrillRun(String itemId, List<String> mistakes, {DateTime? at}) async {
+  /// [pointHit] 只留在本地列上，不进 outbox：中心表没有这一列，不新开同步资源。
+  Future<void> recordDrillRun(
+    String itemId,
+    List<String> mistakes, {
+    DateTime? at,
+    String? pointHit,
+  }) async {
     final stamp = (at ?? DateTime.now()).toIso8601String();
+    final hit = pointHitLabel(pointHit) == null ? null : pointHit;
     _db.execute(
-      "INSERT OR IGNORE INTO drill_runs (item_id, mistakes, at) VALUES (?, ?, ?)",
-      [itemId, mistakes.join(","), stamp],
+      "INSERT OR IGNORE INTO drill_runs (item_id, mistakes, at, point_hit) VALUES (?, ?, ?, ?)",
+      [itemId, mistakes.join(","), stamp, hit],
     );
     _enqueue("drill-runs", payload: {"item_id": itemId, "mistakes": mistakes.join(","), "at": stamp});
   }
@@ -952,6 +1004,7 @@ class ProgressStore {
               if (id.isNotEmpty) id,
           ],
           at: DateTime.parse(row["at"] as String),
+          pointHit: row["point_hit"] as String?,
         ),
     ];
   }
@@ -1024,6 +1077,10 @@ class ProgressStore {
             file: entry["file"] as String,
             caption: entry["caption"] as String? ?? "",
             at: DateTime.tryParse(entry["at"] as String? ?? "") ?? DateTime.now(),
+            marks: [
+              for (final raw in (entry["marks"] as List<dynamic>?) ?? const <dynamic>[])
+                PhotoMark.fromJson(Map<String, dynamic>.from(raw as Map)),
+            ],
           ),
       ];
     } on FormatException {
@@ -1036,7 +1093,14 @@ class ProgressStore {
     file.createSync(recursive: true);
     file.writeAsStringSync(const JsonEncoder.withIndent("  ").convert([
       for (final photo in photos)
-        {"item_id": photo.itemId, "step": photo.step, "file": photo.file, "caption": photo.caption, "at": photo.at.toIso8601String()},
+        {
+          "item_id": photo.itemId,
+          "step": photo.step,
+          "file": photo.file,
+          "caption": photo.caption,
+          "at": photo.at.toIso8601String(),
+          "marks": [for (final mark in photo.marks) mark.toJson()],
+        },
     ]));
   }
 
@@ -1044,6 +1108,24 @@ class ProgressStore {
     final photos = [..._loadPhotos()];
     photos.add(PointPhoto(itemId: itemId, step: step, file: file, caption: caption, at: DateTime.now()));
     _savePhotos(photos);
+  }
+
+  /// 改一张照片上的参照标记。清单随仓库走，不入 outbox。
+  Future<void> savePointPhotoMarks(String file, List<PhotoMark> marks) async {
+    _savePhotos([
+      for (final entry in _loadPhotos())
+        if (entry.file == file)
+          PointPhoto(
+            itemId: entry.itemId,
+            step: entry.step,
+            file: entry.file,
+            caption: entry.caption,
+            at: entry.at,
+            marks: marks,
+          )
+        else
+          entry,
+    ]);
   }
 
   Future<List<PointPhoto>> pointPhotos() async => _loadPhotos();

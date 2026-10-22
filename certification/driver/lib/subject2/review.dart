@@ -21,7 +21,19 @@ class _ItemDraft {
   final GuideItem item;
   var rounds = 3;
   final counts = <int, Map<String, int>>{};
+  final hits = <int, String>{};
   final note = TextEditingController();
+
+  String? hitOf(int round) => hits[round];
+
+  /// 再点同一档就取消。不标也可以保存。
+  void setHit(int round, String hit) {
+    if (hits[round] == hit) {
+      hits.remove(round);
+    } else {
+      hits[round] = hit;
+    }
+  }
 
   List<String> mistakesOf(int round) => [
         for (final e in (counts[round] ?? const <String, int>{}).entries)
@@ -84,7 +96,12 @@ class _DayReviewState extends State<DayReview> {
       if (!_chosen.contains(item.id)) continue;
       final draft = _drafts[item.id]!;
       for (var r = 0; r < draft.rounds; r++) {
-        await widget.store.recordDrillRun(item.id, draft.mistakesOf(r), at: at);
+        await widget.store.recordDrillRun(
+          item.id,
+          draft.mistakesOf(r),
+          at: at,
+          pointHit: draft.hitOf(r),
+        );
         at = at.add(const Duration(milliseconds: 1));
       }
       final note = draft.note.text.trim();
@@ -167,6 +184,7 @@ class _DayReviewState extends State<DayReview> {
                 onPressed: draft.rounds > 1
                     ? () => setState(() {
                           draft.counts.remove(draft.rounds - 1);
+                          draft.hits.remove(draft.rounds - 1);
                           draft.rounds--;
                         })
                     : null,
@@ -250,6 +268,28 @@ class _DayReviewState extends State<DayReview> {
               ],
             ),
           ),
+          const SizedBox(height: 8),
+          for (var r = 0; r < draft.rounds; r++)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 6,
+                children: [
+                  SizedBox(
+                    width: 132,
+                    child: Text("第 ${r + 1} 把点位", style: theme.textTheme.bodyMedium),
+                  ),
+                  for (final hit in const ["on", "early", "late"])
+                    ChoiceChip(
+                      key: ValueKey("review-hit-${draft.item.id}-$r-$hit"),
+                      label: Text(pointHitLabel(hit)!),
+                      selected: draft.hitOf(r) == hit,
+                      onSelected: (_) => setState(() => draft.setHit(r, hit)),
+                    ),
+                ],
+              ),
+            ),
           const SizedBox(height: 10),
           SizedBox(
             width: 720,

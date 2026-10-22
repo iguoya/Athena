@@ -165,7 +165,7 @@ class _ShotFrameState extends State<_ShotFrame> {
                     if (_missing) const Center(child: Text("这张图读不到")),
                     Positioned.fill(
                       child: CustomPaint(
-                        painter: _MarkPainter(
+                        painter: StepMarkPainter(
                           shot.marks,
                           fitted,
                           theme.textTheme.bodyMedium?.fontFamily,
@@ -198,8 +198,8 @@ class _ShotFrameState extends State<_ShotFrame> {
   }
 }
 
-class _MarkPainter extends CustomPainter {
-  _MarkPainter(this.marks, this.image, this.fontFamily);
+class StepMarkPainter extends CustomPainter {
+  StepMarkPainter(this.marks, this.image, this.fontFamily);
 
   final List<StepMark> marks;
   final Rect image;
@@ -269,6 +269,6 @@ class _MarkPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_MarkPainter old) =>
+  bool shouldRepaint(StepMarkPainter old) =>
       old.image != image || old.marks != marks || old.fontFamily != fontFamily;
 }

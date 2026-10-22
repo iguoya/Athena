@@ -11,11 +11,25 @@ import "../ui/glyphs.dart";
 import "guide.dart";
 import "../ui/look.dart";
 import "../core/progress.dart";
+import "step_media.dart";
 
 /// 个人点位卡（ADR 0037）：每一项的每一步，只写使用者自己验证过的点位——
 /// 教练怎么说、自己在车里实测怎样。应用只给骨架，不给通用点位（ADR 0036）。
 
 const pointTemplate = "看哪里：\n看到什么时：\n做什么：";
+
+/// 这一项最近几次标过的点位，新的在前，最多 [limit] 次。没标的把不算。
+List<String> recentPointHits(Iterable<DrillRun> runs, String itemId, {int limit = 3}) {
+  final out = <String>[];
+  for (final run in runs) {
+    if (run.itemId != itemId) continue;
+    final label = pointHitLabel(run.pointHit);
+    if (label == null) continue;
+    out.add(label);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
 
 /// 一项一条标定引导：停在哪、看哪里、拍什么、写什么。不给通用点位（ADR 0036）。
 String calibrationGuide(String itemId) => switch (itemId) {
@@ -83,6 +97,7 @@ class PointCards extends StatelessWidget {
     required this.photos,
     required this.onChanged,
     this.stepKeys,
+    this.recentHits = const [],
   });
 
   final GuideItem item;
@@ -94,11 +109,19 @@ class PointCards extends StatelessWidget {
   /// 每一步一张卡的键，供「去标定」滚到这一步。
   final List<GlobalKey>? stepKeys;
 
+  /// 这一项最近几次点位命中（准 / 偏早 / 偏晚），新的在前。
+  final List<String> recentHits;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        if (recentHits.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text("最近点位：${recentHits.join(" · ")}"),
+          ),
         for (var i = 0; i < item.steps.length; i++)
           PointCard(
             key: stepKeys != null && i < stepKeys!.length ? stepKeys![i] : null,
@@ -245,6 +268,19 @@ class PointCard extends StatelessWidget {
     }
   }
 
+  Future<void> _annotate(BuildContext context, PointPhoto photo) async {
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (context) => Dialog(
+        child: PointMarkEditor(
+          photo: photo,
+          onSave: (marks) => store.savePointPhotoMarks(photo.file, marks),
+        ),
+      ),
+    );
+    if (saved == true) await onChanged();
+  }
+
   Future<void> _view(BuildContext context, PointPhoto photo) async {
     final remove = await showDialog<bool>(
       context: context,
@@ -360,33 +396,43 @@ class PointCard extends StatelessWidget {
               runSpacing: 10,
               children: [
                 for (final photo in photos)
-                  InkWell(
-                    onTap: () => _view(context, photo),
-                    child: SizedBox(
-                      width: 180,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: Image.file(
-                              File(p.join(ProgressStore.pointsDir, photo.file)),
-                              height: 110,
-                              width: 180,
-                              fit: BoxFit.cover,
-                              cacheWidth: 360,
-                              errorBuilder: _missing,
-                            ),
+                  SizedBox(
+                    width: 180,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InkWell(
+                          onTap: () => _view(context, photo),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: Image.file(
+                                  File(p.join(ProgressStore.pointsDir, photo.file)),
+                                  height: 110,
+                                  width: 180,
+                                  fit: BoxFit.cover,
+                                  cacheWidth: 360,
+                                  errorBuilder: _missing,
+                                ),
+                              ),
+                              if (photo.caption.isNotEmpty)
+                                Text(
+                                  photo.caption,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.bodySmall,
+                                ),
+                            ],
                           ),
-                          if (photo.caption.isNotEmpty)
-                            Text(
-                              photo.caption,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.bodySmall,
-                            ),
-                        ],
-                      ),
+                        ),
+                        if (!compact)
+                          TextButton(
+                            onPressed: () => _annotate(context, photo),
+                            child: Text(photo.marks.isEmpty ? "标注参照物" : "改标注"),
+                          ),
+                      ],
                     ),
                   ),
               ],
@@ -460,6 +506,208 @@ class InlinePoint extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+/// 项目页这一步的图：有学员自己的标注照就用它，否则用通用素材。
+class StepVisual extends StatelessWidget {
+  const StepVisual({super.key, required this.media, required this.annotated});
+
+  final List<StepShot> media;
+  final List<PointPhoto> annotated;
+
+  @override
+  Widget build(BuildContext context) {
+    final mine = [for (final photo in annotated) if (photo.marks.isNotEmpty) photo];
+    if (mine.isNotEmpty) return AnnotatedPointPhoto(photo: mine.last);
+    if (media.isEmpty) return const SizedBox.shrink();
+    return StepMedia(shots: media);
+  }
+}
+
+/// 学员照片叠上自己点的参照。优先于通用素材出现在项目页。
+class AnnotatedPointPhoto extends StatelessWidget {
+  const AnnotatedPointPhoto({super.key, required this.photo});
+
+  final PointPhoto photo;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final labels = [for (final mark in photo.marks) mark.label].where((s) => s.isNotEmpty).join("、");
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text("我的参照物${labels.isEmpty ? "" : "：$labels"}", style: theme.textTheme.titleSmall),
+        const SizedBox(height: 6),
+        _MarkedFile(photo: photo, height: 240),
+        if (photo.caption.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(photo.caption, style: theme.textTheme.bodyMedium),
+          ),
+      ],
+    );
+  }
+}
+
+/// 在自己的照片上点选位置并加标签。标签写在输入框里，再点画面落一个点。
+class PointMarkEditor extends StatefulWidget {
+  const PointMarkEditor({super.key, required this.photo, required this.onSave});
+
+  final PointPhoto photo;
+  final Future<void> Function(List<PhotoMark> marks) onSave;
+
+  @override
+  State<PointMarkEditor> createState() => _PointMarkEditorState();
+}
+
+class _PointMarkEditorState extends State<PointMarkEditor> {
+  late final _label = TextEditingController();
+  late var _marks = [...widget.photo.marks];
+  var _saving = false;
+
+  @override
+  void dispose() {
+    _label.dispose();
+    super.dispose();
+  }
+
+  void _drop(Offset local, Size box) {
+    final label = _label.text.trim();
+    if (label.isEmpty) return;
+    final fitted = fittedImageRect(box, box);
+    if (!fitted.contains(local) || fitted.width == 0 || fitted.height == 0) return;
+    final x = ((local.dx - fitted.left) / fitted.width).clamp(0.0, 1.0);
+    final y = ((local.dy - fitted.top) / fitted.height).clamp(0.0, 1.0);
+    setState(() {
+      _marks = [
+        ..._marks,
+        PhotoMark(type: "point", label: label, x: x, y: y),
+      ];
+    });
+  }
+
+  Future<void> _save() async {
+    setState(() => _saving = true);
+    await widget.onSave(_marks);
+    if (mounted) Navigator.of(context).pop(true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: 720,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text("点选参照物", style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 8),
+            Text("先写标签，再点照片上的位置。点一次加一个。", style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(height: 8),
+            TextField(
+              key: const ValueKey("photo-mark-label"),
+              controller: _label,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "标签",
+                hintText: "例如：库角",
+              ),
+            ),
+            const SizedBox(height: 8),
+            _MarkedFile(
+              photo: widget.photo,
+              height: 360,
+              marks: _marks,
+              onTap: _drop,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (_marks.isNotEmpty)
+                  TextButton(
+                    onPressed: _saving
+                        ? null
+                        : () => setState(() => _marks = _marks.sublist(0, _marks.length - 1)),
+                    child: const Text("撤销上一个"),
+                  ),
+                TextButton(
+                  onPressed: _saving ? null : () => Navigator.of(context).pop(false),
+                  child: const Text("取消"),
+                ),
+                const SizedBox(width: 8),
+                FilledButton(
+                  key: const ValueKey("photo-mark-save"),
+                  onPressed: _saving ? null : _save,
+                  child: const Text("保存标注"),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MarkedFile extends StatelessWidget {
+  const _MarkedFile({
+    required this.photo,
+    required this.height,
+    this.marks,
+    this.onTap,
+  });
+
+  final PointPhoto photo;
+  final double height;
+  final List<PhotoMark>? marks;
+  final void Function(Offset local, Size box)? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final shown = marks ?? photo.marks;
+    final stepMarks = [
+      for (final mark in shown) StepMark(type: mark.type, label: mark.label, x: mark.x, y: mark.y),
+    ];
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final box = Size(constraints.maxWidth, height);
+        final fitted = fittedImageRect(box, box);
+        return GestureDetector(
+          key: const ValueKey("photo-mark-surface"),
+          onTapUp: onTap == null ? null : (details) => onTap!(details.localPosition, box),
+          child: SizedBox(
+            width: box.width,
+            height: box.height,
+            child: Stack(
+              children: [
+                Positioned.fromRect(
+                  rect: fitted,
+                  child: Image.file(
+                    File(p.join(ProgressStore.pointsDir, photo.file)),
+                    fit: BoxFit.fill,
+                    errorBuilder: PointCard._missing,
+                  ),
+                ),
+                Positioned.fill(
+                  child: CustomPaint(
+                    painter: StepMarkPainter(
+                      stepMarks,
+                      fitted,
+                      Theme.of(context).textTheme.bodyMedium?.fontFamily,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

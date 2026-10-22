@@ -9,7 +9,6 @@ import "drill.dart";
 import "field_map.dart";
 import "field_sketches.dart";
 import "guide.dart";
-import "step_media.dart";
 import "step_flow.dart";
 import "../ui/look.dart";
 import "../core/narration.dart";
@@ -288,6 +287,7 @@ class _Subject2PageState extends State<Subject2Page> {
           notes: _notes,
           photos: _photos,
           coachNotes: _drillNotes,
+          runs: widget.runs,
           onChanged: _loadLocal,
         ),
       ),
@@ -1112,6 +1112,7 @@ class _PreDrill extends StatefulWidget {
     required this.notes,
     required this.photos,
     required this.coachNotes,
+    required this.runs,
     required this.onChanged,
   });
 
@@ -1121,6 +1122,7 @@ class _PreDrill extends StatefulWidget {
   final Map<(String, int), PointNote> notes;
   final List<PointPhoto> photos;
   final List<DrillNote> coachNotes;
+  final List<DrillRun> runs;
   final Future<void> Function() onChanged;
 
   @override
@@ -1185,6 +1187,11 @@ class _PreDrillState extends State<_PreDrill> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                if (recentPointHits(widget.runs, item.id) case final hits when hits.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text("最近点位：${hits.join(" · ")}"),
+                  ),
                 for (var i = 0; i < item.steps.length; i++)
                   PointCard(
                     item: item,
@@ -1480,9 +1487,18 @@ class _ItemPageState extends State<_ItemPage> {
               BsBadge(text: "出线看${item.judgedBy}", color: Bs.secondary),
             ],
           ),
-          if (current.media.isNotEmpty) ...[
+          if (current.media.isNotEmpty ||
+              widget.photos.any(
+                (ph) => ph.itemId == item.id && ph.step == _step && ph.marks.isNotEmpty,
+              )) ...[
             const SizedBox(height: 8),
-            StepMedia(shots: current.media),
+            StepVisual(
+              media: current.media,
+              annotated: [
+                for (final ph in widget.photos)
+                  if (ph.itemId == item.id && ph.step == _step) ph,
+              ],
+            ),
           ],
           if (_sketchFor(item.id) case final sketch?) ...[
             const SizedBox(height: 8),
@@ -1589,6 +1605,7 @@ class _ItemPageState extends State<_ItemPage> {
                   photos: widget.photos,
                   onChanged: widget.onPointsChanged,
                   stepKeys: _pointKeys,
+                  recentHits: recentPointHits(widget.runs, item.id),
                 ),
               ],
             ),
