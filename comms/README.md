@@ -17,6 +17,15 @@ python comms/comms.py status T-001 review --by <你的名字> --note "验证命�
 python comms/comms.py send --from <你的名字> --to <对方名字|all> --subject "主题" --body "正文" --project <舱>
 python comms/comms.py board --project <舱>                # 重新生成看板（status 命令会自动做）
 python comms/comms.py check --project <舱>                # 校验通讯结构
+python comms/comms.py triage <你的名字>                    # 一条命令查收：全部舱的未处理消息 + 我的任务
+```
+
+会话层（ADR 0181，一般由 hook 自动调，人只在声明角色时用）：
+
+```sh
+python comms/comms.py session touch --agent zcode --sid <session_id> --role operator
+python comms/comms.py session list                       # 看活跃会话
+python comms/comms.py deliver --agent zcode --sid <sid>  # 本会话订阅内的未读全文（自动标记已投递）
 ```
 
 正文较长时用 `--body-file 文件路径`，或 `--body -` 从标准输入读。
@@ -108,26 +117,32 @@ python comms/spawn.py zcode  --project driver --task T-104 [--note "补充说明
 
 ## 多标签页工作法（一个代理开多个会话并行）
 
-使用者会开同一代理的多个标签页各做各的任务。机制上的完整方案见 ADR 0167
-（按任务分箱，`--mine` / `--task` 路由），落地前这些约定立刻可用：
+机制是 ADR 0181 的会话注册表 + ADR 0167 的任务分箱，两层各管一半：
 
-1. **一个标签页一个舱**：跨项目时 `--project` 本来就是分箱，driver 的会话看不到
-   comms-console 的消息，反之亦然。
-2. **认领再做**：开工 `inbox` 认清全局，`status T-xxx doing` 就是「这个任务归我这个
-   会话」的声明；看到任务已被别人 doing 就不碰，也别同时认领两个以上。
-3. **查收带任务**：认领之后只关心自己任务的消息，leader 对具体任务会话说话务必带
-   `--task T-xxx`（消息会挂任务，可追溯）。
-4. **做完即离**：交 review 后这个会话就不再属于该任务；接手的人从 `review` 状态
-   和进展记录接上下文。
+- **会话注册表**（`comms/sessions/`，hook 自动维护）：投递精确到标签页。hook 拿到
+  session_id 就登记并按会话投递——干活的标签页只注入自己订阅舱的未读**全文**
+  （自动标记已投递，无需 ack）；纯对话会话让代理跑一次
+  `session touch --agent <名> --sid <session_id> --role operator` 即永久静音。
+  未注册的会话走旧的逐舱摘要提醒（降级不缺席）。
+- **任务分箱**（ADR 0167）：任务是路由单位，`status T-xxx doing` 就是认领声明。
+  同舱开工先 `triage <名>`（或 `inbox`）认清全局，认领后消息带 `--task T-xxx`；
+  看到任务已被别人 doing 就不碰；做完即离。
+- `--to operator` 是发给使用者本人的保留通道：comms-console 会弹系统通知并聚进
+  「我的收件箱」；需要人拍板的事不要发给别人转达。
 
-## 实时沟通（不打扰的提醒）
+## 实时沟通（ADR 0181 起自动投递）
 
 1. **线程**：`reply <消息文件名片段> --from <名字> --body 正文` 回复一条消息，收件人、
    标题（`Re:`）、线程 id 自动处理；`thread <片段>` 按时间顺序看整个来回。
-2. **提醒（hook 用）**：`notify <名字>`——没有未读时什么都不打印，有未读时最多 3 行
-   摘要。接在代理环境的「每轮开始 / 提交提示前」钩子上让未读自然出现；
-   通用 hook 见 [hooks/agent-notify.py](hooks/agent-notify.py)（一次扫描所有舱）。
-3. **阻塞等待**：`watch <名字>` 后台运行，有新消息进程退出即被唤醒。
+2. **自动投递（hook）**：`comms/hooks/agent-notify.py` 挂在 SessionStart /
+   UserPromptSubmit 上，有 session_id 的代理（ZCode、Claude Code）自动登记会话并
+   `deliver` 本会话订阅内的未读全文；没有的（Cursor）降级为逐舱摘要。已投递的
+   自动标记，无需 ack。
+3. **投递守护（commsd）**：`python comms/commsd.py`（通常由 comms-console 拉起并
+   保活）监听消息落盘：需要使用者的写进 notify-queue 由协作中心弹系统通知；
+   紧急且收件方全部会话心跳超时的，30 分钟窗口内自动 spawn 唤醒一次。
 4. **即时消息**：`say --from <名字> --to <对方|all> "一句话"` 快问快答，不进任务系统；
    `chat <名字>` 读未读并标记已读。在线判定用 `presence`（按发消息、读消息、更新任务、
    提交名下路径这些可观察痕迹算，不靠自报）。
+5. **协作中心**：`tools/comms-console`（ADR 0166、0181）开机自启、托盘常驻——观察
+   全貌、收 operator 通知与收件箱。临时静音某个纯对话会话见「多标签页工作法」。

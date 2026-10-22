@@ -73,3 +73,6 @@ comms/*/runs/
 
 # tsc --build 增量缓存（mentor/jiuzhou 等），纯构建产物
 *.tsbuildinfo
+
+# 会话注册表（ADR 0181）：临时实体、高频写，协作史仍在各舱 msgs/tasks，会话本身不进 git
+comms/sessions/

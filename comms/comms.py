@@ -38,6 +38,19 @@ ATHENA_COMMS_PROJECT）。舱内 config.json：
   python comms/comms.py notify NAME [--mine] [--project P]  # hook：有未读时最多 3 行，没有则静默
   python comms/comms.py watch NAME [--timeout 3300] [--project P]  # 阻塞等待新消息，来了就打印并退出
   python comms/comms.py ping NAME|all [--project P]   # leader 发「联络」消息，之后用 presence 看有没有回应
+
+会话层（ADR 0181）：会话 = 代理的一个标签页/进程实例，注册表在 comms/sessions/
+（临时实体，不进 git）。hook 自动登记与心跳；投递按会话的订阅寻址，任务是路由单位。
+
+  python comms/comms.py session touch --agent NAME --sid SID [--role worker|operator]
+                                     [--projects p1,p2] [--mute]   # 登记/心跳（hook 用）
+  python comms/comms.py session list [--all]         # 活跃会话（默认只看心跳未超时的）
+  python comms/comms.py session drop --agent NAME --sid SID
+  python comms/comms.py deliver --agent NAME --sid SID   # hook：输出本会话该注入的消息全文并标记已投递
+  python comms/comms.py triage NAME [--project P]    # 一条命令查收：未处理消息全文 + 我的任务 + 建议动作
+
+operator 是保留名（使用者本人）：任何舱 `send --to operator` 即「给使用者」，聚合在
+comms-console 的 operator 收件箱；`inbox operator` / `ack operator` 同样合法。
 """
 
 from __future__ import annotations
@@ -54,6 +67,10 @@ from pathlib import Path
 
 ATHENA = Path(__file__).resolve().parents[1]
 COMMS_ROOT = ATHENA / "comms"
+SESSIONS = COMMS_ROOT / "sessions"      # 会话注册表（ADR 0181）：跨舱、临时、不进 git
+HEARTBEAT_TTL = timedelta(minutes=15)   # 超过这个时间没心跳的会话视为不活跃
+DELIVER_LIMIT = 6                       # deliver 单次注入的条数上限（紧急优先，每舱至多 3 条）
+RESERVED_NAMES = ("operator",)          # 保留名：使用者本人，不需要舱 config 声明
 
 AGENTS: tuple[str, ...] = ()
 LEADER = ""
@@ -63,6 +80,9 @@ OWNED: dict[str, list[str]] = {}
 STATUSES = ("todo", "doing", "review", "blocked", "done")
 PRIORITIES = ("P0", "P1", "P2")
 OPEN = ("todo", "doing", "blocked", "review")
+# 舱上下文（session/deliver/triage 走跨舱路径，不先 load_config，预置 None 防未定义）
+PROJECT = "default"
+COMMS = TASKS = MSGS = READ = CHAT = None
 
 
 def load_config(project: str) -> Path:
@@ -175,9 +195,27 @@ def box_file(name: str, box: str) -> Path:
     return READ / f"{name}.{box}.txt"
 
 
+def session_delivered_for(name: str, project: str, box: str) -> set[str]:
+    """该代理所有会话已由 hook 投递过的消息（<舱>/<文件名> 行），并入已读判定，
+    手动 inbox/notify 就不会重复显示 hook 已注入过的内容。"""
+    out: set[str] = set()
+    if not SESSIONS.is_dir():
+        return out
+    for f in SESSIONS.glob(f"{name}.*.delivered.txt"):
+        for ln in _read_lines(f):
+            proj, _, fn = ln.partition("/")
+            if proj != project or not fn:
+                continue
+            p = MSGS / fn
+            if p.exists() and box_of(parse(p)[0]) == box:
+                out.add(fn)
+    return out
+
+
 def seen_in_box(name: str, box: str) -> set[str]:
     """这个箱的已读。旧的单文件 read/<名>.txt 并进来一起算，避免已经 ack 过的消息重新冒出来。不改、不删那个旧文件。"""
-    return _read_lines(box_file(name, box)) | _read_lines(READ / f"{name}.txt")
+    return (_read_lines(box_file(name, box)) | _read_lines(READ / f"{name}.txt")
+            | session_delivered_for(name, PROJECT, box))
 
 
 def doing_owned(name: str) -> set[str]:
@@ -218,8 +256,9 @@ def last_doing_agent(body: str) -> str | None:
 
 
 def check_agent(name: str) -> None:
-    if name not in AGENTS:
-        raise SystemExit(f"名字须为 {AGENTS} 之一（见舱 config.json），收到 {name!r}")
+    if name in RESERVED_NAMES or name in AGENTS:
+        return
+    raise SystemExit(f"名字须为 {AGENTS} 之一或保留名 {RESERVED_NAMES}（见舱 config.json），收到 {name!r}")
 
 
 # ------------------------------------------------------------------ 命令
@@ -398,6 +437,218 @@ def cmd_watch(a):
         time.sleep(a.interval)
     print(f"{a.name}：{a.timeout} 秒内没有新消息")
     return 3
+
+
+# ------------------------------------------------------------------ 会话层（ADR 0181）
+# 会话 = 代理的一个标签页/进程实例。注册表 comms/sessions/ 是投递寻址的依据：
+# 任务仍是路由单位（箱由 doing 推导），注册表只决定「哪个会话看哪些舱、要不要静音」。
+# sessions/ 是临时实体（不进 git）；消息与任务的权威仍在各舱目录，语义不变。
+DAEMON_FILE = SESSIONS / ".daemon.json"      # commsd 的心跳（pid + heartbeat）
+NOTIFY_QUEUE = SESSIONS / "notify-queue"     # 待 comms-console 弹系统通知的请求（消费后删除）
+SPAWNED_DIR = SESSIONS / ".spawned"          # 每条消息至多自动 spawn 一次的幂等标记
+
+
+def _sid8(sid: str) -> str:
+    s = re.sub(r"[^A-Za-z0-9_-]", "", str(sid))[:8]
+    if len(s) < 4:
+        raise SystemExit("--sid 须为至少 4 位字母数字（hook 从 payload 的 session_id 取）")
+    return s
+
+
+def session_path(agent: str, sid: str) -> Path:
+    return SESSIONS / f"{agent}.{_sid8(sid)}.json"
+
+
+def session_read(agent: str, sid: str) -> dict | None:
+    p = session_path(agent, sid)
+    if not p.exists():
+        return None
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+
+
+def session_save(data: dict) -> None:
+    data["heartbeat"] = datetime.now().isoformat(timespec="seconds")
+    atomic_write(session_path(data["agent"], data["sid"]), json.dumps(data, ensure_ascii=False, indent=1))
+
+
+def session_active(data: dict) -> bool:
+    try:
+        hb = datetime.fromisoformat(str(data.get("heartbeat", "")))
+    except ValueError:
+        return False
+    return datetime.now() - hb <= HEARTBEAT_TTL
+
+
+def all_projects() -> list[str]:
+    return sorted(p.parent.name for p in COMMS_ROOT.glob("*/config.json")) if COMMS_ROOT.is_dir() else []
+
+
+def cabin_agents(project: str) -> tuple[str, ...]:
+    cfg = COMMS_ROOT / project / "config.json"
+    if not cfg.is_file():
+        return ()
+    try:
+        return tuple(json.loads(cfg.read_text(encoding="utf-8")).get("agents", []))
+    except json.JSONDecodeError:
+        return ()
+
+
+def _with_cabin(project: str, fn, *args):
+    """把全局舱上下文临时切到 project 跑 fn，完事还原——单舱逻辑（visible_messages、
+    chat_lines、seen_in_box…）原样复用，跨舱命令不重写第二遍。"""
+    global PROJECT, COMMS, TASKS, MSGS, READ, CHAT
+    old = (PROJECT, COMMS, TASKS, MSGS, READ, CHAT)
+    try:
+        PROJECT = project
+        COMMS = load_config(project)
+        TASKS, MSGS = COMMS / "tasks", COMMS / "msgs"
+        READ, CHAT = COMMS / "read", COMMS / "chat"
+        return fn(*args)
+    finally:
+        PROJECT, COMMS, TASKS, MSGS, READ, CHAT = old
+
+
+def cmd_session(a):
+    SESSIONS.mkdir(parents=True, exist_ok=True)
+    if a.sub == "touch":
+        data = session_read(a.agent, a.sid) or {
+            "agent": a.agent, "sid": _sid8(a.sid), "role": "worker", "projects": [], "mute": False,
+            "registered": datetime.now().isoformat(timespec="seconds")}
+        if a.role:
+            data["role"] = a.role
+        if a.projects is not None:
+            data["projects"] = [x.strip() for x in a.projects.split(",") if x.strip()]
+        if a.mute:
+            data["mute"] = True
+        session_save(data)
+        print(f"会话 {data['agent']}.{data['sid']}：role={data.get('role')} "
+              f"projects={data.get('projects') or '全部舱'} mute={data.get('mute')}")
+    elif a.sub == "list":
+        for f in sorted(SESSIONS.glob("*.json")):
+            if f.name.startswith(".") or "delivered" in f.name:
+                continue
+            try:
+                d = json.loads(f.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                continue
+            if "agent" not in d:
+                continue
+            active = session_active(d)
+            if not active and not a.all:
+                continue
+            mark = "活跃" if active else "超时"
+            print(f"{mark}  {d['agent']}.{d.get('sid', '?')}  role={d.get('role', '?')}  "
+                  f"projects={d.get('projects') or '全部舱'}  mute={d.get('mute', False)}  心跳 {str(d.get('heartbeat', '?'))[11:16]}")
+    elif a.sub == "drop":
+        p = session_path(a.agent, a.sid)
+        if p.exists():
+            p.unlink()
+            print("已注销", p.name)
+        else:
+            print("没有这个会话")
+
+
+def cmd_deliver(a):
+    """hook 的投递口：按会话订阅过滤，输出应注入的消息全文，并写 delivered 记录
+    （手动 inbox/notify 会把已投递的并入已读，不会重复显示）。operator / mute 会话零注入。"""
+    data = session_read(a.agent, a.sid)
+    if data is None:
+        data = {"agent": a.agent, "sid": _sid8(a.sid), "role": "worker", "projects": [], "mute": False,
+                "registered": datetime.now().isoformat(timespec="seconds")}
+        session_save(data)
+    if data.get("role") == "operator" or data.get("mute"):
+        return 0
+    want = data.get("projects") or []
+    sid = _sid8(a.sid)
+
+    def collect():
+        picked: dict[str, tuple] = {}
+        for x in visible_messages(a.agent, mode="mine"):
+            picked[x[0].name] = x
+        for x in messages_for(a.agent):
+            if "紧急" in (x[1].get("subject") or ""):
+                picked[x[0].name] = x
+        return sorted(picked.values(), key=lambda x: x[0].name)
+
+    chosen: list[tuple[str, tuple]] = []
+    chat_items: list[tuple[str, tuple]] = []
+    for proj in all_projects():
+        if a.agent not in cabin_agents(proj):
+            continue
+        msgs = _with_cabin(proj, collect)
+        subscribed = not want or proj in want
+        urgent = [x for x in msgs if "紧急" in (x[1].get("subject") or "")]   # 紧急无视订阅
+        ordinary = [x for x in msgs if "紧急" not in (x[1].get("subject") or "")] if subscribed else []
+        chosen += [(proj, x) for x in [*urgent, *ordinary][:3]]
+        ptr = SESSIONS / f"{a.agent}.{sid}.chat"
+
+        def chats(ptr=ptr):
+            last = ptr.read_text(encoding="utf-8").strip() if ptr.exists() else ""
+            return [t for t in chat_lines() if t[1] != a.agent and t[2] in (a.agent, "all") and t[0] > last]
+
+        chat_items += [(proj, t) for t in _with_cabin(proj, chats)[-3:]]
+    chosen.sort(key=lambda px: ("紧急" not in (px[1][1].get("subject") or ""), px[0], px[1][0].name))
+    chosen = chosen[:DELIVER_LIMIT]
+    chat_items.sort(key=lambda pt: pt[1][0], reverse=True)   # 最新优先，全局裁剪
+    chat_items = chat_items[:6]
+    if not chosen and not chat_items:
+        return 0
+    lines = ["【Athena 协作·会话投递】只含本会话订阅的内容；已自动标记投递，无需 ack。"]
+    for proj, (p, m, b) in chosen:
+        lines.append(f"『{proj}』--- {p.name}")
+        lines.append(f"来自 {m.get('from')} · {m.get('created')} · 主题：{m.get('subject')}"
+                     + (f" · 任务 {m['task']}" if m.get("task") else ""))
+        lines.append(b.strip())
+    for proj, (ts, frm, to, text) in chat_items:
+        lines.append(f"『{proj}』[即时 {ts[11:16]}] {frm} → {to}: {text[:120]}")
+    print("\n".join(lines))
+    append_lines(SESSIONS / f"{a.agent}.{sid}.delivered.txt", [f"{proj}/{p.name}" for proj, (p, _, _) in chosen])
+    newest = max((t[0] for _, t in chat_items), default=None)
+    if newest:
+        atomic_write(SESSIONS / f"{a.agent}.{sid}.chat", newest)
+    return 0
+
+
+def cmd_triage(a):
+    """代理主动查收的一条命令：各舱未处理消息全文 + 我的任务 + 建议动作。
+    看过的消息同时写代理级 delivered（<agent>.shared），hook 不再重复注入。"""
+    name = a.name
+    if name not in RESERVED_NAMES and name not in cabin_agents(PROJECT) and a.project:
+        check_agent(name)
+    cabins = [PROJECT] if a.project and PROJECT != "default" else \
+        [p for p in all_projects() if name in RESERVED_NAMES or name in cabin_agents(p)]
+    total = 0
+    marks: list[str] = []
+    for proj in cabins:
+        msgs = _with_cabin(proj, messages_for, name)
+        doing = _with_cabin(proj, doing_owned, name)
+        todo = [(p, m) for p, m, _ in _with_cabin(proj, tasks) if m.get("owner") == name and m.get("status") in OPEN]
+        if not msgs and not doing and not todo:
+            continue
+        print(f"=== 『{proj}』===")
+        for p, m, b in msgs:
+            total += 1
+            marks.append(f"{proj}/{p.name}")
+            print(f"--- {p.name}")
+            print(f"来自 {m.get('from')} · {m.get('created')} · 主题：{m.get('subject')}"
+                  + (f" · 任务 {m['task']}" if m.get("task") else ""))
+            print(b.strip())
+        done_ids = {m.get("id") for _, m, _ in _with_cabin(proj, tasks) if m.get("status") == "done"}
+        if todo:
+            print(f"-- 我的任务（{len(todo)} 项）--")
+            for p, m in sorted(todo, key=lambda t: (t[1].get("priority", "P2"), t[1].get("id", ""))):
+                deps = [d.strip() for d in m.get("depends", "").replace("[", "").replace("]", "").split(",") if d.strip()]
+                waiting = [d for d in deps if d not in done_ids]
+                flag = f"（等待 {','.join(waiting)}）" if waiting else ""
+                print(f"[{m.get('priority')}] {m.get('id')} · {m.get('status'):7} · {m.get('title')}{flag}")
+    if marks:
+        append_lines(SESSIONS / f"{name}.shared.delivered.txt", marks)
+    print(f"triage {name}：{total} 条未处理消息，涉及 {len(cabins)} 个舱" +
+          ("；看过的已自动标记，hook 不会重复注入" if marks else ""))
+    return 0
 
 
 # ------------------------------------------------------------------ 即时消息（chat）
@@ -794,10 +1045,24 @@ def main() -> int:
     s.add_argument("--interval", type=int, default=3); s.set_defaults(fn=cmd_watch)
     s = sub.add_parser("presence"); s.add_argument("name", nargs="?"); s.set_defaults(fn=cmd_presence)
     s = sub.add_parser("ping"); s.add_argument("name"); s.set_defaults(fn=cmd_ping)
+    s = sub.add_parser("session"); ssub = s.add_subparsers(dest="sub", required=True)
+    t2 = ssub.add_parser("touch"); t2.add_argument("--agent", required=True); t2.add_argument("--sid", required=True)
+    t2.add_argument("--role", choices=["worker", "operator"]); t2.add_argument("--projects")
+    t2.add_argument("--mute", action="store_true"); t2.set_defaults(fn=cmd_session)
+    l2 = ssub.add_parser("list"); l2.add_argument("--all", action="store_true"); l2.set_defaults(fn=cmd_session)
+    d3 = ssub.add_parser("drop"); d3.add_argument("--agent", required=True); d3.add_argument("--sid", required=True)
+    d3.set_defaults(fn=cmd_session)
+    s = sub.add_parser("deliver"); s.add_argument("--agent", required=True); s.add_argument("--sid", required=True)
+    s.set_defaults(fn=cmd_deliver)
+    s = sub.add_parser("triage"); s.add_argument("name"); s.set_defaults(fn=cmd_triage)
     explicit, rest = _extract_project(sys.argv[1:])
     a = ap.parse_args(rest)
     global PROJECT, COMMS, TASKS, MSGS, READ, CHAT
     PROJECT = a.project or explicit or os.environ.get("ATHENA_COMMS_PROJECT") or "default"
+    if a.cmd in ("session", "deliver", "triage"):
+        # 跨舱命令：不绑定单一舱上下文，内部按需 _with_cabin 切换
+        r = a.fn(a)
+        return r if isinstance(r, int) else 0
     COMMS = load_config(PROJECT)
     TASKS = COMMS / "tasks"
     MSGS = COMMS / "msgs"
