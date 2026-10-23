@@ -1,0 +1,201 @@
+{
+  "id": "ch3-sec2",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0302",
+      "prompt": "先猜再验：被积函数恒为 1 时，三重积分 $\\displaystyle\\iiint_\\Omega1\\,\\mathrm dv$ 的值是",
+      "options": [
+        "0",
+        "立体 $\\Omega$ 的体积",
+        "立体 $\\Omega$ 的表面积",
+        "1"
+      ],
+      "correct": 1,
+      "explain": "与二重积分同理：$f\\equiv1$ 时每个小块的贡献就是它的体积 $\\Delta v$，总和是 $\\Omega$ 的体积 $V$。如果 $f$ 是密度，三重积分 $\\iiint\\rho\\,\\mathrm dv$ 就是质量。",
+      "knowledge": [
+        "advmath.triple_rect"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜三重积分的几何意义，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**三重积分**\n\n**概念**：$\\iiint_\\Omega f(x,y,z)\\,\\mathrm dv$ 是 $f$ 在立体 $\\Omega$ 上的积分，性质与二重积分类似；$f\\equiv1$ 时等于体积 $V$。\n\n**直角坐标**：\n- **先一后二（投影法）**：$\\Omega$ 在 $xOy$ 面的投影为 $D_{xy}$，$z$ 从下曲面 $z_1(x,y)$ 到上曲面 $z_2(x,y)$：$\\displaystyle\\iiint_\\Omega f\\,\\mathrm dv=\\iint_{D_{xy}}\\mathrm d\\sigma\\int_{z_1(x,y)}^{z_2(x,y)}f\\,\\mathrm dz$。\n- **先二后一（截面法）**：用 $z=z_0$ 截 $\\Omega$ 得截面 $D(z)$，$\\displaystyle\\int_{c_1}^{c_2}\\mathrm dz\\iint_{D(z)}f\\,\\mathrm dx\\,\\mathrm dy$，被积函数只含 $z$ 时特别方便。\n\n**柱面坐标**：$x=r\\cos\\theta,\\ y=r\\sin\\theta,\\ z=z$，\n$$\\mathrm dv=r\\,\\mathrm dr\\,\\mathrm d\\theta\\,\\mathrm dz.$$\n适用于旋转体、投影是圆域的立体（$z$ 方向保持不变）。\n\n**球面坐标（选学）**：$x=\\rho\\sin\\varphi\\cos\\theta,\\ y=\\rho\\sin\\varphi\\sin\\theta,\\ z=\\rho\\cos\\varphi$（$\\varphi$ 是与 $z$ 轴正向的夹角），\n$$\\mathrm dv=\\rho^2\\sin\\varphi\\,\\mathrm d\\rho\\,\\mathrm d\\varphi\\,\\mathrm d\\theta,\\qquad x^2+y^2+z^2=\\rho^2.$$\n适用于球、球壳、锥体。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch3-sec2-solid.svg",
+      "caption": "抛物面 $z=x^2+y^2$ 与平面 $z=4$ 围成的立体 $\\Omega$：投影是圆域 $x^2+y^2\\le4$，适合用柱面坐标，$r^2\\le z\\le4$。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "柱面坐标下 $\\mathrm dv=\\mathrm dr\\,\\mathrm d\\theta\\,\\mathrm dz$。",
+      "why_wrong": "柱面坐标的底面部分就是平面极坐标，面积元素 $r\\,\\mathrm dr\\,\\mathrm d\\theta$，所以 $\\mathrm dv=r\\,\\mathrm dr\\,\\mathrm d\\theta\\,\\mathrm dz$。检验体积：$r\\le1,\\ 0\\le z\\le3$ 的圆柱体积 $\\pi\\cdot1^2\\cdot3=3\\pi$。正确：$\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^1r\\,\\mathrm dr\\int_0^3\\mathrm dz=3\\pi$。",
+      "right": "柱面坐标 $\\mathrm dv=r\\,\\mathrm dr\\,\\mathrm d\\theta\\,\\mathrm dz$；球面坐标 $\\mathrm dv=\\rho^2\\sin\\varphi\\,\\mathrm d\\rho\\,\\mathrm d\\varphi\\,\\mathrm d\\theta$。每换一种坐标都要带上对应的因子。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（直角坐标，体积）",
+      "problem": "求由平面 $x=0,\\ y=0,\\ z=0$ 和 $x+y+z=1$ 围成的四面体的体积。",
+      "steps": [
+        {
+          "text": "投影 $D_{xy}$：$x\\ge0,\\ y\\ge0,\\ x+y\\le1$；$z$ 从 $0$ 到 $1-x-y$。",
+          "why": "下底是 $z=0$，上顶是斜平面。"
+        },
+        {
+          "text": "$V=\\displaystyle\\int_0^1\\mathrm dx\\int_0^{1-x}\\mathrm dy\\int_0^{1-x-y}\\mathrm dz=\\int_0^1\\mathrm dx\\int_0^{1-x}(1-x-y)\\,\\mathrm dy=\\int_0^1\\frac{(1-x)^2}{2}\\,\\mathrm dx=\\frac16$。",
+          "why": "检验：棱锥体积 $=\\frac13\\times$ 底面积 $\\frac12\\times$ 高 1 $=\\frac16$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（柱面坐标）",
+      "problem": "计算 $\\displaystyle\\iiint_\\Omega z\\,\\mathrm dv$，$\\Omega$ 由 $z=x^2+y^2$ 与 $z=4$ 围成。",
+      "steps": [
+        {
+          "text": "投影是圆域 $x^2+y^2\\le4$，柱面坐标：$0\\le\\theta\\le2\\pi,\\ 0\\le r\\le2,\\ r^2\\le z\\le4$。",
+          "why": "$z=x^2+y^2$ 在柱面坐标下是 $z=r^2$。"
+        },
+        {
+          "text": "$\\displaystyle\\iiint_\\Omega z\\,\\mathrm dv=\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^2r\\,\\mathrm dr\\int_{r^2}^4z\\,\\mathrm dz=2\\pi\\int_0^2r\\cdot\\frac{16-r^4}{2}\\,\\mathrm dr$。",
+          "why": "内层对 $z$ 积分得 $\\frac{16-r^4}{2}$；被积函数 $z$ 再乘体积元素里的 $r$。"
+        },
+        {
+          "text": "$=\\pi\\displaystyle\\int_0^2(16r-r^5)\\,\\mathrm dr=\\pi\\left(32-\\frac{64}{6}\\right)=\\dfrac{64\\pi}{3}$。",
+          "why": "$\\int_0^216r\\,\\mathrm dr=32$，$\\int_0^2r^5\\,\\mathrm dr=\\frac{64}{6}=\\frac{32}{3}$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（球面坐标，选学）",
+      "problem": "计算 $\\displaystyle\\iiint_{x^2+y^2+z^2\\le1}(x^2+y^2+z^2)\\,\\mathrm dv$。",
+      "steps": [
+        {
+          "text": "单位球，被积函数 $=\\rho^2$：球面坐标 $0\\le\\rho\\le1,\\ 0\\le\\varphi\\le\\pi,\\ 0\\le\\theta\\le2\\pi$。",
+          "why": "球域加 $x^2+y^2+z^2$ 的标志。"
+        },
+        {
+          "text": "$\\displaystyle\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^{\\pi}\\sin\\varphi\\,\\mathrm d\\varphi\\int_0^1\\rho^2\\cdot\\rho^2\\,\\mathrm d\\rho=2\\pi\\cdot2\\cdot\\frac15=\\dfrac{4\\pi}5$。",
+          "why": "三个积分变量互不牵连，可以分开算：$\\int\\sin\\varphi=2$，$\\int_0^1\\rho^4=\\frac15$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0302a",
+      "knowledge": [
+        "advmath.triple_rect"
+      ],
+      "stem": "$\\Omega=\\{(x,y,z)\\,|\\,0\\le x\\le1,\\ 0\\le y\\le2,\\ 0\\le z\\le3\\}$，则 $\\displaystyle\\iiint_\\Omega\\mathrm dv=$",
+      "answer": {
+        "type": "numeric",
+        "value": 6
+      },
+      "solution": "体积 $=1\\times2\\times3=6$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值：长方体的体积"
+        }
+      ],
+      "varies": "被积函数为 1：直接取体积"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0302b",
+      "knowledge": [
+        "advmath.triple_rect"
+      ],
+      "stem": "单位立方体 $\\Omega=[0,1]\\times[0,1]\\times[0,1]$ 上，$\\displaystyle\\iiint_\\Omega z\\,\\mathrm dv=$",
+      "answer": {
+        "type": "numeric",
+        "value": 0.5
+      },
+      "solution": "$\\displaystyle\\int_0^1\\mathrm dx\\int_0^1\\mathrm dy\\int_0^1z\\,\\mathrm dz=1\\cdot1\\cdot\\frac12=\\frac12$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "被积函数只含 $z$：$x,y$ 方向的积分只贡献区间长度"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0302c",
+      "knowledge": [
+        "advmath.triple_cyl"
+      ],
+      "stem": "抛物面 $z=x^2+y^2$ 与平面 $z=4$ 所围立体（例 2 的区域）的体积为",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$4\\pi$",
+          "$8\\pi$",
+          "$16\\pi$",
+          "$\\dfrac{64\\pi}3$"
+        ],
+        "correct": 1
+      },
+      "solution": "柱面坐标：$V=\\displaystyle\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^2r\\,\\mathrm dr\\int_{r^2}^4\\mathrm dz=2\\pi\\int_0^2(4r-r^3)\\,\\mathrm dr=2\\pi(8-4)=8\\pi$。D 是例 2 里 $\\iiint z\\,\\mathrm dv$ 的值，被积函数不同。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：体积与例 2 的区别在于被积函数"
+        }
+      ],
+      "varies": "同一个立体，被积函数是 1（体积）与 $z$（例 2）算出的是两个量"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0302d",
+      "knowledge": [
+        "advmath.triple_sph"
+      ],
+      "stem": "球面坐标下的体积元素 $\\mathrm dv=$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\rho^2\\sin\\varphi\\,\\mathrm d\\rho\\,\\mathrm d\\varphi\\,\\mathrm d\\theta$",
+          "$\\rho\\,\\mathrm d\\rho\\,\\mathrm d\\varphi\\,\\mathrm d\\theta$",
+          "$\\rho^2\\,\\mathrm d\\rho\\,\\mathrm d\\varphi\\,\\mathrm d\\theta$",
+          "$r\\,\\mathrm dr\\,\\mathrm d\\theta\\,\\mathrm dz$"
+        ],
+        "correct": 0
+      },
+      "solution": "球面坐标：$\\mathrm dv=\\rho^2\\sin\\varphi\\,\\mathrm d\\rho\\,\\mathrm d\\varphi\\,\\mathrm d\\theta$。D 是**柱面**坐标的体积元素；B、C 漏了 $\\sin\\varphi$ 或 $\\rho$ 的幂次不对。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；球面坐标体积元素（选学内容）"
+        }
+      ],
+      "varies": "区分柱面与球面坐标的体积元素"
+    }
+  ]
+}

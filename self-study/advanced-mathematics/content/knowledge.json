@@ -377,6 +377,116 @@
       ],
       "textbook_ref": "教材 第 2 章 §4",
       "syllabus_ref": "多元函数的微分学：方向导数与梯度"
+    },
+    {
+      "id": "advmath.double_def",
+      "title": "二重积分的概念、性质与几何意义",
+      "type": "概念",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.func_two_vars"
+      ],
+      "textbook_ref": "教材 第 3 章 §1",
+      "syllabus_ref": "重积分：二重积分的概念与性质"
+    },
+    {
+      "id": "advmath.double_rect",
+      "title": "直角坐标下的二重积分与交换积分次序",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.double_def"
+      ],
+      "textbook_ref": "教材 第 3 章 §1",
+      "syllabus_ref": "重积分：二重积分的计算"
+    },
+    {
+      "id": "advmath.double_polar",
+      "title": "极坐标下的二重积分",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.double_rect"
+      ],
+      "textbook_ref": "教材 第 3 章 §1",
+      "syllabus_ref": "重积分：二重积分的计算"
+    },
+    {
+      "id": "advmath.triple_rect",
+      "title": "三重积分及其在直角坐标下的计算",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.double_rect"
+      ],
+      "textbook_ref": "教材 第 3 章 §2",
+      "syllabus_ref": "重积分：三重积分"
+    },
+    {
+      "id": "advmath.triple_cyl",
+      "title": "柱面坐标下的三重积分",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.triple_rect",
+        "advmath.double_polar"
+      ],
+      "textbook_ref": "教材 第 3 章 §2",
+      "syllabus_ref": "重积分：三重积分"
+    },
+    {
+      "id": "advmath.triple_sph",
+      "title": "球面坐标下的三重积分（选学）",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "了解",
+      "requires": [
+        "advmath.triple_cyl"
+      ],
+      "textbook_ref": "教材 第 3 章 §2",
+      "syllabus_ref": "重积分：三重积分（选学）"
+    },
+    {
+      "id": "advmath.surface_area",
+      "title": "曲面的面积",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.double_polar",
+        "advmath.partial_deriv"
+      ],
+      "textbook_ref": "教材 第 3 章 §3",
+      "syllabus_ref": "重积分：重积分的应用"
+    },
+    {
+      "id": "advmath.centroid",
+      "title": "平面薄片的质心（选学）",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "了解",
+      "requires": [
+        "advmath.double_rect"
+      ],
+      "textbook_ref": "教材 第 3 章 §3",
+      "syllabus_ref": "重积分：重积分的应用（选学）"
+    },
+    {
+      "id": "advmath.moment_inertia",
+      "title": "转动惯量（选学）",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "了解",
+      "requires": [
+        "advmath.double_rect"
+      ],
+      "textbook_ref": "教材 第 3 章 §3",
+      "syllabus_ref": "重积分：重积分的应用（选学）"
     }
   ]
 }

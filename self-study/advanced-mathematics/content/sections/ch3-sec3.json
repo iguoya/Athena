@@ -1,0 +1,217 @@
+{
+  "id": "ch3-sec3",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0303",
+      "prompt": "先猜再验：曲面 $z=x+y$ 在 $xOy$ 面上方正方形 $0\\le x,y\\le1$ 之上的那一块，面积比 $1$ 大还是小？",
+      "options": [
+        "比 1 小",
+        "等于 1",
+        "比 1 大",
+        "无法比较"
+      ],
+      "correct": 2,
+      "explain": "这块曲面是倾斜的平面，倾斜之后比它在底面的投影（面积 1）**大**。倾斜程度由法向量与 $z$ 轴的夹角决定，曲面面积公式里的 $\\sqrt{1+z_x^2+z_y^2}\\ge1$ 就是这个放大系数。",
+      "knowledge": [
+        "advmath.surface_area"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜曲面面积与投影面积的关系，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**重积分的应用**\n\n**曲面的面积**：曲面 $S:\\ z=f(x,y)$，$(x,y)\\in D$ 且 $f$ 有连续偏导数：\n$$A=\\iint_D\\sqrt{1+f_x^2+f_y^2}\\ \\mathrm d\\sigma.$$\n根号是曲面相对水平面的**倾斜放大系数**，$\\ge1$。\n\n**质心\\*（选学）**：薄片占平面区域 $D$，面密度 $\\rho(x,y)$：\n$$\\bar x=\\frac{\\iint_Dx\\rho\\,\\mathrm d\\sigma}{\\iint_D\\rho\\,\\mathrm d\\sigma},\\qquad\\bar y=\\frac{\\iint_Dy\\rho\\,\\mathrm d\\sigma}{\\iint_D\\rho\\,\\mathrm d\\sigma}.$$\n密度**均匀**时 $\\rho$ 约去，$\\bar x=\\dfrac{\\iint_Dx\\,\\mathrm d\\sigma}{A}$。对称区域的质心在对称轴上。\n\n**转动惯量\\*（选学）**：\n$$I_x=\\iint_Dy^2\\rho\\,\\mathrm d\\sigma,\\quad I_y=\\iint_Dx^2\\rho\\,\\mathrm d\\sigma,\\quad I_O=\\iint_D(x^2+y^2)\\rho\\,\\mathrm d\\sigma.$$\n对 $x$ 轴的转动惯量用 $y^2$（到轴的距离的平方）。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "曲面 $z=f(x,y)$ 在区域 $D$ 上的面积就是 $D$ 的面积 $\\iint_D\\mathrm d\\sigma$。",
+      "why_wrong": "这是曲面在底面上**投影**的面积。曲面倾斜时真实面积更大。例：平面 $z=x+y$ 在单位正方形上方，投影面积 1，真实面积 $\\sqrt3$（$\\sqrt{1+1+1}$ 倍）。",
+      "right": "$A=\\iint_D\\sqrt{1+f_x^2+f_y^2}\\,\\mathrm d\\sigma$，被积函数是 1 的投影面积乘上倾斜系数。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（平面的面积）",
+      "problem": "求平面 $z=x+y$ 在 $0\\le x\\le1,\\ 0\\le y\\le1$ 上方部分的面积。",
+      "steps": [
+        {
+          "text": "$f_x=1,\\ f_y=1$，$\\sqrt{1+1+1}=\\sqrt3$（常数）。",
+          "why": "平面倾斜程度处处相同。"
+        },
+        {
+          "text": "$A=\\sqrt3\\displaystyle\\iint_D\\mathrm d\\sigma=\\sqrt3\\times1=\\sqrt3$。",
+          "why": "投影面积 1 乘放大系数。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（旋转抛物面的面积）",
+      "problem": "求抛物面 $z=x^2+y^2$ 在 $z\\le1$ 部分的面积。",
+      "steps": [
+        {
+          "text": "$f_x=2x,\\ f_y=2y$，$\\sqrt{1+4x^2+4y^2}$；投影 $D:\\ x^2+y^2\\le1$。",
+          "why": "曲面 $z\\le1$ 对应 $x^2+y^2\\le1$。"
+        },
+        {
+          "text": "极坐标：$A=\\displaystyle\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^1\\sqrt{1+4r^2}\\,r\\,\\mathrm dr=2\\pi\\left[\\frac{(1+4r^2)^{3/2}}{12}\\right]_0^1$。",
+          "why": "$\\frac{\\mathrm d}{\\mathrm dr}(1+4r^2)^{3/2}=12r\\sqrt{1+4r^2}$，所以原函数是 $\\frac{(1+4r^2)^{3/2}}{12}$。"
+        },
+        {
+          "text": "$A=2\\pi\\cdot\\dfrac{5\\sqrt5-1}{12}=\\dfrac{\\pi(5\\sqrt5-1)}{6}$。",
+          "why": "代入上限 $r=1$：$5^{3/2}=5\\sqrt5$，下限 $r=0$：1。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（质心，选学）",
+      "problem": "求均匀半圆盘 $x^2+y^2\\le R^2,\\ y\\ge0$ 的质心。",
+      "steps": [
+        {
+          "text": "关于 $y$ 轴对称，$\\bar x=0$。",
+          "why": "对称性省去一半计算。"
+        },
+        {
+          "text": "$\\displaystyle\\iint_Dy\\,\\mathrm d\\sigma=\\int_0^\\pi\\sin\\theta\\,\\mathrm d\\theta\\int_0^Rr^2\\,\\mathrm dr=2\\cdot\\frac{R^3}{3}=\\frac{2R^3}{3}$，面积 $A=\\frac{\\pi R^2}{2}$。",
+          "why": "极坐标：$y=r\\sin\\theta$，面积元素 $r\\,\\mathrm dr\\,\\mathrm d\\theta$，故 $y\\,\\mathrm d\\sigma=r^2\\sin\\theta\\,\\mathrm dr\\,\\mathrm d\\theta$。"
+        },
+        {
+          "text": "$\\bar y=\\dfrac{2R^3/3}{\\pi R^2/2}=\\dfrac{4R}{3\\pi}$。质心 $\\left(0,\\dfrac{4R}{3\\pi}\\right)$。",
+          "why": "$\\frac{4}{3\\pi}\\approx0.42$，质心在圆心上方约 $0.42R$，比半径的一半低，合理。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 4（转动惯量，选学）",
+      "problem": "求均匀圆盘 $x^2+y^2\\le R^2$（面密度 1）对圆心 $O$ 的转动惯量。",
+      "steps": [
+        {
+          "text": "$I_O=\\displaystyle\\iint_D(x^2+y^2)\\,\\mathrm d\\sigma=\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^Rr^2\\cdot r\\,\\mathrm dr=2\\pi\\cdot\\frac{R^4}{4}=\\dfrac{\\pi R^4}{2}$。",
+          "why": "与 §1 例 3 同类。质量 $M=\\pi R^2$，所以 $I_O=\\frac12MR^2$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0303a",
+      "knowledge": [
+        "advmath.surface_area"
+      ],
+      "stem": "曲面 $z=2x+2y+1$ 在 $0\\le x\\le1,\\ 0\\le y\\le1$ 上方部分的面积为",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "$z_x=z_y=2$，$\\sqrt{1+4+4}=3$，面积 $=3\\times1=3$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "常数项 $+1$ 只平移曲面，不影响面积"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0303b",
+      "knowledge": [
+        "advmath.surface_area"
+      ],
+      "stem": "曲面 $z=f(x,y)$ 在 $D$ 上的面积公式是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\displaystyle\\iint_D\\sqrt{1+f_x^2+f_y^2}\\,\\mathrm d\\sigma$",
+          "$\\displaystyle\\iint_D(1+f_x^2+f_y^2)\\,\\mathrm d\\sigma$",
+          "$\\displaystyle\\iint_D\\mathrm d\\sigma$",
+          "$\\displaystyle\\iint_D\\sqrt{f_x^2+f_y^2}\\,\\mathrm d\\sigma$"
+        ],
+        "correct": 0
+      },
+      "solution": "放大系数是 $\\sqrt{1+f_x^2+f_y^2}$。B 漏了根号；C 是投影面积；D 漏了 1（水平的曲面 $f_x=f_y=0$ 会得到面积 0，与事实不符）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：面积公式"
+        }
+      ],
+      "varies": "用水平面（$f_x=f_y=0$）检验公式：应该得到 $D$ 的面积"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0303c",
+      "knowledge": [
+        "advmath.centroid"
+      ],
+      "stem": "均匀矩形薄片 $0\\le x\\le2,\\ 0\\le y\\le4$ 的质心的横坐标 $\\bar x=$",
+      "answer": {
+        "type": "numeric",
+        "value": 1
+      },
+      "solution": "矩形关于直线 $x=1$ 对称，质心在对称轴上，$\\bar x=1$（也可算：$\\iint x\\,\\mathrm d\\sigma=\\int_0^2x\\cdot4\\,\\mathrm dx=8$，面积 8，$\\bar x=1$）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值：对称性与公式互相检验"
+        }
+      ],
+      "varies": "用对称性几乎不需要计算"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0303d",
+      "knowledge": [
+        "advmath.moment_inertia"
+      ],
+      "stem": "薄片 $D$（面密度 $\\rho$）对 $x$ 轴的转动惯量 $I_x=$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\displaystyle\\iint_Dy^2\\rho\\,\\mathrm d\\sigma$",
+          "$\\displaystyle\\iint_Dx^2\\rho\\,\\mathrm d\\sigma$",
+          "$\\displaystyle\\iint_D(x^2+y^2)\\rho\\,\\mathrm d\\sigma$",
+          "$\\displaystyle\\iint_D\\rho\\,\\mathrm d\\sigma$"
+        ],
+        "correct": 0
+      },
+      "solution": "转动惯量是「质量 × 到轴距离的平方」。点 $(x,y)$ 到 $x$ 轴的距离是 $|y|$，所以对 $x$ 轴用 $y^2$。B 是对 $y$ 轴；C 是对原点；D 是质量。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：对哪条轴就用到那条轴的距离"
+        }
+      ],
+      "varies": "对 $x$ 轴用 $y^2$，对 $y$ 轴用 $x^2$：下标和被积变量是『反』的"
+    }
+  ]
+}

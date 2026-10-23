@@ -1,0 +1,227 @@
+{
+  "id": "ch3-sec1",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0301",
+      "prompt": "先猜再验：被积函数恒等于 1 时，二重积分 $\\displaystyle\\iint_Df(x,y)\\,\\mathrm d\\sigma=\\iint_D1\\,\\mathrm d\\sigma$ 的值是什么？",
+      "options": [
+        "0",
+        "区域 $D$ 的面积",
+        "区域 $D$ 的周长",
+        "与 $D$ 无关的常数 1"
+      ],
+      "correct": 1,
+      "explain": "二重积分是把 $D$ 分成小块、每块取 $f\\cdot\\Delta\\sigma$ 再求和。$f\\equiv1$ 时每块就是 $\\Delta\\sigma$，总和是 $D$ 的面积 $\\sigma$。若 $f\\ge0$，二重积分是以 $D$ 为底、曲面 $z=f(x,y)$ 为顶的**曲顶柱体的体积**。",
+      "knowledge": [
+        "advmath.double_def"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜二重积分的几何意义，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**二重积分的概念与计算**\n\n**定义**：把区域 $D$ 任意分成小块 $\\Delta\\sigma_i$，每块取一点 $(\\xi_i,\\eta_i)$，\n$$\\iint_Df(x,y)\\,\\mathrm d\\sigma=\\lim_{\\lambda\\to0}\\sum_if(\\xi_i,\\eta_i)\\Delta\\sigma_i.$$\n**几何意义**：$f\\ge0$ 时是曲顶柱体的体积；$f\\equiv1$ 时是 $D$ 的面积。\n\n**性质**：线性（常数倍、和）；对区域可加 $\\iint_{D_1\\cup D_2}=\\iint_{D_1}+\\iint_{D_2}$；若 $f\\le g$ 则 $\\iint f\\le\\iint g$；估值：$m\\sigma\\le\\iint_Df\\le M\\sigma$（$m,M$ 为最小、最大值）。**对称性**：$D$ 关于 $y$ 轴对称，$f$ 关于 $x$ 是奇函数则积分为 0；是偶函数则等于右半区域的两倍。\n\n**直角坐标下化为累次积分**\n- **X 型区域** $a\\le x\\le b,\\ \\varphi_1(x)\\le y\\le\\varphi_2(x)$：$\\displaystyle\\iint_Df\\,\\mathrm d\\sigma=\\int_a^b\\mathrm dx\\int_{\\varphi_1(x)}^{\\varphi_2(x)}f(x,y)\\,\\mathrm dy$（先对 $y$ 积分，把 $x$ 看作常数）。\n- **Y 型区域** $c\\le y\\le d,\\ \\psi_1(y)\\le x\\le\\psi_2(y)$：$\\displaystyle\\int_c^d\\mathrm dy\\int_{\\psi_1(y)}^{\\psi_2(y)}f\\,\\mathrm dx$。\n- 内层积分的上下限是**外层变量的函数**，外层上下限才是常数。\n- **交换积分次序**：先画出积分区域，再换一种方式描述它。当原次序积不出时（如 $\\mathrm e^{y^2}$）要换次序。\n\n**极坐标**：$x=r\\cos\\theta,\\ y=r\\sin\\theta$，\n$$\\iint_Df(x,y)\\,\\mathrm dx\\,\\mathrm dy=\\iint_Df(r\\cos\\theta,r\\sin\\theta)\\,r\\,\\mathrm dr\\,\\mathrm d\\theta.$$\n**面积元素是 $r\\,\\mathrm dr\\,\\mathrm d\\theta$，不是 $\\mathrm dr\\,\\mathrm d\\theta$。** 适用于圆域、圆环、扇形，或被积函数含 $x^2+y^2$ 的情形。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch3-sec1-regions.svg",
+      "caption": "左：$y=x$ 与 $y=x^2$ 围成的区域是 X 型：固定 $x\\in[0,1]$，$y$ 从下边界 $x^2$ 到上边界 $x$。右：圆域 $x^2+y^2\\le2x$ 在极坐标下是 $0\\le r\\le2\\cos\\theta$，$-\\frac\\pi2\\le\\theta\\le\\frac\\pi2$。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "极坐标下 $\\displaystyle\\iint_Df\\,\\mathrm dx\\,\\mathrm dy=\\iint_Df(r\\cos\\theta,r\\sin\\theta)\\,\\mathrm dr\\,\\mathrm d\\theta$。",
+      "why_wrong": "漏了雅可比因子 $r$。检验面积：单位圆盘的面积是 $\\pi$。正确做法 $\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^1r\\,\\mathrm dr=2\\pi\\cdot\\frac12=\\pi$。漏掉 $r$ 得 $\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^1\\mathrm dr=2\\pi$，是错的。",
+      "right": "$\\mathrm d\\sigma=r\\,\\mathrm dr\\,\\mathrm d\\theta$。换元后遇到 $f\\equiv1$，用已知面积核对一遍。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（X 型区域的累次积分）",
+      "problem": "计算 $\\displaystyle\\iint_Dxy\\,\\mathrm d\\sigma$，$D$ 由 $y=x$ 与 $y=x^2$ 围成。",
+      "steps": [
+        {
+          "text": "两曲线交点 $(0,0),(1,1)$；$0\\le x\\le1$ 时 $x^2\\le y\\le x$。",
+          "why": "解 $x=x^2$ 得交点；画图确定上下边界哪条在上。"
+        },
+        {
+          "text": "$\\displaystyle\\iint_Dxy\\,\\mathrm d\\sigma=\\int_0^1x\\,\\mathrm dx\\int_{x^2}^{x}y\\,\\mathrm dy=\\int_0^1x\\cdot\\frac{x^2-x^4}{2}\\,\\mathrm dx$。",
+          "why": "内层对 $y$ 积分，$x$ 是常数：$\\int y\\,\\mathrm dy=\\frac{y^2}{2}$，代入上下限 $x,\\ x^2$。"
+        },
+        {
+          "text": "$=\\dfrac12\\displaystyle\\int_0^1(x^3-x^5)\\,\\mathrm dx=\\dfrac12\\left(\\dfrac14-\\dfrac16\\right)=\\dfrac1{24}$。",
+          "why": "外层对 $x$ 积分。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，积分已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（交换积分次序）",
+      "problem": "计算 $\\displaystyle\\int_0^1\\mathrm dx\\int_x^1\\mathrm e^{y^2}\\,\\mathrm dy$。",
+      "steps": [
+        {
+          "text": "$\\mathrm e^{y^2}$ 的原函数不是初等函数，**不能**先对 $y$ 积分。区域：$0\\le x\\le1,\\ x\\le y\\le1$，即 $0\\le y\\le1,\\ 0\\le x\\le y$（三角形）。",
+          "why": "画图：直线 $y=x$ 上方、$y=1$ 下方、$x\\ge0$ 的三角形；换成 Y 型描述。"
+        },
+        {
+          "text": "交换：$\\displaystyle\\int_0^1\\mathrm dy\\int_0^y\\mathrm e^{y^2}\\,\\mathrm dx=\\int_0^1y\\,\\mathrm e^{y^2}\\,\\mathrm dy=\\left.\\frac12\\mathrm e^{y^2}\\right|_0^1=\\frac{\\mathrm e-1}{2}$。",
+          "why": "内层对 $x$ 积分，被积函数里没有 $x$，就是乘以区间长度 $y$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算；交换次序的经典例子"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（极坐标）",
+      "problem": "计算 $\\displaystyle\\iint_{x^2+y^2\\le1}(x^2+y^2)\\,\\mathrm d\\sigma$。",
+      "steps": [
+        {
+          "text": "圆域，且被积函数是 $x^2+y^2=r^2$：用极坐标，$0\\le\\theta\\le2\\pi,\\ 0\\le r\\le1$。",
+          "why": "判断标志：圆域 + 被积函数含 $x^2+y^2$。"
+        },
+        {
+          "text": "$\\displaystyle\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^1r^2\\cdot r\\,\\mathrm dr=2\\pi\\cdot\\frac14=\\frac\\pi2$。",
+          "why": "别漏 $r\\,\\mathrm dr\\,\\mathrm d\\theta$ 里的那个 $r$：被积函数 $r^2$ 乘面积元素的 $r$ 得 $r^3$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0301a",
+      "knowledge": [
+        "advmath.double_rect"
+      ],
+      "stem": "计算 $\\displaystyle\\iint_D(x+y)\\,\\mathrm d\\sigma$，$D=\\{(x,y)\\,|\\,0\\le x\\le2,\\ 0\\le y\\le3\\}$。",
+      "answer": {
+        "type": "numeric",
+        "value": 15
+      },
+      "solution": "$\\displaystyle\\int_0^2\\mathrm dx\\int_0^3(x+y)\\,\\mathrm dy=\\int_0^2\\left(3x+\\frac92\\right)\\mathrm dx=6+9=15$。矩形区域上限都是常数，次序可任意。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "矩形区域：内层上下限也是常数"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0301b",
+      "knowledge": [
+        "advmath.double_def"
+      ],
+      "stem": "设 $D$ 是顶点为 $(0,0),(2,0),(0,2)$ 的三角形，则 $\\displaystyle\\iint_D2\\,\\mathrm d\\sigma=$",
+      "answer": {
+        "type": "numeric",
+        "value": 4
+      },
+      "solution": "被积函数是常数 2，积分 $=2\\times D$ 的面积。三角形面积 $\\frac12\\cdot2\\cdot2=2$，所以 $2\\times2=4$。不需要写累次积分。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值：常数被积函数的几何意义"
+        }
+      ],
+      "varies": "被积函数为常数：直接用面积"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0301c",
+      "knowledge": [
+        "advmath.double_rect"
+      ],
+      "stem": "$D$ 由 $y=x$ 与 $y=x^2$ 围成（例 1 的区域），则 $\\displaystyle\\int_0^1\\mathrm dx\\int_{x^2}^{x}f(x,y)\\,\\mathrm dy$ 交换积分次序后等于",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\displaystyle\\int_0^1\\mathrm dy\\int_y^{\\sqrt y}f(x,y)\\,\\mathrm dx$",
+          "$\\displaystyle\\int_0^1\\mathrm dy\\int_{\\sqrt y}^{y}f(x,y)\\,\\mathrm dx$",
+          "$\\displaystyle\\int_0^1\\mathrm dy\\int_{y^2}^{y}f(x,y)\\,\\mathrm dx$",
+          "$\\displaystyle\\int_0^1\\mathrm dy\\int_0^{y}f(x,y)\\,\\mathrm dx$"
+        ],
+        "correct": 0
+      },
+      "solution": "区域 $x^2\\le y\\le x$ 即 $y\\le x\\le\\sqrt y$（$y\\in[0,1]$）：左边界是 $x=y$（直线），右边界是 $x=\\sqrt y$（抛物线 $y=x^2$ 的反函数）。B 上下限颠倒；C 用了错的边界；D 丢了抛物线边界。核对：$f\\equiv1$ 时 $\\int_0^1(\\sqrt y-y)\\mathrm dy=\\frac23-\\frac12=\\frac16$，与面积一致。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：交换次序要先画区域"
+        }
+      ],
+      "varies": "用 $f\\equiv1$ 求面积检验两种次序给出同一个值"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0301d",
+      "knowledge": [
+        "advmath.double_polar"
+      ],
+      "stem": "$D:\\ x^2+y^2\\le2x$，则 $\\displaystyle\\iint_Df(x,y)\\,\\mathrm d\\sigma$ 化为极坐标下的累次积分是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\displaystyle\\int_{-\\pi/2}^{\\pi/2}\\mathrm d\\theta\\int_0^{2\\cos\\theta}f(r\\cos\\theta,r\\sin\\theta)\\,r\\,\\mathrm dr$",
+          "$\\displaystyle\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^{2\\cos\\theta}f(r\\cos\\theta,r\\sin\\theta)\\,r\\,\\mathrm dr$",
+          "$\\displaystyle\\int_{-\\pi/2}^{\\pi/2}\\mathrm d\\theta\\int_0^{2\\cos\\theta}f(r\\cos\\theta,r\\sin\\theta)\\,\\mathrm dr$",
+          "$\\displaystyle\\int_{-\\pi/2}^{\\pi/2}\\mathrm d\\theta\\int_0^{2}f(r\\cos\\theta,r\\sin\\theta)\\,r\\,\\mathrm dr$"
+        ],
+        "correct": 0
+      },
+      "solution": "$x^2+y^2\\le2x$ 即 $r^2\\le2r\\cos\\theta$，$r\\le2\\cos\\theta$（圆心 $(1,0)$、半径 1，在右半平面）；要 $\\cos\\theta\\ge0$，$-\\frac\\pi2\\le\\theta\\le\\frac\\pi2$。B 的 $\\theta$ 范围错（$\\cos\\theta<0$ 时上限为负）；C 漏了 $r$；D 把圆当成了半径 2 的圆。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：圆域的极坐标上下限与 r 因子"
+        }
+      ],
+      "varies": "圆不过原点以外的情形：上限是 $\\theta$ 的函数"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0301e",
+      "knowledge": [
+        "advmath.double_polar"
+      ],
+      "stem": "用极坐标计算单位圆盘 $x^2+y^2\\le1$ 的面积 $\\displaystyle\\iint1\\,\\mathrm d\\sigma$，正确的结果与算式是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\displaystyle\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^1r\\,\\mathrm dr=\\pi$",
+          "$\\displaystyle\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^1\\mathrm dr=2\\pi$",
+          "$\\displaystyle\\int_0^{\\pi}\\mathrm d\\theta\\int_0^1r\\,\\mathrm dr=\\dfrac\\pi2$",
+          "$\\displaystyle\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^1r^2\\,\\mathrm dr=\\dfrac{2\\pi}3$"
+        ],
+        "correct": 0
+      },
+      "solution": "面积元素 $r\\,\\mathrm dr\\,\\mathrm d\\theta$，$\\theta$ 绕满一圈 $[0,2\\pi]$：$2\\pi\\cdot\\frac12=\\pi$，与圆面积公式一致。B 漏 $r$；C 只转了半圈；D 多乘了一个 $r$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：用已知面积核对极坐标因子"
+        }
+      ],
+      "varies": "四个选项各错一处：漏 $r$、范围、多一个 $r$"
+    }
+  ]
+}
