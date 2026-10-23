@@ -1,0 +1,165 @@
+{
+  "id": "ch4-sec2",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0402",
+      "prompt": "先猜再验：变力沿曲线做功 $W=\\displaystyle\\int_LP\\,\\mathrm dx+Q\\,\\mathrm dy$。如果质点沿**反方向**走同一条曲线，功的值",
+      "options": [
+        "不变",
+        "变号",
+        "变为 0",
+        "变为原来的 2 倍"
+      ],
+      "correct": 1,
+      "explain": "功是力与位移的数量积。反向走位移反向，每一小段的功变号，总和变号。**对坐标的曲线积分与曲线的方向有关**：$\\displaystyle\\int_{L^-}P\\,\\mathrm dx+Q\\,\\mathrm dy=-\\int_LP\\,\\mathrm dx+Q\\,\\mathrm dy$。",
+      "knowledge": [
+        "advmath.line_int_coord"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜反向的影响，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**对坐标的曲线积分（第二类）**\n\n$\\displaystyle\\int_LP\\,\\mathrm dx+Q\\,\\mathrm dy$：沿**有方向**的曲线 $L$ 累加 $P\\,\\Delta x+Q\\,\\Delta y$（$\\Delta x,\\Delta y$ 是小段位移的分量）。物理意义：变力 $\\boldsymbol F=(P,Q)$ 沿曲线做的功。\n\n**方向性**：$\\displaystyle\\int_{L^-}=-\\int_L$。\n\n**计算——参数的下限对应起点、上限对应终点，不要求下限小于上限**\n- $L:\\ x=\\varphi(t),\\ y=\\psi(t)$，起点 $t=\\alpha$、终点 $t=\\beta$：\n$$\\int_LP\\,\\mathrm dx+Q\\,\\mathrm dy=\\int_\\alpha^\\beta\\left[P(\\varphi,\\psi)\\varphi'(t)+Q(\\varphi,\\psi)\\psi'(t)\\right]\\mathrm dt.$$\n- $L:\\ y=y(x)$，$x$ 从起点的 $a$ 到终点的 $b$：$\\displaystyle\\int_a^b\\left[P+Q\\,y'(x)\\right]\\mathrm dx$。\n\n**与第一类的关系**：$\\displaystyle\\int_LP\\,\\mathrm dx+Q\\,\\mathrm dy=\\int_L(P\\cos\\alpha+Q\\cos\\beta)\\,\\mathrm ds$，其中 $(\\cos\\alpha,\\cos\\beta)$ 是 $L$ 上点处沿方向的单位切向量。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "化成定积分时，参数的下限一定比上限小，所以从 $t=\\pi$ 走到 $t=0$ 也要写成 $\\int_0^\\pi$。",
+      "why_wrong": "对坐标的曲线积分，**下限是起点的参数，上限是终点的参数**，可以下限大于上限。把积分限写反就是把方向弄反了，结果差一个符号。例：$\\displaystyle\\int_{(1,1)\\to(0,0)}y\\,\\mathrm dx+x\\,\\mathrm dy$（$y=x^2$ 反向）$=\\int_1^0 3x^2\\,\\mathrm dx=-1$。",
+      "right": "先判断起点、终点，再把参数限按「起点 $\\to$ 终点」写。下限小于上限只是**对弧长**积分的要求。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（沿抛物线）",
+      "problem": "计算 $\\displaystyle\\int_Ly\\,\\mathrm dx+x\\,\\mathrm dy$，$L$ 是抛物线 $y=x^2$ 上从 $(0,0)$ 到 $(1,1)$ 的一段。",
+      "steps": [
+        {
+          "text": "$y=x^2,\\ y'=2x$，$x$ 从 0 到 1：$\\displaystyle\\int_0^1\\left[x^2\\cdot1+x\\cdot2x\\right]\\mathrm dx$。",
+          "why": "$P=y=x^2$，$Q=x$，$\\mathrm dy=y'\\mathrm dx=2x\\,\\mathrm dx$。"
+        },
+        {
+          "text": "$=\\displaystyle\\int_0^13x^2\\,\\mathrm dx=1$。",
+          "why": "也可以看出 $y\\,\\mathrm dx+x\\,\\mathrm dy=\\mathrm d(xy)$，积分 $=xy\\big|_{(0,0)}^{(1,1)}=1$，只与起点终点有关（下节）。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（逆时针沿圆）",
+      "problem": "计算 $\\displaystyle\\oint_L-y\\,\\mathrm dx+x\\,\\mathrm dy$，$L$ 是单位圆 $x^2+y^2=1$，逆时针方向。",
+      "steps": [
+        {
+          "text": "参数 $x=\\cos t,\\ y=\\sin t$，$t$ 从 0 到 $2\\pi$（逆时针，起点 $t=0$，终点 $t=2\\pi$）。",
+          "why": "方向决定参数增加的方向。"
+        },
+        {
+          "text": "$\\displaystyle\\int_0^{2\\pi}\\left[-\\sin t\\cdot(-\\sin t)+\\cos t\\cdot\\cos t\\right]\\mathrm dt=\\int_0^{2\\pi}1\\,\\mathrm dt=2\\pi$。",
+          "why": "这是单位圆面积 $\\pi$ 的 2 倍，下节格林公式给出原因。顺时针时结果是 $-2\\pi$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0402a",
+      "knowledge": [
+        "advmath.line_int_coord"
+      ],
+      "stem": "$L$ 是从 $(0,0)$ 到 $(1,2)$ 的线段，则 $\\displaystyle\\int_Lx\\,\\mathrm dx+y\\,\\mathrm dy=$",
+      "answer": {
+        "type": "numeric",
+        "value": 2.5
+      },
+      "solution": "线段 $y=2x$，$x$ 从 0 到 1，$\\mathrm dy=2\\,\\mathrm dx$：$\\displaystyle\\int_0^1(x+2x\\cdot2)\\,\\mathrm dx=\\int_0^15x\\,\\mathrm dx=\\frac52$。验算：$x\\,\\mathrm dx+y\\,\\mathrm dy=\\mathrm d\\left(\\frac{x^2+y^2}{2}\\right)$，积分 $=\\frac{1+4}{2}=\\frac52$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "两种方法互相检验：直接化定积分、观察全微分"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0402b",
+      "knowledge": [
+        "advmath.line_int_coord"
+      ],
+      "stem": "$L$ 是从 $(0,0)$ 到 $(2,2)$ 的线段 $y=x$，则 $\\displaystyle\\int_Ly\\,\\mathrm dx=$",
+      "answer": {
+        "type": "numeric",
+        "value": 2
+      },
+      "solution": "$y=x$，$x$ 从 0 到 2：$\\displaystyle\\int_0^2x\\,\\mathrm dx=2$。只有 $P=y$，没有 $Q$ 项。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "只含 $\\mathrm dx$ 的积分：$Q=0$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0402c",
+      "knowledge": [
+        "advmath.line_int_coord"
+      ],
+      "stem": "设 $\\displaystyle\\int_LP\\,\\mathrm dx+Q\\,\\mathrm dy=5$，$L^-$ 是 $L$ 的反方向，则 $\\displaystyle\\int_{L^-}P\\,\\mathrm dx+Q\\,\\mathrm dy=$",
+      "answer": {
+        "type": "numeric",
+        "value": -5
+      },
+      "solution": "对坐标的曲线积分与方向有关，反向变号：$-5$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：反向变号"
+        }
+      ],
+      "varies": "与上一节『对弧长的积分与方向无关』对照"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0402d",
+      "knowledge": [
+        "advmath.two_types_relation"
+      ],
+      "stem": "对坐标的曲线积分 $\\displaystyle\\int_LP\\,\\mathrm dx+Q\\,\\mathrm dy$ 与对弧长的曲线积分的关系是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\displaystyle\\int_L(P\\cos\\alpha+Q\\cos\\beta)\\,\\mathrm ds$（$\\alpha,\\beta$ 为沿走向的切线方向角）",
+          "$\\displaystyle\\int_L(P+Q)\\,\\mathrm ds$",
+          "$\\displaystyle\\int_L\\sqrt{P^2+Q^2}\\,\\mathrm ds$",
+          "两者没有关系"
+        ],
+        "correct": 0
+      },
+      "solution": "$\\mathrm dx=\\cos\\alpha\\,\\mathrm ds,\\ \\mathrm dy=\\cos\\beta\\,\\mathrm ds$（$\\mathrm ds$ 沿走向的小弧段在坐标轴上的投影），代入即得。这也解释了为什么对坐标的积分有方向：$\\cos\\alpha,\\cos\\beta$ 随走向而变。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：两类曲线积分的关系"
+        }
+      ],
+      "varies": "把对坐标的积分理解成『力在切线方向上的分量沿弧长的积分』"
+    }
+  ]
+}

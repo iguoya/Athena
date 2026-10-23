@@ -1,0 +1,170 @@
+{
+  "id": "ch4-sec5",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0405",
+      "prompt": "先猜再验：曲面积分 $\\displaystyle\\iint_\\Sigma R\\,\\mathrm dx\\,\\mathrm dy$ 是 $R$ 与 $\\Sigma$ 在 $xOy$ 面上**带符号**的投影的累加。把 $\\Sigma$ 的**侧**反过来，积分值",
+      "options": [
+        "不变",
+        "变号",
+        "变为 0",
+        "变为 2 倍"
+      ],
+      "correct": 1,
+      "explain": "换侧相当于法向量反向，投影面积的符号反过来（朝上的一侧为正、朝下的为负），所以积分变号。这是流体「穿过曲面的流量」：流进和流出相反。",
+      "knowledge": [
+        "advmath.surf_int_coord"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜换侧的影响，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**对坐标的曲面积分（第二类）与高斯公式**\n\n**有向曲面**：曲面有两侧，选定一侧叫**有向曲面**。封闭曲面分**外侧**、**内侧**；$z=z(x,y)$ 这类曲面分**上侧**、**下侧**。\n\n$\\displaystyle\\iint_\\Sigma P\\,\\mathrm dy\\,\\mathrm dz+Q\\,\\mathrm dz\\,\\mathrm dx+R\\,\\mathrm dx\\,\\mathrm dy$：$\\mathrm dy\\,\\mathrm dz,\\ \\mathrm dz\\,\\mathrm dx,\\ \\mathrm dx\\,\\mathrm dy$ 分别是有向曲面元在 $yOz,zOx,xOy$ 面上的**带符号投影**。物理意义：流速场 $\\boldsymbol v=(P,Q,R)$ 通过 $\\Sigma$ 指定侧的**流量**。**换侧变号**。\n\n**计算**：以 $\\displaystyle\\iint_\\Sigma R(x,y,z)\\,\\mathrm dx\\,\\mathrm dy$ 为例，$\\Sigma:\\ z=z(x,y)$ 在 $xOy$ 面的投影为 $D_{xy}$：\n$$\\iint_\\Sigma R\\,\\mathrm dx\\,\\mathrm dy=\\pm\\iint_{D_{xy}}R\\big(x,y,z(x,y)\\big)\\,\\mathrm dx\\,\\mathrm dy,$$\n**上侧取 $+$，下侧取 $-$**。（$\\mathrm dy\\,\\mathrm dz$ 看前侧 $+$/后侧 $-$，$\\mathrm dz\\,\\mathrm dx$ 看右侧 $+$/左侧 $-$。）\n\n**高斯公式\\***（选学）：$\\Omega$ 的边界是闭曲面 $\\Sigma$（取**外侧**），则\n$$\\oint\\!\\!\\!\\oint_\\Sigma P\\,\\mathrm dy\\,\\mathrm dz+Q\\,\\mathrm dz\\,\\mathrm dx+R\\,\\mathrm dx\\,\\mathrm dy=\\iiint_\\Omega\\left(\\frac{\\partial P}{\\partial x}+\\frac{\\partial Q}{\\partial y}+\\frac{\\partial R}{\\partial z}\\right)\\mathrm dv.$$\n括号里的量叫向量场 $\\boldsymbol A=(P,Q,R)$ 的**散度** $\\operatorname{div}\\boldsymbol A=P_x+Q_y+R_z$。高斯公式说：穿过闭曲面的总流量 = 散度在内部的积分。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch4-sec5-orientation.svg",
+      "caption": "上半球面 $x^2+y^2+z^2=1,\\ z\\ge0$ 的**外侧**：法向量（箭头）指向球外，在曲面的上部也是「向上」，所以外侧对 $\\mathrm dx\\,\\mathrm dy$ 来说是上侧。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$\\displaystyle\\iint_\\Sigma R\\,\\mathrm dx\\,\\mathrm dy$ 和 $\\displaystyle\\iint_\\Sigma R\\,\\mathrm dS$ 是同一个东西，都等于 $\\iint_{D_{xy}}R\\,\\sqrt{1+z_x^2+z_y^2}\\,\\mathrm dx\\,\\mathrm dy$。",
+      "why_wrong": "前者对坐标，$\\mathrm dx\\,\\mathrm dy$ 是**带符号投影**，化成二重积分时**没有**倾斜系数，且要判断侧。后者对面积。例：单位上半球面，$\\displaystyle\\iint_\\Sigma z\\,\\mathrm dS=\\pi$（§4 例 2，$R=1$），而上侧的 $\\displaystyle\\iint_\\Sigma z\\,\\mathrm dx\\,\\mathrm dy=\\iint_{x^2+y^2\\le1}\\sqrt{1-x^2-y^2}\\,\\mathrm dx\\,\\mathrm dy=\\dfrac{2\\pi}3$。",
+      "right": "对坐标：$\\pm\\iint_{D_{xy}}R(x,y,z(x,y))\\,\\mathrm dx\\,\\mathrm dy$；对面积：$\\iint_{D_{xy}}f\\sqrt{1+z_x^2+z_y^2}\\,\\mathrm dx\\,\\mathrm dy$。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（投影法）",
+      "problem": "计算 $\\displaystyle\\iint_\\Sigma z\\,\\mathrm dx\\,\\mathrm dy$，$\\Sigma$ 是上半球面 $x^2+y^2+z^2=1,\\ z\\ge0$ 的上侧（外侧）。",
+      "steps": [
+        {
+          "text": "$\\Sigma:\\ z=\\sqrt{1-x^2-y^2}$，投影 $D_{xy}:\\ x^2+y^2\\le1$；上侧取 $+$。",
+          "why": "外侧在上半球就是朝上的一侧。"
+        },
+        {
+          "text": "$\\displaystyle\\iint_{x^2+y^2\\le1}\\sqrt{1-x^2-y^2}\\,\\mathrm dx\\,\\mathrm dy=\\int_0^{2\\pi}\\mathrm d\\theta\\int_0^1\\sqrt{1-r^2}\\,r\\,\\mathrm dr=2\\pi\\cdot\\frac13=\\frac{2\\pi}3$。",
+          "why": "极坐标；$\\int_0^1r\\sqrt{1-r^2}\\,\\mathrm dr=\\frac13$。结果是半球体积的量级：$\\frac{2\\pi}3$ 正好是上半球的体积。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（高斯公式，选学）",
+      "problem": "计算 $\\displaystyle\\oint\\!\\!\\!\\oint_\\Sigma x\\,\\mathrm dy\\,\\mathrm dz+y\\,\\mathrm dz\\,\\mathrm dx+z\\,\\mathrm dx\\,\\mathrm dy$，$\\Sigma$ 是球面 $x^2+y^2+z^2=R^2$ 的外侧。",
+      "steps": [
+        {
+          "text": "$P=x,\\ Q=y,\\ R=z$，$\\operatorname{div}\\boldsymbol A=1+1+1=3$。",
+          "why": "高斯公式的被积函数。"
+        },
+        {
+          "text": "$\\displaystyle\\iiint_\\Omega3\\,\\mathrm dv=3\\cdot\\frac43\\pi R^3=4\\pi R^3$。",
+          "why": "也等于球面面积 $4\\pi R^2$ 乘 $R$：在球面上 $\\boldsymbol A\\cdot\\boldsymbol n=R$。两种方法一致。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0405a",
+      "knowledge": [
+        "advmath.surf_int_coord"
+      ],
+      "stem": "$\\Sigma$ 是平面 $z=1$ 上的单位正方形 $0\\le x,y\\le1$，取**上侧**，则 $\\displaystyle\\iint_\\Sigma z\\,\\mathrm dx\\,\\mathrm dy=$",
+      "answer": {
+        "type": "numeric",
+        "value": 1
+      },
+      "solution": "在 $\\Sigma$ 上 $z=1$，投影就是单位正方形（面积 1）：上侧取 $+$：$\\iint1\\,\\mathrm dx\\,\\mathrm dy=1$。若取下侧，结果是 $-1$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值：侧决定符号"
+        }
+      ],
+      "varies": "同一个曲面，上侧与下侧的积分互为相反数"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0405b",
+      "knowledge": [
+        "advmath.gauss"
+      ],
+      "stem": "$\\Sigma$ 是单位立方体 $[0,1]^3$ 表面的外侧，则 $\\displaystyle\\oint\\!\\!\\!\\oint_\\Sigma x\\,\\mathrm dy\\,\\mathrm dz+y\\,\\mathrm dz\\,\\mathrm dx+z\\,\\mathrm dx\\,\\mathrm dy=$",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "高斯公式：散度 $=1+1+1=3$，$\\iiint_\\Omega3\\,\\mathrm dv=3\\times1=3$（立方体体积 1）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "散度为常数：积分 = 常数 × 体积"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0405c",
+      "knowledge": [
+        "advmath.divergence"
+      ],
+      "stem": "向量场 $\\boldsymbol A=(x^2y,\\ y^2z,\\ z^2x)$ 在点 $(1,2,3)$ 处的散度 $\\operatorname{div}\\boldsymbol A=$",
+      "answer": {
+        "type": "numeric",
+        "value": 22
+      },
+      "solution": "$\\operatorname{div}\\boldsymbol A=\\dfrac{\\partial(x^2y)}{\\partial x}+\\dfrac{\\partial(y^2z)}{\\partial y}+\\dfrac{\\partial(z^2x)}{\\partial z}=2xy+2yz+2zx$。在 $(1,2,3)$：$4+12+6=22$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "三个分量各对**自己对应的变量**求偏导（$P$ 对 $x$，$Q$ 对 $y$，$R$ 对 $z$）"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0405d",
+      "knowledge": [
+        "advmath.surf_int_coord"
+      ],
+      "stem": "对于 $\\displaystyle\\iint_\\Sigma R(x,y,z)\\,\\mathrm dx\\,\\mathrm dy$，下列说法**正确**的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "上侧取 $+$，下侧取 $-$，化成 $\\iint_{D_{xy}}R(x,y,z(x,y))\\,\\mathrm dx\\,\\mathrm dy$",
+          "与侧无关，化成 $\\iint_{D_{xy}}R\\sqrt{1+z_x^2+z_y^2}\\,\\mathrm dx\\,\\mathrm dy$",
+          "上侧取 $-$，下侧取 $+$",
+          "必须是封闭曲面才能计算"
+        ],
+        "correct": 0
+      },
+      "solution": "对坐标的曲面积分由侧决定符号，化成投影区域上的二重积分时**不带**倾斜系数。B 是对面积的曲面积分的化法；C 符号弄反；D 非封闭曲面同样可以算。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：第二类曲面积分的化法"
+        }
+      ],
+      "varies": "同一类概念的第二类曲线积分、第二类曲面积分，都看方向或侧"
+    }
+  ]
+}

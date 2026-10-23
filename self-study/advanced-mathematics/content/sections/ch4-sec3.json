@@ -1,0 +1,205 @@
+{
+  "id": "ch4-sec3",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0403",
+      "prompt": "先猜再验：格林公式建立了哪两种积分之间的联系？",
+      "options": [
+        "沿闭曲线的曲线积分 与 它围成区域上的二重积分",
+        "对弧长的曲线积分 与 对坐标的曲线积分",
+        "二重积分 与 三重积分",
+        "定积分 与 不定积分"
+      ],
+      "correct": 0,
+      "explain": "$\\displaystyle\\oint_LP\\,\\mathrm dx+Q\\,\\mathrm dy=\\iint_D\\left(\\dfrac{\\partial Q}{\\partial x}-\\dfrac{\\partial P}{\\partial y}\\right)\\mathrm d\\sigma$：左边是沿边界一圈的曲线积分，右边是区域内部的二重积分。它把「沿边界走一圈」换成「在内部累加」。",
+      "knowledge": [
+        "advmath.green"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜格林公式的作用，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**格林公式**\n\n设闭区域 $D$ 由分段光滑曲线 $L$ 围成，$P,Q$ 在 $D$ 上有一阶连续偏导数，则\n$$\\oint_LP\\,\\mathrm dx+Q\\,\\mathrm dy=\\iint_D\\left(\\frac{\\partial Q}{\\partial x}-\\frac{\\partial P}{\\partial y}\\right)\\mathrm d\\sigma,$$\n其中 $L$ 取**正向**（沿 $L$ 前进时区域 $D$ 在**左侧**，即外边界逆时针）。\n\n**应用**\n1. **化成二重积分**：闭曲线上的第二类积分 $\\to$ 区域内的二重积分，或反过来。非闭曲线时可**补线**成闭曲线。\n2. **求面积**：取 $Q=x,P=-y$ 得 $A=\\dfrac12\\oint_Lx\\,\\mathrm dy-y\\,\\mathrm dx$。\n3. **路径无关**：在单连通区域 $D$ 内，下列四条等价：\n   - $\\dfrac{\\partial Q}{\\partial x}=\\dfrac{\\partial P}{\\partial y}$ 在 $D$ 内处处成立；\n   - 积分 $\\int_LP\\,\\mathrm dx+Q\\,\\mathrm dy$ 与路径无关，只与起点、终点有关；\n   - 沿 $D$ 内任何闭曲线的积分为 0；\n   - $P\\,\\mathrm dx+Q\\,\\mathrm dy$ 是某个函数 $u(x,y)$ 的**全微分**。\n4. **全微分求积**：此时 $\\displaystyle\\int_{(x_0,y_0)}^{(x_1,y_1)}P\\,\\mathrm dx+Q\\,\\mathrm dy=u(x_1,y_1)-u(x_0,y_0)$，$u$ 可以沿平行于坐标轴的折线积分得到。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch4-sec3-green.svg",
+      "caption": "左：正向 = 沿边界前进时区域在左侧（逆时针）。右：区域内部若含 $P,Q$ 无定义的奇点（如原点），格林公式的条件不满足，不能直接用。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$\\displaystyle\\frac{\\partial Q}{\\partial x}=\\frac{\\partial P}{\\partial y}$ 处处成立，所以沿**任何**闭曲线的积分都是 0。",
+      "why_wrong": "忽略了「区域内 $P,Q$ 要有连续偏导数」。例：$P=\\dfrac{-y}{x^2+y^2},\\ Q=\\dfrac{x}{x^2+y^2}$，在除去原点的平面上 $Q_x=P_y$ 处处成立，但沿单位圆逆时针一圈 $\\oint=\\int_0^{2\\pi}(\\sin^2t+\\cos^2t)\\,\\mathrm dt=2\\pi\\neq0$，因为圆内有奇点原点，$P,Q$ 在那里无定义。",
+      "right": "路径无关的结论要求 $D$ **单连通**且 $P,Q$ 在 $D$ 内处处有连续偏导。闭曲线内含奇点时必须单独处理。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（用格林公式化为二重积分）",
+      "problem": "计算 $\\displaystyle\\oint_Ly^2\\,\\mathrm dx+x\\,\\mathrm dy$，$L$ 是由 $y=x^2$ 与 $y=x$ 围成区域的正向边界。",
+      "steps": [
+        {
+          "text": "$P=y^2,\\ Q=x$，$\\dfrac{\\partial Q}{\\partial x}-\\dfrac{\\partial P}{\\partial y}=1-2y$。",
+          "why": "先写出被积函数。"
+        },
+        {
+          "text": "$D$：$0\\le x\\le1,\\ x^2\\le y\\le x$。$\\displaystyle\\iint_D(1-2y)\\,\\mathrm d\\sigma=\\int_0^1\\mathrm dx\\int_{x^2}^{x}(1-2y)\\,\\mathrm dy=\\int_0^1\\left[y-y^2\\right]_{x^2}^{x}\\mathrm dx$。",
+          "why": "内层对 $y$ 积分，上下限分别代入 $x$ 与 $x^2$。"
+        },
+        {
+          "text": "$=\\displaystyle\\int_0^1(x-2x^2+x^4)\\,\\mathrm dx=\\frac12-\\frac23+\\frac15=\\frac1{30}$。",
+          "why": "已用直接沿 $y=x^2$（$0\\to1$）再沿 $y=x$（$1\\to0$）两段计算验证，结果同为 $\\frac1{30}$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；公式与直接计算两种方法已用 sympy 对照"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（用曲线积分求面积）",
+      "problem": "求椭圆 $x=a\\cos t,\\ y=b\\sin t$（$0\\le t\\le2\\pi$）围成的面积。",
+      "steps": [
+        {
+          "text": "$A=\\dfrac12\\oint_Lx\\,\\mathrm dy-y\\,\\mathrm dx=\\dfrac12\\displaystyle\\int_0^{2\\pi}\\left[a\\cos t\\cdot b\\cos t-b\\sin t\\cdot(-a\\sin t)\\right]\\mathrm dt$。",
+          "why": "$\\mathrm dx=-a\\sin t\\,\\mathrm dt,\\ \\mathrm dy=b\\cos t\\,\\mathrm dt$；$t$ 增大时逆时针，是正向。"
+        },
+        {
+          "text": "$=\\dfrac12\\displaystyle\\int_0^{2\\pi}ab\\,\\mathrm dt=\\pi ab$。",
+          "why": "$a=b=R$ 时得圆的面积 $\\pi R^2$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（路径无关与全微分求积）",
+      "problem": "证明 $2xy\\,\\mathrm dx+x^2\\,\\mathrm dy$ 是全微分，并求 $\\displaystyle\\int_{(0,0)}^{(1,2)}2xy\\,\\mathrm dx+x^2\\,\\mathrm dy$。",
+      "steps": [
+        {
+          "text": "$P=2xy,\\ Q=x^2$：$\\dfrac{\\partial Q}{\\partial x}=2x=\\dfrac{\\partial P}{\\partial y}$，在全平面（单连通）上成立，所以是全微分，积分与路径无关。",
+          "why": "判别式相等。"
+        },
+        {
+          "text": "找 $u$：$u_x=2xy\\Rightarrow u=x^2y+\\varphi(y)$，$u_y=x^2+\\varphi'(y)=x^2\\Rightarrow\\varphi'=0$。取 $u=x^2y$。",
+          "why": "先对 $x$ 积分，再用 $u_y=Q$ 确定 $y$ 的部分。"
+        },
+        {
+          "text": "积分 $=u(1,2)-u(0,0)=2-0=2$。",
+          "why": "只与起点终点有关；沿折线 $(0,0)\\to(1,0)\\to(1,2)$ 计算：第一段 $y=0$ 积分为 0，第二段 $x=1$ 积分 $\\int_0^21\\,\\mathrm dy=2$，也得 2。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0403a",
+      "knowledge": [
+        "advmath.exact_diff"
+      ],
+      "stem": "$\\displaystyle\\int_{(0,0)}^{(1,1)}(2x+y)\\,\\mathrm dx+(x+2y)\\,\\mathrm dy=$",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "$Q_x=1=P_y$，积分与路径无关，$u=x^2+xy+y^2$（$u_x=2x+y,\\ u_y=x+2y$）。$u(1,1)-u(0,0)=3$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "先判别路径无关，再用原函数，不必选路径积分"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0403b",
+      "knowledge": [
+        "advmath.green"
+      ],
+      "stem": "设 $L$ 是围成面积为 3 的区域 $D$ 的正向边界，则 $\\displaystyle\\oint_Lx\\,\\mathrm dy-y\\,\\mathrm dx=$",
+      "answer": {
+        "type": "numeric",
+        "value": 6
+      },
+      "solution": "格林公式：$P=-y,\\ Q=x$，$Q_x-P_y=1-(-1)=2$，$\\oint=\\iint_D2\\,\\mathrm d\\sigma=2\\times3=6$。（这正是 $A=\\frac12\\oint x\\,\\mathrm dy-y\\,\\mathrm dx$。）",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；面积公式的反向使用"
+        }
+      ],
+      "varies": "被积函数是常数 2，积分就是 2 乘面积"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0403c",
+      "knowledge": [
+        "advmath.path_independence"
+      ],
+      "stem": "下列微分形式中，是**全微分**的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$y\\,\\mathrm dx+x\\,\\mathrm dy$",
+          "$y\\,\\mathrm dx-x\\,\\mathrm dy$",
+          "$x\\,\\mathrm dx-xy\\,\\mathrm dy$",
+          "$y\\,\\mathrm dx+2x\\,\\mathrm dy$"
+        ],
+        "correct": 0
+      },
+      "solution": "A：$P=y,Q=x$，$Q_x=1=P_y$，$=\\mathrm d(xy)$。B：$Q_x=-1,\\ P_y=1$，不相等。C：$P=x,\\ Q=-xy$，$Q_x=-y\\neq0=P_y$。D：$Q_x=2,\\ P_y=1$，不相等。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：用 Q_x = P_y 判别"
+        }
+      ],
+      "varies": "逐个计算 $Q_x$ 与 $P_y$，别凭直觉"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0403d",
+      "knowledge": [
+        "advmath.green"
+      ],
+      "stem": "格林公式 $\\displaystyle\\oint_LP\\,\\mathrm dx+Q\\,\\mathrm dy=\\iint_D(\\ \\ )\\,\\mathrm d\\sigma$ 的右端被积函数是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\dfrac{\\partial Q}{\\partial x}-\\dfrac{\\partial P}{\\partial y}$",
+          "$\\dfrac{\\partial P}{\\partial x}-\\dfrac{\\partial Q}{\\partial y}$",
+          "$\\dfrac{\\partial Q}{\\partial x}+\\dfrac{\\partial P}{\\partial y}$",
+          "$\\dfrac{\\partial P}{\\partial y}-\\dfrac{\\partial Q}{\\partial x}$"
+        ],
+        "correct": 0
+      },
+      "solution": "$Q_x-P_y$。D 与它符号相反，对应 $L$ 取**负向**（顺时针）时的情形。记忆：$\\oint P\\,\\mathrm dx+Q\\,\\mathrm dy$ 里 $Q$ 配 $\\mathrm dy$，对 $x$ 求偏导；$P$ 配 $\\mathrm dx$，对 $y$ 求偏导；先写 $Q$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：格林公式的写法"
+        }
+      ],
+      "varies": "符号与 $L$ 的方向配套：顺时针要加负号"
+    }
+  ]
+}

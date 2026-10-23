@@ -487,6 +487,130 @@
       ],
       "textbook_ref": "教材 第 3 章 §3",
       "syllabus_ref": "重积分：重积分的应用（选学）"
+    },
+    {
+      "id": "advmath.line_int_arc",
+      "title": "对弧长的曲线积分",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.double_rect",
+        "advmath.partial_deriv"
+      ],
+      "textbook_ref": "教材 第 4 章 §1",
+      "syllabus_ref": "曲线积分与曲面积分：对弧长的曲线积分"
+    },
+    {
+      "id": "advmath.line_int_coord",
+      "title": "对坐标的曲线积分（与方向有关）",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.line_int_arc"
+      ],
+      "textbook_ref": "教材 第 4 章 §2",
+      "syllabus_ref": "曲线积分与曲面积分：对坐标的曲线积分"
+    },
+    {
+      "id": "advmath.two_types_relation",
+      "title": "两类曲线积分的关系",
+      "type": "概念",
+      "difficulty": 4,
+      "target": "掌握",
+      "requires": [
+        "advmath.line_int_coord"
+      ],
+      "textbook_ref": "教材 第 4 章 §2",
+      "syllabus_ref": "曲线积分与曲面积分：对坐标的曲线积分"
+    },
+    {
+      "id": "advmath.green",
+      "title": "格林公式",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.line_int_coord",
+        "advmath.double_rect"
+      ],
+      "textbook_ref": "教材 第 4 章 §3",
+      "syllabus_ref": "曲线积分与曲面积分：格林公式"
+    },
+    {
+      "id": "advmath.path_independence",
+      "title": "平面曲线积分与路径无关的条件",
+      "type": "概念",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.green"
+      ],
+      "textbook_ref": "教材 第 4 章 §3",
+      "syllabus_ref": "曲线积分与曲面积分：路径无关的条件"
+    },
+    {
+      "id": "advmath.exact_diff",
+      "title": "全微分求积与原函数",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.path_independence"
+      ],
+      "textbook_ref": "教材 第 4 章 §3",
+      "syllabus_ref": "曲线积分与曲面积分：全微分求积"
+    },
+    {
+      "id": "advmath.surf_int_area",
+      "title": "对面积的曲面积分",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.surface_area",
+        "advmath.double_rect"
+      ],
+      "textbook_ref": "教材 第 4 章 §4",
+      "syllabus_ref": "曲线积分与曲面积分：对面积的曲面积分"
+    },
+    {
+      "id": "advmath.surf_int_coord",
+      "title": "对坐标的曲面积分（有向曲面与侧）",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.surf_int_area"
+      ],
+      "textbook_ref": "教材 第 4 章 §5",
+      "syllabus_ref": "曲线积分与曲面积分：对坐标的曲面积分"
+    },
+    {
+      "id": "advmath.gauss",
+      "title": "高斯公式（选学）",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "了解",
+      "requires": [
+        "advmath.surf_int_coord",
+        "advmath.triple_rect"
+      ],
+      "textbook_ref": "教材 第 4 章 §5",
+      "syllabus_ref": "曲线积分与曲面积分：高斯公式（选学）"
+    },
+    {
+      "id": "advmath.divergence",
+      "title": "散度（选学）",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "了解",
+      "requires": [
+        "advmath.partial_deriv"
+      ],
+      "textbook_ref": "教材 第 4 章 §5",
+      "syllabus_ref": "曲线积分与曲面积分：散度（选学）"
     }
   ]
 }

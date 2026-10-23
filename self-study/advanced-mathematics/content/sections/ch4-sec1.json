@@ -1,0 +1,192 @@
+{
+  "id": "ch4-sec1",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0401",
+      "prompt": "先猜再验：被积函数恒为 1 时，对弧长的曲线积分 $\\displaystyle\\int_L1\\,\\mathrm ds$ 表示什么？",
+      "options": [
+        "曲线 $L$ 的长度",
+        "曲线 $L$ 围成区域的面积",
+        "曲线 $L$ 的斜率",
+        "0"
+      ],
+      "correct": 0,
+      "explain": "把 $L$ 分成小弧段 $\\Delta s_i$，$f\\equiv1$ 时每段的贡献就是弧长 $\\Delta s_i$，总和是曲线的长度。若 $f$ 是曲线的线密度，积分是**曲线形细棒的质量**。",
+      "knowledge": [
+        "advmath.line_int_arc"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜弧长积分的几何意义，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**对弧长的曲线积分（第一类）**\n\n$\\displaystyle\\int_Lf(x,y)\\,\\mathrm ds=\\lim_{\\lambda\\to0}\\sum_if(\\xi_i,\\eta_i)\\Delta s_i$：沿曲线 $L$ 把 $f$ 与弧长元素 $\\mathrm ds$ 的乘积累加。$f\\equiv1$ 是弧长，$f$ 为线密度是质量。\n\n**性质**：线性；对曲线可加；**与曲线的方向无关**（弧长总是正的）。\n\n**计算——化为定积分，$\\mathrm ds$ 总是取正，所以定积分的下限小于上限**\n- $L:\\ x=\\varphi(t),\\ y=\\psi(t),\\ \\alpha\\le t\\le\\beta$：\n$$\\int_Lf\\,\\mathrm ds=\\int_\\alpha^\\beta f(\\varphi(t),\\psi(t))\\sqrt{\\varphi'^2(t)+\\psi'^2(t)}\\,\\mathrm dt.$$\n- $L:\\ y=y(x),\\ a\\le x\\le b$：$\\displaystyle\\int_a^bf(x,y(x))\\sqrt{1+y'^2}\\,\\mathrm dx$。\n- 极坐标 $r=r(\\theta)$：$\\mathrm ds=\\sqrt{r^2+r'^2}\\,\\mathrm d\\theta$。\n- 空间曲线：$\\mathrm ds=\\sqrt{x'^2+y'^2+z'^2}\\,\\mathrm dt$。\n\n圆周 $x^2+y^2=R^2$ 上先代入 $x=R\\cos t,\\ y=R\\sin t$，此时 $\\mathrm ds=R\\,\\mathrm dt$。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "把 $L$ 的方向反过来，对弧长的曲线积分要变号：$\\displaystyle\\int_{L^-}f\\,\\mathrm ds=-\\int_Lf\\,\\mathrm ds$。",
+      "why_wrong": "变号是下一节**对坐标**的曲线积分的性质。对弧长的积分里 $\\mathrm ds$ 是弧长元素，永远非负，与走向无关。例：$f\\equiv1$ 时积分是弧长，不可能因为反向而变成负数。",
+      "right": "对弧长：$\\displaystyle\\int_{L^-}f\\,\\mathrm ds=\\int_Lf\\,\\mathrm ds$。对坐标：$\\displaystyle\\int_{L^-}P\\,\\mathrm dx+Q\\,\\mathrm dy=-\\int_LP\\,\\mathrm dx+Q\\,\\mathrm dy$。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（参数方程）",
+      "problem": "计算 $\\displaystyle\\int_Lxy\\,\\mathrm ds$，$L$ 是 $x=\\cos t,\\ y=\\sin t\\ \\left(0\\le t\\le\\frac\\pi2\\right)$。",
+      "steps": [
+        {
+          "text": "$x'=-\\sin t,\\ y'=\\cos t$，$\\sqrt{x'^2+y'^2}=1$，所以 $\\mathrm ds=\\mathrm dt$。",
+          "why": "单位圆上弧长元素就是角度元素。"
+        },
+        {
+          "text": "$\\displaystyle\\int_0^{\\pi/2}\\cos t\\sin t\\,\\mathrm dt=\\left.\\frac{\\sin^2t}{2}\\right|_0^{\\pi/2}=\\dfrac12$。",
+          "why": "下限小于上限。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（直线段）",
+      "problem": "计算 $\\displaystyle\\int_L(x+y)\\,\\mathrm ds$，$L$ 是线段 $y=2x\\ (0\\le x\\le1)$。",
+      "steps": [
+        {
+          "text": "$y'=2$，$\\mathrm ds=\\sqrt{1+4}\\,\\mathrm dx=\\sqrt5\\,\\mathrm dx$；在 $L$ 上 $x+y=3x$。",
+          "why": "把 $y$ 用 $2x$ 代入，$\\mathrm ds$ 用 $\\sqrt{1+y'^2}\\,\\mathrm dx$。"
+        },
+        {
+          "text": "$\\displaystyle\\int_0^13x\\sqrt5\\,\\mathrm dx=\\frac{3\\sqrt5}{2}$。",
+          "why": "$\\sqrt5$ 是常数，提出。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（质量）",
+      "problem": "半径为 2 的半圆形细丝 $x^2+y^2=4,\\ y\\ge0$，线密度 $\\rho=y$，求质量。",
+      "steps": [
+        {
+          "text": "参数 $x=2\\cos t,\\ y=2\\sin t\\ (0\\le t\\le\\pi)$，$\\mathrm ds=2\\,\\mathrm dt$。",
+          "why": "半径 $R=2$ 时 $\\mathrm ds=R\\,\\mathrm dt$。"
+        },
+        {
+          "text": "$M=\\displaystyle\\int_Ly\\,\\mathrm ds=\\int_0^\\pi2\\sin t\\cdot2\\,\\mathrm dt=4\\cdot2=8$。",
+          "why": "$\\int_0^\\pi\\sin t\\,\\mathrm dt=2$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0401a",
+      "knowledge": [
+        "advmath.line_int_arc"
+      ],
+      "stem": "$L$ 是从 $(0,0)$ 到 $(3,4)$ 的线段，则 $\\displaystyle\\int_L\\mathrm ds=$",
+      "answer": {
+        "type": "numeric",
+        "value": 5
+      },
+      "solution": "$f\\equiv1$，积分就是线段的长度 $\\sqrt{3^2+4^2}=5$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值：弧长"
+        }
+      ],
+      "varies": "被积函数为 1：不必化成定积分"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0401b",
+      "knowledge": [
+        "advmath.line_int_arc"
+      ],
+      "stem": "$L$ 是单位圆的上半圆 $x^2+y^2=1,\\ y\\ge0$，则 $\\displaystyle\\int_Ly\\,\\mathrm ds=$",
+      "answer": {
+        "type": "numeric",
+        "value": 2
+      },
+      "solution": "$x=\\cos t,\\ y=\\sin t\\ (0\\le t\\le\\pi)$，$\\mathrm ds=\\mathrm dt$：$\\int_0^\\pi\\sin t\\,\\mathrm dt=2$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "与例 3 同一类，半径为 1 时 $\\mathrm ds=\\mathrm dt$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0401c",
+      "knowledge": [
+        "advmath.line_int_arc"
+      ],
+      "stem": "$L:\\ y=y(x),\\ a\\le x\\le b$，则 $\\displaystyle\\int_Lf(x,y)\\,\\mathrm ds=$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\displaystyle\\int_a^bf(x,y(x))\\sqrt{1+y'^2(x)}\\,\\mathrm dx$",
+          "$\\displaystyle\\int_a^bf(x,y(x))\\,\\mathrm dx$",
+          "$\\displaystyle\\int_a^bf(x,y(x))\\,(1+y'^2(x))\\,\\mathrm dx$",
+          "$\\displaystyle\\int_a^bf(x,y(x))\\,y'(x)\\,\\mathrm dx$"
+        ],
+        "correct": 0
+      },
+      "solution": "弧长元素 $\\mathrm ds=\\sqrt{(\\mathrm dx)^2+(\\mathrm dy)^2}=\\sqrt{1+y'^2}\\,\\mathrm dx$。B 漏了弧长元素的系数；C 漏了根号；D 是对坐标的积分（下一节）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：弧长元素"
+        }
+      ],
+      "varies": "$\\mathrm ds$ 不是 $\\mathrm dx$：多了一个 $\\sqrt{1+y'^2}$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0401d",
+      "knowledge": [
+        "advmath.line_int_arc"
+      ],
+      "stem": "设 $L$ 是从 $A$ 到 $B$ 的曲线，$L^-$ 是反方向，$f\\ge0$。则 $\\displaystyle\\int_Lf\\,\\mathrm ds$ 与 $\\displaystyle\\int_{L^-}f\\,\\mathrm ds$ 的关系是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "相等",
+          "互为相反数",
+          "一个是另一个的 2 倍",
+          "没有确定关系"
+        ],
+        "correct": 0
+      },
+      "solution": "对弧长的曲线积分与曲线的方向无关，两者相等。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：与对坐标积分的区别"
+        }
+      ],
+      "varies": "与下一节对比：对坐标的积分才与方向有关"
+    }
+  ]
+}

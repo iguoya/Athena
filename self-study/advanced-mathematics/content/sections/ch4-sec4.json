@@ -1,0 +1,151 @@
+{
+  "id": "ch4-sec4",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0404",
+      "prompt": "先猜再验：被积函数恒为 1 时，对面积的曲面积分 $\\displaystyle\\iint_\\Sigma1\\,\\mathrm dS$ 表示",
+      "options": [
+        "曲面 $\\Sigma$ 的面积",
+        "曲面 $\\Sigma$ 围成立体的体积",
+        "曲面的法向量",
+        "0"
+      ],
+      "correct": 0,
+      "explain": "与曲线上的弧长积分类似：把曲面分成小块 $\\Delta S_i$，$f\\equiv1$ 时每块的贡献是面积本身。$f$ 是面密度时积分是曲面薄壳的质量。",
+      "knowledge": [
+        "advmath.surf_int_area"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜面积分的几何意义，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**对面积的曲面积分（第一类）**\n\n$\\displaystyle\\iint_\\Sigma f(x,y,z)\\,\\mathrm dS$：把 $f$ 与面积元素 $\\mathrm dS$ 的乘积在曲面 $\\Sigma$ 上累加。性质与二重积分类似；**与曲面的侧无关**（面积非负）。\n\n**计算——投影到坐标面**：$\\Sigma:\\ z=z(x,y)$，在 $xOy$ 面上的投影区域为 $D_{xy}$，\n$$\\iint_\\Sigma f(x,y,z)\\,\\mathrm dS=\\iint_{D_{xy}}f\\big(x,y,z(x,y)\\big)\\sqrt{1+z_x^2+z_y^2}\\,\\mathrm dx\\,\\mathrm dy.$$\n（$\\sqrt{1+z_x^2+z_y^2}$ 就是 §3.1 曲面面积公式里的倾斜系数。）\n\n**化简技巧**：先把 $\\Sigma$ 的方程代入被积函数（在曲面上 $z=z(x,y)$）；曲面关于坐标面对称、被积函数奇偶时用对称性。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "对面积的曲面积分化成二重积分时，面积元素 $\\mathrm dS=\\mathrm dx\\,\\mathrm dy$。",
+      "why_wrong": "$\\mathrm dx\\,\\mathrm dy$ 是**投影**面积元素，曲面倾斜时 $\\mathrm dS$ 更大：$\\mathrm dS=\\sqrt{1+z_x^2+z_y^2}\\,\\mathrm dx\\,\\mathrm dy$。例：平面 $x+y+z=1$ 的 $\\mathrm dS=\\sqrt3\\,\\mathrm dx\\,\\mathrm dy$，漏掉 $\\sqrt3$ 结果会错。",
+      "right": "$\\mathrm dS=\\sqrt{1+z_x^2+z_y^2}\\,\\mathrm dx\\,\\mathrm dy$。下一节对**坐标**的曲面积分才直接用 $\\mathrm dx\\,\\mathrm dy$。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（平面）",
+      "problem": "计算 $\\displaystyle\\iint_\\Sigma(x+y+z)\\,\\mathrm dS$，$\\Sigma$ 是平面 $x+y+z=1$ 在第一卦限的部分。",
+      "steps": [
+        {
+          "text": "在 $\\Sigma$ 上 $x+y+z=1$，所以被积函数 $=1$，积分 $=\\iint_\\Sigma\\mathrm dS$（$\\Sigma$ 的面积）。",
+          "why": "先代入曲面方程，大大简化。"
+        },
+        {
+          "text": "$z=1-x-y$，$z_x=z_y=-1$，$\\mathrm dS=\\sqrt3\\,\\mathrm dx\\,\\mathrm dy$；投影 $D_{xy}$ 是三角形 $x,y\\ge0,\\ x+y\\le1$，面积 $\\frac12$。积分 $=\\sqrt3\\cdot\\dfrac12=\\dfrac{\\sqrt3}2$。",
+          "why": "投影面积乘倾斜系数 $\\sqrt3$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（上半球面）",
+      "problem": "计算 $\\displaystyle\\iint_\\Sigma z\\,\\mathrm dS$，$\\Sigma$ 是上半球面 $z=\\sqrt{R^2-x^2-y^2}$。",
+      "steps": [
+        {
+          "text": "$z_x=\\dfrac{-x}{z},\\ z_y=\\dfrac{-y}{z}$，$\\sqrt{1+z_x^2+z_y^2}=\\sqrt{\\dfrac{z^2+x^2+y^2}{z^2}}=\\dfrac Rz$。",
+          "why": "利用 $x^2+y^2+z^2=R^2$。"
+        },
+        {
+          "text": "$\\displaystyle\\iint_\\Sigma z\\,\\mathrm dS=\\iint_{x^2+y^2\\le R^2}z\\cdot\\frac Rz\\,\\mathrm dx\\,\\mathrm dy=R\\cdot\\pi R^2=\\pi R^3$。",
+          "why": "$z$ 恰好被约去，剩下 $R$ 乘投影圆盘面积 $\\pi R^2$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0404a",
+      "knowledge": [
+        "advmath.surf_int_area"
+      ],
+      "stem": "$\\Sigma$ 是曲面 $z=2x+2y$ 在 $0\\le x\\le2,\\ 0\\le y\\le1$ 上方的部分，则 $\\displaystyle\\iint_\\Sigma\\mathrm dS=$",
+      "answer": {
+        "type": "numeric",
+        "value": 6
+      },
+      "solution": "$z_x=z_y=2$，$\\sqrt{1+4+4}=3$，投影矩形面积 $2\\times1=2$，$\\mathrm dS$ 面积 $=3\\times2=6$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "被积函数为 1：曲面面积 = 倾斜系数 × 投影面积"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0404b",
+      "knowledge": [
+        "advmath.surf_int_area"
+      ],
+      "stem": "曲面 $\\Sigma:\\ z=z(x,y),\\ (x,y)\\in D_{xy}$ 上，$\\displaystyle\\iint_\\Sigma f\\,\\mathrm dS=$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\displaystyle\\iint_{D_{xy}}f(x,y,z(x,y))\\sqrt{1+z_x^2+z_y^2}\\,\\mathrm dx\\,\\mathrm dy$",
+          "$\\displaystyle\\iint_{D_{xy}}f(x,y,z(x,y))\\,\\mathrm dx\\,\\mathrm dy$",
+          "$\\displaystyle\\iint_{D_{xy}}f(x,y,z(x,y))(1+z_x^2+z_y^2)\\,\\mathrm dx\\,\\mathrm dy$",
+          "$\\displaystyle\\iint_{D_{xy}}f(x,y,0)\\sqrt{1+z_x^2+z_y^2}\\,\\mathrm dx\\,\\mathrm dy$"
+        ],
+        "correct": 0
+      },
+      "solution": "B 漏了倾斜系数（那是对**坐标**的积分的化法）；C 漏了根号；D 没有把 $z$ 换成曲面上的值。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：面积元素的化法"
+        }
+      ],
+      "varies": "两处都不能漏：$z$ 要代成 $z(x,y)$，面积元素要带倾斜系数"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0404c",
+      "knowledge": [
+        "advmath.surf_int_area"
+      ],
+      "stem": "对面积的曲面积分 $\\displaystyle\\iint_\\Sigma f\\,\\mathrm dS$ 与曲面 $\\Sigma$ 的侧",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "无关",
+          "有关，换侧要变号",
+          "有关，换侧结果变成 2 倍",
+          "只在封闭曲面时有关"
+        ],
+        "correct": 0
+      },
+      "solution": "面积元素 $\\mathrm dS$ 非负，与选哪一侧无关。与「对坐标的曲面积分」（下一节，换侧变号）相对。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：第一类与第二类的区别"
+        }
+      ],
+      "varies": "与上一节曲线积分的对比结构完全一样"
+    }
+  ]
+}
