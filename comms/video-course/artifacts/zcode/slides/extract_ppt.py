@@ -128,9 +128,23 @@ def main():
     files = {
         "序言": unpack / "实用大众线性代数课件序言.ppt",
         "第１章": unpack / "实用大众线性代数课件第１章.ppt",
+        "第２章": unpack / "实用大众线性代数课件第２章.ppt",
+        "第３章": unpack / "实用大众线性代数课件第３章.ppt",
+        "第４章": unpack / "实用大众线性代数课件第４章.ppt",
+        "第５章": unpack / "实用大众线性代数课件第５章.ppt",
+        "第６章": unpack / "实用大众线性代数课件第６章.ppt",
         "附录": unpack / "实用大众线性代数课件附录.ppt",
     }
-    names = {"序言": "preface", "第１章": "ch1", "附录": "appendix-a"}
+    names = {
+        "序言": "preface",
+        "第１章": "ch1",
+        "第２章": "ch2",
+        "第３章": "ch3",
+        "第４章": "ch4",
+        "第５章": "ch5",
+        "第６章": "ch6",
+        "附录": "appendix-a",
+    }
     out_dir.mkdir(parents=True, exist_ok=True)
     pythoncom.CoInitialize()
     app = win32com.client.Dispatch("PowerPoint.Application")
