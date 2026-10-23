@@ -1,0 +1,129 @@
+{
+  "id": "ch3-sec4",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0304",
+      "prompt": "先猜再验：矩阵 $\\begin{pmatrix}1 & 0 & 1 \\\\ 0 & 1 & 1\\end{pmatrix}$ 的**行向量组**的秩与**列向量组**的秩，哪个大？",
+      "options": [
+        "行向量组秩大",
+        "列向量组秩大",
+        "相等",
+        "不一定"
+      ],
+      "correct": 2,
+      "explain": "两个行向量无关，行秩为 2；三个 2 维列向量最多 2 个无关，列秩也是 2。这不是巧合：任何矩阵的行秩 = 列秩 = 矩阵的秩 $r(A)$。",
+      "knowledge": [
+        "linalg.vector_rank"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜行秩与列秩的关系，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**向量组的秩与矩阵的秩**\n\n向量组的**秩**定义为它的极大线性无关组所含向量的个数，记 $r(\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s)$。\n\n**矩阵的秩 = 行向量组的秩 = 列向量组的秩**。所以把向量作为列（或行）排成矩阵，向量组的秩就是矩阵的秩，§2.6 的阶梯形方法直接用上。\n\n**用秩判断线性相关性**（$s$ 个向量）：\n- $r<s\\iff$ 线性相关；$r=s\\iff$ 线性无关。\n\n**用秩判断线性表出**（$A=(\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s)$）：\n- $\\boldsymbol\\beta$ 能由 $\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s$ 线性表出 $\\iff r(A)=r(A,\\boldsymbol\\beta)$；\n- 此时表出**唯一** $\\iff r(A)=s$（即 $\\boldsymbol\\alpha$ 无关）。\n\n**向量组的线性表出与秩**：若向量组 $B$ 的每个向量都能由 $A$ 线性表出，则 $r(B)\\le r(A)$。两个向量组**互相**线性表出称为**等价**，等价向量组的秩相等。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "两个向量组的秩相等，所以它们等价。",
+      "why_wrong": "等价能推出秩相等，反过来不行。$\\{(1,0)^{\\mathrm T}\\}$ 与 $\\{(0,1)^{\\mathrm T}\\}$ 的秩都是 1，但 $(0,1)^{\\mathrm T}$ 无法由 $(1,0)^{\\mathrm T}$ 表出，二者不等价。",
+      "right": "秩相等只是等价的必要条件。要说明等价，还要说明其中一组可由另一组线性表出，且秩相等（此时能推出另一方向）。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（能否线性表出）",
+      "problem": "$\\boldsymbol\\alpha_1=(1,1,1)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(1,2,3)^{\\mathrm T},\\ \\boldsymbol\\beta=(1,2,2)^{\\mathrm T}$。$\\boldsymbol\\beta$ 能否由 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2$ 线性表出？",
+      "steps": [
+        {
+          "text": "$r(\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2)=2$（两个向量不成比例，线性无关）。",
+          "why": "先算系数矩阵的秩。"
+        },
+        {
+          "text": "$|\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\beta|=\\begin{vmatrix}1&1&1\\\\1&2&2\\\\1&3&2\\end{vmatrix}=-1\\neq0$，所以 $r(\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\beta)=3$。",
+          "why": "增广矩阵是 $3\\times3$，行列式非零就是满秩 3。按第 1 行展开：$1\\cdot(4-6)-1\\cdot(2-2)+1\\cdot(3-2)=-2-0+1=-1$。"
+        },
+        {
+          "text": "$2\\neq3$，所以**不能**线性表出。",
+          "why": "$r(A)\\neq r(A,\\boldsymbol\\beta)$：加入 $\\boldsymbol\\beta$ 后秩变大，说明 $\\boldsymbol\\beta$ 带来了新方向。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，行列式与秩已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0304a",
+      "knowledge": [
+        "linalg.vector_rank"
+      ],
+      "stem": "设向量组 $\\boldsymbol\\alpha_1=(1,2,-1)^{\\mathrm T}$，$\\boldsymbol\\alpha_2=(0,-4,5)^{\\mathrm T}$，$\\boldsymbol\\alpha_3=(2,0,t)^{\\mathrm T}$ 的秩为 2，则 $t=$",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "秩为 2 小于向量个数 3，三个向量线性相关，$\\begin{vmatrix}1&0&2\\\\2&-4&0\\\\-1&5&t\\end{vmatrix}=-4t+12=0$，$t=3$。再确认秩恰为 2：$\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2$ 不成比例，无关；$t=3$ 时 $\\boldsymbol\\alpha_3=2\\boldsymbol\\alpha_1+\\boldsymbol\\alpha_2$。",
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 11 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ],
+      "varies": "由秩的值倒推参数：先转化为行列式为 0，再核对秩是否恰好为 2 而不是更小"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0304b",
+      "knowledge": [
+        "linalg.rep_by_rank"
+      ],
+      "stem": "$\\boldsymbol\\alpha_1=(1,1,1)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(1,2,3)^{\\mathrm T},\\ \\boldsymbol\\beta=(1,1,m)^{\\mathrm T}$。$\\boldsymbol\\beta$ 能由 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2$ 线性表出，则 $m=$",
+      "answer": {
+        "type": "numeric",
+        "value": 1
+      },
+      "solution": "表出 $\\iff r(\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2)=r(\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\beta)=2$，所以 $\\begin{vmatrix}1&1&1\\\\1&2&1\\\\1&3&m\\end{vmatrix}=m-1=0$，$m=1$。验证：$\\boldsymbol\\beta=1\\cdot\\boldsymbol\\alpha_1+0\\cdot\\boldsymbol\\alpha_2=(1,1,1)^{\\mathrm T}$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "把『能表出』翻译成『增广后秩不变』，由行列式为 0 得参数"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0304c",
+      "knowledge": [
+        "linalg.vector_rank"
+      ],
+      "stem": "若向量组 $A$ 与向量组 $B$ 等价，则下列一定成立的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$A,B$ 所含向量个数相同",
+          "$r(A)=r(B)$",
+          "$A,B$ 的极大线性无关组相同",
+          "$A,B$ 都线性无关"
+        ],
+        "correct": 1
+      },
+      "solution": "等价 $\\Rightarrow$ 秩相等。向量个数、极大无关组都可以不同（比如 $B$ 在 $A$ 里多加一个可由 $A$ 表出的向量），也不要求无关。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：等价向量组的性质"
+        }
+      ],
+      "varies": "区分等价能推出什么（只有秩）与不能推出什么"
+    }
+  ]
+}

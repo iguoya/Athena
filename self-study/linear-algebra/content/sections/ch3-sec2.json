@@ -1,0 +1,158 @@
+{
+  "id": "ch3-sec2",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0302",
+      "prompt": "先猜再验：$\\boldsymbol\\alpha_1=(1,2)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(2,4)^{\\mathrm T}$。存在不全为零的数 $k_1,k_2$ 使 $k_1\\boldsymbol\\alpha_1+k_2\\boldsymbol\\alpha_2=\\boldsymbol0$ 吗？",
+      "options": [
+        "存在，如 $k_1=2,\\ k_2=-1$",
+        "不存在，只有 $k_1=k_2=0$",
+        "不存在，因为两个向量不同",
+        "无法判断"
+      ],
+      "correct": 0,
+      "explain": "$2(1,2)^{\\mathrm T}-(2,4)^{\\mathrm T}=\\boldsymbol0$。这样的「不全为零的系数」存在，这组向量就叫**线性相关**；只有全零系数才行时叫线性无关。两个向量相关的几何意思：成比例，共线。",
+      "knowledge": [
+        "linalg.lin_dep_def"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜线性相关的含义，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**线性相关与线性无关**\n\n若存在**不全为零**的数 $k_1,\\dots,k_s$，使 $k_1\\boldsymbol\\alpha_1+\\cdots+k_s\\boldsymbol\\alpha_s=\\boldsymbol0$，称向量组 $\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s$ **线性相关**；若上式**只有** $k_1=\\cdots=k_s=0$ 时才成立，称**线性无关**。\n\n直观：相关表示组里有「多余」的向量，**线性相关 $\\iff$ 至少有一个向量能由其余向量线性表出**；无关表示每个向量都提供新方向。\n\n**判定**\n- $n$ 个 $n$ 维向量：以它们为列作行列式，**$|\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_n|\\neq0\\iff$ 线性无关**（理由：$A\\boldsymbol x=\\boldsymbol0$ 只有零解 $\\iff|A|\\neq0$，见 §1.5 与第 4 章）。\n- 一般情形用秩：向量组的秩小于向量个数则相关，等于则无关（§3.4）。\n\n**常用性质**\n- 含零向量的向量组必相关；单个向量相关 $\\iff$ 它是零向量。\n- 两个向量相关 $\\iff$ 对应分量成比例。\n- 向量个数**大于**维数，必相关（例如 4 个 3 维向量）。\n- **部分相关则整体相关**；**整体无关则部分无关**。\n- 若 $\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s$ 无关而 $\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s,\\boldsymbol\\beta$ 相关，则 $\\boldsymbol\\beta$ 能由 $\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s$ **唯一**线性表出。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "向量组 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\alpha_3$ 线性相关，所以其中**每一个**向量都能由其余两个线性表出。",
+      "why_wrong": "相关只保证**至少有一个**能被其余表出。反例：$\\boldsymbol\\alpha_1=(1,0)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(2,0)^{\\mathrm T},\\ \\boldsymbol\\alpha_3=(0,1)^{\\mathrm T}$。3 个 2 维向量必相关；$\\boldsymbol\\alpha_1=\\frac12\\boldsymbol\\alpha_2$ 可以表出，但 $\\boldsymbol\\alpha_3$ 不能由 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2$ 表出（它们的第 2 分量都是 0）。",
+      "right": "相关 $\\iff$ 至少一个可被其余表出。要证某个具体向量可被表出，需要额外条件（如去掉它剩下的组仍无关）。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（行列式判定）",
+      "problem": "判断 $\\boldsymbol\\alpha_1=(1,1,0)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(0,1,1)^{\\mathrm T},\\ \\boldsymbol\\alpha_3=(1,0,1)^{\\mathrm T}$ 是否线性相关。",
+      "steps": [
+        {
+          "text": "以三个向量为列：$\\begin{vmatrix}1&0&1\\\\1&1&0\\\\0&1&1\\end{vmatrix}=1\\cdot(1-0)-0+1\\cdot(1-0)=2\\neq0$。",
+          "why": "3 个 3 维向量，可以用行列式。按第 1 行展开：$a_{11}A_{11}+a_{13}A_{13}$，$a_{12}=0$ 那项不用算。"
+        },
+        {
+          "text": "行列式不为零，所以线性无关。",
+          "why": "与 §3.1 例 1 对照：因此那里的表出系数是唯一的。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，行列式已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（含参数的相关性）",
+      "problem": "$t$ 取何值时，$\\boldsymbol\\alpha_1=(1,1,1)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(1,2,3)^{\\mathrm T},\\ \\boldsymbol\\alpha_3=(1,4,t)^{\\mathrm T}$ 线性相关？",
+      "steps": [
+        {
+          "text": "相关 $\\iff\\begin{vmatrix}1&1&1\\\\1&2&4\\\\1&3&t\\end{vmatrix}=0$。按第 1 行展开：$(2t-12)-(t-4)+(3-2)=t-7$。",
+          "why": "3 个 3 维向量，相关等价于行列式为零。注意第 1 列是 $\\boldsymbol\\alpha_1$、第 2 列是 $\\boldsymbol\\alpha_2$、第 3 列是 $\\boldsymbol\\alpha_3$。"
+        },
+        {
+          "text": "$t=7$ 时相关。此时 $\\boldsymbol\\alpha_3=-2\\boldsymbol\\alpha_1+3\\boldsymbol\\alpha_2$。",
+          "why": "检验：$-2(1,1,1)+3(1,2,3)=(1,4,7)$，第 3 分量正是 $t=7$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，行列式已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0302a",
+      "knowledge": [
+        "linalg.lin_dep_test"
+      ],
+      "stem": "设向量组 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\alpha_3$ 线性无关，则下列向量组中线性无关的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\boldsymbol\\alpha_1,\\ 2\\boldsymbol\\alpha_2,\\ 3\\boldsymbol\\alpha_3$",
+          "$\\boldsymbol\\alpha_1-\\boldsymbol\\alpha_2,\\ \\boldsymbol\\alpha_2-\\boldsymbol\\alpha_3,\\ \\boldsymbol\\alpha_3-\\boldsymbol\\alpha_1$",
+          "$\\boldsymbol\\alpha_1,\\ 2\\boldsymbol\\alpha_1,\\ \\boldsymbol\\alpha_2-\\boldsymbol\\alpha_3$",
+          "$\\boldsymbol\\alpha_1+\\boldsymbol\\alpha_2,\\ \\boldsymbol\\alpha_2-\\boldsymbol\\alpha_3,\\ \\boldsymbol\\alpha_1+2\\boldsymbol\\alpha_2-\\boldsymbol\\alpha_3$"
+        ],
+        "correct": 0
+      },
+      "solution": "A：每个向量乘非零数，仍无关。B：三个向量之和为 $\\boldsymbol0$，相关。C：前两个向量成比例，相关。D：第 3 个等于前两个之和 $(\\boldsymbol\\alpha_1+\\boldsymbol\\alpha_2)+(\\boldsymbol\\alpha_2-\\boldsymbol\\alpha_3)=\\boldsymbol\\alpha_1+2\\boldsymbol\\alpha_2-\\boldsymbol\\alpha_3$，相关。",
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 3 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ],
+      "varies": "不用算行列式：找出每个选项里的线性关系（成比例、和为零、一个是另两个之和）"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0302b",
+      "knowledge": [
+        "linalg.lin_dep_def"
+      ],
+      "stem": "下列命题中**正确**的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "若向量组的一部分线性相关，则整个向量组线性相关",
+          "若向量组线性相关，则它的任一部分组也线性相关",
+          "含有零向量的向量组线性无关",
+          "两个向量线性相关当且仅当它们相等"
+        ],
+        "correct": 0
+      },
+      "solution": "A 对（部分相关则整体相关）。B 反了：整体相关，部分可以无关（如 $(1,0),(2,0),(0,1)$ 中 $(1,0),(0,1)$ 无关）。C 错：含零向量必相关。D 错：相关指成比例，不必相等。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：整体与部分的方向"
+        }
+      ],
+      "varies": "命题的逻辑方向：「部分 → 整体」与「整体 → 部分」只有一个方向成立"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0302c",
+      "knowledge": [
+        "linalg.lin_dep_test"
+      ],
+      "stem": "4 个 3 维向量 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\alpha_3,\\boldsymbol\\alpha_4$ 一定是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "线性无关",
+          "线性相关",
+          "两两正交",
+          "无法判断"
+        ],
+        "correct": 1
+      },
+      "solution": "向量个数 4 大于维数 3，必线性相关。道理：以它们为列的 $3\\times4$ 矩阵，秩至多为 3，小于向量个数。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：个数大于维数"
+        }
+      ],
+      "varies": "不需要具体数值：个数与维数的比较就够了"
+    }
+  ]
+}

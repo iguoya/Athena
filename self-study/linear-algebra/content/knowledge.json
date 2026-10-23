@@ -314,6 +314,144 @@
       ],
       "textbook_ref": "教材 §2.6",
       "syllabus_ref": "矩阵：矩阵的秩"
+    },
+    {
+      "id": "linalg.vector_ops",
+      "title": "向量的线性运算",
+      "type": "技能",
+      "difficulty": 1,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.matrix_def"
+      ],
+      "textbook_ref": "教材 §3.1",
+      "syllabus_ref": "向量空间：n 维向量及其运算"
+    },
+    {
+      "id": "linalg.linear_combination",
+      "title": "线性组合与线性表出（等价于解方程组）",
+      "type": "概念",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.vector_ops",
+        "linalg.mat_mul"
+      ],
+      "textbook_ref": "教材 §3.1",
+      "syllabus_ref": "向量空间：线性组合与线性表出"
+    },
+    {
+      "id": "linalg.lin_dep_def",
+      "title": "线性相关与线性无关的定义和性质",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.linear_combination"
+      ],
+      "textbook_ref": "教材 §3.2",
+      "syllabus_ref": "向量空间：线性相关与线性无关"
+    },
+    {
+      "id": "linalg.lin_dep_test",
+      "title": "线性相关性的判定",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.lin_dep_def",
+        "linalg.cramer"
+      ],
+      "textbook_ref": "教材 §3.2",
+      "syllabus_ref": "向量空间：线性相关与线性无关"
+    },
+    {
+      "id": "linalg.max_indep",
+      "title": "极大线性无关组的概念",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.lin_dep_def"
+      ],
+      "textbook_ref": "教材 §3.3",
+      "syllabus_ref": "向量空间：极大线性无关组"
+    },
+    {
+      "id": "linalg.max_indep_find",
+      "title": "行变换法求极大线性无关组与表出系数",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.max_indep",
+        "linalg.rank_by_echelon"
+      ],
+      "textbook_ref": "教材 §3.3",
+      "syllabus_ref": "向量空间：极大线性无关组"
+    },
+    {
+      "id": "linalg.vector_rank",
+      "title": "向量组的秩与矩阵的秩（行秩=列秩）",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.max_indep",
+        "linalg.rank_def"
+      ],
+      "textbook_ref": "教材 §3.4",
+      "syllabus_ref": "向量空间：向量组的秩"
+    },
+    {
+      "id": "linalg.rep_by_rank",
+      "title": "用秩判断线性表出与唯一性",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "掌握",
+      "requires": [
+        "linalg.vector_rank",
+        "linalg.linear_combination"
+      ],
+      "textbook_ref": "教材 §3.4",
+      "syllabus_ref": "向量空间：向量组的秩"
+    },
+    {
+      "id": "linalg.inner_product",
+      "title": "内积、长度与正交",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.vector_ops"
+      ],
+      "textbook_ref": "教材 §3.5",
+      "syllabus_ref": "向量空间：内积与正交"
+    },
+    {
+      "id": "linalg.orthonormal",
+      "title": "正交向量组、标准正交基与正交矩阵",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.inner_product",
+        "linalg.lin_dep_def"
+      ],
+      "textbook_ref": "教材 §3.5",
+      "syllabus_ref": "向量空间：标准正交基"
+    },
+    {
+      "id": "linalg.gram_schmidt",
+      "title": "施密特正交化",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.orthonormal"
+      ],
+      "textbook_ref": "教材 §3.5",
+      "syllabus_ref": "向量空间：标准正交基"
     }
   ]
 }

@@ -1,0 +1,134 @@
+{
+  "id": "ch3-sec5",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0305",
+      "prompt": "先猜再验：$\\boldsymbol\\alpha=(1,2)^{\\mathrm T},\\ \\boldsymbol\\beta=(2,-1)^{\\mathrm T}$ 的**内积**（对应分量乘积之和）是",
+      "options": [
+        "0",
+        "3",
+        "4",
+        "5"
+      ],
+      "correct": 0,
+      "explain": "$1\\times2+2\\times(-1)=0$。内积为 0 称两个向量**正交**（垂直）。这一节的主题是：把一组无关的向量变成两两垂直、长度为 1 的向量。",
+      "knowledge": [
+        "linalg.inner_product"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先算一个内积，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**内积、正交与标准正交基**\n\n$\\boldsymbol\\alpha=(a_1,\\dots,a_n)^{\\mathrm T},\\ \\boldsymbol\\beta=(b_1,\\dots,b_n)^{\\mathrm T}$ 的**内积**\n$$(\\boldsymbol\\alpha,\\boldsymbol\\beta)=a_1b_1+\\cdots+a_nb_n=\\boldsymbol\\alpha^{\\mathrm T}\\boldsymbol\\beta.$$\n**长度**（范数）$\\|\\boldsymbol\\alpha\\|=\\sqrt{(\\boldsymbol\\alpha,\\boldsymbol\\alpha)}$；长度为 1 的叫**单位向量**，$\\boldsymbol\\alpha/\\|\\boldsymbol\\alpha\\|$ 是 $\\boldsymbol\\alpha$ 的**单位化**。$(\\boldsymbol\\alpha,\\boldsymbol\\beta)=0$ 称**正交**。\n\n**正交向量组**：两两正交的**非零**向量组，必线性无关。若再都是单位向量，称**标准正交向量组**；$\\mathbb R^n$ 里 $n$ 个这样的向量组成**标准正交基**。\n\n**施密特（Schmidt）正交化**：把线性无关的 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\alpha_3$ 变成正交组：\n$$\\boldsymbol\\beta_1=\\boldsymbol\\alpha_1,\\quad\\boldsymbol\\beta_2=\\boldsymbol\\alpha_2-\\frac{(\\boldsymbol\\alpha_2,\\boldsymbol\\beta_1)}{(\\boldsymbol\\beta_1,\\boldsymbol\\beta_1)}\\boldsymbol\\beta_1,\\quad\\boldsymbol\\beta_3=\\boldsymbol\\alpha_3-\\frac{(\\boldsymbol\\alpha_3,\\boldsymbol\\beta_1)}{(\\boldsymbol\\beta_1,\\boldsymbol\\beta_1)}\\boldsymbol\\beta_1-\\frac{(\\boldsymbol\\alpha_3,\\boldsymbol\\beta_2)}{(\\boldsymbol\\beta_2,\\boldsymbol\\beta_2)}\\boldsymbol\\beta_2.$$\n每一步都是「减去在已有方向上的分量」。最后把 $\\boldsymbol\\beta_i$ **单位化**，得到标准正交基。\n\n**正交矩阵**：$Q^{\\mathrm T}Q=E$（即 $Q^{-1}=Q^{\\mathrm T}$）的方阵。它的**列向量组**（行向量组也一样）是标准正交基。性质：$|Q|=\\pm1$；正交矩阵的乘积、逆、转置仍是正交矩阵。第 5、6 章的正交变换要用它。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "两两正交的向量组一定线性无关。",
+      "why_wrong": "漏了「非零」。含零向量的组也满足两两内积为 0（零向量与任何向量内积为 0），但含零向量的组线性相关。例：$\\{(1,0)^{\\mathrm T},(0,0)^{\\mathrm T}\\}$。",
+      "right": "**两两正交的非零向量组**才一定线性无关。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（施密特正交化并单位化）",
+      "problem": "把 $\\boldsymbol\\alpha_1=(1,1,0)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(1,0,1)^{\\mathrm T}$ 化成标准正交向量组。",
+      "steps": [
+        {
+          "text": "$\\boldsymbol\\beta_1=\\boldsymbol\\alpha_1=(1,1,0)^{\\mathrm T}$。",
+          "why": "第一个向量原样保留。"
+        },
+        {
+          "text": "$(\\boldsymbol\\alpha_2,\\boldsymbol\\beta_1)=1,\\ (\\boldsymbol\\beta_1,\\boldsymbol\\beta_1)=2$，$\\boldsymbol\\beta_2=\\boldsymbol\\alpha_2-\\dfrac12\\boldsymbol\\beta_1=\\left(\\dfrac12,-\\dfrac12,1\\right)^{\\mathrm T}$。",
+          "why": "检验正交：$(\\boldsymbol\\beta_2,\\boldsymbol\\beta_1)=\\frac12-\\frac12+0=0$。"
+        },
+        {
+          "text": "$\\|\\boldsymbol\\beta_1\\|=\\sqrt2$，$\\|\\boldsymbol\\beta_2\\|^2=\\frac14+\\frac14+1=\\frac32$，所以 $\\boldsymbol e_1=\\dfrac{1}{\\sqrt2}(1,1,0)^{\\mathrm T}$，$\\boldsymbol e_2=\\dfrac{1}{\\sqrt6}(1,-1,2)^{\\mathrm T}$。",
+          "why": "单位化只看方向，$\\boldsymbol\\beta_2=\\frac12(1,-1,2)^{\\mathrm T}$ 里的正数因子 $\\frac12$ 可以先去掉：$(1,-1,2)^{\\mathrm T}$ 的长度是 $\\sqrt6$，所以 $\\boldsymbol e_2=\\frac1{\\sqrt6}(1,-1,2)^{\\mathrm T}$。与 $\\|\\boldsymbol\\beta_2\\|^2=\\frac32$ 得出的结果一致。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，正交性与长度已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0305a",
+      "knowledge": [
+        "linalg.gram_schmidt"
+      ],
+      "stem": "对 $\\boldsymbol\\alpha_1=(1,1,0)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(1,0,1)^{\\mathrm T}$ 做施密特正交化（不单位化）得 $\\boldsymbol\\beta_1,\\boldsymbol\\beta_2$，则 $\\|\\boldsymbol\\beta_2\\|^2=$",
+      "answer": {
+        "type": "numeric",
+        "value": 1.5
+      },
+      "solution": "$\\boldsymbol\\beta_2=\\boldsymbol\\alpha_2-\\frac{(\\boldsymbol\\alpha_2,\\boldsymbol\\beta_1)}{(\\boldsymbol\\beta_1,\\boldsymbol\\beta_1)}\\boldsymbol\\beta_1=(1,0,1)^{\\mathrm T}-\\frac12(1,1,0)^{\\mathrm T}=(\\frac12,-\\frac12,1)^{\\mathrm T}$，$\\|\\boldsymbol\\beta_2\\|^2=\\frac14+\\frac14+1=\\frac32=1.5$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算（与例 1 同数据，只问长度平方）"
+        }
+      ],
+      "varies": "只问 $\\|\\boldsymbol\\beta_2\\|^2$ 而不是单位化后的向量，避开了根号"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0305b",
+      "knowledge": [
+        "linalg.orthonormal"
+      ],
+      "stem": "下列矩阵中，是正交矩阵的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "\\begin{pmatrix}\\frac35 & \\frac45 \\\\ \\frac45 & \\frac35\\end{pmatrix}",
+          "\\begin{pmatrix}\\frac35 & -\\frac45 \\\\ \\frac45 & \\frac35\\end{pmatrix}",
+          "\\begin{pmatrix}1 & 1 \\\\ -1 & 1\\end{pmatrix}",
+          "\\begin{pmatrix}\\frac13 & \\frac23 \\\\ \\frac23 & \\frac13\\end{pmatrix}"
+        ],
+        "correct": 1
+      },
+      "solution": "正交矩阵要求列向量是标准正交基。B：两列 $(\\frac35,\\frac45)^{\\mathrm T},(-\\frac45,\\frac35)^{\\mathrm T}$ 长度都是 1，内积 $-\\frac{12}{25}+\\frac{12}{25}=0$，是。A：两列内积 $\\frac{12}{25}+\\frac{12}{25}=\\frac{24}{25}\\neq0$。C：两列正交但长度 $\\sqrt2$。D：列长 $\\frac{\\sqrt5}{3}\\neq1$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：正交矩阵 = 列向量标准正交（长度 + 正交，缺一不可）"
+        }
+      ],
+      "varies": "两个条件分开查：长度为 1，两两正交"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0305c",
+      "knowledge": [
+        "linalg.orthonormal"
+      ],
+      "stem": "设 $Q$ 为正交矩阵，则 $|Q|$ 的值只可能是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$1$",
+          "$-1$",
+          "$1$ 或 $-1$",
+          "任意实数"
+        ],
+        "correct": 2
+      },
+      "solution": "$Q^{\\mathrm T}Q=E$，两边取行列式：$|Q|^2=1$，所以 $|Q|=\\pm1$。两个值都能取到：单位矩阵 $|E|=1$，$\\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}$ 的行列式 $-1$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：由 Q^TQ=E 取行列式"
+        }
+      ],
+      "varies": "用行列式乘法定理从定义直接推出"
+    }
+  ]
+}

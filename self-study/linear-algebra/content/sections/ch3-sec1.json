@@ -1,0 +1,102 @@
+{
+  "id": "ch3-sec1",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0301",
+      "prompt": "先猜再验：向量 $(3,6)^{\\mathrm T}$ 能不能写成向量 $(1,2)^{\\mathrm T}$ 的**线性组合** $k\\,(1,2)^{\\mathrm T}$？",
+      "options": [
+        "能，$k=3$",
+        "不能，两个向量不同",
+        "能，$k=2$",
+        "无法判断"
+      ],
+      "correct": 0,
+      "explain": "线性组合就是「数乘再相加」，只有一个向量时就是数乘：$3\\cdot(1,2)^{\\mathrm T}=(3,6)^{\\mathrm T}$。判断「能否表示」就是问：是否存在这样的系数。",
+      "knowledge": [
+        "linalg.linear_combination"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜线性组合的含义，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**向量与线性组合**\n\n$n$ 个数排成一列 $\\boldsymbol\\alpha=(a_1,a_2,\\dots,a_n)^{\\mathrm T}$ 叫 $n$ **维向量**（本应用默认写成列向量，行写法加转置号），$a_i$ 是第 $i$ 个分量。全体 $n$ 维实向量的集合记作 $\\mathbb R^n$。向量就是 $n\\times1$ 矩阵，所以加法、数乘与矩阵相同：对应分量相加、每个分量乘 $k$。零向量 $\\boldsymbol0$ 的分量全是 0，$\\boldsymbol\\alpha$ 的负向量是 $-\\boldsymbol\\alpha$。\n\n给定向量 $\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s$ 和数 $k_1,\\dots,k_s$，\n$$k_1\\boldsymbol\\alpha_1+k_2\\boldsymbol\\alpha_2+\\cdots+k_s\\boldsymbol\\alpha_s$$\n叫这组向量的一个**线性组合**，$k_i$ 是组合系数。若 $\\boldsymbol\\beta$ 等于这样一个线性组合，就说 $\\boldsymbol\\beta$ 能由 $\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s$ **线性表出**（或线性表示）。\n\n**线性表出就是解方程组**：把 $\\boldsymbol\\alpha_j$ 作为列写成矩阵 $A=(\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s)$，$\\boldsymbol x=(x_1,\\dots,x_s)^{\\mathrm T}$，则（按列分块，§2.3）\n$$x_1\\boldsymbol\\alpha_1+\\cdots+x_s\\boldsymbol\\alpha_s=A\\boldsymbol x.$$\n所以「$\\boldsymbol\\beta$ 能否由 $\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s$ 线性表出」等价于「方程组 $A\\boldsymbol x=\\boldsymbol\\beta$ 有没有解」，解就是表出系数。第 4 章会系统地解这类方程组。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$\\boldsymbol\\beta$ 能由 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\alpha_3$ 线性表出，那么表出的系数是唯一的。",
+      "why_wrong": "可以表出，却不一定唯一。取 $\\boldsymbol\\alpha_1=(1,0)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(0,1)^{\\mathrm T},\\ \\boldsymbol\\alpha_3=(1,1)^{\\mathrm T}$，$\\boldsymbol\\beta=(2,3)^{\\mathrm T}$：$\\boldsymbol\\beta=2\\boldsymbol\\alpha_1+3\\boldsymbol\\alpha_2+0\\boldsymbol\\alpha_3$，也有 $\\boldsymbol\\beta=1\\boldsymbol\\alpha_1+2\\boldsymbol\\alpha_2+1\\boldsymbol\\alpha_3$。系数还可以取 0，这并不妨碍「能表出」。",
+      "right": "「能否表出」问有没有解，「系数是否唯一」问解是否唯一，两个问题要分开。唯一性与下一节的线性无关有关。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（把线性表出翻译成方程组）",
+      "problem": "设 $\\boldsymbol\\alpha_1=(1,1,0)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(0,1,1)^{\\mathrm T},\\ \\boldsymbol\\alpha_3=(1,0,1)^{\\mathrm T},\\ \\boldsymbol\\beta=(4,3,5)^{\\mathrm T}$。把 $\\boldsymbol\\beta$ 表示成 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\alpha_3$ 的线性组合。",
+      "steps": [
+        {
+          "text": "设 $x_1\\boldsymbol\\alpha_1+x_2\\boldsymbol\\alpha_2+x_3\\boldsymbol\\alpha_3=\\boldsymbol\\beta$，按分量写：$\\begin{cases}x_1+x_3=4\\\\ x_1+x_2=3\\\\ x_2+x_3=5\\end{cases}$。",
+          "why": "向量等式逐分量相等，一个向量等式就是 3 个数的方程。"
+        },
+        {
+          "text": "三式相加得 $2(x_1+x_2+x_3)=12$，$x_1+x_2+x_3=6$。分别减去各式：$x_2=6-4=2$，$x_3=6-3=3$，$x_1=6-5=1$。",
+          "why": "这个方程组的结构对称，加起来再逐个减比消元快。"
+        },
+        {
+          "text": "$\\boldsymbol\\beta=1\\cdot\\boldsymbol\\alpha_1+2\\boldsymbol\\alpha_2+3\\boldsymbol\\alpha_3$。检验：$(1,1,0)+(0,2,2)+(3,0,3)=(4,3,5)$。",
+          "why": "表出题一定要代回去检验，系数算错最常见。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，解已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0301a",
+      "knowledge": [
+        "linalg.vector_ops"
+      ],
+      "stem": "设 $\\boldsymbol\\alpha=(1,2,3)^{\\mathrm T},\\ \\boldsymbol\\beta=(-1,0,2)^{\\mathrm T}$，则 $2\\boldsymbol\\alpha-3\\boldsymbol\\beta$ 的第 3 个分量为",
+      "answer": {
+        "type": "numeric",
+        "value": 0
+      },
+      "solution": "$2\\boldsymbol\\alpha-3\\boldsymbol\\beta=(2+3,\\ 4-0,\\ 6-6)^{\\mathrm T}=(5,4,0)^{\\mathrm T}$，第 3 个分量为 $2\\times3-3\\times2=0$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值：向量线性运算的基础练习，已复算"
+        }
+      ],
+      "varies": "负号与数乘的先后：先乘系数，再逐分量相减"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0301b",
+      "knowledge": [
+        "linalg.linear_combination"
+      ],
+      "stem": "仍取例 1 中的 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\alpha_3$，设 $\\boldsymbol\\beta=(5,4,3)^{\\mathrm T}$ 并写成 $\\boldsymbol\\beta=x_1\\boldsymbol\\alpha_1+x_2\\boldsymbol\\alpha_2+x_3\\boldsymbol\\alpha_3$，则 $x_3=$",
+      "answer": {
+        "type": "numeric",
+        "value": 2
+      },
+      "solution": "方程组 $\\begin{cases}x_1+x_3=5\\\\ x_1+x_2=4\\\\ x_2+x_3=3\\end{cases}$，三式相加得 $x_1+x_2+x_3=6$。$x_3=6-4=2$（$x_1=3,\\ x_2=1$）。检验：$3(1,1,0)+(0,1,1)+2(1,0,1)=(5,4,3)$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，解已复算"
+        }
+      ],
+      "varies": "同一组向量换一个 $\\boldsymbol\\beta$：先判断可表出，再解系数"
+    }
+  ]
+}

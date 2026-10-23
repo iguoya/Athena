@@ -1,0 +1,113 @@
+{
+  "id": "ch3-sec3",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0303",
+      "prompt": "先猜再验：向量组 $\\boldsymbol\\alpha_1=(1,0)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(0,1)^{\\mathrm T},\\ \\boldsymbol\\alpha_3=(1,1)^{\\mathrm T}$ 里，**最多**能挑出几个线性无关的向量？",
+      "options": [
+        "1 个",
+        "2 个",
+        "3 个",
+        "挑不出"
+      ],
+      "correct": 1,
+      "explain": "3 个 2 维向量必相关，所以最多 2 个。挑出的 2 个（如 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2$）线性无关，再加任何一个都变成相关——这样的部分组叫**极大线性无关组**。",
+      "knowledge": [
+        "linalg.max_indep"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜极大无关组的个数，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**极大线性无关组**\n\n向量组 $T$ 的一个部分组 $\\boldsymbol\\alpha_{i_1},\\dots,\\boldsymbol\\alpha_{i_r}$ 若满足：(1) 它线性无关；(2) 从 $T$ 里再任取一个向量加进去就线性相关，则称为 $T$ 的一个**极大线性无关组**。$T$ 里每个向量都能由它线性表出，它是 $T$ 的「骨架」。\n\n极大线性无关组**不唯一**（上面例子里 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_3$ 也是），但**所含向量个数相同**，这个个数就是向量组的**秩**（§3.4）。\n\n**求法（行变换法）**：把向量作为**列**排成矩阵 $A=(\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s)$，只做**初等行变换**化成行最简形。\n- **主元（每行第一个非零元）所在的列**，对应的原向量就是一个极大线性无关组；\n- 其余列在最简形里的**坐标**，就是该向量由极大线性无关组表出的系数。\n\n必须只用行变换：行变换不改变各列之间的线性关系（相当于左乘可逆矩阵），列变换会改变。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "求极大无关组时，行变换、列变换都可以用，反正秩不变。",
+      "why_wrong": "秩确实不变，但「哪些列线性相关、表出系数是多少」只有行变换才保持。例：$\\begin{pmatrix}1&1\\\\0&0\\end{pmatrix}$ 两列相等，$\\boldsymbol\\alpha_2=\\boldsymbol\\alpha_1$；若做列变换 $c_2-c_1$ 得 $\\begin{pmatrix}1&0\\\\0&0\\end{pmatrix}$，两列不再有「相等」的关系，原来的表出关系就读不出来了。",
+      "right": "求极大线性无关组与表出系数：**只用初等行变换**，向量按列排。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（秩、极大无关组、表出）",
+      "problem": "求向量组 $\\boldsymbol\\alpha_1=(2,1,3,-1)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(3,-1,2,0)^{\\mathrm T},\\ \\boldsymbol\\alpha_3=(1,3,4,-2)^{\\mathrm T},\\ \\boldsymbol\\alpha_4=(4,-3,1,1)^{\\mathrm T}$ 的秩和一个极大线性无关组，并将其余向量由该极大线性无关组线性表出。",
+      "steps": [
+        {
+          "text": "以四个向量为列：$A=\\begin{pmatrix}2 & 3 & 1 & 4 \\\\ 1 & -1 & 3 & -3 \\\\ 3 & 2 & 4 & 1 \\\\ -1 & 0 & -2 & 1\\end{pmatrix}$。",
+          "why": "向量作列，只做行变换。"
+        },
+        {
+          "text": "$r_1\\leftrightarrow r_2$，再 $r_2-2r_1,\\ r_3-3r_1,\\ r_4+r_1$：$\\begin{pmatrix}1 & -1 & 3 & -3 \\\\ 0 & 5 & -5 & 10 \\\\ 0 & 5 & -5 & 10 \\\\ 0 & -1 & 1 & -2\\end{pmatrix}$。",
+          "why": "把 1 换到左上角，避免分数。第 2、3 行出现完全相同的行。"
+        },
+        {
+          "text": "$r_3-r_2,\\ r_4+\\frac15r_2$ 得两行零；$\\frac15r_2$，再 $r_1+r_2$：最简形 $\\begin{pmatrix}1 & 0 & 2 & -1 \\\\ 0 & 1 & -1 & 2 \\\\ 0 & 0 & 0 & 0 \\\\ 0 & 0 & 0 & 0\\end{pmatrix}$。",
+          "why": "最简形里主元在第 1、2 列，非零行 2 行。"
+        },
+        {
+          "text": "秩为 2；$\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2$ 是一个极大线性无关组。由第 3、4 列的坐标：$\\boldsymbol\\alpha_3=2\\boldsymbol\\alpha_1-\\boldsymbol\\alpha_2$，$\\boldsymbol\\alpha_4=-\\boldsymbol\\alpha_1+2\\boldsymbol\\alpha_2$。",
+          "why": "检验 $\\boldsymbol\\alpha_3$：$2(2,1,3,-1)-(3,-1,2,0)=(1,3,4,-2)$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 19 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0303a",
+      "knowledge": [
+        "linalg.max_indep_find"
+      ],
+      "stem": "设 $\\boldsymbol\\alpha_1=(1,2,1)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(2,1,3)^{\\mathrm T},\\ \\boldsymbol\\alpha_3=(1,-1,2)^{\\mathrm T}$。若 $\\boldsymbol\\alpha_3=k_1\\boldsymbol\\alpha_1+k_2\\boldsymbol\\alpha_2$，则 $k_1=$",
+      "answer": {
+        "type": "numeric",
+        "value": -1
+      },
+      "solution": "$\\boldsymbol\\alpha_2-\\boldsymbol\\alpha_1=(1,-1,2)^{\\mathrm T}=\\boldsymbol\\alpha_3$，所以 $\\boldsymbol\\alpha_3=-\\boldsymbol\\alpha_1+\\boldsymbol\\alpha_2$，$k_1=-1,\\ k_2=1$。也可按列排成矩阵化最简形，第 3 列坐标就是 $(-1,1)$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，表出关系已复算"
+        }
+      ],
+      "varies": "已知表出成立，求系数：可以观察，也可以化最简形读坐标"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0303b",
+      "knowledge": [
+        "linalg.max_indep"
+      ],
+      "stem": "关于向量组的极大线性无关组，下列说法**正确**的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "极大线性无关组是唯一的",
+          "同一向量组的两个极大线性无关组所含向量个数相等",
+          "极大线性无关组一定含有零向量",
+          "向量组里的任意一个线性无关部分组都是极大的"
+        ],
+        "correct": 1
+      },
+      "solution": "组合不唯一，但个数相等（等于秩）。极大无关组由线性无关的向量组成，不含零向量。线性无关的部分组不一定极大：还可能再加向量保持无关。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：极大线性无关组的概念"
+        }
+      ],
+      "varies": "区分『极大』（不能再加）与『无关』（只要求无关）"
+    }
+  ]
+}
