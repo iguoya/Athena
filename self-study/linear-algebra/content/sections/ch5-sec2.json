@@ -1,0 +1,156 @@
+{
+  "id": "ch5-sec2",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0502",
+      "prompt": "先猜再验：$B=P^{-1}AP$（$P$ 可逆），称 $A$ 与 $B$ **相似**。下列哪一项在相似下**一定不变**？",
+      "options": [
+        "特征值",
+        "矩阵的每个元素",
+        "属于每个特征值的特征向量",
+        "是否为对称矩阵"
+      ],
+      "correct": 0,
+      "explain": "$|\\lambda E-B|=|P^{-1}(\\lambda E-A)P|=|\\lambda E-A|$，特征多项式相同，特征值相同。元素当然会变；特征向量要乘 $P^{-1}$ 才对应；对称性也不一定保持。",
+      "knowledge": [
+        "linalg.similar"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜相似不变量，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**相似矩阵与对角化**\n\n**相似**：存在可逆矩阵 $P$ 使 $P^{-1}AP=B$，记 $A\\sim B$。相似是等价关系，相似的矩阵有相同的：特征多项式（故特征值）、行列式、迹、秩、可逆性。\n\n**对角化**：若 $A$ 相似于对角矩阵 $\\Lambda$，即 $P^{-1}AP=\\Lambda=\\operatorname{diag}(\\lambda_1,\\dots,\\lambda_n)$，称 $A$ **可对角化**。\n\n**判定**\n- $A$ 可对角化 $\\iff A$ 有 $n$ 个线性无关的特征向量。\n- 等价：每个特征值 $\\lambda_i$ 的**几何重数** $n-r(\\lambda_iE-A)$（该特征子空间的维数）等于它的**代数重数**。\n- 充分条件：$A$ 有 $n$ 个**互不相同**的特征值。\n\n**怎么对角化**：求出 $n$ 个线性无关的特征向量 $\\boldsymbol\\xi_1,\\dots,\\boldsymbol\\xi_n$（对应特征值 $\\lambda_1,\\dots,\\lambda_n$），令 $P=(\\boldsymbol\\xi_1,\\dots,\\boldsymbol\\xi_n)$，则 $P^{-1}AP=\\operatorname{diag}(\\lambda_1,\\dots,\\lambda_n)$。**$P$ 的第 $i$ 列与 $\\Lambda$ 的第 $i$ 个对角元要对应。**\n\n**应用**：$A=P\\Lambda P^{-1}$，所以 $A^k=P\\Lambda^kP^{-1}$，$\\Lambda^k=\\operatorname{diag}(\\lambda_1^k,\\dots,\\lambda_n^k)$ 很容易算。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "特征方程有重根，所以矩阵不能对角化。",
+      "why_wrong": "看的是**几何重数**。例：$A=\\begin{pmatrix}2&0&0\\\\0&3&1\\\\0&1&3\\end{pmatrix}$，特征值 $2,2,4$，2 是二重根。但 $2E-A=\\begin{pmatrix}0&0&0\\\\0&-1&-1\\\\0&-1&-1\\end{pmatrix}$ 秩为 1，几何重数 $3-1=2$，等于代数重数，所以 $A$ 可对角化。",
+      "right": "重根不是障碍，障碍是「几何重数小于代数重数」。判定一律看每个特征值 $\\lambda$ 的 $n-r(\\lambda E-A)$。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（几何重数不够：不可对角化）",
+      "problem": "设 $A=\\begin{pmatrix}1&-1&-1\\\\-3&0&2\\\\-3&1&1\\end{pmatrix}$，判定 $A$ 是否可对角化并说明理由。",
+      "steps": [
+        {
+          "text": "特征多项式 $|\\lambda E-A|=(\\lambda-4)(\\lambda+1)^2$，特征值 $4$（单根）与 $-1$（二重根）。",
+          "why": "迹检验：$4-1-1=2=1+0+1=\\operatorname{tr}A$。"
+        },
+        {
+          "text": "二重根 $\\lambda=-1$：$A+E=\\begin{pmatrix}2&-1&-1\\\\-3&1&2\\\\-3&1&2\\end{pmatrix}$，两行相同，前两行不成比例，$r(A+E)=2$。",
+          "why": "几何重数 $=n-r(\\lambda E-A)=3-2=1$。这里 $\\lambda E-A=-(A+E)$，秩相同。"
+        },
+        {
+          "text": "几何重数 $1<$ 代数重数 $2$，所以 $A$ 只有 $1+1=2$ 个线性无关的特征向量，**不可对角化**。",
+          "why": "单根 4 提供 1 个特征向量，$\\lambda=-1$ 只提供 1 个，凑不够 3 个。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 21 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（对角化并求矩阵的幂）",
+      "problem": "设 $A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}$。求可逆矩阵 $P$ 使 $P^{-1}AP$ 为对角矩阵，并求 $A^n$。",
+      "steps": [
+        {
+          "text": "由 §5.1 例 1：$\\lambda_1=1,\\ \\boldsymbol\\xi_1=(1,-1)^{\\mathrm T}$；$\\lambda_2=3,\\ \\boldsymbol\\xi_2=(1,1)^{\\mathrm T}$。两个不同特征值，必可对角化。令 $P=\\begin{pmatrix}1&1\\\\-1&1\\end{pmatrix}$，则 $P^{-1}AP=\\begin{pmatrix}1&0\\\\0&3\\end{pmatrix}$。",
+          "why": "列的顺序与对角元顺序一致：第 1 列对应 1，第 2 列对应 3。"
+        },
+        {
+          "text": "$P^{-1}=\\dfrac12\\begin{pmatrix}1&-1\\\\1&1\\end{pmatrix}$。$A^n=P\\begin{pmatrix}1&0\\\\0&3^n\\end{pmatrix}P^{-1}=\\dfrac12\\begin{pmatrix}3^n+1&3^n-1\\\\3^n-1&3^n+1\\end{pmatrix}$。",
+          "why": "$P\\Lambda^n=\\begin{pmatrix}1&3^n\\\\-1&3^n\\end{pmatrix}$，再右乘 $P^{-1}$。检验 $n=1$ 得 $\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算（A³ = [[14,13],[13,14]]）"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0502a",
+      "knowledge": [
+        "linalg.diagonalize_compute"
+      ],
+      "stem": "设 $A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}$，则 $A^3$ 的第 1 行第 2 列元素为",
+      "answer": {
+        "type": "numeric",
+        "value": 13
+      },
+      "solution": "由例 2，$A^n$ 的 $(1,2)$ 元素为 $\\frac12(3^n-1)$，$n=3$：$\\frac12(27-1)=13$。直接验算：$A^2=\\begin{pmatrix}5&4\\\\4&5\\end{pmatrix}$，$A^3=A^2A=\\begin{pmatrix}14&13\\\\13&14\\end{pmatrix}$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "用 $P\\Lambda^nP^{-1}$ 的公式与直接乘两种方法互相检验"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0502b",
+      "knowledge": [
+        "linalg.diagonalizable"
+      ],
+      "stem": "下列矩阵中，**不能**对角化的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\begin{pmatrix}2&0\\\\0&2\\end{pmatrix}$",
+          "$\\begin{pmatrix}2&1\\\\0&2\\end{pmatrix}$",
+          "$\\begin{pmatrix}1&2\\\\2&1\\end{pmatrix}$",
+          "$\\begin{pmatrix}1&0\\\\0&3\\end{pmatrix}$"
+        ],
+        "correct": 1
+      },
+      "solution": "B：特征值 2（二重），$2E-A=\\begin{pmatrix}0&-1\\\\0&0\\end{pmatrix}$ 秩 1，几何重数 $2-1=1<2$，不可对角化。A 本身是对角阵（几何重数 2 = 代数重数）；C 是实对称矩阵，一定可以；D 已是对角阵。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：重根不等于不可对角化，几何重数不足才是"
+        }
+      ],
+      "varies": "A 与 B 同样有二重特征值 2，区别只在几何重数"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0502c",
+      "knowledge": [
+        "linalg.similar"
+      ],
+      "stem": "设 $A$ 与 $B$ 相似，则下列结论**不一定**成立的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$|A|=|B|$",
+          "$r(A)=r(B)$",
+          "$A=B$",
+          "$\\operatorname{tr}A=\\operatorname{tr}B$"
+        ],
+        "correct": 2
+      },
+      "solution": "相似保持行列式、秩、迹、特征值，但元素一般不同：$B=P^{-1}AP$ 与 $A$ 相等只在 $A$ 与 $P$ 可交换时才成立。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：相似不变量"
+        }
+      ],
+      "varies": "把『相似』与『相等』区分开"
+    }
+  ]
+}

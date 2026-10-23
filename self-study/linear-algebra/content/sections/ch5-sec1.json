@@ -1,0 +1,187 @@
+{
+  "id": "ch5-sec1",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0501",
+      "prompt": "先猜再验：$A=\\begin{pmatrix}2&0\\\\0&3\\end{pmatrix}$，向量 $\\boldsymbol x=(1,0)^{\\mathrm T}$。$A\\boldsymbol x$ 与 $\\boldsymbol x$ 的关系是",
+      "options": [
+        "$A\\boldsymbol x=2\\boldsymbol x$（方向不变，只伸长 2 倍）",
+        "$A\\boldsymbol x=3\\boldsymbol x$",
+        "$A\\boldsymbol x=\\boldsymbol0$",
+        "方向和长度都改变"
+      ],
+      "correct": 0,
+      "explain": "$A\\boldsymbol x=(2,0)^{\\mathrm T}=2\\boldsymbol x$。矩阵乘向量一般会同时改变方向和长度；少数特殊方向上只拉伸，这些方向就是**特征向量**，拉伸倍数就是**特征值**。",
+      "knowledge": [
+        "linalg.eigen_def"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜矩阵作用的几何含义，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**特征值与特征向量**\n\n对 $n$ 阶方阵 $A$，若存在数 $\\lambda$ 和**非零**向量 $\\boldsymbol x$ 使\n$$A\\boldsymbol x=\\lambda\\boldsymbol x,$$\n则称 $\\lambda$ 为 $A$ 的**特征值**，$\\boldsymbol x$ 是属于 $\\lambda$ 的**特征向量**。零向量总满足上式，但**不算**特征向量。\n\n**求法**：$A\\boldsymbol x=\\lambda\\boldsymbol x\\iff(\\lambda E-A)\\boldsymbol x=\\boldsymbol0$。要它有非零解，必须 $|\\lambda E-A|=0$（§4.2：方阵的齐次方程组有非零解 $\\iff$ 行列式为 0）。\n1. 解**特征方程** $|\\lambda E-A|=0$（左边叫特征多项式，$n$ 次），得特征值；$\\lambda_i$ 作为根的重数叫**代数重数**。\n2. 对每个特征值 $\\lambda_i$，解齐次方程组 $(\\lambda_iE-A)\\boldsymbol x=\\boldsymbol0$，其**基础解系**的任意非零线性组合都是属于 $\\lambda_i$ 的特征向量。\n\n**性质**（$\\lambda_1,\\dots,\\lambda_n$ 为 $A$ 的 $n$ 个特征值，计重数）：\n- $\\lambda_1+\\cdots+\\lambda_n=\\operatorname{tr}A$（对角线元素之和），$\\lambda_1\\lambda_2\\cdots\\lambda_n=|A|$。\n- $A$ 可逆 $\\iff0$ 不是特征值。\n- 若 $A\\boldsymbol x=\\lambda\\boldsymbol x$，则 $kA,\\ A^m,\\ f(A)$（$f$ 为多项式）、$A^{-1}$、$A^{*}$ 有同一个特征向量 $\\boldsymbol x$，特征值依次为 $k\\lambda,\\ \\lambda^m,\\ f(\\lambda),\\ \\lambda^{-1},\\ |A|/\\lambda$。\n- $A$ 与 $A^{\\mathrm T}$ 有相同的特征值。\n- **属于不同特征值的特征向量线性无关。**"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$\\boldsymbol\\xi_1,\\boldsymbol\\xi_2$ 是属于不同特征值的特征向量，那么 $\\boldsymbol\\xi_1+\\boldsymbol\\xi_2$ 也是 $A$ 的特征向量。",
+      "why_wrong": "反例：$A=\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}$，$\\boldsymbol\\xi_1=(1,0)^{\\mathrm T}$（$\\lambda=1$），$\\boldsymbol\\xi_2=(0,1)^{\\mathrm T}$（$\\lambda=2$）。$A(\\boldsymbol\\xi_1+\\boldsymbol\\xi_2)=(1,2)^{\\mathrm T}$，不是 $\\boldsymbol\\xi_1+\\boldsymbol\\xi_2=(1,1)^{\\mathrm T}$ 的倍数。",
+      "right": "只有属于**同一个**特征值的特征向量，它们的非零线性组合才仍是该特征值的特征向量。不同特征值的特征向量之和不是特征向量。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（求特征值与特征向量）",
+      "problem": "求 $A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}$ 的特征值与特征向量。",
+      "steps": [
+        {
+          "text": "$|\\lambda E-A|=\\begin{vmatrix}\\lambda-2&-1\\\\-1&\\lambda-2\\end{vmatrix}=(\\lambda-2)^2-1=(\\lambda-1)(\\lambda-3)$，特征值 $\\lambda_1=1,\\ \\lambda_2=3$。",
+          "why": "检验：$1+3=4=\\operatorname{tr}A$，$1\\times3=3=|A|$。"
+        },
+        {
+          "text": "$\\lambda_1=1$：$(E-A)\\boldsymbol x=\\begin{pmatrix}-1&-1\\\\-1&-1\\end{pmatrix}\\boldsymbol x=\\boldsymbol0$，$x_1=-x_2$，取 $\\boldsymbol\\xi_1=(1,-1)^{\\mathrm T}$。",
+          "why": "两行成比例，系数矩阵秩为 1，基础解系含 $2-1=1$ 个向量。"
+        },
+        {
+          "text": "$\\lambda_2=3$：$(3E-A)\\boldsymbol x=\\begin{pmatrix}1&-1\\\\-1&1\\end{pmatrix}\\boldsymbol x=\\boldsymbol0$，$x_1=x_2$，$\\boldsymbol\\xi_2=(1,1)^{\\mathrm T}$。属于 1、3 的特征向量分别是 $k_1\\boldsymbol\\xi_1,\\ k_2\\boldsymbol\\xi_2$（$k_i\\neq0$）。",
+          "why": "验证：$A\\boldsymbol\\xi_2=(2+1,\\ 1+2)^{\\mathrm T}=3\\boldsymbol\\xi_2$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，特征对已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（特征值的性质）",
+      "problem": "3 阶方阵 $A$ 的特征值为 $1,2,4$。求 $|A|$，$\\operatorname{tr}A$，并说明 $A^2-2A$ 是否可逆。",
+      "steps": [
+        {
+          "text": "$|A|=1\\times2\\times4=8$；$\\operatorname{tr}A=1+2+4=7$。",
+          "why": "行列式是特征值之积，迹是特征值之和。"
+        },
+        {
+          "text": "$f(x)=x^2-2x$，$f(A)=A^2-2A$ 的特征值为 $f(1),f(2),f(4)=-1,\\ 0,\\ 8$。",
+          "why": "多项式 $f(A)$ 的特征值是 $f(\\lambda)$。"
+        },
+        {
+          "text": "其中有 0，所以 $A^2-2A$ **不可逆**（$|A^2-2A|=(-1)\\cdot0\\cdot8=0$）。",
+          "why": "不必把 $A$ 求出来，只靠特征值就能判断。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；特征值性质的典型用法"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0501a",
+      "knowledge": [
+        "linalg.eigen_props"
+      ],
+      "stem": "设 2 阶矩阵 $A$ 满足 $|2E+A|=0$，$|3A-E|=0$，则 $|A|=$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$-\\dfrac{3}{2}$",
+          "$-\\dfrac{2}{3}$",
+          "$\\dfrac{2}{3}$",
+          "$\\dfrac{3}{2}$"
+        ],
+        "correct": 1
+      },
+      "solution": "$|2E+A|=0$ 说明 $-2$ 是 $A$ 的特征值；$|3A-E|=0$ 即 $|A-\\frac13E|=0$（两边除以 $3^2$ 不影响为 0），说明 $\\frac13$ 是特征值。2 阶矩阵只有 2 个特征值，就是 $-2$ 与 $\\frac13$，所以 $|A|=-2\\times\\frac13=-\\frac23$。",
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 4 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ],
+      "varies": "把『行列式为 0』读成『特征值』：$|\\lambda E-A|=0$ 的形式要认出来"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0501b",
+      "knowledge": [
+        "linalg.eigen_props"
+      ],
+      "stem": "设 $\\lambda=-\\dfrac{2}{3}$ 为 $n$ 阶矩阵 $A$ 的一个特征值，则矩阵 $2E-3A^{2}$ 必有一个特征值为",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\dfrac{2}{3}$",
+          "$-\\dfrac{2}{3}$",
+          "$\\dfrac{14}{3}$",
+          "$\\dfrac{4}{3}$"
+        ],
+        "correct": 0
+      },
+      "solution": "$f(x)=2-3x^2$，$f(A)$ 的特征值是 $f(\\lambda)=2-3\\cdot\\frac49=2-\\frac43=\\frac23$。常数项 $2E$ 对应 $2$ 而不是 $2\\lambda$。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "locator": "全国 2018 年 4 月 第 13 题",
+          "note": "原题为填空题，这里改为选择题并自拟三个干扰项；条件与矩阵多项式原样不变"
+        }
+      ],
+      "varies": "代入 $f(\\lambda)$ 时常数项 $2E$ 对应常数 2，平方项才用到 $\\lambda^2$"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0501c",
+      "knowledge": [
+        "linalg.eigen_props"
+      ],
+      "stem": "设 3 阶方阵 $A$ 的特征值为 $1,2,4$，则 $|A+E|=$",
+      "answer": {
+        "type": "numeric",
+        "value": 30
+      },
+      "solution": "$A+E$ 的特征值为 $1+1,\\ 2+1,\\ 4+1=2,3,5$，行列式是特征值之积：$2\\times3\\times5=30$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值：用特征值求行列式"
+        }
+      ],
+      "varies": "$A+E$ 的特征值是 $\\lambda+1$，不是 $\\lambda$"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0501d",
+      "knowledge": [
+        "linalg.eigen_def"
+      ],
+      "stem": "设 $\\boldsymbol\\xi_1,\\boldsymbol\\xi_2$ 是 $A$ 的属于**同一个**特征值 $\\lambda$ 的两个**线性无关**的特征向量，则下列说法正确的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\boldsymbol\\xi_1+\\boldsymbol\\xi_2$ 是属于 $\\lambda$ 的特征向量",
+          "$\\boldsymbol\\xi_1+\\boldsymbol\\xi_2$ 是属于 $2\\lambda$ 的特征向量",
+          "零向量是属于 $\\lambda$ 的特征向量",
+          "$\\boldsymbol\\xi_1+\\boldsymbol\\xi_2$ 不是 $A$ 的特征向量"
+        ],
+        "correct": 0
+      },
+      "solution": "$A(\\boldsymbol\\xi_1+\\boldsymbol\\xi_2)=\\lambda\\boldsymbol\\xi_1+\\lambda\\boldsymbol\\xi_2=\\lambda(\\boldsymbol\\xi_1+\\boldsymbol\\xi_2)$，且两向量线性无关保证和非零，所以是属于 $\\lambda$ 的特征向量。B 把特征值写错成 $2\\lambda$；C 零向量不算特征向量；D 与上面的推导矛盾。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：同一特征值的线性组合"
+        }
+      ],
+      "varies": "与上面陷阱对照：同一特征值可以相加，不同特征值不行"
+    }
+  ]
+}
