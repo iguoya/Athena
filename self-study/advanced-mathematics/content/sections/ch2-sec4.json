@@ -1,0 +1,251 @@
+{
+  "id": "ch2-sec4",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0204",
+      "prompt": "先猜再验：$z=x^2+y^2$ 在原点处 $z_x=z_y=0$。原点是极大值点、极小值点，还是都不是？",
+      "options": [
+        "极大值点",
+        "极小值点",
+        "都不是",
+        "无法判断"
+      ],
+      "correct": 1,
+      "explain": "$z=x^2+y^2\\ge0=z(0,0)$，原点是最低点，**极小值点**（见下图左）。偏导数同时为零的点叫**驻点**，它是极值点的候选，但不一定是极值点——$z=xy$ 在原点也有 $z_x=z_y=0$，却是「鞍点」。",
+      "knowledge": [
+        "advmath.extremum"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜驻点的类型，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**极值、条件极值、几何应用、方向导数与梯度**\n\n**极值**\n- **必要条件**：可微函数在极值点处 $f_x=f_y=0$（驻点）。\n- **充分条件**：在驻点处记 $A=f_{xx},\\ B=f_{xy},\\ C=f_{yy}$，$\\Delta=AC-B^2$：$\\Delta>0$ 且 $A>0$ 为**极小**，$\\Delta>0$ 且 $A<0$ 为**极大**，$\\Delta<0$ **不是极值**（鞍点），$\\Delta=0$ 不能判定。\n- **最值**：有界闭区域上的连续函数必有最值；比较**区域内驻点**与**边界上**的函数值。\n\n**条件极值（拉格朗日乘数法）**：求 $f(x,y)$ 在约束 $\\varphi(x,y)=0$ 下的极值：令 $L=f+\\lambda\\varphi$，解 $L_x=0,\\ L_y=0,\\ \\varphi=0$，得到的点是可能的极值点。\n\n**几何应用**\n- 曲面 $F(x,y,z)=0$ 在 $M_0$ 的**法向量** $\\boldsymbol n=(F_x,F_y,F_z)|_{M_0}$。**切平面**：$F_x(x-x_0)+F_y(y-y_0)+F_z(z-z_0)=0$。**法线**：$\\dfrac{x-x_0}{F_x}=\\dfrac{y-y_0}{F_y}=\\dfrac{z-z_0}{F_z}$。（曲面 $z=f(x,y)$ 取 $F=f(x,y)-z$。）\n- 空间曲线 $x=x(t),y=y(t),z=z(t)$ 在 $t_0$ 的切向量 $\\boldsymbol T=(x'(t_0),y'(t_0),z'(t_0))$。\n\n**方向导数与梯度**：$f(x,y)$ 的**梯度** $\\nabla f=(f_x,\\ f_y)$。沿单位方向 $\\boldsymbol e_l=(\\cos\\alpha,\\cos\\beta)$ 的**方向导数**\n$$\\frac{\\partial f}{\\partial l}=f_x\\cos\\alpha+f_y\\cos\\beta=\\nabla f\\cdot\\boldsymbol e_l.$$\n梯度的方向是 $f$ **增加最快**的方向，最大的方向导数等于梯度的模 $|\\nabla f|$；梯度垂直于等高线。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch2-sec4-extrema.svg",
+      "caption": "驻点的三种情形（黑点是原点，三个函数在原点都有 $z_x=z_y=0$）：$z=x^2+y^2$ 极小，$z=-x^2-y^2$ 极大，$z=xy$ 是鞍点——沿 $y=x$ 方向上升，沿 $y=-x$ 方向下降，不是极值。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch2-sec4-gradient.svg",
+      "caption": "$f=x^2+2y^2$ 的等高线（椭圆）与几个点处的梯度（箭头）：梯度处处垂直于等高线、指向函数增大最快的一侧。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "驻点一定是极值点。",
+      "why_wrong": "驻点只是极值的**必要**条件。$z=xy$：$z_x=y,\\ z_y=x$，驻点 $(0,0)$；$A=z_{xx}=0,\\ B=z_{xy}=1,\\ C=z_{yy}=0$，$\\Delta=AC-B^2=-1<0$，所以不是极值点（在原点附近既有 $z>0$ 又有 $z<0$）。",
+      "right": "求出驻点后必须用 $\\Delta=AC-B^2$ 判别；$\\Delta<0$ 的驻点不是极值点。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（无条件极值）",
+      "problem": "求 $f(x,y)=x^3-3x+y^2$ 的极值。",
+      "steps": [
+        {
+          "text": "$f_x=3x^2-3=0\\Rightarrow x=\\pm1$；$f_y=2y=0\\Rightarrow y=0$。驻点 $(1,0),\\ (-1,0)$。",
+          "why": "两个偏导数同时为 0，解联立方程。"
+        },
+        {
+          "text": "二阶偏导数：$A=f_{xx}=6x,\\ B=f_{xy}=0,\\ C=f_{yy}=2$。",
+          "why": "在每个驻点分别代入。"
+        },
+        {
+          "text": "$(1,0)$：$A=6>0,\\ \\Delta=6\\cdot2-0=12>0$，**极小值** $f(1,0)=1-3=-2$。$(-1,0)$：$\\Delta=(-6)\\cdot2=-12<0$，**不是极值点**。",
+          "why": "两个驻点结论不同，要分别判断。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，驻点与极值已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（拉格朗日乘数法）",
+      "problem": "在直线 $x+y=2$ 上求 $f=xy$ 的最大值。",
+      "steps": [
+        {
+          "text": "$L=xy+\\lambda(x+y-2)$。$L_x=y+\\lambda=0,\\ L_y=x+\\lambda=0,\\ x+y=2$。",
+          "why": "把约束写成 $\\varphi=x+y-2=0$。"
+        },
+        {
+          "text": "由前两式 $x=y=-\\lambda$，代入第三式 $x=y=1$，$f=1$。这是唯一的可能极值点；由 $xy\\le\\left(\\frac{x+y}{2}\\right)^2=1$ 知它是**最大值** 1。",
+          "why": "拉格朗日法给出候选点，是不是最大还要结合问题本身判断。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（切平面与法线）",
+      "problem": "求曲面 $z=x^2+y^2$ 在点 $(1,2,5)$ 处的切平面方程和法线方程。",
+      "steps": [
+        {
+          "text": "令 $F=x^2+y^2-z$，$F_x=2x,\\ F_y=2y,\\ F_z=-1$，在 $(1,2,5)$：法向量 $\\boldsymbol n=(2,4,-1)$。",
+          "why": "代入点的坐标，注意 $F_z$ 是 $-1$。"
+        },
+        {
+          "text": "切平面：$2(x-1)+4(y-2)-(z-5)=0$，即 $2x+4y-z-5=0$。法线：$\\dfrac{x-1}{2}=\\dfrac{y-2}{4}=\\dfrac{z-5}{-1}$。",
+          "why": "检验切点在平面上：$2+8-5-5=0$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 4（方向导数与梯度）",
+      "problem": "设 $f=x^2y$，求在点 $(1,2)$ 处沿方向 $\\boldsymbol l=(3,4)$ 的方向导数，以及方向导数的最大值。",
+      "steps": [
+        {
+          "text": "$\\nabla f=(2xy,\\ x^2)$，在 $(1,2)$：$(4,1)$。",
+          "why": "先求梯度。"
+        },
+        {
+          "text": "$\\boldsymbol l$ 的单位向量 $\\boldsymbol e_l=\\left(\\dfrac35,\\dfrac45\\right)$。$\\dfrac{\\partial f}{\\partial l}=4\\cdot\\dfrac35+1\\cdot\\dfrac45=\\dfrac{16}5$。",
+          "why": "方向导数是梯度与**单位**方向向量的数量积，别忘了把 $(3,4)$ 单位化。"
+        },
+        {
+          "text": "最大方向导数 $=|\\nabla f|=\\sqrt{16+1}=\\sqrt{17}$，方向是梯度方向 $(4,1)$。",
+          "why": "$\\sqrt{17}\\approx4.12>3.2$，符合「梯度方向增加最快」。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0204a",
+      "knowledge": [
+        "advmath.extremum"
+      ],
+      "stem": "函数 $f(x,y)=x^2+y^2-2x+4y$ 的极小值为",
+      "answer": {
+        "type": "numeric",
+        "value": -5
+      },
+      "solution": "$f_x=2x-2=0,\\ f_y=2y+4=0$，驻点 $(1,-2)$；$A=2,\\ B=0,\\ C=2$，$\\Delta=4>0,\\ A>0$，极小。$f(1,-2)=1+4-2-8=-5$。（也可配方：$(x-1)^2+(y+2)^2-5$。）",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "二次函数配方与偏导数两种方法对照"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0204b",
+      "knowledge": [
+        "advmath.extremum"
+      ],
+      "stem": "函数 $z=xy$ 在点 $(0,0)$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "取极大值",
+          "取极小值",
+          "不取极值（驻点但是鞍点）",
+          "不可导"
+        ],
+        "correct": 2
+      },
+      "solution": "$z_x=y,\\ z_y=x$，$(0,0)$ 是驻点；$A=0,\\ B=1,\\ C=0$，$\\Delta=-1<0$，不是极值。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：驻点不一定是极值点"
+        }
+      ],
+      "varies": "可导且驻点，但 $\\Delta<0$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0204c",
+      "knowledge": [
+        "advmath.lagrange"
+      ],
+      "stem": "在约束 $x+y=2$ 下，$f=x^2+y^2$ 的最小值为",
+      "answer": {
+        "type": "numeric",
+        "value": 2
+      },
+      "solution": "$L=x^2+y^2+\\lambda(x+y-2)$：$2x+\\lambda=0,\\ 2y+\\lambda=0$，所以 $x=y=1$，$f=2$。几何上这是原点到直线 $x+y=2$ 的最短距离的平方：距离 $\\sqrt2$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "拉格朗日乘数法与几何意义（点到直线距离）互相检验"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0204d",
+      "knowledge": [
+        "advmath.tangent_plane"
+      ],
+      "stem": "曲面 $z=x^2+y^2$ 在点 $(1,2,5)$ 处的切平面方程为",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$2x+4y-z-5=0$",
+          "$2x+4y+z-15=0$",
+          "$x+2y-z=0$",
+          "$2x+4y-z=0$"
+        ],
+        "correct": 0
+      },
+      "solution": "例 3：法向量 $(2,4,-1)$，$2(x-1)+4(y-2)-(z-5)=0$，即 $2x+4y-z-5=0$。A、B、C 三个平面**都过切点** $(1,2,5)$（代入都成立），只有 A 的法向量与曲面的法向量 $(2,4,-1)$ 一致：B 的法向量是 $(2,4,1)$，C 的是 $(1,2,-1)$，方向都不对。D 不过切点。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：只验证过切点不够，法向量也要对"
+        }
+      ],
+      "varies": "过切点只是必要条件；法向量的符号决定它是不是切平面"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0204e",
+      "knowledge": [
+        "advmath.directional_grad"
+      ],
+      "stem": "设 $f=x^2y$，则在点 $(1,2)$ 处沿方向 $\\boldsymbol l=(3,4)$ 的方向导数为",
+      "answer": {
+        "type": "numeric",
+        "value": 3.2
+      },
+      "solution": "$\\nabla f(1,2)=(4,1)$，单位方向 $(\\frac35,\\frac45)$，$\\frac{\\partial f}{\\partial l}=4\\cdot\\frac35+1\\cdot\\frac45=\\frac{16}5=3.2$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算（与例 4 同题）"
+        }
+      ],
+      "varies": "方向向量必须先单位化：用 $(3,4)$ 直接计算会得到 16（是 5 倍）"
+    }
+  ]
+}

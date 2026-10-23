@@ -230,6 +230,153 @@
       ],
       "textbook_ref": "教材 第 1 章 §6",
       "syllabus_ref": "空间解析几何与向量代数：二次曲面"
+    },
+    {
+      "id": "advmath.func_two_vars",
+      "title": "二元函数、定义域与等高线",
+      "type": "概念",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.surface_eq"
+      ],
+      "textbook_ref": "教材 第 2 章 §1",
+      "syllabus_ref": "多元函数的微分学：多元函数的基本概念"
+    },
+    {
+      "id": "advmath.limit_multi",
+      "title": "二重极限（路径法与替换）",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.func_two_vars"
+      ],
+      "textbook_ref": "教材 第 2 章 §1",
+      "syllabus_ref": "多元函数的微分学：多元函数的极限"
+    },
+    {
+      "id": "advmath.continuity_multi",
+      "title": "多元函数的连续性",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "掌握",
+      "requires": [
+        "advmath.limit_multi"
+      ],
+      "textbook_ref": "教材 第 2 章 §1",
+      "syllabus_ref": "多元函数的微分学：多元函数的连续性"
+    },
+    {
+      "id": "advmath.partial_deriv",
+      "title": "偏导数的概念与计算",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.func_two_vars"
+      ],
+      "textbook_ref": "教材 第 2 章 §2",
+      "syllabus_ref": "多元函数的微分学：偏导数"
+    },
+    {
+      "id": "advmath.higher_partial",
+      "title": "高阶偏导数",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.partial_deriv"
+      ],
+      "textbook_ref": "教材 第 2 章 §2",
+      "syllabus_ref": "多元函数的微分学：高阶偏导数"
+    },
+    {
+      "id": "advmath.total_diff",
+      "title": "全微分与可微、连续、偏导数的关系",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.partial_deriv",
+        "advmath.continuity_multi"
+      ],
+      "textbook_ref": "教材 第 2 章 §2",
+      "syllabus_ref": "多元函数的微分学：全微分"
+    },
+    {
+      "id": "advmath.chain_rule",
+      "title": "复合函数的偏导数（链式法则）",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.partial_deriv"
+      ],
+      "textbook_ref": "教材 第 2 章 §3",
+      "syllabus_ref": "多元函数的微分学：复合函数的偏导数"
+    },
+    {
+      "id": "advmath.implicit_func",
+      "title": "隐函数的导数与偏导数",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.chain_rule"
+      ],
+      "textbook_ref": "教材 第 2 章 §3",
+      "syllabus_ref": "多元函数的微分学：隐函数的偏导数"
+    },
+    {
+      "id": "advmath.extremum",
+      "title": "多元函数的极值与最值",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.higher_partial"
+      ],
+      "textbook_ref": "教材 第 2 章 §4",
+      "syllabus_ref": "多元函数的微分学：多元函数的极值与最值"
+    },
+    {
+      "id": "advmath.lagrange",
+      "title": "条件极值与拉格朗日乘数法",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.extremum"
+      ],
+      "textbook_ref": "教材 第 2 章 §4",
+      "syllabus_ref": "多元函数的微分学：条件极值"
+    },
+    {
+      "id": "advmath.tangent_plane",
+      "title": "曲面的切平面与法线",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.partial_deriv",
+        "advmath.plane_eq"
+      ],
+      "textbook_ref": "教材 第 2 章 §4",
+      "syllabus_ref": "多元函数的微分学：偏导数的几何应用"
+    },
+    {
+      "id": "advmath.directional_grad",
+      "title": "方向导数与梯度",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.partial_deriv",
+        "advmath.dot_product"
+      ],
+      "textbook_ref": "教材 第 2 章 §4",
+      "syllabus_ref": "多元函数的微分学：方向导数与梯度"
     }
   ]
 }

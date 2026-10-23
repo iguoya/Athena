@@ -1,0 +1,182 @@
+{
+  "id": "ch2-sec1",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0201",
+      "prompt": "先猜再验：函数 $f(x,y)=\\sqrt{1-x^2-y^2}$ 的**定义域**在平面上是什么图形？",
+      "options": [
+        "整个平面",
+        "单位圆的内部和圆周（闭圆盘）",
+        "单位圆的外部",
+        "一条直线"
+      ],
+      "correct": 1,
+      "explain": "根号下要 $\\ge0$：$1-x^2-y^2\\ge0$，即 $x^2+y^2\\le1$，原点为圆心、半径 1 的闭圆盘。一元函数的定义域是数轴上的一段，二元函数的定义域是**平面上的一块区域**。",
+      "knowledge": [
+        "advmath.func_two_vars"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜二元函数定义域的形状，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**二元函数与它的定义域**\n\n**平面点集**：点 $P_0$ 的 $\\delta$ 邻域是以 $P_0$ 为圆心、$\\delta$ 为半径的开圆盘。若点集 $D$ 中每一点都有一个邻域整个含于 $D$，$D$ 叫**开集**；开集中任意两点可用折线连接且折线在 $D$ 内，叫**开区域**；开区域加上边界叫**闭区域**。能被某个圆盘盖住的叫**有界**区域。\n\n**二元函数**：对定义域 $D$ 中每一点 $(x,y)$，有唯一的 $z$ 与之对应，记 $z=f(x,y)$。$(x,y,f(x,y))$ 构成空间中的一张**曲面**（上一章）。在平面上令 $f(x,y)=c$ 得到一条**等高线**，把不同 $c$ 的等高线画在一起就是地形图。\n\n**定义域的求法**：把各个运算的要求一起列出：分母 $\\neq0$，偶次根号下 $\\ge0$，对数的真数 $>0$，反正弦与反余弦的自变量在 $[-1,1]$，再取交集。\n\n**二重极限**：$\\lim_{(x,y)\\to(x_0,y_0)}f(x,y)=A$ 指点 $(x,y)$ 以**任何方式**趋近 $(x_0,y_0)$ 时，$f$ 都趋近 $A$。\n- **证明极限不存在**：找两条不同的路径（如 $y=kx$，$y=x^2$），沿它们趋近时极限不同，或有一条路径极限不存在。\n- 求极限：用一元函数的方法（变量替换、重要极限、夹逼）。\n\n**连续**：$\\lim_{(x,y)\\to(x_0,y_0)}f(x,y)=f(x_0,y_0)$。**多元初等函数在其定义域内连续**。有界闭区域上的连续函数必有最大值与最小值。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch2-sec1-contours.svg",
+      "caption": "左：曲面 $z=x^2+y^2$。右：它在 $xOy$ 平面上的等高线 $x^2+y^2=c$，一族同心圆；$c$ 越大圆越大，靠得越近的地方曲面越陡。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "沿每一条直线 $y=kx$ 趋近原点时，$f$ 的极限都存在且相等，所以二重极限存在。",
+      "why_wrong": "二重极限要求**任何方式**趋近都一样，直线只是其中一族。例：$f(x,y)=\\dfrac{x^2y}{x^4+y^2}$。沿 $y=kx$：$\\dfrac{kx^3}{x^4+k^2x^2}=\\dfrac{kx}{x^2+k^2}\\to0$（对所有 $k$）；但沿抛物线 $y=x^2$：$\\dfrac{x^4}{x^4+x^4}=\\dfrac12$。两条路径极限不同，二重极限**不存在**。",
+      "right": "证明极限**存在**要对一切路径都成立（用夹逼、替换）；证明**不存在**只需找出两条结果不同的路径。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（求定义域）",
+      "problem": "求 $z=\\dfrac{\\ln(x+y)}{\\sqrt{x-y}}$ 的定义域。",
+      "steps": [
+        {
+          "text": "对数要求 $x+y>0$；根号在分母，要求 $x-y>0$（根号下非负，且分母不为零）。",
+          "why": "两个条件同时成立。"
+        },
+        {
+          "text": "即 $y>-x$ 且 $y<x$，也就是 $x>|y|$。图形是以原点为顶点、开口向右、夹在直线 $y=x$ 与 $y=-x$ 之间的开区域（不含边界直线）。",
+          "why": "两条边界直线都取不到，所以是开区域。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；定义域的标准写法"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（极限存在与不存在）",
+      "problem": "讨论 (1) $\\displaystyle\\lim_{(x,y)\\to(0,0)}\\frac{x^2-y^2}{x^2+y^2}$；(2) $\\displaystyle\\lim_{(x,y)\\to(0,0)}\\frac{\\sin(x^2+y^2)}{x^2+y^2}$ 是否存在。",
+      "steps": [
+        {
+          "text": "(1) 沿 $y=kx$：$\\dfrac{x^2-k^2x^2}{x^2+k^2x^2}=\\dfrac{1-k^2}{1+k^2}$，随 $k$ 变化（$k=0$ 得 1，$k=1$ 得 0）。极限**不存在**。",
+          "why": "沿不同直线趋近，值不同。"
+        },
+        {
+          "text": "(2) 令 $u=x^2+y^2\\to0$，原式 $=\\dfrac{\\sin u}{u}\\to1$。极限**存在**，等于 1。",
+          "why": "不管点怎样趋近原点，$u=x^2+y^2$ 总趋于 0，所以化成一元的重要极限。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；极限的两类典型"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0201a",
+      "knowledge": [
+        "advmath.func_two_vars"
+      ],
+      "stem": "函数 $z=\\ln(x+y)$ 的定义域是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$x+y>0$ 的半平面（不含直线 $x+y=0$）",
+          "$x+y\\ge0$ 的半平面",
+          "整个平面",
+          "$x>0$ 且 $y>0$ 的第一象限"
+        ],
+        "correct": 0
+      },
+      "solution": "对数的真数 $x+y>0$，严格大于 0，所以边界直线 $x+y=0$ 取不到。B 误含了边界；D 要求过强（$x=3,y=-1$ 时 $x+y=2>0$ 也在定义域内）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：对数的真数必须大于 0"
+        }
+      ],
+      "varies": "边界取不取：严格不等号与区域的开闭"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0201b",
+      "knowledge": [
+        "advmath.limit_multi"
+      ],
+      "stem": "$\\displaystyle\\lim_{(x,y)\\to(0,0)}\\frac{\\sin(x^2+y^2)}{x^2+y^2}=$",
+      "answer": {
+        "type": "numeric",
+        "value": 1
+      },
+      "solution": "令 $u=x^2+y^2\\to0$，$\\dfrac{\\sin u}{u}\\to1$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；化为一元重要极限"
+        }
+      ],
+      "varies": "分母恰是 $\\sin$ 的自变量，才能整体替换"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0201c",
+      "knowledge": [
+        "advmath.limit_multi"
+      ],
+      "stem": "关于 $\\displaystyle\\lim_{(x,y)\\to(0,0)}\\frac{xy}{x^2+y^2}$，正确的结论是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "等于 0",
+          "等于 1",
+          "不存在",
+          "等于 $\\dfrac12$"
+        ],
+        "correct": 2
+      },
+      "solution": "沿 $y=x$：$\\dfrac{x^2}{2x^2}=\\dfrac12$；沿 $y=-x$：$\\dfrac{-x^2}{2x^2}=-\\dfrac12$。两条路径极限不同，极限**不存在**。注意沿坐标轴趋近（$y=0$）得 0，只验证坐标轴会得出错误结论。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：路径法"
+        }
+      ],
+      "varies": "要选两条结果不同的路径；沿轴的结果（0）容易让人误以为极限为 0"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0201d",
+      "knowledge": [
+        "advmath.continuity_multi"
+      ],
+      "stem": "设 $f(x,y)=\\begin{cases}\\dfrac{xy}{x^2+y^2},&(x,y)\\neq(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}$，则 $f$ 在原点",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "连续",
+          "不连续，因为极限不存在",
+          "不连续，因为函数值不等于 0",
+          "无定义"
+        ],
+        "correct": 1
+      },
+      "solution": "原点处函数值 $f(0,0)=0$ 有定义，但 $\\lim_{(x,y)\\to(0,0)}f(x,y)$ 不存在（上一题），所以 $f$ 在原点**不连续**。连续要求极限存在且等于函数值。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：连续的定义"
+        }
+      ],
+      "varies": "函数在该点有定义不等于连续，还要有极限并相等"
+    }
+  ]
+}

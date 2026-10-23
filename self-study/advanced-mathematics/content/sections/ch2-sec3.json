@@ -1,0 +1,166 @@
+{
+  "id": "ch2-sec3",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0203",
+      "prompt": "先猜再验：$z=f(u,v)$，$u=x+y,\\ v=xy$。求 $\\dfrac{\\partial z}{\\partial x}$ 时，结果里有几项？",
+      "options": [
+        "1 项",
+        "2 项",
+        "3 项",
+        "4 项"
+      ],
+      "correct": 1,
+      "explain": "$x$ 通过**两条路**影响 $z$：经过 $u$（$x\\to u\\to z$）和经过 $v$（$x\\to v\\to z$）。链式法则把每条路的变化率相乘、再把各条路相加：$\\dfrac{\\partial z}{\\partial x}=\\dfrac{\\partial z}{\\partial u}\\dfrac{\\partial u}{\\partial x}+\\dfrac{\\partial z}{\\partial v}\\dfrac{\\partial v}{\\partial x}$，共 2 项。",
+      "knowledge": [
+        "advmath.chain_rule"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜链式法则的项数，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**复合函数的偏导数与隐函数的偏导数**\n\n**链式法则（路径相乘、分叉相加）**：\n- $z=f(u,v)$，$u=u(x,y)$，$v=v(x,y)$：\n$$\\frac{\\partial z}{\\partial x}=\\frac{\\partial z}{\\partial u}\\frac{\\partial u}{\\partial x}+\\frac{\\partial z}{\\partial v}\\frac{\\partial v}{\\partial x},\\qquad\\frac{\\partial z}{\\partial y}=\\frac{\\partial z}{\\partial u}\\frac{\\partial u}{\\partial y}+\\frac{\\partial z}{\\partial v}\\frac{\\partial v}{\\partial y}.$$\n- 自变量只有一个（$u=u(t),v=v(t)$）：$\\dfrac{\\mathrm dz}{\\mathrm dt}=\\dfrac{\\partial z}{\\partial u}\\dfrac{\\mathrm du}{\\mathrm dt}+\\dfrac{\\partial z}{\\partial v}\\dfrac{\\mathrm dv}{\\mathrm dt}$（叫**全导数**）。\n- 抽象函数：$z=f(x+y,xy)$ 里用 $f_1',f_2'$ 分别表示对第 1、第 2 个中间变量的偏导数。**先画变量关系图**，数清每个自变量到 $z$ 有几条路。\n\n**隐函数的求导公式**：\n- 由 $F(x,y)=0$ 确定 $y=y(x)$（$F_y\\neq0$）：$\\dfrac{\\mathrm dy}{\\mathrm dx}=-\\dfrac{F_x}{F_y}$。\n- 由 $F(x,y,z)=0$ 确定 $z=z(x,y)$（$F_z\\neq0$）：$\\dfrac{\\partial z}{\\partial x}=-\\dfrac{F_x}{F_z},\\quad\\dfrac{\\partial z}{\\partial y}=-\\dfrac{F_y}{F_z}$。\n\n用公式时，$F$ 对 $x$ 求偏导**把 $y,z$ 都看成常数**。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "由 $F(x,y,z)=0$ 确定的隐函数，$\\dfrac{\\partial z}{\\partial x}=\\dfrac{F_x}{F_z}$。",
+      "why_wrong": "漏了负号。验证：$x+y+z=0$ 即 $z=-x-y$，直接求导 $\\dfrac{\\partial z}{\\partial x}=-1$。公式里 $F=x+y+z,\\ F_x=1,\\ F_z=1$，$F_x/F_z=1$，符号反了；$-F_x/F_z=-1$ 才对。",
+      "right": "$\\dfrac{\\partial z}{\\partial x}=-\\dfrac{F_x}{F_z}$。负号来自对 $F(x,y,z(x,y))=0$ 两边求导：$F_x+F_z\\cdot z_x=0$。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（两个中间变量）",
+      "problem": "设 $z=\\mathrm e^u\\sin v$，$u=xy$，$v=x+y$，求 $\\dfrac{\\partial z}{\\partial x}$。",
+      "steps": [
+        {
+          "text": "$\\dfrac{\\partial z}{\\partial u}=\\mathrm e^u\\sin v,\\ \\dfrac{\\partial z}{\\partial v}=\\mathrm e^u\\cos v$；$\\dfrac{\\partial u}{\\partial x}=y,\\ \\dfrac{\\partial v}{\\partial x}=1$。",
+          "why": "先把四个基本的偏导数各自求出来。"
+        },
+        {
+          "text": "$\\dfrac{\\partial z}{\\partial x}=\\mathrm e^u\\sin v\\cdot y+\\mathrm e^u\\cos v\\cdot1=\\mathrm e^{xy}\\left[y\\sin(x+y)+\\cos(x+y)\\right]$。",
+          "why": "最后把 $u,v$ 换回 $x,y$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（全导数）",
+      "problem": "设 $z=u^2+v$，$u=\\sin t$，$v=\\cos t$，求 $\\dfrac{\\mathrm dz}{\\mathrm dt}$。",
+      "steps": [
+        {
+          "text": "$\\dfrac{\\mathrm dz}{\\mathrm dt}=2u\\cdot\\cos t+1\\cdot(-\\sin t)=2\\sin t\\cos t-\\sin t$。",
+          "why": "$\\partial z/\\partial u=2u,\\ \\partial z/\\partial v=1$；$u'=\\cos t,\\ v'=-\\sin t$。"
+        },
+        {
+          "text": "验证：先代入 $z=\\sin^2t+\\cos t$，直接求导得 $2\\sin t\\cos t-\\sin t$，一致。",
+          "why": "能直接代入时用来自查。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（隐函数求导）",
+      "problem": "(1) 由 $\\mathrm e^y+xy=\\mathrm e$ 确定 $y=y(x)$，求 $\\dfrac{\\mathrm dy}{\\mathrm dx}\\Big|_{x=0}$（此时 $y=1$）；(2) 由 $x^2+y^2+z^2=14$ 确定 $z=z(x,y)$，写出 $\\dfrac{\\partial z}{\\partial x}$。",
+      "steps": [
+        {
+          "text": "(1) $F=\\mathrm e^y+xy-\\mathrm e$，$F_x=y,\\ F_y=\\mathrm e^y+x$。$\\dfrac{\\mathrm dy}{\\mathrm dx}=-\\dfrac{y}{\\mathrm e^y+x}$，在 $(0,1)$：$-\\dfrac1{\\mathrm e}$。",
+          "why": "代入点 $x=0,y=1$。"
+        },
+        {
+          "text": "(2) $F=x^2+y^2+z^2-14$，$F_x=2x,\\ F_z=2z$，$\\dfrac{\\partial z}{\\partial x}=-\\dfrac{x}{z}$。",
+          "why": "检验：球面上半部分 $z=\\sqrt{14-x^2-y^2}$，直接求导 $z_x=-x/\\sqrt{14-x^2-y^2}=-x/z$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0203a",
+      "knowledge": [
+        "advmath.chain_rule"
+      ],
+      "stem": "设 $z=u^2v$，$u=x+y$，$v=x-y$，则 $\\dfrac{\\partial z}{\\partial x}\\Big|_{(1,1)}=$",
+      "answer": {
+        "type": "numeric",
+        "value": 4
+      },
+      "solution": "$z_u=2uv,\\ z_v=u^2$，$u_x=1,\\ v_x=1$。$z_x=2uv\\cdot1+u^2\\cdot1$。在 $(1,1)$：$u=2,\\ v=0$，$z_x=0+4=4$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "先算中间变量在该点的值，再代入链式法则的结果"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0203b",
+      "knowledge": [
+        "advmath.implicit_func"
+      ],
+      "stem": "由方程 $x^3+y^3=3xy$ 确定 $y=y(x)$，则 $\\dfrac{\\mathrm dy}{\\mathrm dx}=$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\dfrac{y-x^2}{y^2-x}$",
+          "$\\dfrac{x^2-y}{y^2-x}$",
+          "$\\dfrac{y^2-x}{y-x^2}$",
+          "$\\dfrac{y+x^2}{y^2+x}$"
+        ],
+        "correct": 0
+      },
+      "solution": "$F=x^3+y^3-3xy$，$F_x=3x^2-3y,\\ F_y=3y^2-3x$。$\\dfrac{\\mathrm dy}{\\mathrm dx}=-\\dfrac{3x^2-3y}{3y^2-3x}=\\dfrac{y-x^2}{y^2-x}$。B 漏了公式里的负号；C 把 $F_x/F_y$ 写成了 $F_y/F_x$（上下颠倒）；D 在约分时把减号看成了加号。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：隐函数公式的负号"
+        }
+      ],
+      "varies": "分子分母同时变号不改变值，要看总的负号个数"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0203c",
+      "knowledge": [
+        "advmath.implicit_func"
+      ],
+      "stem": "由 $x^2+y^2-z^2=0$ 确定 $z=z(x,y)$（上半锥面），则在点 $(3,4,5)$ 处 $\\dfrac{\\partial z}{\\partial x}=$",
+      "answer": {
+        "type": "numeric",
+        "value": 0.6
+      },
+      "solution": "$F=x^2+y^2-z^2$，$F_x=2x,\\ F_z=-2z$，$\\dfrac{\\partial z}{\\partial x}=-\\dfrac{2x}{-2z}=\\dfrac xz$，在 $(3,4,5)$：$\\dfrac35=0.6$。注意 $F_z=-2z$ 里自带负号，两个负号抵消。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "$F_z$ 本身为负时，公式里的负号与它相消"
+    }
+  ]
+}

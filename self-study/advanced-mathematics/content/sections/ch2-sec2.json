@@ -1,0 +1,186 @@
+{
+  "id": "ch2-sec2",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0202",
+      "prompt": "先猜再验：求 $z=x^2y$ 对 $x$ 的偏导数时，应把 $y$ 看成什么？",
+      "options": [
+        "常数",
+        "$x$ 的函数",
+        "0",
+        "与 $x$ 同样的变量，一起求导"
+      ],
+      "correct": 0,
+      "explain": "偏导数是「只让一个变量变化，其余都固定」的变化率。$\\partial z/\\partial x$ 把 $y$ 当作常数：$\\dfrac{\\partial}{\\partial x}(x^2y)=2xy$。所有的求导法则都和一元函数相同。",
+      "knowledge": [
+        "advmath.partial_deriv"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜偏导数中其余变量的处理，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**偏导数、高阶偏导数、全微分**\n\n**偏导数**：\n$$f_x(x_0,y_0)=\\lim_{\\Delta x\\to0}\\frac{f(x_0+\\Delta x,y_0)-f(x_0,y_0)}{\\Delta x},$$\n记作 $\\dfrac{\\partial z}{\\partial x}$ 或 $z_x$。**求法**：对 $x$ 求偏导就把 $y$ 看成常数，按一元函数的法则求导；$f_y$ 同理。几何意义：$f_x(x_0,y_0)$ 是曲面被平面 $y=y_0$ 截得的曲线在该点的切线斜率。\n\n**高阶偏导数**：$z_{xx}=\\dfrac{\\partial^2z}{\\partial x^2}$，$z_{xy}=\\dfrac{\\partial^2z}{\\partial x\\partial y}$（先对 $x$ 再对 $y$），$z_{yx}$，$z_{yy}$。**当 $z_{xy},z_{yx}$ 都连续时，它们相等**。\n\n**全微分**：若 $z=f(x,y)$ 可微，则\n$$\\mathrm dz=\\frac{\\partial z}{\\partial x}\\mathrm dx+\\frac{\\partial z}{\\partial y}\\mathrm dy.$$\n当 $|\\Delta x|,|\\Delta y|$ 很小时，$\\Delta z\\approx\\mathrm dz$，可用来做近似计算。\n\n**几个概念的关系**（单向箭头，反向都不成立）：\n$$\\text{偏导数连续}\\Longrightarrow\\text{可微}\\Longrightarrow\\text{连续},\\qquad\\text{可微}\\Longrightarrow\\text{偏导数存在}.$$\n一元函数里「可导 $\\iff$ 可微」，多元函数里**没有**这个等价。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "函数在某点的两个偏导数都存在，所以它在该点连续（可微）。",
+      "why_wrong": "偏导数只描述沿两个坐标方向的变化，不保证沿其他方向也好。例：$f(x,y)=\\dfrac{xy}{x^2+y^2}$（$f(0,0)=0$），在原点 $f_x(0,0)=\\lim\\dfrac{f(\\Delta x,0)-0}{\\Delta x}=0$，$f_y(0,0)=0$，两个偏导数都存在，但 $f$ 在原点**不连续**（上节），更不可微。",
+      "right": "偏导数存在**推不出**连续。需要的是「偏导数在该点**连续**」这个更强的条件，才能推出可微。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（求一阶偏导数）",
+      "problem": "求 $z=x^2y+\\mathrm e^{xy}$ 的 $\\dfrac{\\partial z}{\\partial x},\\ \\dfrac{\\partial z}{\\partial y}$。",
+      "steps": [
+        {
+          "text": "对 $x$ 求偏导（$y$ 视为常数）：$\\dfrac{\\partial z}{\\partial x}=2xy+y\\,\\mathrm e^{xy}$。",
+          "why": "$(\\mathrm e^{xy})'_x=\\mathrm e^{xy}\\cdot y$，复合函数求导，内层 $xy$ 对 $x$ 求导得 $y$。"
+        },
+        {
+          "text": "对 $y$ 求偏导（$x$ 视为常数）：$\\dfrac{\\partial z}{\\partial y}=x^2+x\\,\\mathrm e^{xy}$。",
+          "why": "$x^2y$ 对 $y$ 是常数 $x^2$ 乘 $y$，导数 $x^2$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（二阶偏导数）",
+      "problem": "求 $z=x^3y^2-3xy+y$ 的 $z_{xx},\\ z_{xy},\\ z_{yx}$。",
+      "steps": [
+        {
+          "text": "$z_x=3x^2y^2-3y$，$z_y=2x^3y-3x+1$。",
+          "why": "先求一阶，再继续求导。"
+        },
+        {
+          "text": "$z_{xx}=6xy^2$；$z_{xy}=(z_x)_y=6x^2y-3$；$z_{yx}=(z_y)_x=6x^2y-3$。",
+          "why": "两个混合偏导数相等（它们连续）；验算时用这一点互相检验。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（全微分与近似）",
+      "problem": "求 $z=x^2y^3$ 在点 $(1,2)$ 的全微分，并用它估计 $x$ 由 1 增加到 1.01、$y$ 由 2 增加到 2.02 时 $z$ 的改变量。",
+      "steps": [
+        {
+          "text": "$z_x=2xy^3,\\ z_y=3x^2y^2$，在 $(1,2)$：$z_x=16,\\ z_y=12$。所以 $\\mathrm dz=16\\,\\mathrm dx+12\\,\\mathrm dy$。",
+          "why": "偏导数的值代入点的坐标。"
+        },
+        {
+          "text": "$\\mathrm dx=0.01,\\ \\mathrm dy=0.02$：$\\mathrm dz=16\\times0.01+12\\times0.02=0.16+0.24=0.40$。",
+          "why": "精确值 $1.01^2\\cdot2.02^3-1^2\\cdot2^3\\approx0.408$，近似值 0.40 很接近。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0202a",
+      "knowledge": [
+        "advmath.partial_deriv"
+      ],
+      "stem": "设 $z=x^2y+xy^2$，则 $\\dfrac{\\partial z}{\\partial x}\\Big|_{(1,2)}=$",
+      "answer": {
+        "type": "numeric",
+        "value": 8
+      },
+      "solution": "$z_x=2xy+y^2$，代入 $(1,2)$：$2\\cdot1\\cdot2+2^2=4+4=8$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "先求偏导函数再代点，不要先代点再求导（先代 $y=2$ 也可以，但 $x$ 不能先代）"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0202b",
+      "knowledge": [
+        "advmath.higher_partial"
+      ],
+      "stem": "设 $z=x^3y^2-3xy+y$，则 $\\dfrac{\\partial^2z}{\\partial x\\partial y}\\Big|_{(1,1)}=$",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "$z_{xy}=6x^2y-3$（例 2），代入 $(1,1)$：$6-3=3$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "混合偏导数在连续条件下与求导次序无关"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0202c",
+      "knowledge": [
+        "advmath.total_diff"
+      ],
+      "stem": "设 $z=x^2y^3$，则 $x$ 由 1 变为 1.01、$y$ 由 2 变为 2.02 时，全微分 $\\mathrm dz$ 的值为",
+      "answer": {
+        "type": "numeric",
+        "value": 0.4
+      },
+      "solution": "在 $(1,2)$：$\\mathrm dz=z_x\\mathrm dx+z_y\\mathrm dy=16\\times0.01+12\\times0.02=0.4$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算（与例 3 同题）"
+        }
+      ],
+      "varies": "$\\mathrm dx,\\mathrm dy$ 是自变量的改变量，不是函数值"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0202d",
+      "knowledge": [
+        "advmath.total_diff"
+      ],
+      "stem": "对二元函数 $f(x,y)$，下列推断**正确**的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "两个偏导数都存在 $\\Rightarrow$ 可微",
+          "可微 $\\Rightarrow$ 连续",
+          "连续 $\\Rightarrow$ 偏导数存在",
+          "偏导数存在 $\\Rightarrow$ 连续"
+        ],
+        "correct": 1
+      },
+      "solution": "只有「可微 $\\Rightarrow$ 连续」成立。A、D 见上文陷阱（偏导数存在推不出连续、可微）；C 反例 $f=\\sqrt{x^2+y^2}$ 在原点连续但偏导数不存在。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：连续、偏导数、可微的关系"
+        }
+      ],
+      "varies": "四个箭头只有一个成立"
+    }
+  ]
+}
