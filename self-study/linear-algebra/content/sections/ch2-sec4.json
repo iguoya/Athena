@@ -1,0 +1,232 @@
+{
+  "id": "ch2-sec4",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0204",
+      "prompt": "先猜再验：矩阵 $\\begin{pmatrix}1 & 2 \\\\ 2 & 4\\end{pmatrix}$ 有逆矩阵吗？",
+      "options": [
+        "有，因为它不是零矩阵",
+        "没有，因为它的行列式为 0",
+        "有，逆矩阵是 $\\begin{pmatrix}1&1/2\\\\1/2&1/4\\end{pmatrix}$（各元素取倒数）",
+        "无法判断"
+      ],
+      "correct": 1,
+      "explain": "$\\begin{vmatrix}1&2\\\\2&4\\end{vmatrix}=4-4=0$，不可逆。逆矩阵**不是**各元素取倒数；它只对 $|A|\\neq0$ 的方阵存在。",
+      "knowledge": [
+        "linalg.inverse_def"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜可逆性，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**可逆矩阵与逆矩阵**\n\n对 $n$ 阶方阵 $A$，若存在 $n$ 阶方阵 $B$ 使 $AB=BA=E$，称 $A$ **可逆**，$B$ 为 $A$ 的**逆矩阵**，记 $A^{-1}$。逆矩阵若存在则唯一。\n\n**判别与公式**：$A$ 可逆 $\\iff|A|\\neq0$，此时\n$$A^{-1}=\\frac{1}{|A|}A^{*},$$\n其中**伴随矩阵** $A^{*}$ 是由代数余子式组成的矩阵再**转置**：$A^{*}=(A_{ji})$，即第 $i$ 行第 $j$ 列放的是 $A_{ji}$（注意下标颠倒，这是最常见的错误）。核心恒等式：$AA^{*}=A^{*}A=|A|E$。\n\n二阶时有现成的口诀：\n$$\\begin{pmatrix}a&b\\\\c&d\\end{pmatrix}^{-1}=\\frac{1}{ad-bc}\\begin{pmatrix}d&-b\\\\-c&a\\end{pmatrix}\\quad(\\text{主对角线互换，副对角线变号，除以行列式}).$$\n\n**性质**（$A,B$ 同阶可逆，$k\\neq0$）：\n- $(A^{-1})^{-1}=A$；$(kA)^{-1}=k^{-1}A^{-1}$；$(A^{\\mathrm T})^{-1}=(A^{-1})^{\\mathrm T}$；\n- $(AB)^{-1}=B^{-1}A^{-1}$（顺序反过来，推广：$(A_1A_2\\cdots A_s)^{-1}=A_s^{-1}\\cdots A_1^{-1}$）；\n- $|A^{-1}|=|A|^{-1}$；$A^{*}=|A|A^{-1}$，$|A^{*}|=|A|^{n-1}$。\n\n**分块对角求逆**：$\\operatorname{diag}(A_1,A_2)^{-1}=\\operatorname{diag}(A_1^{-1},A_2^{-1})$，每块各自求逆。\n\n**解矩阵方程**的思路：先把方程化成 $AX=B$、$XA=B$ 或 $AXB=C$ 的形式，再**左乘或右乘**逆矩阵。方向不能错：$AX=B\\Rightarrow X=A^{-1}B$；$XA=B\\Rightarrow X=BA^{-1}$。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$(AB)^{-1}=A^{-1}B^{-1}$。",
+      "why_wrong": "检验：$(AB)(A^{-1}B^{-1})=A(BA^{-1})B^{-1}$，中间的 $BA^{-1}$ 无法抵消，一般不等于 $E$。穿袜再穿鞋，脱的时候先脱鞋再脱袜；逆的顺序要反过来。",
+      "right": "$(AB)^{-1}=B^{-1}A^{-1}$。验证：$(AB)(B^{-1}A^{-1})=A(BB^{-1})A^{-1}=AA^{-1}=E$。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（伴随矩阵法求逆）",
+      "problem": "设 $A=\\begin{pmatrix}0 & 1 & 1 \\\\ 1 & 0 & 1 \\\\ 1 & 1 & 0\\end{pmatrix}$，求 $A^{-1}$。",
+      "steps": [
+        {
+          "text": "$|A|=\\begin{vmatrix}0&1&1\\\\1&0&1\\\\1&1&0\\end{vmatrix}=0\\cdot(0-1)-1\\cdot(0-1)+1\\cdot(1-0)=2\\neq0$，可逆。",
+          "why": "先算行列式：为 0 就不必往下做。"
+        },
+        {
+          "text": "九个代数余子式：$A_{11}=-1,\\ A_{12}=1,\\ A_{13}=1,\\ A_{21}=1,\\ A_{22}=-1,\\ A_{23}=1,\\ A_{31}=1,\\ A_{32}=1,\\ A_{33}=-1$。",
+          "why": "例：$A_{12}=(-1)^{1+2}\\begin{vmatrix}1&1\\\\1&0\\end{vmatrix}=-(0-1)=1$。符号别漏。"
+        },
+        {
+          "text": "$A^{*}=\\begin{pmatrix}-1 & 1 & 1 \\\\ 1 & -1 & 1 \\\\ 1 & 1 & -1\\end{pmatrix}$（这里 $A$ 对称，转置前后相同），$A^{-1}=\\dfrac{1}{2}A^{*}$。",
+          "why": "一般情形要转置；检验：$A$ 的第 1 行 $(0,1,1)$ 乘 $A^{-1}$ 的第 1 列 $\\frac12(-1,1,1)^{\\mathrm T}$ 得 $\\frac12(0+1+1)=1$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 17 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（解矩阵方程）",
+      "problem": "设 3 阶矩阵 $A,B$ 满足 $AB+E=A^2+B$，其中 $A=\\begin{pmatrix}1 & -1 & 1 \\\\ 1 & 2 & 0 \\\\ 2 & 1 & -1\\end{pmatrix}$，求 $B$。",
+      "steps": [
+        {
+          "text": "把含 $B$ 的项移到一边：$AB-B=A^2-E$，即 $(A-E)B=(A-E)(A+E)$。",
+          "why": "目标：凑出 $(\\text{某矩阵})\\cdot B$。右边 $A^2-E=(A-E)(A+E)$ 因为 $A$ 与 $E$ 可交换。"
+        },
+        {
+          "text": "$A-E=\\begin{pmatrix}0 & -1 & 1 \\\\ 1 & 1 & 0 \\\\ 2 & 1 & -2\\end{pmatrix}$，$|A-E|=-3\\neq0$，可逆。",
+          "why": "要消去的因子必须先验证可逆，否则不能直接约去。"
+        },
+        {
+          "text": "左乘 $(A-E)^{-1}$：$B=A+E=\\begin{pmatrix}2 & -1 & 1 \\\\ 1 & 3 & 0 \\\\ 2 & 1 & 0\\end{pmatrix}$。",
+          "why": "注意 $A-E$ 在**左边**，所以也从左边乘它的逆。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 18 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0204a",
+      "knowledge": [
+        "linalg.inverse_props",
+        "linalg.adjugate_inverse"
+      ],
+      "stem": "设 $A$ 为 2 阶矩阵，若已知 $A^{-1}=\\begin{pmatrix}1 & 3 \\\\ 2 & 5\\end{pmatrix}$，则 $A^{*}=$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "\\begin{pmatrix}5 & -3 \\\\ -2 & 1\\end{pmatrix}",
+          "\\begin{pmatrix}-5 & 3 \\\\ 2 & -1\\end{pmatrix}",
+          "\\begin{pmatrix}-1 & -3 \\\\ -2 & -5\\end{pmatrix}",
+          "\\begin{pmatrix}1 & 3 \\\\ 2 & 5\\end{pmatrix}"
+        ],
+        "correct": 2
+      },
+      "solution": "$|A^{-1}|=5-6=-1$，故 $|A|=1/|A^{-1}|=-1$。$A^{*}=|A|A^{-1}=-A^{-1}=\\begin{pmatrix}-1 & -3 \\\\ -2 & -5\\end{pmatrix}$。",
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 2 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ],
+      "varies": "不求 $A$，直接用 $A^{*}=|A|A^{-1}$ 在逆矩阵上改造"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0204b",
+      "knowledge": [
+        "linalg.inverse_props"
+      ],
+      "stem": "设 $A$ 为 3 阶矩阵，$|A|=-\\dfrac{1}{3}$，则行列式 $\\left|\\left(\\dfrac{1}{2}A\\right)^{-1}+3A^{*}\\right|=$",
+      "answer": {
+        "type": "numeric",
+        "value": -3
+      },
+      "solution": "$\\left(\\frac12A\\right)^{-1}=2A^{-1}$；$A^{*}=|A|A^{-1}=-\\frac13A^{-1}$，所以 $3A^{*}=-A^{-1}$。和为 $2A^{-1}-A^{-1}=A^{-1}$，其行列式为 $|A|^{-1}=-3$。",
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 8 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ],
+      "varies": "把整个括号先化成同一个矩阵 $A^{-1}$，再取行列式，不要分别算"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0204c",
+      "knowledge": [
+        "linalg.inverse_props"
+      ],
+      "stem": "设 $A=\\begin{pmatrix}1 & 5 & 0 \\\\ 1 & 4 & 0 \\\\ 0 & 0 & 3\\end{pmatrix}$，则 $A^{-1}=$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "\\begin{pmatrix}-4 & 5 & 0 \\\\ 1 & -1 & 0 \\\\ 0 & 0 & \\frac13\\end{pmatrix}",
+          "\\begin{pmatrix}4 & -5 & 0 \\\\ -1 & 1 & 0 \\\\ 0 & 0 & \\frac13\\end{pmatrix}",
+          "\\begin{pmatrix}-4 & 5 & 0 \\\\ 1 & -1 & 0 \\\\ 0 & 0 & 3\\end{pmatrix}",
+          "\\begin{pmatrix}4 & -1 & 0 \\\\ -5 & 1 & 0 \\\\ 0 & 0 & \\frac13\\end{pmatrix}"
+        ],
+        "correct": 0
+      },
+      "solution": "$A=\\operatorname{diag}\\left(\\begin{pmatrix}1&5\\\\1&4\\end{pmatrix},\\,3\\right)$，各块求逆。$\\begin{pmatrix}1&5\\\\1&4\\end{pmatrix}^{-1}=\\dfrac{1}{4-5}\\begin{pmatrix}4&-5\\\\-1&1\\end{pmatrix}=\\begin{pmatrix}-4&5\\\\1&-1\\end{pmatrix}$（行列式 $-1$ 的符号别漏），$(3)^{-1}=\\frac13$。B 少了行列式的符号，C 没把 3 取倒数，D 把 2 阶块转置了。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "locator": "全国 2018 年 4 月 第 7 题",
+          "note": "原题为填空题，这里改为选择题并自拟三个干扰项；矩阵原样不变"
+        }
+      ],
+      "varies": "分块对角各块独立求逆，其中 1 阶块的逆就是倒数"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0204d",
+      "knowledge": [
+        "linalg.matrix_equation"
+      ],
+      "stem": "设 3 阶矩阵 $A,B$ 满足 $AB+E=A^2+B$，$A=\\begin{pmatrix}1 & -1 & 1 \\\\ 1 & 2 & 0 \\\\ 2 & 1 & -1\\end{pmatrix}$（与例 2 同题）。则 $B$ 的第 2 行第 2 列元素为",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "例 2 已得 $B=A+E$，第 2 行第 2 列元素为 $a_{22}+1=2+1=3$。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "locator": "全国 2018 年 4 月 第 18 题",
+          "note": "原题要求整个矩阵 $B$，这里只问其中一个元素，便于机器判分；矩阵与等式原样不变"
+        }
+      ],
+      "varies": "先看出方程的结构（$(A-E)B=(A-E)(A+E)$）再回答，不要硬解 9 个未知数"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0204e",
+      "knowledge": [
+        "linalg.adjugate_inverse"
+      ],
+      "stem": "$A=\\begin{pmatrix}2 & 1 \\\\ 5 & 3\\end{pmatrix}$，则 $A^{-1}=$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "\\begin{pmatrix}3 & 1 \\\\ 5 & 2\\end{pmatrix}",
+          "\\begin{pmatrix}-3 & 1 \\\\ 5 & -2\\end{pmatrix}",
+          "\\begin{pmatrix}3 & -1 \\\\ -5 & 2\\end{pmatrix}",
+          "\\begin{pmatrix}2 & -1 \\\\ -5 & 3\\end{pmatrix}"
+        ],
+        "correct": 2
+      },
+      "solution": "$|A|=6-5=1$。口诀：主对角线互换（$2\\leftrightarrow3$）、副对角线变号，除以 $|A|=1$：$A^{-1}=\\begin{pmatrix}3 & -1 \\\\ -5 & 2\\end{pmatrix}$。检验：$\\begin{pmatrix}2 & 1 \\\\ 5 & 3\\end{pmatrix}\\begin{pmatrix}3 & -1 \\\\ -5 & 2\\end{pmatrix}$ 第一行 $(6-5,\\ -2+2)=(1,0)$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；二阶口诀的基础练习，已复算"
+        }
+      ],
+      "varies": "干扰项对应口诀里的常见漏步：只互换主对角线没改符号、符号位置错、只改符号没互换"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0204f",
+      "knowledge": [
+        "linalg.inverse_props"
+      ],
+      "stem": "设 $A$ 为 3 阶方阵，$|A|=2$，则 $|A^{*}|=$",
+      "answer": {
+        "type": "numeric",
+        "value": 4
+      },
+      "solution": "$|A^{*}|=|A|^{n-1}=2^{3-1}=4$。（推导：$A^{*}=|A|A^{-1}$，3 阶时 $|A^{*}|=|A|^3|A^{-1}|=2^3\\cdot\\frac12=4$。）",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；考查 |A*| = |A|^(n−1)，不是 |A|"
+        }
+      ],
+      "varies": "阶数 3 决定指数 2；换成 4 阶答案就是 8"
+    }
+  ]
+}

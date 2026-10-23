@@ -1,0 +1,108 @@
+{
+  "id": "ch2-sec3",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0203",
+      "prompt": "先猜再验：把 $A,B$ 都分成 $2\\times2$ 块 $A=\\begin{pmatrix}A_{11}&A_{12}\\\\A_{21}&A_{22}\\end{pmatrix}$，$B$ 同样记法。乘积 $AB$ 的左上角那一块是",
+      "options": [
+        "$A_{11}B_{11}+A_{12}B_{21}$",
+        "$A_{11}B_{11}+A_{22}B_{21}$",
+        "$B_{11}A_{11}+B_{12}A_{21}$",
+        "$A_{11}B_{11}$"
+      ],
+      "correct": 0,
+      "explain": "分块乘法就是把「块」当成元素，用同一个「行乘列」规则：第 1 行的块 $A_{11},A_{12}$ 依次乘第 1 列的块 $B_{11},B_{21}$。注意每个乘积里 $A$ 的块**仍在左边**，次序不能换。",
+      "knowledge": [
+        "linalg.block_ops"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜分块乘法的写法，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**分块：把大矩阵当作小矩阵的矩阵**\n\n用横线、竖线把矩阵分成若干小矩阵（块）。分块的目的是把大矩阵的运算化成小矩阵的运算。\n\n**分块乘法**：规则和普通乘法相同，只要**左矩阵列的分法与右矩阵行的分法一致**，使得每个块乘积都有意义。\n\n**按列分块**是最常用的一种：$A$ 是 $m\\times n$，把 $B=(\\boldsymbol b_1,\\boldsymbol b_2,\\dots,\\boldsymbol b_p)$ 按列分，则\n$$AB=(A\\boldsymbol b_1,A\\boldsymbol b_2,\\dots,A\\boldsymbol b_p).$$\n即 $AB$ 的第 $j$ 列等于 $A$ 乘以 $B$ 的第 $j$ 列。第 3、4 章会把方程组 $A\\boldsymbol x=\\boldsymbol b$ 写成「$A$ 的列的线性组合」，用的就是这个视角。\n\n**分块对角矩阵** $\\operatorname{diag}(A_1,A_2,\\dots,A_s)$：主对角线上是方阵块，其余块为零。它的运算和对角矩阵一样，可以按块进行：\n$$|\\operatorname{diag}(A_1,\\dots,A_s)|=|A_1|\\cdots|A_s|,\\qquad\\operatorname{diag}(A_1,\\dots,A_s)^k=\\operatorname{diag}(A_1^k,\\dots,A_s^k).$$\n若每个 $A_i$ 可逆，则整体可逆且 $\\operatorname{diag}(A_1,\\dots,A_s)^{-1}=\\operatorname{diag}(A_1^{-1},\\dots,A_s^{-1})$（可逆的概念见 §2.4）。\n\n**分块上（下）三角**的行列式也只看对角块：\n$$\\begin{vmatrix}A&C\\\\O&B\\end{vmatrix}=|A||B|\\quad(A,B\\text{ 为方阵}).$$"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$\\begin{vmatrix}A&B\\\\C&D\\end{vmatrix}=|A||D|-|B||C|$（照搬二阶公式）。",
+      "why_wrong": "二阶公式 $ad-bc$ 只在每块是 $1\\times1$ 时成立。反例：取 $A=D=O_2,\\ B=C=E_2$，即 $\\begin{pmatrix}0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \\\\ 1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0\\end{pmatrix}$，它的行列式是 $+1$（互换两对行）；照搬公式得 $0\\cdot0-1\\cdot1=-1$。",
+      "right": "分块的行列式只对**分块三角**（含分块对角）有「对角块行列式相乘」这个结论，一般的分块矩阵没有。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（分块对角的幂与行列式）",
+      "problem": "设 $A=\\begin{pmatrix}1&1&0&0\\\\0&1&0&0\\\\0&0&2&0\\\\0&0&0&3\\end{pmatrix}$，求 $A^3$ 和 $|A|$。",
+      "steps": [
+        {
+          "text": "分成两个对角块 $A_1=\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}$，$A_2=\\begin{pmatrix}2&0\\\\0&3\\end{pmatrix}$，$A=\\operatorname{diag}(A_1,A_2)$。",
+          "why": "看出块结构是关键；零块把两部分隔开。"
+        },
+        {
+          "text": "$A_1^3=\\begin{pmatrix}1&3\\\\0&1\\end{pmatrix}$（§2.2 例 2），$A_2^3=\\begin{pmatrix}8&0\\\\0&27\\end{pmatrix}$，故 $A^3=\\operatorname{diag}(A_1^3,A_2^3)$。",
+          "why": "对角块各自乘幂，互不影响。"
+        },
+        {
+          "text": "$|A|=|A_1||A_2|=1\\times6=6$。",
+          "why": "分块对角的行列式是各块行列式之积；也可看作上三角矩阵，对角线乘积 $1\times1\times2\times3=6$，一致。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0203a",
+      "knowledge": [
+        "linalg.block_ops"
+      ],
+      "stem": "设 $A=\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}$，$B=\\begin{pmatrix}3&1\\\\2&4\\end{pmatrix}$，$C$ 是任意的 $2\\times2$ 矩阵，则 $\\begin{vmatrix}A&C\\\\O&B\\end{vmatrix}=$",
+      "answer": {
+        "type": "numeric",
+        "value": -20
+      },
+      "solution": "分块上三角，$|A||B|$。$|A|=4-6=-2$，$|B|=12-2=10$，积为 $-20$；与 $C$ 无关。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，用独立工具复算（取具体 C 验证与 C 无关）"
+        }
+      ],
+      "varies": "右上角块任意：只需要看对角块，其余信息是干扰"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0203b",
+      "knowledge": [
+        "linalg.block_ops"
+      ],
+      "stem": "设 $B=(\\boldsymbol b_1,\\boldsymbol b_2)$ 按列分块，$A$ 是与 $B$ 可乘的矩阵，则 $AB=$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$(\\boldsymbol b_1A,\\ \\boldsymbol b_2A)$",
+          "$(A\\boldsymbol b_1,\\ A\\boldsymbol b_2)$",
+          "$(A+\\boldsymbol b_1,\\ A+\\boldsymbol b_2)$",
+          "$A\\boldsymbol b_1+A\\boldsymbol b_2$"
+        ],
+        "correct": 1
+      },
+      "solution": "$A$ 在左，$AB$ 的第 $j$ 列等于 $A\\boldsymbol b_j$。A 把次序写反；C 把乘法错当加法；D 把两列加成了一列。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：按列分块的乘法规则"
+        }
+      ],
+      "varies": "这条规则是第 3、4 章『线性组合』视角的基础"
+    }
+  ]
+}

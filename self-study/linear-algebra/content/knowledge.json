@@ -119,6 +119,201 @@
       ],
       "textbook_ref": "教材 §1.5",
       "syllabus_ref": "行列式：克拉默法则"
+    },
+    {
+      "id": "linalg.matrix_def",
+      "title": "矩阵的概念与相等",
+      "type": "概念",
+      "difficulty": 1,
+      "target": "掌握",
+      "requires": [],
+      "textbook_ref": "教材 §2.1",
+      "syllabus_ref": "矩阵：矩阵的概念"
+    },
+    {
+      "id": "linalg.special_matrices",
+      "title": "零、单位、对角、三角、对称矩阵",
+      "type": "概念",
+      "difficulty": 1,
+      "target": "掌握",
+      "requires": [
+        "linalg.matrix_def"
+      ],
+      "textbook_ref": "教材 §2.1",
+      "syllabus_ref": "矩阵：特殊矩阵"
+    },
+    {
+      "id": "linalg.mat_mul",
+      "title": "矩阵乘法",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.matrix_def"
+      ],
+      "textbook_ref": "教材 §2.2",
+      "syllabus_ref": "矩阵：矩阵的运算"
+    },
+    {
+      "id": "linalg.mat_noncomm",
+      "title": "乘法不交换、无消去律、有零因子",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "掌握",
+      "requires": [
+        "linalg.mat_mul"
+      ],
+      "textbook_ref": "教材 §2.2",
+      "syllabus_ref": "矩阵：矩阵的运算"
+    },
+    {
+      "id": "linalg.mat_transpose",
+      "title": "矩阵的转置与 (AB)ᵀ=BᵀAᵀ",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.mat_mul"
+      ],
+      "textbook_ref": "教材 §2.2",
+      "syllabus_ref": "矩阵：矩阵的运算"
+    },
+    {
+      "id": "linalg.mat_power",
+      "title": "方阵的幂",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "掌握",
+      "requires": [
+        "linalg.mat_mul"
+      ],
+      "textbook_ref": "教材 §2.2",
+      "syllabus_ref": "矩阵：矩阵的运算"
+    },
+    {
+      "id": "linalg.block_ops",
+      "title": "分块矩阵的运算与分块对角矩阵",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "掌握",
+      "requires": [
+        "linalg.mat_mul",
+        "linalg.det_expansion"
+      ],
+      "textbook_ref": "教材 §2.3",
+      "syllabus_ref": "矩阵：矩阵的分块"
+    },
+    {
+      "id": "linalg.inverse_def",
+      "title": "可逆矩阵与逆矩阵的概念",
+      "type": "概念",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.mat_mul",
+        "linalg.det_props"
+      ],
+      "textbook_ref": "教材 §2.4",
+      "syllabus_ref": "矩阵：可逆矩阵"
+    },
+    {
+      "id": "linalg.adjugate_inverse",
+      "title": "伴随矩阵与 A⁻¹ = A*/|A|",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.inverse_def",
+        "linalg.det_cofactor"
+      ],
+      "textbook_ref": "教材 §2.4",
+      "syllabus_ref": "矩阵：可逆矩阵"
+    },
+    {
+      "id": "linalg.inverse_props",
+      "title": "逆矩阵与伴随矩阵的性质",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.adjugate_inverse"
+      ],
+      "textbook_ref": "教材 §2.4",
+      "syllabus_ref": "矩阵：可逆矩阵"
+    },
+    {
+      "id": "linalg.matrix_equation",
+      "title": "解矩阵方程",
+      "type": "策略",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.inverse_props"
+      ],
+      "textbook_ref": "教材 §2.4",
+      "syllabus_ref": "矩阵：可逆矩阵"
+    },
+    {
+      "id": "linalg.elementary_matrix",
+      "title": "初等变换与初等矩阵（左行右列）",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.mat_mul"
+      ],
+      "textbook_ref": "教材 §2.5",
+      "syllabus_ref": "矩阵：矩阵的初等变换和初等矩阵"
+    },
+    {
+      "id": "linalg.inverse_by_rowop",
+      "title": "初等行变换求逆",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.elementary_matrix",
+        "linalg.inverse_def"
+      ],
+      "textbook_ref": "教材 §2.5",
+      "syllabus_ref": "矩阵：矩阵的初等变换和初等矩阵"
+    },
+    {
+      "id": "linalg.rank_def",
+      "title": "矩阵的秩与子式",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.det_expansion"
+      ],
+      "textbook_ref": "教材 §2.6",
+      "syllabus_ref": "矩阵：矩阵的秩"
+    },
+    {
+      "id": "linalg.rank_by_echelon",
+      "title": "化阶梯形求秩",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.rank_def",
+        "linalg.elementary_matrix"
+      ],
+      "textbook_ref": "教材 §2.6",
+      "syllabus_ref": "矩阵：矩阵的秩"
+    },
+    {
+      "id": "linalg.rank_props",
+      "title": "秩的性质",
+      "type": "概念",
+      "difficulty": 4,
+      "target": "掌握",
+      "requires": [
+        "linalg.rank_def"
+      ],
+      "textbook_ref": "教材 §2.6",
+      "syllabus_ref": "矩阵：矩阵的秩"
     }
   ]
 }

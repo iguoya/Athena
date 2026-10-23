@@ -1,0 +1,83 @@
+{
+  "id": "ch2-sec1",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0201",
+      "prompt": "先猜再验：矩阵 $\\begin{pmatrix}1 & 2 \\\\ 3 & 4\\end{pmatrix}$ 的「值」是多少？",
+      "options": [
+        "$-2$",
+        "$10$",
+        "它没有「值」，它只是一张数表",
+        "$5$"
+      ],
+      "correct": 2,
+      "explain": "圆括号的是**矩阵**，一张按行列排好的数表，不对应某个数。竖线的才是**行列式**，由方阵算出一个数：$\\begin{vmatrix}1&2\\\\3&4\\end{vmatrix}=-2$。第 1 章算的都是后者，从这一章起要分清两个符号。",
+      "knowledge": [
+        "linalg.matrix_def"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜矩阵与行列式的区别，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**矩阵是一张数表**\n\n由 $m\\times n$ 个数排成 $m$ 行 $n$ 列的表\n$$A=\\begin{pmatrix}a_{11}&a_{12}&\\cdots&a_{1n}\\\\ a_{21}&a_{22}&\\cdots&a_{2n}\\\\ \\vdots&\\vdots&&\\vdots\\\\ a_{m1}&a_{m2}&\\cdots&a_{mn}\\end{pmatrix}=(a_{ij})_{m\\times n}$$\n叫 $m\\times n$ **矩阵**，$a_{ij}$ 是第 $i$ 行第 $j$ 列的元素。$m=n$ 时叫 $n$ 阶**方阵**。两个矩阵**相等**，指行数列数都相同、对应元素都相等。\n\n**矩阵与行列式的区别**：矩阵可以是任意 $m\\times n$ 的表，没有「值」；行列式只对方阵才有，是按规则算出的一个数。\n\n**几类特殊矩阵**（以下都是方阵）\n- **零矩阵** $O$：元素全为 0（不一定是方阵）。\n- **单位矩阵** $E$：主对角线上全是 1，其余为 0。它在矩阵乘法里扮演数 1 的角色。\n- **对角矩阵**：主对角线以外的元素全为 0。\n- **上（下）三角矩阵**：主对角线下方（上方）的元素全为 0。\n- **对称矩阵**：$a_{ij}=a_{ji}$，即 $A^{\\mathrm T}=A$；**反对称矩阵**：$a_{ij}=-a_{ji}$（对角线上必为 0），即 $A^{\\mathrm T}=-A$。\n\n只有一行的矩阵叫行向量，只有一列的叫列向量，第 3 章要专门研究。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$|A|=|B|$，所以 $A=B$。",
+      "why_wrong": "行列式只记录方阵的一个数，不同的矩阵可以有同一个行列式。例如 $A=\\begin{pmatrix}1 & 0 \\\\ 0 & 2\\end{pmatrix}$，$B=\\begin{pmatrix}2 & 0 \\\\ 0 & 1\\end{pmatrix}$，$|A|=|B|=2$，但 $A\\neq B$。反过来 $A=B$ 一定推出 $|A|=|B|$。",
+      "right": "矩阵相等是逐个元素相等；行列式相等只是数相等，信息少得多。"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0201a",
+      "knowledge": [
+        "linalg.special_matrices"
+      ],
+      "stem": "设 3 阶方阵 $A=(a_{ij})$，其中 $a_{ij}=i-j$。则 $A$ 是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "对称矩阵",
+          "反对称矩阵",
+          "单位矩阵",
+          "对角矩阵"
+        ],
+        "correct": 1
+      },
+      "solution": "$a_{ji}=j-i=-(i-j)=-a_{ij}$，满足反对称的定义；对角线 $a_{ii}=0$ 与之相符。它不是对称矩阵，因为 $a_{12}=-1\\neq a_{21}=1$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：按定义逐条核对"
+        }
+      ],
+      "varies": "用通项公式判断矩阵类型，而不是给出具体数表"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0201b",
+      "knowledge": [
+        "linalg.matrix_def"
+      ],
+      "stem": "设 3 阶方阵 $A=(a_{ij})$，其中 $a_{ij}=i\\cdot j$，则 $A$ 的主对角线元素之和为",
+      "answer": {
+        "type": "numeric",
+        "value": 14
+      },
+      "solution": "主对角线元素 $a_{ii}=i^2$：$1+4+9=14$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造：由通项写出元素，检验下标与行列位置的对应"
+        }
+      ],
+      "varies": "下标 $i,j$ 的位置：第一个是行，第二个是列"
+    }
+  ]
+}
