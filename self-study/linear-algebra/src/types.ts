@@ -73,7 +73,7 @@ export type Block =
   | FigureBlock;
 
 export type SectionMeta = { id: string; no: string; title: string; knowledge: KnowledgeId[] };
-export type Chapter = { id: string; no: string; title: string; sections: SectionMeta[] };
+export type Chapter = { id: string; no: string; title: string; sections?: SectionMeta[] };
 
 export type CourseInfo = {
   id: string;

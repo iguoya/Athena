@@ -1,5 +1,5 @@
 import { figures } from "./App";
-import { Tex } from "./math";
+import { Prose, Tex } from "./math";
 import { Exercise } from "./Exercise";
 import { SourceBadge } from "./ui";
 import type {
@@ -24,7 +24,7 @@ function Blocks({
     case "prose":
       return (
         <div className="prose">
-          <Tex text={block.text} />
+          <Prose text={block.text} />
         </div>
       );
     case "example":
@@ -100,7 +100,7 @@ export function SectionView({
   onAnswered: (ids: string[], correct: boolean) => void;
 }) {
   const meta = curriculum.chapters
-    .flatMap((c) => c.sections.map((s) => ({ ...s, chapter: c })))
+    .flatMap((c) => (c.sections ?? []).map((s) => ({ ...s, chapter: c })))
     .find((s) => s.id === content.id);
   const points = (meta?.knowledge ?? [])
     .map((id) => knowledgeMap[id])

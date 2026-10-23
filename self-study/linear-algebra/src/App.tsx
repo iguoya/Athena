@@ -82,7 +82,7 @@ export function App() {
               <div className="chapter-title">
                 {ch.no} {ch.title}
               </div>
-              {ch.sections.map((sec) => (
+              {(ch.sections ?? []).map((sec) => (
                 <button
                   key={sec.id}
                   className={`section-link ${current === sec.id ? "active" : ""} ${
