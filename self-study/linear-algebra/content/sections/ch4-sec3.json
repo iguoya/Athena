@@ -1,0 +1,220 @@
+{
+  "id": "ch4-sec3",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0403",
+      "prompt": "先猜再验：3 个未知数的方程组，增广矩阵化成 $\\left(\\begin{array}{ccc|c}1&0&0&1\\\\0&1&0&2\\\\0&0&0&0\\end{array}\\right)$。它的解的情况是",
+      "options": [
+        "唯一解",
+        "无解",
+        "无穷多解",
+        "无法判断"
+      ],
+      "correct": 2,
+      "explain": "没有矛盾行，非零行数 2 小于未知数个数 3，$x_3$ 是自由未知量，取任意值都行：解为 $(1,2,0)^{\\mathrm T}+k(0,0,1)^{\\mathrm T}$，**无穷多解**。",
+      "knowledge": [
+        "linalg.nonhomog_criterion"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜解的情形，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**非齐次线性方程组 $A\\boldsymbol x=\\boldsymbol b$**\n\n**判别定理**\n- 有解 $\\iff r(A)=r(A\\,|\\,\\boldsymbol b)$；\n- 有解时：$r(A)=n\\Rightarrow$ **唯一解**；$r(A)<n\\Rightarrow$ **无穷多解**；\n- 无解 $\\iff r(A)<r(A\\,|\\,\\boldsymbol b)$（此时 $r(A\\,|\\,\\boldsymbol b)=r(A)+1$）。\n\n**解的结构**：设 $\\boldsymbol\\eta^*$ 是 $A\\boldsymbol x=\\boldsymbol b$ 的一个**特解**，$A\\boldsymbol x=\\boldsymbol0$（**导出组**）的基础解系是 $\\boldsymbol\\xi_1,\\dots,\\boldsymbol\\xi_{n-r}$，则通解为\n$$\\boldsymbol x=\\boldsymbol\\eta^*+k_1\\boldsymbol\\xi_1+\\cdots+k_{n-r}\\boldsymbol\\xi_{n-r}.$$\n原因：任意两个解的**差**是导出组的解。\n\n**解题步骤**：(1) 增广矩阵化行阶梯形，用 $r(A)$ 与 $r(A\\,|\\,\\boldsymbol b)$ 判断有无解；(2) 化行最简形，令自由未知量为 0 得一个特解；(3) 去掉常数列，求导出组基础解系；(4) 写通解。\n\n含参数的方程组：方阵情形先用行列式把「有唯一解」的参数范围排除（克拉默法则，§1.5），再把使行列式为 0 的**每个**参数值代回去，逐一判断无解还是无穷多解。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "非齐次方程组 $A\\boldsymbol x=\\boldsymbol b$ 的通解就是 $k_1\\boldsymbol\\xi_1+\\cdots+k_{n-r}\\boldsymbol\\xi_{n-r}$（$\\boldsymbol\\xi_i$ 是基础解系）。",
+      "why_wrong": "这是导出组 $A\\boldsymbol x=\\boldsymbol0$ 的通解，漏了特解。例：$x_1+x_2=2$，$\\boldsymbol\\xi=(-1,1)^{\\mathrm T}$。只写 $k\\boldsymbol\\xi$，取 $k=1$ 得 $(-1,1)$，代入左边得 $0\\neq2$，不是解。正确通解是 $(2,0)^{\\mathrm T}+k(-1,1)^{\\mathrm T}$。",
+      "right": "非齐次通解 = **一个特解 + 导出组的通解**，两部分缺一不可。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（通解的完整求法）",
+      "problem": "解方程组 $\\begin{cases}x_1+x_2+x_3=3\\\\x_2-x_3+x_4=5\\\\x_1+2x_3+x_4=4\\end{cases}$。",
+      "steps": [
+        {
+          "text": "增广矩阵 $\\left(\\begin{array}{cccc|c}1&1&1&0&3\\\\0&1&-1&1&5\\\\1&0&2&1&4\\end{array}\\right)$，$r_3-r_1,\\ r_3+r_2$，$\\frac12r_3$，再 $r_2-r_3,\\ r_1-r_2$，得最简形 $\\left(\\begin{array}{cccc|c}1&0&2&0&1\\\\0&1&-1&0&2\\\\0&0&0&1&3\\end{array}\\right)$。",
+          "why": "$r_3-r_1=(0,-1,1,1\\,|\\,1)$，加上 $r_2$ 得 $(0,0,0,2\\,|\\,6)$，除以 2 得 $(0,0,0,1\\,|\\,3)$。"
+        },
+        {
+          "text": "$r(A)=r(A\\,|\\,\\boldsymbol b)=3<4$，有无穷多解；自由未知量 $x_3$。方程：$x_1=1-2x_3,\\ x_2=2+x_3,\\ x_4=3$。",
+          "why": "没有矛盾行，非零行 3 行，$n=4$，自由未知量 $4-3=1$ 个。"
+        },
+        {
+          "text": "令 $x_3=0$ 得特解 $\\boldsymbol\\eta^*=(1,2,0,3)^{\\mathrm T}$。导出组去掉常数：$x_1=-2x_3,\\ x_2=x_3,\\ x_4=0$，令 $x_3=1$ 得 $\\boldsymbol\\xi=(-2,1,1,0)^{\\mathrm T}$。",
+          "why": "导出组就是把右端换成 0；$\\boldsymbol\\xi$ 代入原方程组的左端：$-2+1+1=0$，$1-1+0=0$，$-2+2+0=0$。"
+        },
+        {
+          "text": "通解 $\\boldsymbol x=(1,2,0,3)^{\\mathrm T}+k(-2,1,1,0)^{\\mathrm T}$，$k$ 为任意实数。",
+          "why": "检验特解：$1+2+0=3,\\ 2-0+3=5,\\ 1+0+3=4$，三个方程都成立。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，通解已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（含常数参数的有解条件）",
+      "problem": "已知 $\\begin{cases}x_1-x_2=a_1\\\\x_2-x_3=a_2\\\\x_3-x_1=a_3\\end{cases}$。(1) 常数 $a_1,a_2,a_3$ 满足什么条件时有解？(2) 有无穷多解时，用一个特解和导出组的基础解系表示通解。",
+      "steps": [
+        {
+          "text": "三个方程**相加**，左边为 $0$：$0=a_1+a_2+a_3$。所以有解的**必要条件**是 $a_1+a_2+a_3=0$。",
+          "why": "系数矩阵三行之和为零，所以 $r(A)=2$（前两行不成比例）；增广矩阵的第 3 行加上前两行得 $(0,0,0\\,|\\,a_1+a_2+a_3)$。"
+        },
+        {
+          "text": "此条件下 $r(A)=r(A\\,|\\,\\boldsymbol b)=2<3$，有无穷多解：条件 $a_1+a_2+a_3=0$ 既必要又充分。",
+          "why": "若 $a_1+a_2+a_3\\neq0$，增广矩阵秩为 3，$r(A)<r(A\\,|\\,\\boldsymbol b)$，无解。"
+        },
+        {
+          "text": "取 $x_3=0$：$x_2=a_2,\\ x_1=a_1+a_2$，特解 $\\boldsymbol\\eta^*=(a_1+a_2,\\ a_2,\\ 0)^{\\mathrm T}$。导出组 $x_1=x_2=x_3$，基础解系 $\\boldsymbol\\xi=(1,1,1)^{\\mathrm T}$。通解 $\\boldsymbol x=\\boldsymbol\\eta^*+k\\boldsymbol\\xi$。",
+          "why": "检验第 3 个方程：$x_3-x_1=0-(a_1+a_2)=a_3$（因为 $a_3=-a_1-a_2$），成立。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 20 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（含参方程组的讨论）",
+      "problem": "$\\lambda$ 取何值时，方程组 $\\begin{cases}\\lambda x_1+x_2+x_3=1\\\\x_1+\\lambda x_2+x_3=\\lambda\\\\x_1+x_2+\\lambda x_3=\\lambda^2\\end{cases}$ 有唯一解、无解、无穷多解？",
+      "steps": [
+        {
+          "text": "系数行列式 $D=(\\lambda+2)(\\lambda-1)^2$（§1.2 例 2 的套路，§1.5 例 2 同一个行列式）。",
+          "why": "方阵情形，先用克拉默法则划出唯一解的范围。"
+        },
+        {
+          "text": "$\\lambda\\neq1$ 且 $\\lambda\\neq-2$：$D\\neq0$，**唯一解**。",
+          "why": "克拉默法则。"
+        },
+        {
+          "text": "$\\lambda=1$：三个方程都是 $x_1+x_2+x_3=1$，$r(A)=r(A\\,|\\,\\boldsymbol b)=1<3$，**无穷多解**。",
+          "why": "常数项 $(1,1,1)$ 与系数行一致，没有矛盾。"
+        },
+        {
+          "text": "$\\lambda=-2$：增广矩阵 $\\left(\\begin{array}{ccc|c}-2&1&1&1\\\\1&-2&1&-2\\\\1&1&-2&4\\end{array}\\right)$，三行相加得 $(0,0,0\\,|\\,3)$，$r(A)=2<r(A\\,|\\,\\boldsymbol b)=3$，**无解**。",
+          "why": "行列式为零的两个值要**分别**代回去判断，它们的结论不同。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；自考常见的含参讨论，三种结论各占一类"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0403a",
+      "knowledge": [
+        "linalg.nonhomog_criterion"
+      ],
+      "stem": "线性方程组 $\\begin{cases}x_1-x_2=a_1\\\\x_2-x_3=a_2\\\\x_3-x_1=a_3\\end{cases}$ 有解的充分必要条件是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$a_1+a_2+a_3=0$",
+          "$a_1=a_2=a_3$",
+          "$a_1+a_2+a_3\\neq0$",
+          "对任意 $a_1,a_2,a_3$ 都有解"
+        ],
+        "correct": 0
+      },
+      "solution": "三个方程相加，左边为 0，所以必须 $a_1+a_2+a_3=0$；反之此条件下 $r(A)=r(A\\,|\\,\\boldsymbol b)=2$，有解。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "locator": "全国 2018 年 4 月 第 20 题",
+          "note": "原题第 (1) 问「讨论 a1,a2,a3 满足什么条件时有解」，这里改成选择题并自拟干扰项；方程组原样不变"
+        }
+      ],
+      "varies": "把『有解』翻译成『三个方程相加』这一步观察，比直接消元更快"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0403b",
+      "knowledge": [
+        "linalg.param_system"
+      ],
+      "stem": "方程组 $\\begin{cases}\\lambda x_1+x_2+x_3=1\\\\x_1+\\lambda x_2+x_3=\\lambda\\\\x_1+x_2+\\lambda x_3=\\lambda^2\\end{cases}$ **无解**，则 $\\lambda=$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$1$",
+          "$-2$",
+          "$1$ 或 $-2$",
+          "$2$"
+        ],
+        "correct": 1
+      },
+      "solution": "由例 3：$\\lambda=1$ 时无穷多解，$\\lambda=-2$ 时无解，其余唯一解。选 C 的错误是只用 $D=0$ 不区分两个值。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：与例 3 对照"
+        }
+      ],
+      "varies": "行列式为零不等于无解，还要看增广矩阵的秩"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0403c",
+      "knowledge": [
+        "linalg.nonhomog_structure"
+      ],
+      "stem": "例 1 的通解为 $\\boldsymbol x=(1,2,0,3)^{\\mathrm T}+k(-2,1,1,0)^{\\mathrm T}$。取 $k=2$ 得到的解中，$x_1=$",
+      "answer": {
+        "type": "numeric",
+        "value": -3
+      },
+      "solution": "$x_1=1+2\\times(-2)=1-4=-3$。完整解 $(-3,4,2,3)^{\\mathrm T}$ 代入第 1 个方程：$-3+4+2=3$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "通解里取具体的 $k$：每个 $k$ 对应一个解，不是只有特解才是解"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0403d",
+      "knowledge": [
+        "linalg.nonhomog_structure"
+      ],
+      "stem": "设 $\\boldsymbol\\eta_1,\\boldsymbol\\eta_2$ 是非齐次方程组 $A\\boldsymbol x=\\boldsymbol b$（$\\boldsymbol b\\neq\\boldsymbol0$）的两个解，则 $\\boldsymbol\\eta_1-\\boldsymbol\\eta_2$ 一定是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$A\\boldsymbol x=\\boldsymbol b$ 的解",
+          "$A\\boldsymbol x=\\boldsymbol0$ 的解",
+          "$A\\boldsymbol x=2\\boldsymbol b$ 的解",
+          "不一定是任何方程组的解"
+        ],
+        "correct": 1
+      },
+      "solution": "$A(\\boldsymbol\\eta_1-\\boldsymbol\\eta_2)=\\boldsymbol b-\\boldsymbol b=\\boldsymbol0$，是导出组的解。这正是「通解 = 特解 + 导出组通解」的原因。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：两解之差属于导出组"
+        }
+      ],
+      "varies": "用 $A\\boldsymbol\\eta=\\boldsymbol b$ 直接代入验证，不需要具体数值"
+    }
+  ]
+}

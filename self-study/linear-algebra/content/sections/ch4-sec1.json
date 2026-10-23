@@ -1,0 +1,108 @@
+{
+  "id": "ch4-sec1",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0401",
+      "prompt": "先猜再验：一个线性方程组（未知数个数任意），解的个数可能有哪几种？",
+      "options": [
+        "无解、唯一解、无穷多解，三种之一",
+        "无解、唯一解、恰有两个解、无穷多解",
+        "只有唯一解或无解",
+        "取决于方程个数，没有固定规律"
+      ],
+      "correct": 0,
+      "explain": "线性方程组的解集是「平的」（点、直线、平面……），不可能恰有两个解：若有两个解 $\\boldsymbol x_1\\neq\\boldsymbol x_2$，则连线上的所有点 $\\boldsymbol x_1+t(\\boldsymbol x_2-\\boldsymbol x_1)$ 也是解。这一章要回答的就是：怎样判定是哪一种，并把解写出来。",
+      "knowledge": [
+        "linalg.linear_system"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜解的个数，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**方程组的矩阵形式与高斯消元法**\n\n$m$ 个方程、$n$ 个未知数的线性方程组可以写成 $A\\boldsymbol x=\\boldsymbol b$，$A$ 是 $m\\times n$ **系数矩阵**，$\\boldsymbol b$ 是常数项列。把 $\\boldsymbol b$ 并在 $A$ 右侧得 **增广矩阵** $(A\\,|\\,\\boldsymbol b)$。\n\n**高斯消元法**：对增广矩阵施行初等行变换（交换两行、某行乘非零数、某行加另一行的倍数），把它化成**行阶梯形**，再回代求解。初等行变换是**同解变形**：每一步相当于对方程组左乘一个可逆矩阵，解集不变。\n\n读阶梯形的结论：\n- 出现 $(0,0,\\dots,0\\,|\\,d)$，$d\\neq0$，即「$0=d$」：**无解**；\n- 没有矛盾行，非零行数 $r=n$：**唯一解**；\n- 没有矛盾行，$r<n$：**无穷多解**，有 $n-r$ 个**自由未知量**。\n\n第 4.3 节会把这个读法写成严格的秩判别式 $r(A)$ 与 $r(A\\,|\\,\\boldsymbol b)$。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "方程个数少于未知数个数时，方程组一定有无穷多解。",
+      "why_wrong": "这只在方程组**有解**的前提下成立。反例：$\\begin{cases}x+y+z=1\\\\x+y+z=2\\end{cases}$，2 个方程 3 个未知数，却无解（$0=1$）。「方程少未知数多」只保证有无穷多**非零**解的是**齐次**方程组（4.2 节）。",
+      "right": "非齐次方程组先判断有没有解，再谈解的个数：无解 / 唯一 / 无穷多都可能出现，与方程个数没有直接对应。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（高斯消元求唯一解）",
+      "problem": "解方程组 $\\begin{cases}x_1+2x_2+x_3=8\\\\2x_1+3x_2-x_3=5\\\\x_1-x_2+2x_3=5\\end{cases}$。",
+      "steps": [
+        {
+          "text": "增广矩阵 $\\left(\\begin{array}{ccc|c}1&2&1&8\\\\2&3&-1&5\\\\1&-1&2&5\\end{array}\\right)$，$r_2-2r_1,\\ r_3-r_1$：$\\left(\\begin{array}{ccc|c}1&2&1&8\\\\0&-1&-3&-11\\\\0&-3&1&-3\\end{array}\\right)$。",
+          "why": "用第 1 行把第 1 列的其余元素消成 0。"
+        },
+        {
+          "text": "$r_3-3r_2$：$\\left(\\begin{array}{ccc|c}1&2&1&8\\\\0&-1&-3&-11\\\\0&0&10&30\\end{array}\\right)$。",
+          "why": "已是行阶梯形，没有矛盾行，非零行数 3 = 未知数个数 3，所以有唯一解。"
+        },
+        {
+          "text": "回代：$10x_3=30\\Rightarrow x_3=3$；$-x_2-9=-11\\Rightarrow x_2=2$；$x_1+4+3=8\\Rightarrow x_1=1$。解为 $(1,2,3)^{\\mathrm T}$。",
+          "why": "检验第 2 个方程：$2\\cdot1+3\\cdot2-3=5$，第 3 个：$1-2+6=5$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，解已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0401a",
+      "knowledge": [
+        "linalg.gauss_elim"
+      ],
+      "stem": "方程组的增广矩阵经初等行变换化成 $\\left(\\begin{array}{ccc|c}1&2&-1&3\\\\0&1&4&2\\\\0&0&0&5\\end{array}\\right)$，则该方程组",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "有唯一解",
+          "有无穷多解",
+          "无解",
+          "无法判断"
+        ],
+        "correct": 2
+      },
+      "solution": "最后一行是 $0x_1+0x_2+0x_3=5$，即 $0=5$，矛盾，方程组**无解**。此时系数矩阵的秩是 2，增广矩阵的秩是 3。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：读阶梯形里的矛盾行"
+        }
+      ],
+      "varies": "只看最后一行：矛盾行的出现与前面各行无关"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0401b",
+      "knowledge": [
+        "linalg.gauss_elim"
+      ],
+      "stem": "方程组 $\\begin{cases}x_1+2x_2+x_3=8\\\\2x_1+3x_2-x_3=5\\\\x_1-x_2+2x_3=5\\end{cases}$（与例 1 同）的解 $(x_1,x_2,x_3)$ 中，$x_2=$",
+      "answer": {
+        "type": "numeric",
+        "value": 2
+      },
+      "solution": "由例 1，解为 $(1,2,3)^{\\mathrm T}$，$x_2=2$。快速检验：代入第 1 个方程 $1+4+3=8$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，解已复算（与例 1 同题，检验不看解答能否复现）"
+        }
+      ],
+      "varies": "先自己消元，再对照例 1，检验的是消元过程而不是记结果"
+    }
+  ]
+}

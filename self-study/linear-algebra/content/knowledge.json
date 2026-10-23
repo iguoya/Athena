@@ -452,6 +452,201 @@
       ],
       "textbook_ref": "教材 §3.5",
       "syllabus_ref": "向量空间：标准正交基"
+    },
+    {
+      "id": "linalg.linear_system",
+      "title": "线性方程组的矩阵形式与解的三种情形",
+      "type": "概念",
+      "difficulty": 1,
+      "target": "掌握",
+      "requires": [
+        "linalg.mat_mul"
+      ],
+      "textbook_ref": "教材 §4.1",
+      "syllabus_ref": "线性方程组：线性方程组的表示"
+    },
+    {
+      "id": "linalg.gauss_elim",
+      "title": "高斯消元法（化阶梯形、回代）",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.linear_system",
+        "linalg.rank_by_echelon"
+      ],
+      "textbook_ref": "教材 §4.1",
+      "syllabus_ref": "线性方程组：高斯消元法"
+    },
+    {
+      "id": "linalg.homog_solution",
+      "title": "齐次方程组有无非零解的判定",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.rank_def",
+        "linalg.cramer_homogeneous"
+      ],
+      "textbook_ref": "教材 §4.2",
+      "syllabus_ref": "线性方程组：齐次线性方程组"
+    },
+    {
+      "id": "linalg.fundamental_system",
+      "title": "基础解系与齐次方程组的通解",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.homog_solution",
+        "linalg.max_indep"
+      ],
+      "textbook_ref": "教材 §4.2",
+      "syllabus_ref": "线性方程组：齐次线性方程组"
+    },
+    {
+      "id": "linalg.nonhomog_criterion",
+      "title": "非齐次方程组有解与唯一性的判别",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.vector_rank",
+        "linalg.rep_by_rank"
+      ],
+      "textbook_ref": "教材 §4.3",
+      "syllabus_ref": "线性方程组：非齐次线性方程组"
+    },
+    {
+      "id": "linalg.nonhomog_structure",
+      "title": "非齐次方程组通解的结构（特解 + 导出组通解）",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.fundamental_system",
+        "linalg.nonhomog_criterion"
+      ],
+      "textbook_ref": "教材 §4.3",
+      "syllabus_ref": "线性方程组：非齐次线性方程组"
+    },
+    {
+      "id": "linalg.param_system",
+      "title": "含参数线性方程组的讨论",
+      "type": "策略",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.nonhomog_criterion",
+        "linalg.cramer"
+      ],
+      "textbook_ref": "教材 §4.3",
+      "syllabus_ref": "线性方程组：非齐次线性方程组"
+    },
+    {
+      "id": "linalg.eigen_def",
+      "title": "特征值与特征向量的概念",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.homog_solution",
+        "linalg.det_props"
+      ],
+      "textbook_ref": "教材 §5.1",
+      "syllabus_ref": "矩阵的相似对角化：特征值与特征向量"
+    },
+    {
+      "id": "linalg.eigen_compute",
+      "title": "求特征值与特征向量",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.eigen_def",
+        "linalg.fundamental_system"
+      ],
+      "textbook_ref": "教材 §5.1",
+      "syllabus_ref": "矩阵的相似对角化：特征值与特征向量"
+    },
+    {
+      "id": "linalg.eigen_props",
+      "title": "特征值的性质（迹、行列式、矩阵多项式）",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.eigen_def",
+        "linalg.inverse_props"
+      ],
+      "textbook_ref": "教材 §5.1",
+      "syllabus_ref": "矩阵的相似对角化：特征值与特征向量"
+    },
+    {
+      "id": "linalg.similar",
+      "title": "相似矩阵及其不变量",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.eigen_def",
+        "linalg.inverse_def"
+      ],
+      "textbook_ref": "教材 §5.2",
+      "syllabus_ref": "矩阵的相似对角化：相似矩阵"
+    },
+    {
+      "id": "linalg.diagonalizable",
+      "title": "矩阵可对角化的条件",
+      "type": "概念",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.eigen_compute",
+        "linalg.lin_dep_def"
+      ],
+      "textbook_ref": "教材 §5.2",
+      "syllabus_ref": "矩阵的相似对角化：矩阵的对角化"
+    },
+    {
+      "id": "linalg.diagonalize_compute",
+      "title": "对角化与矩阵的幂",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.diagonalizable",
+        "linalg.mat_power"
+      ],
+      "textbook_ref": "教材 §5.2",
+      "syllabus_ref": "矩阵的相似对角化：矩阵的对角化"
+    },
+    {
+      "id": "linalg.symmetric_props",
+      "title": "实对称矩阵的性质",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.eigen_def",
+        "linalg.orthonormal"
+      ],
+      "textbook_ref": "教材 §5.3",
+      "syllabus_ref": "矩阵的相似对角化：实对称矩阵的对角化"
+    },
+    {
+      "id": "linalg.orthogonal_diagonalize",
+      "title": "实对称矩阵的正交对角化",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.symmetric_props",
+        "linalg.gram_schmidt",
+        "linalg.diagonalize_compute"
+      ],
+      "textbook_ref": "教材 §5.3",
+      "syllabus_ref": "矩阵的相似对角化：实对称矩阵的对角化"
     }
   ]
 }

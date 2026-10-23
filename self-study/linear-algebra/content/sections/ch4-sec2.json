@@ -1,0 +1,135 @@
+{
+  "id": "ch4-sec2",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0402",
+      "prompt": "先猜再验：$A$ 是 $3\\times5$ 矩阵，齐次方程组 $A\\boldsymbol x=\\boldsymbol0$ 有没有**非零解**？",
+      "options": [
+        "一定有",
+        "一定没有",
+        "要看 $A$ 的具体数值",
+        "无法判断"
+      ],
+      "correct": 0,
+      "explain": "$r(A)\\le3<5$：5 个未知数，至多 3 个方程「起作用」，一定剩下自由未知量，可以取非零值。「未知数个数大于方程个数的齐次方程组必有非零解」是常用结论。",
+      "knowledge": [
+        "linalg.homog_solution"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜非零解的存在性，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**齐次线性方程组**\n\n$A\\boldsymbol x=\\boldsymbol0$（$A$ 是 $m\\times n$）总有**零解** $\\boldsymbol x=\\boldsymbol0$。问题是有没有**非零解**：\n- 有非零解 $\\iff r(A)<n$；只有零解 $\\iff r(A)=n$。\n- $A$ 为 $n$ 阶方阵时：有非零解 $\\iff|A|=0$（对照 §1.5）。\n- $m<n$（方程少于未知数）必有非零解。\n\n**解的结构**：Ax=0 的两个解的和、数乘仍是解，所有解构成一个「解空间」。解空间的一个极大线性无关组叫**基础解系**，它含 $n-r(A)$ 个向量 $\\boldsymbol\\xi_1,\\dots,\\boldsymbol\\xi_{n-r}$。**通解**为\n$$\\boldsymbol x=k_1\\boldsymbol\\xi_1+k_2\\boldsymbol\\xi_2+\\cdots+k_{n-r}\\boldsymbol\\xi_{n-r}\\quad(k_i\\text{ 为任意常数}).$$\n\n**求基础解系**：把 $A$ 用初等行变换化成行最简形；**非主元列对应的未知量是自由未知量**。依次让一个自由未知量取 1、其余取 0，由最简形的方程求出主元未知量，得一个解；每个自由未知量对应一个解，合起来就是基础解系。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "齐次方程组的基础解系是唯一的。",
+      "why_wrong": "基础解系只要求「线性无关、个数为 $n-r$、都是解」，取法不唯一。例：解空间有基础解系 $\\boldsymbol\\xi_1=(1,1,0,0)^{\\mathrm T},\\ \\boldsymbol\\xi_2=(-1,0,2,1)^{\\mathrm T}$，则 $\\boldsymbol\\xi_1+\\boldsymbol\\xi_2=(0,1,2,1)^{\\mathrm T},\\ \\boldsymbol\\xi_2$ 也是一个基础解系（两个都是解，线性无关）。",
+      "right": "基础解系**不唯一**，但每个基础解系含的向量个数相同（$n-r$），通解的集合相同，只是写法不同。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（求基础解系与通解）",
+      "problem": "求 $\\begin{cases}x_1-x_2+x_4=0\\\\x_1-x_2+x_3-x_4=0\\end{cases}$ 的基础解系和通解。",
+      "steps": [
+        {
+          "text": "系数矩阵 $A=\\begin{pmatrix}1 & -1 & 0 & 1 \\\\ 1 & -1 & 1 & -1\\end{pmatrix}$，$r_2-r_1$：$\\begin{pmatrix}1 & -1 & 0 & 1 \\\\ 0 & 0 & 1 & -2\\end{pmatrix}$（已是最简形）。",
+          "why": "$r(A)=2$，$n=4$，基础解系含 $4-2=2$ 个向量。"
+        },
+        {
+          "text": "主元在第 1、3 列，所以 $x_2,x_4$ 是自由未知量。方程：$x_1=x_2-x_4,\\ x_3=2x_4$。",
+          "why": "每个非零行对应一个主元未知量，用自由未知量表示它。"
+        },
+        {
+          "text": "令 $(x_2,x_4)=(1,0)$：$\\boldsymbol\\xi_1=(1,1,0,0)^{\\mathrm T}$；令 $(x_2,x_4)=(0,1)$：$\\boldsymbol\\xi_2=(-1,0,2,1)^{\\mathrm T}$。通解 $\\boldsymbol x=k_1\\boldsymbol\\xi_1+k_2\\boldsymbol\\xi_2$。",
+          "why": "检验 $\\boldsymbol\\xi_2$ 代入第 2 个方程：$-1-0+2-1=0$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，基础解系已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0402a",
+      "knowledge": [
+        "linalg.fundamental_system"
+      ],
+      "stem": "设 $A=\\begin{pmatrix}1 & -2 & 2 \\\\ 2 & 1 & -1 \\\\ 3 & -1 & 1\\end{pmatrix}$，则 3 元齐次线性方程组 $A\\boldsymbol x=\\boldsymbol0$ 的通解为（$k$ 为任意实数）",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$k(0,1,1)^{\\mathrm T}$",
+          "$k(1,1,0)^{\\mathrm T}$",
+          "$k(0,1,-1)^{\\mathrm T}$",
+          "只有零解"
+        ],
+        "correct": 0
+      },
+      "solution": "行变换化最简形得 $\\begin{pmatrix}1&0&0\\\\0&1&-1\\\\0&0&0\\end{pmatrix}$，$r(A)=2$，基础解系含 $3-2=1$ 个向量：$x_1=0,\\ x_2=x_3$，取 $x_3=1$ 得 $(0,1,1)^{\\mathrm T}$。检验：$A(0,1,1)^{\\mathrm T}=(-2+2,\\ 1-1,\\ -1+1)^{\\mathrm T}=\\boldsymbol0$。其余选项代入都得不到零向量。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "locator": "全国 2018 年 4 月 第 12 题",
+          "note": "原题为填空题，这里改为选择题并自拟三个干扰项；矩阵与方程组原样不变"
+        }
+      ],
+      "varies": "通解要带任意常数 $k$，且是整个直线而不是一个具体解"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0402b",
+      "knowledge": [
+        "linalg.homog_solution"
+      ],
+      "stem": "$A$ 为 $3\\times5$ 矩阵，$r(A)=2$，则齐次方程组 $A\\boldsymbol x=\\boldsymbol0$ 的基础解系中含有的向量个数为",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "个数 $=n-r(A)=5-2=3$。注意 $n$ 是**未知数个数**（列数 5），不是方程个数 3。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；n − r 的直接应用，n 是列数的常见易错点"
+        }
+      ],
+      "varies": "n 取列数还是行数：自由未知量个数由列数决定"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0402c",
+      "knowledge": [
+        "linalg.homog_solution"
+      ],
+      "stem": "设 $A$ 为 $n$ 阶方阵，则 $A\\boldsymbol x=\\boldsymbol0$ 有非零解的充分必要条件是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$|A|\\neq0$",
+          "$|A|=0$",
+          "$A=O$",
+          "$A$ 可逆"
+        ],
+        "correct": 1
+      },
+      "solution": "有非零解 $\\iff r(A)<n\\iff|A|=0\\iff A$ 不可逆。A、D 说的是只有零解。C 太强：$A$ 不是零矩阵时（如奇异矩阵）也可以有非零解。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：方阵情形的齐次方程组"
+        }
+      ],
+      "varies": "充要条件的方向：有非零解对应行列式为零，而不是不为零"
+    }
+  ]
+}
