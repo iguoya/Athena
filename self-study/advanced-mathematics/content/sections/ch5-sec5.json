@@ -1,0 +1,184 @@
+{
+  "id": "ch5-sec5",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0505",
+      "prompt": "先猜再验：把 $y=\\mathrm e^{rx}$ 代入 $y''-3y'+2y=0$，得到关于 $r$ 的方程是",
+      "options": [
+        "$r^2-3r+2=0$",
+        "$r-3+2=0$",
+        "$r^2-3r=2$",
+        "$\\mathrm e^{r}=0$"
+      ],
+      "correct": 0,
+      "explain": "$y=\\mathrm e^{rx}$ 时 $y'=r\\mathrm e^{rx},\\ y''=r^2\\mathrm e^{rx}$，代入得 $(r^2-3r+2)\\mathrm e^{rx}=0$。$\\mathrm e^{rx}\\neq0$，所以 $r^2-3r+2=0$。这个**特征方程**的根决定了解的形状。",
+      "knowledge": [
+        "advmath.const_coeff_homog"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜特征方程，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**二阶常系数线性方程** $y''+py'+qy=f(x)$（$p,q$ 为常数）\n\n**齐次** $y''+py'+qy=0$：由特征方程 $r^2+pr+q=0$ 的根决定通解。\n\n- 两个不等实根 $r_1\\neq r_2$：$y=C_1\\mathrm e^{r_1x}+C_2\\mathrm e^{r_2x}$；\n- 二重实根 $r_1=r_2=r$：$y=(C_1+C_2x)\\mathrm e^{rx}$；\n- 一对共轭复根 $r=\\alpha\\pm\\mathrm i\\beta$：$y=\\mathrm e^{\\alpha x}(C_1\\cos\\beta x+C_2\\sin\\beta x)$。\n\n**非齐次（选学）** $f(x)=P_m(x)\\mathrm e^{\\lambda x}$（$P_m$ 是 $m$ 次多项式）：设特解\n$$y^*=x^k\\,Q_m(x)\\,\\mathrm e^{\\lambda x},$$\n$Q_m$ 是与 $P_m$ 同次的待定多项式；$k$ 看 $\\lambda$ 是**特征方程的几重根**：$\\lambda$ 不是根取 $k=0$，是单根取 $k=1$，是二重根取 $k=2$。代入方程比较系数定出 $Q_m$ 的系数；通解 $y=Y+y^*$。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch5-sec5-roots.svg",
+      "caption": "三类特征根对应的解的形状：不等实根（指数函数的组合）、二重根（带 $x$ 的因子，先升后降）、共轭复根（振荡，包络线是 $\\pm\\mathrm e^{\\alpha x}$；$\\alpha<0$ 时衰减）。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$y''-4y'+4y=0$ 的特征方程有二重根 $r=2$，通解是 $y=C\\mathrm e^{2x}$。",
+      "why_wrong": "二重根只给出一个解 $\\mathrm e^{2x}$，二阶方程需要两个线性无关的解。另一个解是 $x\\mathrm e^{2x}$（可代入验证），所以通解 $y=(C_1+C_2x)\\mathrm e^{2x}$。若只写一项，常数个数少于阶数。",
+      "right": "二重根：$(C_1+C_2x)\\mathrm e^{rx}$，两个任意常数。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（三类特征根）",
+      "problem": "求下列方程的通解：(1) $y''-3y'+2y=0$；(2) $y''-4y'+4y=0$；(3) $y''+2y'+5y=0$。",
+      "steps": [
+        {
+          "text": "(1) $r^2-3r+2=0$，$r=1,2$。$y=C_1\\mathrm e^x+C_2\\mathrm e^{2x}$。",
+          "why": "两个不等实根。"
+        },
+        {
+          "text": "(2) $r^2-4r+4=(r-2)^2=0$，二重根 $r=2$。$y=(C_1+C_2x)\\mathrm e^{2x}$。",
+          "why": "二重根要补上 $x$ 因子。"
+        },
+        {
+          "text": "(3) $r^2+2r+5=0$，$r=-1\\pm2\\mathrm i$，$\\alpha=-1,\\beta=2$。$y=\\mathrm e^{-x}(C_1\\cos2x+C_2\\sin2x)$。",
+          "why": "复根的实部进指数，虚部进三角函数。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，三个通解均已用 sympy 代回验证"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（非齐次，选学：$\\lambda$ 是单根）",
+      "problem": "求 $y''-3y'+2y=\\mathrm e^x$ 的通解。",
+      "steps": [
+        {
+          "text": "齐次通解 $Y=C_1\\mathrm e^x+C_2\\mathrm e^{2x}$。$f=\\mathrm e^x$，$\\lambda=1$，$P_0=1$（零次）。",
+          "why": "$\\lambda=1$ 是特征方程的**单根**，取 $k=1$。"
+        },
+        {
+          "text": "设 $y^*=Ax\\mathrm e^x$：$y^{*\\prime}=A(1+x)\\mathrm e^x,\\ y^{*\\prime\\prime}=A(2+x)\\mathrm e^x$，代入：$A\\left[(2+x)-3(1+x)+2x\\right]\\mathrm e^x=-A\\mathrm e^x=\\mathrm e^x$，$A=-1$。",
+          "why": "$x$ 项抵消，只剩常数项；若误设 $A\\mathrm e^x$ 会得到 $0=1$ 的矛盾。"
+        },
+        {
+          "text": "通解 $y=C_1\\mathrm e^x+C_2\\mathrm e^{2x}-x\\mathrm e^x$。",
+          "why": "已用 sympy 代回验证。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 代回验证"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0505a",
+      "knowledge": [
+        "advmath.const_coeff_homog"
+      ],
+      "stem": "$y''+4y=0$ 的通解是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$y=C_1\\cos2x+C_2\\sin2x$",
+          "$y=C_1\\mathrm e^{2x}+C_2\\mathrm e^{-2x}$",
+          "$y=(C_1+C_2x)\\mathrm e^{2x}$",
+          "$y=C_1\\cos4x+C_2\\sin4x$"
+        ],
+        "correct": 0
+      },
+      "solution": "$r^2+4=0$，$r=\\pm2\\mathrm i$，$\\alpha=0,\\beta=2$：$y=C_1\\cos2x+C_2\\sin2x$。B 是 $y''-4y=0$ 的通解；C 是 $y''-4y'+4y=0$ 的；D 的频率错（$\\beta=\\sqrt4=2$，不是 4）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：纯虚根"
+        }
+      ],
+      "varies": "$\\alpha=0$ 时没有指数因子；$\\beta=\\sqrt q$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0505b",
+      "knowledge": [
+        "advmath.const_coeff_homog"
+      ],
+      "stem": "方程 $y''-5y'+6y=0$ 的两个特征根之和为",
+      "answer": {
+        "type": "numeric",
+        "value": 5
+      },
+      "solution": "$r^2-5r+6=(r-2)(r-3)=0$，$r=2,3$，和为 5（也可由韦达定理 $r_1+r_2=-p=5$ 直接得到）。通解 $y=C_1\\mathrm e^{2x}+C_2\\mathrm e^{3x}$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "韦达定理 $r_1+r_2=-p,\\ r_1r_2=q$ 是检验特征根的捷径"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0505c",
+      "knowledge": [
+        "advmath.const_coeff_homog"
+      ],
+      "stem": "$y''-y=0$ 满足 $y(0)=1,\\ y'(0)=1$ 的特解在 $x=\\ln3$ 处的值 $y(\\ln3)=$",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "$r=\\pm1$：$y=C_1\\mathrm e^x+C_2\\mathrm e^{-x}$。$y(0)=C_1+C_2=1$，$y'(0)=C_1-C_2=1$，得 $C_1=1,\\ C_2=0$，$y=\\mathrm e^x$。$y(\\ln3)=3$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "两个初始条件定两个常数，恰好 $C_2=0$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0505d",
+      "knowledge": [
+        "advmath.const_coeff_nonhomog"
+      ],
+      "stem": "（选学）方程 $y''-3y'+2y=\\mathrm e^x$ 的特解应设为",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$y^*=A\\mathrm e^x$",
+          "$y^*=Ax\\mathrm e^x$",
+          "$y^*=Ax^2\\mathrm e^x$",
+          "$y^*=A$"
+        ],
+        "correct": 1
+      },
+      "solution": "$\\lambda=1$ 是特征方程 $r^2-3r+2=0$ 的**单根**，取 $k=1$：$y^*=Ax\\mathrm e^x$。A 会得到 $0=1$（因为 $\\mathrm e^x$ 本身是齐次解）；C 用于二重根。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：$\\lambda$ 与特征根的关系决定 $k$"
+        }
+      ],
+      "varies": "$f$ 的指数与特征根重合时要乘 $x$"
+    }
+  ]
+}

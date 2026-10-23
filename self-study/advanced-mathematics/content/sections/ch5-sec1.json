@@ -1,0 +1,156 @@
+{
+  "id": "ch5-sec1",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0501",
+      "prompt": "先猜再验：满足 $y'=2y$ 的函数 $y(x)$ 有多少个？",
+      "options": [
+        "只有一个",
+        "恰好两个",
+        "无穷多个，形如 $y=C\\mathrm e^{2x}$（$C$ 为任意常数）",
+        "不存在"
+      ],
+      "correct": 2,
+      "explain": "$y=C\\mathrm e^{2x}$ 对每个 $C$ 都满足 $y'=2C\\mathrm e^{2x}=2y$。微分方程的解通常是**一族**函数，含有任意常数；加上初始条件（如 $y(0)=1$）才能定出其中一个（$C=1$）。",
+      "knowledge": [
+        "advmath.ode_concept"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜微分方程解的个数，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**微分方程的基本概念**\n\n含有未知函数的导数（或微分）的方程叫**微分方程**；未知函数只有一个自变量的叫**常微分方程**。方程中出现的最高阶导数的阶数叫方程的**阶**。\n\n**解**：代入方程使它成为恒等式的函数。\n- **通解**：含有**独立的**任意常数、常数个数等于方程阶数的解。\n- **特解**：通解中的任意常数取定值后的解。\n- **初始条件**：确定特解的条件，$n$ 阶方程需要 $n$ 个，如 $y(x_0)=y_0,\\ y'(x_0)=y_1$。方程加初始条件叫**初值问题**。\n\n**验证一个函数是不是解**：把它和它的各阶导数代回方程，看是否恒成立；要说是**通解**，还要看任意常数的个数是否等于阶数。\n\n**几何意义**：通解 $y=\\varphi(x,C)$ 是平面上的一族曲线（**积分曲线族**），特解是其中过指定点的那一条。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch5-sec1-family.svg",
+      "caption": "$y'=y$ 的通解 $y=C\\mathrm e^x$ 是一族曲线（灰色）；初始条件 $y(0)=1$ 选出其中过 $(0,1)$ 的一条（红色，$C=1$）。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$y=C_1\\mathrm e^x+C_2\\mathrm e^{x}$ 是二阶方程 $y''-y=0$ 的通解，因为含有两个任意常数。",
+      "why_wrong": "两个常数必须是**独立的**。$C_1\\mathrm e^x+C_2\\mathrm e^x=(C_1+C_2)\\mathrm e^x$，实际上只有一个独立常数，它不是 $y''-y=0$ 的通解。通解应为 $y=C_1\\mathrm e^x+C_2\\mathrm e^{-x}$（两个函数不成比例）。",
+      "right": "通解的任意常数个数 = 阶数，且这些常数不能合并成更少的。判断独立性见 §4 的线性无关。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（验证通解、确定特解）",
+      "problem": "验证 $y=C\\mathrm e^{2x}$ 是 $y'=2y$ 的通解，并求满足 $y(0)=3$ 的特解。",
+      "steps": [
+        {
+          "text": "$y'=2C\\mathrm e^{2x}=2y$，对任意 $C$ 成立；方程一阶，解含一个任意常数，所以是通解。",
+          "why": "代回方程，常数个数对上阶数。"
+        },
+        {
+          "text": "$y(0)=C\\mathrm e^0=C=3$，特解 $y=3\\mathrm e^{2x}$。",
+          "why": "初始条件定出常数。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 代回验证"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（二阶方程的通解）",
+      "problem": "验证 $y=C_1\\cos x+C_2\\sin x$ 是 $y''+y=0$ 的通解。",
+      "steps": [
+        {
+          "text": "$y'=-C_1\\sin x+C_2\\cos x$，$y''=-C_1\\cos x-C_2\\sin x=-y$，所以 $y''+y=0$ 恒成立。",
+          "why": "二阶导数恰好是 $-y$。"
+        },
+        {
+          "text": "方程二阶，解含两个任意常数 $C_1,C_2$，且 $\\cos x,\\sin x$ 不成比例（独立），所以是通解。",
+          "why": "独立性：$\\sin x/\\cos x=\\tan x$ 不是常数。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 代回验证"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0501a",
+      "knowledge": [
+        "advmath.ode_concept"
+      ],
+      "stem": "微分方程 $(y'')^2+y'\\,y^3=x$ 的阶数是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "correct": 1
+      },
+      "solution": "阶数由**最高阶导数**的阶决定，与它的幂次无关。最高阶导数是 $y''$（二阶），虽然被平方，方程仍是二阶。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：阶数与幂次"
+        }
+      ],
+      "varies": "幂次 2 与阶数 2 不要混淆"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0501b",
+      "knowledge": [
+        "advmath.ode_concept"
+      ],
+      "stem": "$y=C\\mathrm e^{3x}$ 是 $y'=3y$ 的通解。满足 $y(0)=2$ 的特解中 $C=$",
+      "answer": {
+        "type": "numeric",
+        "value": 2
+      },
+      "solution": "$y(0)=C\\mathrm e^0=C=2$，特解 $y=2\\mathrm e^{3x}$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "$x=0$ 时指数函数为 1，初始值直接等于 $C$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0501c",
+      "knowledge": [
+        "advmath.ode_concept"
+      ],
+      "stem": "二阶微分方程的通解应含有",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "1 个任意常数",
+          "2 个相互独立的任意常数",
+          "2 个任意常数（不必独立）",
+          "任意多个常数"
+        ],
+        "correct": 1
+      },
+      "solution": "通解的任意常数个数等于阶数，且必须独立。$C_1\\mathrm e^x+C_2\\mathrm e^x$ 有两个常数但只有一个独立，不是通解。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：通解的定义"
+        }
+      ],
+      "varies": "个数与独立性，两个条件缺一不可"
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "id": "ch5-sec3",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0503",
+      "prompt": "先猜再验：解 $y''=6x$，应该怎么做？",
+      "options": [
+        "连续积分两次",
+        "分离变量",
+        "用特征方程",
+        "无法求解"
+      ],
+      "correct": 0,
+      "explain": "$y''$ 是 $x$ 的已知函数，积分一次得 $y'=3x^2+C_1$，再积分一次得 $y=x^3+C_1x+C_2$。两次积分，两个任意常数，正好对应二阶。本节的三类方程都是把二阶降成一阶来解。",
+      "knowledge": [
+        "advmath.reducible"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜最简单的可降阶方程，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**三类可降阶的二阶方程**\n\n**1. $y''=f(x)$**：直接积分两次。\n\n**2. $y''=f(x,y')$（不显含 $y$）**：令 $p=y'$，则 $y''=p'=\\dfrac{\\mathrm dp}{\\mathrm dx}$，方程化为一阶 $p'=f(x,p)$。解出 $p=p(x,C_1)$，再积分 $y=\\int p\\,\\mathrm dx+C_2$。\n\n**3. $y''=f(y,y')$（不显含 $x$）**：令 $p=y'$，把 $p$ 看成 $y$ 的函数，则\n$$y''=\\frac{\\mathrm dp}{\\mathrm dx}=\\frac{\\mathrm dp}{\\mathrm dy}\\cdot\\frac{\\mathrm dy}{\\mathrm dx}=p\\frac{\\mathrm dp}{\\mathrm dy},$$\n方程化为 $p\\dfrac{\\mathrm dp}{\\mathrm dy}=f(y,p)$，是关于 $p$ 与 $y$ 的一阶方程。\n\n**记忆**：缺 $y$ 令 $p=y'$、$y''=p'$（自变量仍是 $x$）；缺 $x$ 令 $p=y'$、$y''=p\\,\\mathrm dp/\\mathrm dy$（自变量变成 $y$）。两种代换的 $y''$ 不一样。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "方程不显含 $x$（如 $yy''-y'^2=0$）时，也令 $y''=\\dfrac{\\mathrm dp}{\\mathrm dx}$ 来化简。",
+      "why_wrong": "$p=y'$ 此时含有 $y$，$\\dfrac{\\mathrm dp}{\\mathrm dx}$ 仍是二阶问题，没有降阶。必须把 $p$ 当作 $y$ 的函数：$y''=p\\dfrac{\\mathrm dp}{\\mathrm dy}$，才得到关于 $p,y$ 的一阶方程。",
+      "right": "缺 $x$：$y''=p\\,\\dfrac{\\mathrm dp}{\\mathrm dy}$；缺 $y$：$y''=\\dfrac{\\mathrm dp}{\\mathrm dx}$。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（$y''=f(x)$，带初值）",
+      "problem": "求 $y''=6x$ 满足 $y(0)=1,\\ y'(0)=0$ 的特解。",
+      "steps": [
+        {
+          "text": "$y'=3x^2+C_1$，$y'(0)=C_1=0$；$y=x^3+C_2$，$y(0)=C_2=1$。",
+          "why": "每积分一次立刻用对应的初始条件定常数，比最后一起定更省力。"
+        },
+        {
+          "text": "特解 $y=x^3+1$。",
+          "why": "检验：$y''=6x$ ✓，$y(0)=1$ ✓，$y'(0)=0$ ✓。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（不显含 $y$）",
+      "problem": "求 $xy''+y'=0$（$x>0$）的通解。",
+      "steps": [
+        {
+          "text": "令 $p=y'$，$y''=p'$：$xp'+p=0$，即 $(xp)'=0$，$xp=C_1$，$p=\\dfrac{C_1}x$。",
+          "why": "方程里没有 $y$，只有 $y',y''$。"
+        },
+        {
+          "text": "$y=\\int\\dfrac{C_1}x\\,\\mathrm dx=C_1\\ln x+C_2$。",
+          "why": "再积分一次，出现第二个常数。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 代回验证"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（不显含 $x$）",
+      "problem": "求 $y\\,y''-(y')^2=0$ 的通解。",
+      "steps": [
+        {
+          "text": "令 $p=y'$，$y''=p\\dfrac{\\mathrm dp}{\\mathrm dy}$：$y\\,p\\dfrac{\\mathrm dp}{\\mathrm dy}-p^2=0$，即 $p\\left(y\\dfrac{\\mathrm dp}{\\mathrm dy}-p\\right)=0$。",
+          "why": "把 $y$ 当自变量、$p$ 当未知函数。"
+        },
+        {
+          "text": "$p\\neq0$ 时 $\\dfrac{\\mathrm dp}p=\\dfrac{\\mathrm dy}y$，$p=C_1y$，即 $y'=C_1y$，$y=C_2\\mathrm e^{C_1x}$。",
+          "why": "$p=0$ 对应 $y=$ 常数，已包含在 $C_1=0$ 的情形里。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 代回验证"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0503a",
+      "knowledge": [
+        "advmath.reducible"
+      ],
+      "stem": "$y''=6x$，$y(0)=1,\\ y'(0)=0$，则 $y(2)=$",
+      "answer": {
+        "type": "numeric",
+        "value": 9
+      },
+      "solution": "例 1：$y=x^3+1$，$y(2)=8+1=9$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "初始条件的先后：先定 $C_1$（用 $y'(0)$），再定 $C_2$（用 $y(0)$）"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0503b",
+      "knowledge": [
+        "advmath.reducible"
+      ],
+      "stem": "求解 $y''=f(y,y')$（不显含 $x$）时，应作的变换是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "令 $p=y'$，$y''=p\\dfrac{\\mathrm dp}{\\mathrm dy}$",
+          "令 $p=y'$，$y''=\\dfrac{\\mathrm dp}{\\mathrm dx}$",
+          "令 $p=y''$",
+          "两边积分"
+        ],
+        "correct": 0
+      },
+      "solution": "不显含 $x$，把 $p$ 看作 $y$ 的函数，$y''=p\\,\\mathrm dp/\\mathrm dy$。B 是不显含 $y$ 时的做法。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：两种代换"
+        }
+      ],
+      "varies": "看缺的是 $x$ 还是 $y$，决定自变量是 $y$ 还是 $x$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0503c",
+      "knowledge": [
+        "advmath.reducible"
+      ],
+      "stem": "方程 $xy''+y'=0$（$x>0$）的通解为",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$y=C_1\\ln x+C_2$",
+          "$y=C_1\\mathrm e^x+C_2$",
+          "$y=C_1x+C_2$",
+          "$y=\\dfrac{C_1}x+C_2$"
+        ],
+        "correct": 0
+      },
+      "solution": "例 2：$xp'+p=0\\Rightarrow p=C_1/x\\Rightarrow y=C_1\\ln x+C_2$。D 是 $y'$ 与 $-y/x$ 相关的另一个方程的解。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；与例 2 同一方程"
+        }
+      ],
+      "varies": "$(xp)'=0$ 是识别的关键：$xp'+p$ 正是 $(xp)'$"
+    }
+  ]
+}

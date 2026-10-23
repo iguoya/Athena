@@ -611,6 +611,100 @@
       ],
       "textbook_ref": "教材 第 4 章 §5",
       "syllabus_ref": "曲线积分与曲面积分：散度（选学）"
+    },
+    {
+      "id": "advmath.ode_concept",
+      "title": "微分方程的基本概念（阶、解、通解、特解、初值）",
+      "type": "概念",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [],
+      "textbook_ref": "教材 第 5 章 §1",
+      "syllabus_ref": "常微分方程：微分方程的基本概念"
+    },
+    {
+      "id": "advmath.separable",
+      "title": "可分离变量的方程",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.ode_concept"
+      ],
+      "textbook_ref": "教材 第 5 章 §2",
+      "syllabus_ref": "常微分方程：可分离变量的方程"
+    },
+    {
+      "id": "advmath.homogeneous_ode",
+      "title": "齐次方程（换元 u = y/x）",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.separable"
+      ],
+      "textbook_ref": "教材 第 5 章 §2",
+      "syllabus_ref": "常微分方程：齐次方程"
+    },
+    {
+      "id": "advmath.linear_first_order",
+      "title": "一阶线性方程（积分因子）",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.separable"
+      ],
+      "textbook_ref": "教材 第 5 章 §2",
+      "syllabus_ref": "常微分方程：一阶线性方程"
+    },
+    {
+      "id": "advmath.reducible",
+      "title": "可降阶的二阶方程",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.separable"
+      ],
+      "textbook_ref": "教材 第 5 章 §3",
+      "syllabus_ref": "常微分方程：可降阶的二阶微分方程"
+    },
+    {
+      "id": "advmath.linear_structure",
+      "title": "二阶线性方程解的结构",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.ode_concept"
+      ],
+      "textbook_ref": "教材 第 5 章 §4",
+      "syllabus_ref": "常微分方程：二阶线性微分方程解的结构"
+    },
+    {
+      "id": "advmath.const_coeff_homog",
+      "title": "二阶常系数齐次方程（特征方程）",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.linear_structure"
+      ],
+      "textbook_ref": "教材 第 5 章 §5",
+      "syllabus_ref": "常微分方程：二阶常系数线性微分方程"
+    },
+    {
+      "id": "advmath.const_coeff_nonhomog",
+      "title": "二阶常系数非齐次方程的特解（选学）",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "了解",
+      "requires": [
+        "advmath.const_coeff_homog"
+      ],
+      "textbook_ref": "教材 第 5 章 §5",
+      "syllabus_ref": "常微分方程：二阶常系数线性微分方程（选学）"
     }
   ]
 }

@@ -1,0 +1,151 @@
+{
+  "id": "ch5-sec4",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0504",
+      "prompt": "先猜再验：$y_1=\\mathrm e^x,\\ y_2=\\mathrm e^{2x}$ 都是 $y''-3y'+2y=0$ 的解。$y=3y_1-2y_2$ 是不是它的解？",
+      "options": [
+        "是",
+        "不是",
+        "只有系数为 1 时才是",
+        "不一定"
+      ],
+      "correct": 0,
+      "explain": "二阶**齐次线性**方程的解有**叠加性**：解的线性组合仍是解。代入验证：$L[y]=3L[y_1]-2L[y_2]=0$。这一性质只对**线性且齐次**的方程成立，是下面通解结构的基础。",
+      "knowledge": [
+        "advmath.linear_structure"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜齐次线性方程解的叠加性，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**二阶线性方程解的结构**\n\n**二阶线性齐次方程** $y''+P(x)y'+Q(x)y=0$：\n1. **叠加原理**：$y_1,y_2$ 是解，则 $C_1y_1+C_2y_2$ 也是解。\n2. **通解结构**：若 $y_1,y_2$ 是两个**线性无关**的解，则 $y=C_1y_1+C_2y_2$ 是**通解**。\n3. **线性无关**：两个函数 $y_1,y_2$ 线性无关 $\\iff\\dfrac{y_2}{y_1}$ 不恒为常数。\n\n**二阶线性非齐次方程** $y''+P(x)y'+Q(x)y=f(x)$（$f\\not\\equiv0$）：\n1. **通解结构**：$y=Y+y^*$，$Y$ 是对应齐次方程的通解，$y^*$ 是非齐次方程的**一个**特解。\n2. **两个解之差**是对应齐次方程的解。\n3. **叠加**：$f=f_1+f_2$ 时，$y_1^*+y_2^*$ 是方程的一个特解（$y_i^*$ 分别对应 $f_i$）。\n\n**求解思路**：先求齐次通解，再求一个特解，加起来。§5 解决常系数情形下这两步怎么做。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$y_1=\\mathrm e^x,\\ y_2=2\\mathrm e^x$ 是齐次方程 $y''-y=0$ 的两个解，所以 $y=C_1y_1+C_2y_2$ 是它的通解。",
+      "why_wrong": "$y_2/y_1=2$ 是常数，二者线性相关。$C_1\\mathrm e^x+2C_2\\mathrm e^x=(C_1+2C_2)\\mathrm e^x$ 只有一个独立常数，不是二阶方程的通解。要取线性无关的解，如 $\\mathrm e^x$ 与 $\\mathrm e^{-x}$（比值 $\\mathrm e^{-2x}$ 不是常数）。",
+      "right": "通解需要**线性无关**的两个解；先用比值是否为常数检验。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（由两个解写通解）",
+      "problem": "验证 $y_1=\\mathrm e^x,\\ y_2=\\mathrm e^{2x}$ 是 $y''-3y'+2y=0$ 的线性无关解，并写出通解。",
+      "steps": [
+        {
+          "text": "$y_1$：$1-3+2=0$ ✓；$y_2=\\mathrm e^{2x}$：$4-3\\cdot2+2=0$ ✓。",
+          "why": "代入方程：$y''-3y'+2y$ 对 $\\mathrm e^{rx}$ 的值是 $(r^2-3r+2)\\mathrm e^{rx}$。"
+        },
+        {
+          "text": "$\\dfrac{y_2}{y_1}=\\mathrm e^x$ 不是常数，线性无关。通解 $y=C_1\\mathrm e^x+C_2\\mathrm e^{2x}$。",
+          "why": "两个线性无关的解，通解结构定理。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 代回验证"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（非齐次方程的通解结构）",
+      "problem": "已知 $y^*=x$ 是 $y''-3y'+2y=2x-3$ 的一个特解，求通解。",
+      "steps": [
+        {
+          "text": "验证特解：$y^*=x$，$y^{*\\prime}=1,\\ y^{*\\prime\\prime}=0$：$0-3+2x=2x-3$ ✓。",
+          "why": "确认它真的是特解。"
+        },
+        {
+          "text": "通解 $y=Y+y^*=C_1\\mathrm e^x+C_2\\mathrm e^{2x}+x$（$Y$ 来自例 1）。",
+          "why": "非齐次通解 = 齐次通解 + 一个特解。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 代回验证"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0504a",
+      "knowledge": [
+        "advmath.linear_structure"
+      ],
+      "stem": "下列函数组中，**线性无关**的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\mathrm e^x,\\ \\mathrm e^{2x}$",
+          "$x,\\ 2x$",
+          "$\\sin x,\\ 3\\sin x$",
+          "$1,\\ 5$"
+        ],
+        "correct": 0
+      },
+      "solution": "比值 $\\mathrm e^{2x}/\\mathrm e^x=\\mathrm e^x$ 不是常数，线性无关。其余三组的比值都是常数（$2,\\ 3,\\ 5$），线性相关。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：比值判别法"
+        }
+      ],
+      "varies": "只检验比值是否为常数，不需要解方程"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0504b",
+      "knowledge": [
+        "advmath.linear_structure"
+      ],
+      "stem": "通解 $y=C_1\\mathrm e^x+C_2\\mathrm e^{2x}+x$，满足 $y(0)=1,\\ y'(0)=2$ 的特解中 $C_2=$",
+      "answer": {
+        "type": "numeric",
+        "value": 0
+      },
+      "solution": "$y(0)=C_1+C_2=1$；$y'=C_1\\mathrm e^x+2C_2\\mathrm e^{2x}+1$，$y'(0)=C_1+2C_2+1=2$，即 $C_1+2C_2=1$。两式相减 $C_2=0$，$C_1=1$。特解 $y=\\mathrm e^x+x$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "二阶方程用两个初始条件解关于 $C_1,C_2$ 的方程组；注意 $y'$ 里常数项 1 来自特解部分 $x$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0504c",
+      "knowledge": [
+        "advmath.linear_structure"
+      ],
+      "stem": "设 $y_1^*,y_2^*$ 是 $y''+Py'+Qy=f(x)$（$f\\not\\equiv0$）的两个解，则 $y_1^*-y_2^*$ 是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "该方程的解",
+          "对应齐次方程 $y''+Py'+Qy=0$ 的解",
+          "$y''+Py'+Qy=2f(x)$ 的解",
+          "不一定是任何方程的解"
+        ],
+        "correct": 1
+      },
+      "solution": "$L[y_1^*-y_2^*]=L[y_1^*]-L[y_2^*]=f-f=0$，是齐次方程的解。这正是「非齐次通解 = 一个特解 + 齐次通解」的原因。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：两个特解之差"
+        }
+      ],
+      "varies": "与线性代数 §4.3「两解之差属于导出组」是同一个道理"
+    }
+  ]
+}

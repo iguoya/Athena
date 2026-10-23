@@ -1,0 +1,219 @@
+{
+  "id": "ch5-sec2",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0502",
+      "prompt": "先猜再验：方程 $\\dfrac{\\mathrm dy}{\\mathrm dx}=2xy$ 可以怎样求解？",
+      "options": [
+        "把含 $y$ 的项移到一边、含 $x$ 的项移到另一边：$\\dfrac{\\mathrm dy}{y}=2x\\,\\mathrm dx$，两边积分",
+        "两边同时对 $x$ 求导",
+        "直接猜 $y=2x$",
+        "无法求解"
+      ],
+      "correct": 0,
+      "explain": "方程右边是「$x$ 的函数 $\\times$ $y$ 的函数」，可以分离变量：$\\dfrac{\\mathrm dy}{y}=2x\\,\\mathrm dx$，两边积分 $\\ln|y|=x^2+C$，$y=C_1\\mathrm e^{x^2}$。这是最基本的一类一阶方程。",
+      "knowledge": [
+        "advmath.separable"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜分离变量法，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**三类一阶微分方程**\n\n**1. 可分离变量**：$\\dfrac{\\mathrm dy}{\\mathrm dx}=f(x)g(y)$。\n步骤：$\\dfrac{\\mathrm dy}{g(y)}=f(x)\\,\\mathrm dx$，两边积分，**不要忘记任意常数 $C$**；$g(y)=0$ 的解要另外检查（有时已含在通解中，有时需补上）。\n\n**2. 齐次方程**：$\\dfrac{\\mathrm dy}{\\mathrm dx}=\\varphi\\!\\left(\\dfrac yx\\right)$。令 $u=\\dfrac yx$，即 $y=xu$，$y'=u+xu'$，化成关于 $u$ 与 $x$ 的可分离变量方程：$x\\dfrac{\\mathrm du}{\\mathrm dx}=\\varphi(u)-u$。求出 $u$ 后换回 $u=y/x$。\n\n**3. 一阶线性方程**：$\\dfrac{\\mathrm dy}{\\mathrm dx}+P(x)y=Q(x)$。通解公式\n$$y=\\mathrm e^{-\\int P\\,\\mathrm dx}\\left(\\int Q\\,\\mathrm e^{\\int P\\,\\mathrm dx}\\,\\mathrm dx+C\\right).$$\n推导思路：乘积分因子 $\\mu=\\mathrm e^{\\int P\\,\\mathrm dx}$，左边变成 $(\\mu y)'$。$Q\\equiv0$ 时是齐次线性方程 $y=C\\mathrm e^{-\\int P\\,\\mathrm dx}$。\n\n**判断类型**：先看能不能分离变量；右端只含 $y/x$ 的是齐次；关于 $y,y'$ 都是一次的是线性。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "解 $\\dfrac{\\mathrm dy}{\\mathrm dx}=2xy$ 时，$\\dfrac{\\mathrm dy}{y}=2x\\,\\mathrm dx$ 两边积分得 $\\ln y=x^2$。",
+      "why_wrong": "漏了任意常数，也漏了绝对值。正确：$\\ln|y|=x^2+C_1$，$y=\\pm\\mathrm e^{C_1}\\mathrm e^{x^2}=C\\mathrm e^{x^2}$（$C$ 为任意非零常数，再把 $y\\equiv0$ 这个解并入，$C$ 取任意实数）。漏掉 $C$ 只得到一个特解，不是通解。",
+      "right": "积分后立刻写 $+C$；一阶方程的通解含一个任意常数。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（可分离变量）",
+      "problem": "求 $\\dfrac{\\mathrm dy}{\\mathrm dx}=-\\dfrac xy$ 满足 $y(0)=2$ 的特解。",
+      "steps": [
+        {
+          "text": "分离变量：$y\\,\\mathrm dy=-x\\,\\mathrm dx$，积分 $\\dfrac{y^2}2=-\\dfrac{x^2}2+C$，即 $x^2+y^2=C'$。",
+          "why": "通解是以原点为圆心的一族圆。"
+        },
+        {
+          "text": "$y(0)=2$：$0+4=C'$，特解 $x^2+y^2=4$，由 $y(0)=2>0$ 取上半圆 $y=\\sqrt{4-x^2}$。",
+          "why": "初始条件还要决定取圆的哪一支。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（齐次方程）",
+      "problem": "求 $\\dfrac{\\mathrm dy}{\\mathrm dx}=\\dfrac{x+y}{x}$ 的通解（$x>0$）。",
+      "steps": [
+        {
+          "text": "右边 $=1+\\dfrac yx$，是齐次方程。令 $u=\\dfrac yx$，$y'=u+xu'$：$u+xu'=1+u$，$xu'=1$。",
+          "why": "两边的 $u$ 抵消，变成最简单的可分离方程。"
+        },
+        {
+          "text": "$\\mathrm du=\\dfrac{\\mathrm dx}x$，$u=\\ln x+C$。换回：$y=x(\\ln x+C)$。",
+          "why": "检验：$y'=\\ln x+C+1$，右边 $\\frac{x+y}{x}=1+\\ln x+C$，一致。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 代回验证"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（一阶线性）",
+      "problem": "求 $y'+2y=\\mathrm e^{-x}$ 的通解。",
+      "steps": [
+        {
+          "text": "$P=2,\\ Q=\\mathrm e^{-x}$。积分因子 $\\mathrm e^{\\int2\\,\\mathrm dx}=\\mathrm e^{2x}$。",
+          "why": "公式中的 $\\int P\\,\\mathrm dx$ 不再加常数。"
+        },
+        {
+          "text": "$y=\\mathrm e^{-2x}\\left(\\int\\mathrm e^{-x}\\mathrm e^{2x}\\,\\mathrm dx+C\\right)=\\mathrm e^{-2x}(\\mathrm e^x+C)=\\mathrm e^{-x}+C\\mathrm e^{-2x}$。",
+          "why": "检验：$y'+2y=(-\\mathrm e^{-x}-2C\\mathrm e^{-2x})+(2\\mathrm e^{-x}+2C\\mathrm e^{-2x})=\\mathrm e^{-x}$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 代回验证"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 4（带初始条件的线性方程）",
+      "problem": "求 $y'+\\dfrac yx=x^2$（$x>0$）满足 $y(1)=1$ 的特解。",
+      "steps": [
+        {
+          "text": "$P=\\dfrac1x$，积分因子 $\\mathrm e^{\\int\\frac1x\\mathrm dx}=x$。方程两边乘 $x$：$(xy)'=x^3$，$xy=\\dfrac{x^4}4+C$，$y=\\dfrac{x^3}4+\\dfrac Cx$。",
+          "why": "积分因子让左边变成乘积的导数。"
+        },
+        {
+          "text": "$y(1)=\\dfrac14+C=1$，$C=\\dfrac34$。特解 $y=\\dfrac{x^3}4+\\dfrac3{4x}$。",
+          "why": "代入初始条件定 $C$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 代回验证"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0502a",
+      "knowledge": [
+        "advmath.separable"
+      ],
+      "stem": "方程 $\\dfrac{\\mathrm dy}{\\mathrm dx}=2xy$ 的通解是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$y=C\\mathrm e^{x^2}$",
+          "$y=\\mathrm e^{x^2}$",
+          "$y=x^2+C$",
+          "$y=C\\mathrm e^{2x}$"
+        ],
+        "correct": 0
+      },
+      "solution": "分离变量 $\\dfrac{\\mathrm dy}y=2x\\,\\mathrm dx$，$\\ln|y|=x^2+C_1$，$y=C\\mathrm e^{x^2}$。B 缺任意常数；C 是 $y'=2x$ 的通解；D 是 $y'=2y$ 的通解。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：分离变量与常数"
+        }
+      ],
+      "varies": "通解必含任意常数；形似的方程通解完全不同"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0502b",
+      "knowledge": [
+        "advmath.homogeneous_ode"
+      ],
+      "stem": "方程 $\\dfrac{\\mathrm dy}{\\mathrm dx}=\\dfrac{x+y}{x}$ 的通解为（$x>0$）",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$y=x(\\ln x+C)$",
+          "$y=\\ln x+C$",
+          "$y=x\\ln x$",
+          "$y=C\\mathrm e^x$"
+        ],
+        "correct": 0
+      },
+      "solution": "例 2：令 $u=y/x$，得 $u=\\ln x+C$，$y=x(\\ln x+C)$。检验 $y=C\\mathrm e^x$：$y'=y$，而右边 $\\frac{x+y}x\\neq y$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；与例 2 同一方程，检验能否复现"
+        }
+      ],
+      "varies": "换元回代：$u=y/x$ 要换回 $y$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0502c",
+      "knowledge": [
+        "advmath.linear_first_order"
+      ],
+      "stem": "设 $y'+y=1$，$y(0)=0$，则 $y(\\ln2)=$",
+      "answer": {
+        "type": "numeric",
+        "value": 0.5
+      },
+      "solution": "$P=1,Q=1$：$y=\\mathrm e^{-x}\\left(\\int\\mathrm e^x\\,\\mathrm dx+C\\right)=1+C\\mathrm e^{-x}$。$y(0)=1+C=0$，$C=-1$，$y=1-\\mathrm e^{-x}$。$y(\\ln2)=1-\\frac12=\\frac12$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "先求通解，再用初值定常数，最后代值"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0502d",
+      "knowledge": [
+        "advmath.linear_first_order"
+      ],
+      "stem": "一阶线性方程 $y'+P(x)y=Q(x)$ 的积分因子是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\mathrm e^{\\int P\\,\\mathrm dx}$",
+          "$\\mathrm e^{-\\int P\\,\\mathrm dx}$",
+          "$\\mathrm e^{\\int Q\\,\\mathrm dx}$",
+          "$P(x)$"
+        ],
+        "correct": 0
+      },
+      "solution": "乘 $\\mu=\\mathrm e^{\\int P\\,\\mathrm dx}$ 后 $(\\mu y)'=\\mu y'+\\mu Py=\\mu Q$，所以 $y=\\frac1\\mu\\left(\\int\\mu Q\\,\\mathrm dx+C\\right)$。通解公式里出现的是 $\\mathrm e^{-\\int P}$（即 $1/\\mu$）和 $\\mathrm e^{\\int P}$（$\\mu$ 本身）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：积分因子"
+        }
+      ],
+      "varies": "区分积分因子（$\\mu$）与它的倒数（通解公式的前因子）"
+    }
+  ]
+}
