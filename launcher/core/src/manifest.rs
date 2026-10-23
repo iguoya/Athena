@@ -315,13 +315,14 @@ pub fn discover(repo: &Path) -> Vec<App> {
     apps
 }
 
-/// 启动器要管的全部应用：课程类的分组目录（`LEARNING_ROOTS`）、`guide/`、`practice/`、`certification/`、`mentor/`、`tools/` 各一层 `app.json`。
+/// 启动器要管的全部应用：课程类的分组目录（`LEARNING_ROOTS`）、`guide/`、`lecture/`、`practice/`、`certification/`、`mentor/`、`tools/` 各一层 `app.json`。
 /// 桌面窗口不按目录分家——地球、魔方、课程、驾考、北极星和数学工具进同一份清单。
 /// `hidden` 的条目仍在结果里（目前只有路由器上的 nas-admin），界面自己不画。
-/// 顺序是先课程类分组目录、再 guide、再 practice、再 certification、再 mentor、再 tools，各自按目录名排。
+/// 顺序是先课程类分组目录、再 guide、再 lecture、再 practice、再 certification、再 mentor、再 tools，各自按目录名排。
 pub fn discover_all(repo: &Path) -> Vec<App> {
     let mut apps = discover(repo);
     apps.extend(discover_in(&repo.join("guide")));
+    apps.extend(discover_in(&repo.join("lecture")));
     apps.extend(discover_in(&repo.join("practice")));
     apps.extend(discover_in(&repo.join("certification")));
     apps.extend(discover_in(&repo.join("mentor")));

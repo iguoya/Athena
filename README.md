@@ -39,8 +39,8 @@
 | [`guide/octave-manual`](guide/octave-manual) | GNU Octave 官方手册按线代与高数需要裁剪的精读（工具类手册，「数学」圈，ADR 0163） | Tauri 2 + React + KaTeX |
 | [`guide/sympy-tutorial`](guide/sympy-tutorial) | SymPy 官方入门教程精读：用符号计算做微积分与矩阵运算（工具类手册，「数学」圈，ADR 0163） | Tauri 2 + React + KaTeX |
 | [`guide/chen-linear-algebra`](guide/chen-linear-algebra) | 陈怀琛《实用大众线性代数（MATLAB版）》精读：原书题目 + Octave 复算（手册类，「数学」圈，ADR 0177） | Tauri 2 + React + KaTeX |
-| [`guide/chen-linear-algebra-mooc`](guide/chen-linear-algebra-mooc) | 西电慕课《实用大众线性代数（MATLAB版）》视频课精读：周→节、看前提示 + 课件精读 + Octave 上机；视频只登记外链（视频课，「数学」圈，ADR 0180） | Tauri 2 + React + KaTeX |
-| [`guide/weng-c-programming`](guide/weng-c-programming) | 浙大翁恺《C语言程序设计》视频课·课堂工作台：B 站播放器是界面里的一个窗格，节拍 + 预测/速答/上机任务（视频课，「程序设计」圈，ADR 0182） | Tauri 2 + React + 多 webview |
+| [`lecture/chen-linear-algebra-mooc`](lecture/chen-linear-algebra-mooc) | 西电慕课《实用大众线性代数（MATLAB版）》视频课精读：周→节、看前提示 + 课件精读 + Octave 上机；视频只登记外链（视频课，「数学」圈，ADR 0180） | Tauri 2 + React + KaTeX |
+| [`lecture/weng-c-programming`](lecture/weng-c-programming) | 浙大翁恺《C语言程序设计》视频课·课堂工作台：B 站播放器是界面里的一个窗格，节拍 + 预测/速答/上机任务（视频课，「程序设计」圈，ADR 0182） | Tauri 2 + React + 多 webview |
 | [`guide/axler-linear-algebra`](guide/axler-linear-algebra) | Axler《线性代数应该这样学（第四版）》官方中文版精读：判分做证明思路与概念辨析（手册类，「数学」圈，ADR 0179） | Tauri 2 + React + KaTeX |
 | [`mentor/polaris`](mentor/polaris) | 北极星（技术体系图谱，ADR 0144） | Tauri 2 + React |
 | [`postgraduate/organization`](postgraduate/organization) | 计算机组成原理（408，ADR 0115） | Tauri 2 + Vite |

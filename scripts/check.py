@@ -43,7 +43,7 @@ def _force_utf8_output() -> None:
 # 应用住在这两处，彼此平级（ADR 0060）。按意图分住处，但都走同一个验证入口。
 # 课程类学习应用按分组分目录（ADR 0150），其余按应用类别分；增减分组目录只改这两行。
 GROUP_ROOTS = ("programming", "artificial-intelligence", "computer-fundamentals", "electronics", "postgraduate", "self-study")
-APP_ROOTS = (*GROUP_ROOTS, "guide", "practice", "certification", "mentor", "tools")
+APP_ROOTS = (*GROUP_ROOTS, "guide", "lecture", "practice", "certification", "mentor", "tools")
 _ROOTS_RE = "|".join(APP_ROOTS)
 
 
@@ -605,8 +605,8 @@ def run_structure_check() -> None:
     for missing in sorted(working_apps - readme_refs):
         problems.append(f"  根 README.md 应用表没有登记开工应用 {missing}（加一行）")
 
-    learning_dirs = {p.name for root in (*GROUP_ROOTS, "guide", "mentor") for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
-    learning_working = {p.name for root in (*GROUP_ROOTS, "guide", "mentor") for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
+    learning_dirs = {p.name for root in (*GROUP_ROOTS, "guide", "lecture", "mentor") for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
+    learning_working = {p.name for root in (*GROUP_ROOTS, "guide", "lecture", "mentor") for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
     app_dir_names = {
         p.name
         for root in APP_ROOTS

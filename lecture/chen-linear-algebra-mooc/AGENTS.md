@@ -1,6 +1,6 @@
 # Athena 大众线性代数·视频课 — 项目协作规则
 
-本文档是 **`guide/chen-linear-algebra-mooc` 独立应用** 的项目级指令，不依赖任何其他应用即可完成
+本文档是 **`lecture/chen-linear-algebra-mooc` 独立应用** 的项目级指令，不依赖任何其他应用即可完成
 开发、构建与学习。仓库根 `AGENTS.md` 写各应用共同遵守的规则；**改本应用时以本文为准**。
 
 ## 定位

@@ -1,6 +1,6 @@
 # Athena 翁恺 C 语言 · 课堂工作台 — 项目协作规则
 
-本文档是 **`guide/weng-c-programming` 独立应用** 的项目级指令，不依赖任何其他应用即可完成开发、构建与学习。
+本文档是 **`lecture/weng-c-programming` 独立应用** 的项目级指令，不依赖任何其他应用即可完成开发、构建与学习。
 仓库根 `AGENTS.md` 写各应用共同遵守的规则；**改本应用时以本文为准**。
 
 ## 定位
@@ -8,7 +8,7 @@
 - 目标：**跟着浙大翁恺的《C语言程序设计》视频课学会 C，并且课堂上就动手**。底本是 B 站 2022 年版 **BV1dr4y1n7vA**（100 集，入门 11 章；
   分集编号 `1.1.1` 起，第 2 集才是 1.1.1，第 3 集是 1.1.2），应用形态是 `guide/` 圈的视频课精读，挂「程序设计」圈（主仓库 ADR 0182，首个带播放窗格的视频课）。
 - **视频只是界面的一个窗格，不是全部**：主角是课堂区的「节拍 → 任务 → 要点」；窗格可收起，收起后课堂区自己完整可用。不做无检索闭环的纯被动观看。
-- 与 `machine`（C 与机器，Beej 系统视角）、`guide/chen-linear-algebra-mooc` 并存、互不引用，知识点前缀独立。
+- 与 `machine`（C 与机器，Beej 系统视角）、`lecture/chen-linear-algebra-mooc` 并存、互不引用，知识点前缀独立。
 
 ## 播放窗格与播放桥（ADR 0182 决策 3，改这里要先读）
 
@@ -40,7 +40,7 @@
 - **文本底本（参考层）**：优先用 B 站自己的字幕（登录后 `x/player/wbi/v2` 给出 `subtitle_url`，每行带起止秒，比本机 Whisper 转写准：枚举、源代码都对，不需要同音错词校正表；P3 实测两条轨内容一致），标「平台字幕，未逐句校对」；没有字幕的集才用本机 faster-whisper 转写，标「机器转写，未逐句校对」。它们不是出处、不是教学正文，只供检索与对照；音频不入库。判分题 locator 的时间以字幕行时间为准（误差 <1 秒），Whisper 时间戳比字幕早或晚 1–3 秒。
 - 不用「显然」「容易看出」「不难证明」等把难度推给读者的词（`check.py` 拦，主仓库 ADR 0013）。
 
-## 技术栈（本应用自有，最初复制自 `guide/chen-linear-algebra-mooc` 的壳，此后独立演进）
+## 技术栈（本应用自有，最初复制自 `lecture/chen-linear-algebra-mooc` 的壳，此后独立演进）
 
 - **壳**：Tauri 2（Rust）：`get_curriculum` / `get_lesson` / `record_attempt` / `get_attempts` / `open_external`（只放行 https）/ `player_*`（load、seek、ping、poll、play、pause、set_pause_point、set_visible）/
   `bridge_report`（播放器页面专用）/ `player_open_login` / `save_marks` / `load_marks`；界面 Vite + React + TypeScript，行内公式 KaTeX。

@@ -37,6 +37,7 @@ APP_TOP_DIRS = (
     "electronics",
     "postgraduate",
     "guide",
+    "lecture",
     "mentor",
     "practice",
     "certification",

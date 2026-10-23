@@ -78,9 +78,10 @@ guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，�
   octave-manual/            GNU Octave 官方手册按线代与高数需要裁剪的精读（Tauri 2 + React，「数学」圈，ADR 0163）
   sympy-tutorial/           SymPy 官方入门教程精读：符号计算做微积分与矩阵运算（Tauri 2 + React，「数学」圈，ADR 0163）
   chen-linear-algebra/      陈怀琛《实用大众线性代数（MATLAB版）》精读：题目逐字取自原书、Octave 复算（Tauri 2 + React，「数学」圈，ADR 0177）
+  axler-linear-algebra/     Axler《线性代数应该这样学（第四版）》官方中文版精读：以算子为中心的定理型线代，判分做证明思路与概念辨析（Tauri 2 + React，「数学」圈，ADR 0179）
+lecture/<id>/   视频课：以一套外部视频课为底本、视频（播放窗格或外链）是界面的一部分；内容单位是集/节拍/任务，出处挂「分集号 + 时间」；目录表达形态，科目看 app.json 的 group（ADR 0184）
   chen-linear-algebra-mooc/ 西电慕课《实用大众线性代数（MATLAB版）》视频课精读：周→节、课件精读 + Octave 上机，视频只登记外链（Tauri 2 + React，「数学」圈，ADR 0180）
   weng-c-programming/       浙大翁恺《C语言程序设计》视频课·课堂工作台：视频是界面里的一个窗格，节拍 + 任务驱动（Tauri 2 + React，「程序设计」圈，ADR 0182）
-  axler-linear-algebra/     Axler《线性代数应该这样学（第四版）》官方中文版精读：以算子为中心的定理型线代，判分做证明思路与概念辨析（Tauri 2 + React，「数学」圈，ADR 0179）
 tools/         配套工具：做出能用的工具，不建进度库（ADR 0146）
   math-tools/  数学工具（Tauri 2 + React）——数学学习的配套工具（ADR 0084、0146）
   comms-console/ 协作观察台（Tauri 2 + React，只读）——多智能体协作的任务、决策与
