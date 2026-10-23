@@ -1,0 +1,195 @@
+{
+  "id": "ch6-sec3",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0603",
+      "prompt": "先猜再验：幂级数 $1+x+x^2+x^3+\\cdots$（几何级数）在 $x=2$ 处收敛吗？",
+      "options": [
+        "收敛",
+        "发散，因为 $|x|=2\\ge1$",
+        "和为 $-1$",
+        "无法判断"
+      ],
+      "correct": 1,
+      "explain": "几何级数 $\\sum x^n$ 当 $|x|<1$ 时收敛，和 $\\frac1{1-x}$；$|x|\\ge1$ 时发散。$x=2$ 时各项 $2^n\\to\\infty$。注意：虽然 $\\frac1{1-2}=-1$ 有定义，但这是函数的值，不是级数在 $x=2$ 的和。幂级数的一个关键问题是：**在哪些 $x$ 处收敛？**",
+      "knowledge": [
+        "advmath.power_series_radius"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜幂级数的收敛范围，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**幂级数**\n\n$\\displaystyle\\sum_{n=0}^\\infty a_nx^n=a_0+a_1x+a_2x^2+\\cdots$（或 $\\sum a_n(x-x_0)^n$）。\n\n**收敛半径**：存在 $R\\in[0,+\\infty]$，使幂级数在 $|x|<R$ 内**绝对收敛**，在 $|x|>R$ 时发散；$|x|=R$ 的两个端点**可能收敛也可能发散**。**收敛区间** $(-R,R)$，**收敛域**是收敛区间加上收敛的端点。\n$$R=\\lim_{n\\to\\infty}\\left|\\frac{a_n}{a_{n+1}}\\right|\\quad(\\text{极限存在时}).$$\n$\\rho=\\lim|a_{n+1}/a_n|$，则 $R=1/\\rho$（$\\rho=0$ 时 $R=\\infty$，$\\rho=\\infty$ 时 $R=0$）。**缺项**的幂级数（如只有偶次项）不能直接用这个公式，要对整个通项用比值法。\n\n**求收敛域的步骤**：(1) 求 $R$；(2) 把 $x=\\pm R$ 代回，**逐个**判别敛散性。\n\n**和函数与逐项运算**：在收敛区间内，幂级数的和函数 $S(x)$ 连续，可以**逐项求导、逐项积分**，所得幂级数的**收敛半径不变**（端点的敛散性可能改变）。由 $\\sum x^n=\\dfrac1{1-x}$（$|x|<1$）出发，逐项求导、积分可得到一批和函数：\n$$\\sum_{n=1}^\\infty nx^{n-1}=\\frac1{(1-x)^2},\\qquad\\sum_{n=1}^\\infty\\frac{x^n}n=-\\ln(1-x)\\quad(|x|<1).$$"
+    },
+    {
+      "kind": "figure",
+      "file": "ch6-sec3-geometric.svg",
+      "caption": "几何级数 $\\sum x^n$ 的部分和（彩色曲线）与和函数 $\\frac1{1-x}$（黑色）。在收敛区间 $(-1,1)$（浅蓝带）内，项数越多，曲线越贴近 $\\frac1{1-x}$；区间之外（如 $x<-1$），部分和越来越偏离。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "收敛半径是 $R$，所以收敛域就是 $[-R,R]$ 或 $(-R,R)$，不用再判断端点。",
+      "why_wrong": "端点的敛散性与 $R$ 无关，必须逐个检验。例：$\\sum\\dfrac{x^n}n$，$R=1$；$x=1$ 时是调和级数，发散；$x=-1$ 时是交错级数 $\\sum\\dfrac{(-1)^n}n$，收敛。收敛域是 $[-1,1)$，一端含一端不含。",
+      "right": "求出 $R$ 后，把 $x=R$ 与 $x=-R$ 分别代入，用数项级数的判别法判断。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（收敛半径与收敛域）",
+      "problem": "求 $\\displaystyle\\sum_{n=1}^\\infty\\frac{x^n}n$ 的收敛域。",
+      "steps": [
+        {
+          "text": "$a_n=\\dfrac1n$，$R=\\lim\\left|\\dfrac{a_n}{a_{n+1}}\\right|=\\lim\\dfrac{n+1}n=1$。收敛区间 $(-1,1)$。",
+          "why": "先求半径。"
+        },
+        {
+          "text": "$x=1$：调和级数，发散。$x=-1$：$\\sum\\dfrac{(-1)^n}n$，交错级数，莱布尼茨判别收敛。",
+          "why": "端点逐个检验。"
+        },
+        {
+          "text": "收敛域 $[-1,1)$。",
+          "why": "含 $-1$，不含 $1$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；极限已用 sympy 复核"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（收敛半径为 $\\infty$）",
+      "problem": "求 $\\displaystyle\\sum_{n=0}^\\infty\\frac{x^n}{n!}$ 的收敛半径。",
+      "steps": [
+        {
+          "text": "$R=\\lim\\left|\\dfrac{1/n!}{1/(n+1)!}\\right|=\\lim(n+1)=+\\infty$。",
+          "why": "阶乘增长极快。"
+        },
+        {
+          "text": "收敛域是整条数轴 $(-\\infty,+\\infty)$。这个级数就是 $\\mathrm e^x$ 的展开式（下一节）。",
+          "why": "$R=\\infty$ 时没有端点要检验。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；极限已用 sympy 复核"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（用逐项求导求和函数）",
+      "problem": "求 $\\displaystyle\\sum_{n=1}^\\infty nx^{n-1}$ 的和函数，并求 $x=\\dfrac12$ 时的值。",
+      "steps": [
+        {
+          "text": "$\\displaystyle\\sum_{n=1}^\\infty nx^{n-1}=\\left(\\sum_{n=0}^\\infty x^n\\right)'=\\left(\\dfrac1{1-x}\\right)'=\\dfrac1{(1-x)^2}$，$|x|<1$。",
+          "why": "逐项求导，收敛半径不变，仍是 1。"
+        },
+        {
+          "text": "$x=\\dfrac12$：$\\dfrac1{(1/2)^2}=4$。",
+          "why": "检验前几项：$1+2\\cdot\\frac12+3\\cdot\\frac14+4\\cdot\\frac18+\\cdots$，$1+1+0.75+0.5+0.3125+\\cdots$ 趋于 4。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 复核"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0603a",
+      "knowledge": [
+        "advmath.power_series_radius"
+      ],
+      "stem": "幂级数 $\\displaystyle\\sum_{n=0}^\\infty\\frac{x^n}{2^n}$ 的收敛半径 $R=$",
+      "answer": {
+        "type": "numeric",
+        "value": 2
+      },
+      "solution": "$a_n=\\frac1{2^n}$，$R=\\lim\\left|\\frac{a_n}{a_{n+1}}\\right|=\\lim\\frac{2^{n+1}}{2^n}=2$。（它是公比 $\\frac x2$ 的几何级数，$|x|<2$ 收敛。）",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "几何级数的特例：公比 $x/2$，$|x/2|<1$ 即 $|x|<2$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0603b",
+      "knowledge": [
+        "advmath.power_series_radius"
+      ],
+      "stem": "幂级数 $\\displaystyle\\sum_{n=1}^\\infty\\frac{(x-1)^n}{n\\cdot3^n}$ 的收敛半径 $R=$",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "以 $x-1$ 为变量，$a_n=\\frac1{n3^n}$：$R=\\lim\\left|\\frac{a_n}{a_{n+1}}\\right|=\\lim\\frac{(n+1)3^{n+1}}{n3^n}=3$。收敛区间 $|x-1|<3$，即 $(-2,4)$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "中心在 $x=1$ 而不是 0：半径不变，区间向右平移"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0603c",
+      "knowledge": [
+        "advmath.power_series_radius"
+      ],
+      "stem": "幂级数 $\\displaystyle\\sum_{n=1}^\\infty\\frac{x^n}{n^2}$ 的收敛域是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$(-1,1)$",
+          "$[-1,1)$",
+          "$(-1,1]$",
+          "$[-1,1]$"
+        ],
+        "correct": 3
+      },
+      "solution": "$R=1$。$x=1$：$\\sum\\frac1{n^2}$ 收敛；$x=-1$：$\\sum\\frac{(-1)^n}{n^2}$ 绝对收敛。两个端点都收敛，收敛域 $[-1,1]$。与 $\\sum\\frac{x^n}n$（$[-1,1)$）对照：分母的次数不同，端点的敛散性不同。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：端点逐个检验"
+        }
+      ],
+      "varies": "同样 $R=1$，$p=2$ 的端点都收敛"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0603d",
+      "knowledge": [
+        "advmath.power_series_sum"
+      ],
+      "stem": "$\\displaystyle\\sum_{n=1}^\\infty nx^{n-1}$ 在 $x=\\dfrac12$ 处的和为",
+      "answer": {
+        "type": "numeric",
+        "value": 4
+      },
+      "solution": "和函数 $\\dfrac1{(1-x)^2}$，$x=\\frac12$ 时 $=4$（例 3）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "先求和函数，再代入点"
+    }
+  ]
+}

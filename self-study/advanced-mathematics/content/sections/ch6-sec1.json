@@ -1,0 +1,221 @@
+{
+  "id": "ch6-sec1",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0601",
+      "prompt": "先猜再验：把无穷多个数相加 $1+\\dfrac12+\\dfrac14+\\dfrac18+\\cdots$，和是",
+      "options": [
+        "无穷大，因为项数无穷多",
+        "2",
+        "1",
+        "没有意义"
+      ],
+      "correct": 1,
+      "explain": "前 $n$ 项和 $S_n=2-\\dfrac1{2^{n-1}}\\to2$。无穷多个数相加**不一定**是无穷大：项越来越小时，部分和可以趋向一个有限的数。研究级数就是研究部分和数列 $S_n$ 有没有极限。",
+      "knowledge": [
+        "advmath.series_concept"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜无穷项求和，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**数项级数的收敛与发散**\n\n给定数列 $u_1,u_2,\\dots$，$\\displaystyle\\sum_{n=1}^\\infty u_n=u_1+u_2+\\cdots$ 叫**数项级数**，$u_n$ 是**通项**，$S_n=u_1+\\cdots+u_n$ 是**部分和**。若 $\\lim_{n\\to\\infty}S_n=S$ 存在，级数**收敛**，$S$ 是它的**和**；否则**发散**。\n\n**基本性质**\n- **线性**：$\\sum u_n,\\sum v_n$ 收敛，则 $\\sum(au_n+bv_n)=a\\sum u_n+b\\sum v_n$。\n- 去掉、增加或改变**有限项**不改变敛散性（只改变和）。\n- **收敛的必要条件**：$\\sum u_n$ 收敛 $\\Rightarrow\\lim_{n\\to\\infty}u_n=0$。**逆否**：若 $u_n\\not\\to0$，级数发散（常用来判发散）。\n- 级数收敛，加括号后仍收敛且和不变；反过来不成立。\n\n**两个基本级数**\n- **几何级数** $\\displaystyle\\sum_{n=0}^\\infty aq^n$：$|q|<1$ 时收敛，和 $\\dfrac a{1-q}$；$|q|\\ge1$ 时发散。\n- **$p$ 级数** $\\displaystyle\\sum_{n=1}^\\infty\\frac1{n^p}$：$p>1$ 收敛，$p\\le1$ 发散（$p=1$ 是**调和级数**）。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch6-sec1-partial-sums.svg",
+      "caption": "两个级数的部分和：$\\sum\\frac1{n^2}$ 的部分和趋于 $\\frac{\\pi^2}{6}\\approx1.645$（收敛）；$\\sum\\frac1n$ 的通项也趋于 0，但部分和像 $\\ln n$ 一样无限增长（发散）。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$\\displaystyle\\lim_{n\\to\\infty}u_n=0$，所以级数 $\\sum u_n$ 收敛。",
+      "why_wrong": "$u_n\\to0$ 只是**必要**条件，不是充分条件。调和级数 $\\sum\\dfrac1n$ 的通项趋于 0，却发散：$\\dfrac1n$ 虽然小，加起来的速度仍使部分和像 $\\ln n$ 一样无界。",
+      "right": "用法：$u_n\\not\\to0$ $\\Rightarrow$ 发散（有效）；$u_n\\to0$ 则**无结论**，必须用别的方法（比较、比值、$p$ 级数等）。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（裂项求和）",
+      "problem": "求 $\\displaystyle\\sum_{n=1}^\\infty\\frac1{n(n+1)}$ 的和。",
+      "steps": [
+        {
+          "text": "裂项：$\\dfrac1{n(n+1)}=\\dfrac1n-\\dfrac1{n+1}$。",
+          "why": "把一项拆成两项之差，使得相邻项抵消。"
+        },
+        {
+          "text": "$S_n=\\left(1-\\dfrac12\\right)+\\left(\\dfrac12-\\dfrac13\\right)+\\cdots+\\left(\\dfrac1n-\\dfrac1{n+1}\\right)=1-\\dfrac1{n+1}\\to1$。",
+          "why": "中间的项两两抵消，只剩首尾。"
+        },
+        {
+          "text": "级数收敛，和为 1。",
+          "why": "$\\lim S_n=1$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 求和验证"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（几何级数）",
+      "problem": "求 (1) $\\displaystyle\\sum_{n=0}^\\infty\\left(\\frac13\\right)^n$；(2) $\\displaystyle\\sum_{n=1}^\\infty\\frac2{3^n}$。",
+      "steps": [
+        {
+          "text": "(1) 首项 $a=1$，公比 $q=\\frac13$，$|q|<1$：和 $=\\dfrac1{1-\\frac13}=\\dfrac32$。",
+          "why": "几何级数求和公式 $a/(1-q)$，$a$ 是**第一项**。"
+        },
+        {
+          "text": "(2) 首项（$n=1$）$a=\\dfrac23$，公比 $\\dfrac13$：和 $=\\dfrac{2/3}{1-1/3}=1$。",
+          "why": "起始下标是 1，首项不是 $2$ 而是 $2/3$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已用 sympy 求和验证"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（用必要条件判发散）",
+      "problem": "判断 $\\displaystyle\\sum_{n=1}^\\infty\\frac n{n+1}$ 的敛散性。",
+      "steps": [
+        {
+          "text": "$u_n=\\dfrac n{n+1}\\to1\\neq0$。",
+          "why": "先检查通项的极限。"
+        },
+        {
+          "text": "通项不趋于 0，由必要条件的逆否命题，级数**发散**。",
+          "why": "不需要再用别的判别法。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；必要条件的使用"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0601a",
+      "knowledge": [
+        "advmath.series_concept"
+      ],
+      "stem": "$\\displaystyle\\sum_{n=1}^\\infty\\frac1{n(n+1)}=$",
+      "answer": {
+        "type": "numeric",
+        "value": 1
+      },
+      "solution": "裂项 $\\frac1n-\\frac1{n+1}$，$S_n=1-\\frac1{n+1}\\to1$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "拆项后相消，只剩首项与尾项"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0601b",
+      "knowledge": [
+        "advmath.geometric_p"
+      ],
+      "stem": "$\\displaystyle\\sum_{n=0}^\\infty\\left(\\frac12\\right)^n=$",
+      "answer": {
+        "type": "numeric",
+        "value": 2
+      },
+      "solution": "几何级数，首项 1（$n=0$），公比 $\\frac12$：$\\dfrac1{1-1/2}=2$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "起始下标为 0 时首项是 1"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0601c",
+      "knowledge": [
+        "advmath.geometric_p"
+      ],
+      "stem": "$\\displaystyle\\sum_{n=1}^\\infty\\frac3{4^n}=$",
+      "answer": {
+        "type": "numeric",
+        "value": 1
+      },
+      "solution": "首项（$n=1$）$\\frac34$，公比 $\\frac14$：$\\dfrac{3/4}{1-1/4}=1$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "起始下标为 1：首项是 $n=1$ 的那一项"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0601d",
+      "knowledge": [
+        "advmath.series_concept"
+      ],
+      "stem": "设 $\\displaystyle\\lim_{n\\to\\infty}u_n=0$，则级数 $\\displaystyle\\sum_{n=1}^\\infty u_n$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "一定收敛",
+          "一定发散",
+          "可能收敛也可能发散",
+          "收敛于 0"
+        ],
+        "correct": 2
+      },
+      "solution": "$u_n\\to0$ 是收敛的必要条件，不是充分条件：$\\sum\\frac1{n^2}$ 收敛，$\\sum\\frac1n$ 发散，通项都趋于 0。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：必要条件"
+        }
+      ],
+      "varies": "两个通项趋于 0 的级数，结论相反"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0601e",
+      "knowledge": [
+        "advmath.geometric_p"
+      ],
+      "stem": "下列级数中**收敛**的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\displaystyle\\sum_{n=1}^\\infty\\frac1{\\sqrt n}$",
+          "$\\displaystyle\\sum_{n=1}^\\infty\\frac1{n^2}$",
+          "$\\displaystyle\\sum_{n=1}^\\infty\\frac1n$",
+          "$\\displaystyle\\sum_{n=0}^\\infty2^n$"
+        ],
+        "correct": 1
+      },
+      "solution": "$p$ 级数 $p=2>1$ 收敛。A：$p=\\frac12\\le1$ 发散；C：调和级数发散；D：几何级数 $q=2\\ge1$ 发散。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：p 级数与几何级数"
+        }
+      ],
+      "varies": "$p$ 与 $q$ 两个判别标准：$p>1$ 收敛，$|q|<1$ 收敛"
+    }
+  ]
+}

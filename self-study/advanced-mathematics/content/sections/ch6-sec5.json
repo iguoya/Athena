@@ -1,0 +1,198 @@
+{
+  "id": "ch6-sec5",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0605",
+      "prompt": "先猜再验：傅里叶级数用什么函数的线性组合去逼近一个周期函数？",
+      "options": [
+        "$1,\\cos x,\\sin x,\\cos2x,\\sin2x,\\dots$（三角函数）",
+        "$1,x,x^2,x^3,\\dots$（幂函数）",
+        "$\\mathrm e^x,\\mathrm e^{2x},\\dots$",
+        "只用 $\\sin x$"
+      ],
+      "correct": 0,
+      "explain": "幂级数用 $1,x,x^2,\\dots$ 逼近函数，要求函数光滑；傅里叶级数用**三角函数系**逼近**周期函数**，允许函数有跳跃（间断点）。这一章最后一节，用的是一套全新的「基」。",
+      "knowledge": [
+        "advmath.fourier_series"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜傅里叶级数的基，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**傅里叶级数**\n\n周期为 $2\\pi$ 的函数 $f(x)$（在一个周期上可积）的**傅里叶级数**\n$$\\frac{a_0}2+\\sum_{n=1}^\\infty(a_n\\cos nx+b_n\\sin nx),$$\n**傅里叶系数**\n$$a_n=\\frac1\\pi\\int_{-\\pi}^{\\pi}f(x)\\cos nx\\,\\mathrm dx\\ (n=0,1,2,\\dots),\\qquad b_n=\\frac1\\pi\\int_{-\\pi}^{\\pi}f(x)\\sin nx\\,\\mathrm dx\\ (n=1,2,\\dots).$$\n\n**收敛定理（狄利克雷）**：$f$ 在一个周期上连续或只有有限个第一类间断点，且只有有限个极值点，则傅里叶级数收敛，其和为\n- 在**连续点** $x$：$f(x)$；\n- 在**间断点** $x$：$\\dfrac{f(x^-)+f(x^+)}2$（左右极限的平均值）。\n\n**奇偶函数**：$f$ 为**奇函数**（$f(-x)=-f(x)$）时 $a_n=0$，只有**正弦项**（正弦级数）；$f$ 为**偶函数**时 $b_n=0$，只有**余弦项**（余弦级数）。利用对称区间上奇函数积分为 0 可省一半计算。\n\n**只在 $[0,\\pi]$ 上给定的函数\\***（选学）：作**奇延拓**得正弦级数，作**偶延拓**得余弦级数。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch6-sec5-fourier.svg",
+      "caption": "$f(x)=x$（$-\\pi<x<\\pi$，按周期 $2\\pi$ 延拓）的傅里叶级数 $2\\sum(-1)^{n+1}\\frac{\\sin nx}n$ 的部分和：项数增加，在内部越来越贴近 $y=x$；在端点 $x=\\pm\\pi$（延拓后的间断点）收敛到 0，即左右极限 $\\pm\\pi$ 的平均值。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$f(x)=x$ 的傅里叶级数在 $x=\\pi$ 处收敛于 $f(\\pi)=\\pi$。",
+      "why_wrong": "$f(x)=x$ 按周期 $2\\pi$ 延拓后，在 $x=\\pi$ 处有**跳跃**：左极限 $\\pi$，右极限 $-\\pi$（下一个周期从 $-\\pi$ 开始）。间断点处级数收敛于左右极限的平均 $\\dfrac{\\pi+(-\\pi)}2=0$，而不是函数在该点的值。事实上级数 $2\\sum(-1)^{n+1}\\frac{\\sin n\\pi}{n}$ 的每一项都是 0。",
+      "right": "间断点：收敛于 $\\dfrac{f(x^-)+f(x^+)}2$；连续点：收敛于 $f(x)$。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（奇函数）",
+      "problem": "把 $f(x)=x\\ (-\\pi<x<\\pi)$ 展开成傅里叶级数（周期 $2\\pi$）。",
+      "steps": [
+        {
+          "text": "$f$ 是奇函数：$a_n=0$（$n=0,1,2,\\dots$）。",
+          "why": "$x\\cos nx$ 是奇函数，对称区间积分为 0。"
+        },
+        {
+          "text": "$b_n=\\dfrac1\\pi\\displaystyle\\int_{-\\pi}^\\pi x\\sin nx\\,\\mathrm dx=\\dfrac2\\pi\\int_0^\\pi x\\sin nx\\,\\mathrm dx=\\dfrac{2(-1)^{n+1}}n$。",
+          "why": "分部积分：$\\int_0^\\pi x\\sin nx\\,\\mathrm dx=-\\frac{\\pi\\cos n\\pi}n$。$b_1=2$，$b_2=-1$，$b_3=\\frac23$。"
+        },
+        {
+          "text": "$x=2\\displaystyle\\sum_{n=1}^\\infty\\frac{(-1)^{n+1}}n\\sin nx=2\\left(\\sin x-\\frac{\\sin2x}2+\\frac{\\sin3x}3-\\cdots\\right)$，$-\\pi<x<\\pi$。",
+          "why": "在 $x=\\pm\\pi$（间断点）处级数的和是 0，不是 $\\pm\\pi$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，傅里叶系数已用 sympy 积分复核"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（偶函数）",
+      "problem": "把 $f(x)=|x|\\ (-\\pi\\le x\\le\\pi)$ 展开成傅里叶级数，并由此求 $\\displaystyle\\sum_{k=0}^\\infty\\frac1{(2k+1)^2}$。",
+      "steps": [
+        {
+          "text": "$f$ 是偶函数：$b_n=0$。$a_0=\\dfrac2\\pi\\displaystyle\\int_0^\\pi x\\,\\mathrm dx=\\pi$，$a_n=\\dfrac2\\pi\\int_0^\\pi x\\cos nx\\,\\mathrm dx=\\dfrac{2\\left[(-1)^n-1\\right]}{\\pi n^2}$。",
+          "why": "$n$ 为偶数时 $a_n=0$，$n$ 为奇数时 $a_n=-\\dfrac4{\\pi n^2}$。"
+        },
+        {
+          "text": "$|x|=\\dfrac\\pi2-\\dfrac4\\pi\\displaystyle\\sum_{k=0}^\\infty\\frac{\\cos(2k+1)x}{(2k+1)^2}$，$-\\pi\\le x\\le\\pi$（$|x|$ 连续，级数处处收敛于 $|x|$）。",
+          "why": "只有奇数项。"
+        },
+        {
+          "text": "取 $x=0$：$0=\\dfrac\\pi2-\\dfrac4\\pi\\displaystyle\\sum_{k=0}^\\infty\\frac1{(2k+1)^2}$，所以 $\\displaystyle\\sum_{k=0}^\\infty\\dfrac1{(2k+1)^2}=\\dfrac{\\pi^2}8$。",
+          "why": "用收敛定理（$x=0$ 是连续点）把傅里叶级数变成数项级数的求和。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，傅里叶系数与级数和已用 sympy 复核"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0605a",
+      "knowledge": [
+        "advmath.fourier_coeff"
+      ],
+      "stem": "$f(x)=x\\ (-\\pi<x<\\pi)$ 的傅里叶级数中，$b_1=$",
+      "answer": {
+        "type": "numeric",
+        "value": 2
+      },
+      "solution": "$b_n=\\dfrac{2(-1)^{n+1}}n$，$n=1$：$b_1=2$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "公式中 $(-1)^{n+1}$ 的符号：$n=1$ 为正，$n=2$ 为负"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0605b",
+      "knowledge": [
+        "advmath.fourier_coeff"
+      ],
+      "stem": "$f(x)=x\\ (-\\pi<x<\\pi)$ 的傅里叶级数中，$b_2=$",
+      "answer": {
+        "type": "numeric",
+        "value": -1
+      },
+      "solution": "$b_2=\\dfrac{2(-1)^{3}}2=-1$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "偶数项的系数符号为负"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0605c",
+      "knowledge": [
+        "advmath.fourier_convergence"
+      ],
+      "stem": "$f(x)=x\\ (-\\pi<x<\\pi)$ 按周期 $2\\pi$ 延拓，其傅里叶级数在 $x=\\pi$ 处收敛于",
+      "answer": {
+        "type": "numeric",
+        "value": 0
+      },
+      "solution": "$x=\\pi$ 是延拓后的间断点：左极限 $\\pi$，右极限 $-\\pi$，收敛于 $\\dfrac{\\pi+(-\\pi)}2=0$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值：狄利克雷收敛定理"
+        }
+      ],
+      "varies": "间断点处收敛于左右极限的平均，不是函数值"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0605d",
+      "knowledge": [
+        "advmath.fourier_series"
+      ],
+      "stem": "设 $f$ 是以 $2\\pi$ 为周期的**偶函数**，则它的傅里叶级数",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "只含余弦项（$b_n=0$）",
+          "只含正弦项（$a_n=0$）",
+          "正弦项与余弦项都有",
+          "只有常数项"
+        ],
+        "correct": 0
+      },
+      "solution": "偶函数乘 $\\sin nx$（奇函数）得奇函数，在 $[-\\pi,\\pi]$ 上积分为 0，所以 $b_n=0$。例：$|x|$ 的级数只含余弦项。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：奇偶性与傅里叶级数"
+        }
+      ],
+      "varies": "偶函数 $\\leftrightarrow$ 余弦，奇函数 $\\leftrightarrow$ 正弦"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0605e",
+      "knowledge": [
+        "advmath.fourier_series"
+      ],
+      "stem": "$f$ 是以 $2\\pi$ 为周期的**奇函数**，则 $a_n=$（$n=0,1,2,\\dots$）",
+      "answer": {
+        "type": "numeric",
+        "value": 0
+      },
+      "solution": "$f(x)\\cos nx$ 是奇函数（奇 × 偶），在对称区间 $[-\\pi,\\pi]$ 上积分为 0，所以 $a_n=0$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：奇函数的余弦系数"
+        }
+      ],
+      "varies": "对称区间上的奇函数积分为 0"
+    }
+  ]
+}

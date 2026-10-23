@@ -705,6 +705,137 @@
       ],
       "textbook_ref": "教材 第 5 章 §5",
       "syllabus_ref": "常微分方程：二阶常系数线性微分方程（选学）"
+    },
+    {
+      "id": "advmath.series_concept",
+      "title": "数项级数的收敛、发散与基本性质（必要条件）",
+      "type": "概念",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [],
+      "textbook_ref": "教材 第 6 章 §1",
+      "syllabus_ref": "无穷级数：数项级数的概念及基本性质"
+    },
+    {
+      "id": "advmath.geometric_p",
+      "title": "几何级数与 p 级数",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.series_concept"
+      ],
+      "textbook_ref": "教材 第 6 章 §1",
+      "syllabus_ref": "无穷级数：数项级数的概念及基本性质"
+    },
+    {
+      "id": "advmath.positive_series",
+      "title": "正项级数的审敛法（比较、比值）",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.geometric_p"
+      ],
+      "textbook_ref": "教材 第 6 章 §2",
+      "syllabus_ref": "无穷级数：正项级数的审敛法"
+    },
+    {
+      "id": "advmath.alternating_abs",
+      "title": "交错级数、绝对收敛与条件收敛",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.positive_series"
+      ],
+      "textbook_ref": "教材 第 6 章 §2",
+      "syllabus_ref": "无穷级数：交错级数；绝对收敛和条件收敛"
+    },
+    {
+      "id": "advmath.power_series_radius",
+      "title": "幂级数的收敛半径与收敛域",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.positive_series"
+      ],
+      "textbook_ref": "教材 第 6 章 §3",
+      "syllabus_ref": "无穷级数：幂级数"
+    },
+    {
+      "id": "advmath.power_series_sum",
+      "title": "幂级数的和函数与逐项运算",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.power_series_radius"
+      ],
+      "textbook_ref": "教材 第 6 章 §3",
+      "syllabus_ref": "无穷级数：幂级数"
+    },
+    {
+      "id": "advmath.maclaurin_basic",
+      "title": "常用函数的麦克劳林展开式",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.power_series_radius"
+      ],
+      "textbook_ref": "教材 第 6 章 §4",
+      "syllabus_ref": "无穷级数：函数的幂级数展开式"
+    },
+    {
+      "id": "advmath.indirect_expansion",
+      "title": "间接展开法（代换、逐项求导与积分）",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.maclaurin_basic",
+        "advmath.power_series_sum"
+      ],
+      "textbook_ref": "教材 第 6 章 §4",
+      "syllabus_ref": "无穷级数：函数的幂级数展开式"
+    },
+    {
+      "id": "advmath.fourier_series",
+      "title": "傅里叶级数与奇偶函数",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.series_concept"
+      ],
+      "textbook_ref": "教材 第 6 章 §5",
+      "syllabus_ref": "无穷级数：傅里叶级数"
+    },
+    {
+      "id": "advmath.fourier_coeff",
+      "title": "傅里叶系数的计算",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.fourier_series"
+      ],
+      "textbook_ref": "教材 第 6 章 §5",
+      "syllabus_ref": "无穷级数：傅里叶级数"
+    },
+    {
+      "id": "advmath.fourier_convergence",
+      "title": "傅里叶级数的收敛定理（间断点）",
+      "type": "概念",
+      "difficulty": 4,
+      "target": "掌握",
+      "requires": [
+        "advmath.fourier_series"
+      ],
+      "textbook_ref": "教材 第 6 章 §5",
+      "syllabus_ref": "无穷级数：傅里叶级数"
     }
   ]
 }

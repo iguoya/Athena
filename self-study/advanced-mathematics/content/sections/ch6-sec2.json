@@ -1,0 +1,218 @@
+{
+  "id": "ch6-sec2",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0602",
+      "prompt": "先猜再验：$0\\le u_n\\le v_n$，且 $\\sum v_n$ 收敛。那么 $\\sum u_n$ 会怎样？",
+      "options": [
+        "一定收敛",
+        "一定发散",
+        "不一定",
+        "和等于 $\\sum v_n$"
+      ],
+      "correct": 0,
+      "explain": "正项级数的部分和单调增加；$u_n\\le v_n$ 使 $u$ 的部分和不超过 $v$ 的部分和（有上界），单调有界数列必有极限，所以 $\\sum u_n$ 收敛。这是**比较判别法**。反过来，$\\sum u_n$ 发散则 $\\sum v_n$ 也发散。",
+      "knowledge": [
+        "advmath.positive_series"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜比较判别法，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**审敛法**\n\n**正项级数**（$u_n\\ge0$）：部分和单调增，收敛 $\\iff$ 部分和有上界。\n- **比较判别法**：$0\\le u_n\\le v_n$：$\\sum v_n$ 收敛 $\\Rightarrow\\sum u_n$ 收敛；$\\sum u_n$ 发散 $\\Rightarrow\\sum v_n$ 发散。**极限形式**：$\\lim\\dfrac{u_n}{v_n}=l\\in(0,+\\infty)$，则两个级数同敛散。常用 $v_n=\\dfrac1{n^p}$ 或几何级数作比较对象。\n- **比值判别法**：$\\rho=\\lim\\dfrac{u_{n+1}}{u_n}$：$\\rho<1$ 收敛；$\\rho>1$（或 $+\\infty$）发散；$\\rho=1$ **失效**，要换别的方法。通项含 $n!$、$a^n$、$n^n$ 时优先用。\n\n**交错级数** $\\sum(-1)^{n-1}u_n$（$u_n>0$），**莱布尼茨判别法**：$u_n$ 单调减少且 $u_n\\to0$，则收敛（和 $S\\le u_1$）。\n\n**绝对收敛与条件收敛**（一般项级数）：\n- $\\sum|u_n|$ 收敛 $\\Rightarrow\\sum u_n$ **绝对收敛**（一定收敛）；\n- $\\sum u_n$ 收敛而 $\\sum|u_n|$ 发散 $\\Rightarrow$ **条件收敛**。\n\n**选方法的顺序**：先看通项是否趋于 0；正项级数先试比值（含阶乘、指数），不行再比较；交错级数用莱布尼茨；一般项级数先对 $|u_n|$ 判别。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "比值判别法求得 $\\rho=1$，所以级数发散（或收敛）。",
+      "why_wrong": "$\\rho=1$ 时比值法**没有结论**。$\\sum\\dfrac1n$（发散）与 $\\sum\\dfrac1{n^2}$（收敛）的比值极限都是 1：$\\dfrac{1/(n+1)}{1/n}=\\dfrac n{n+1}\\to1$，$\\dfrac{n^2}{(n+1)^2}\\to1$。",
+      "right": "$\\rho=1$ 时改用比较判别法（与 $p$ 级数比）、积分判别或其他方法。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（比值判别法）",
+      "problem": "判断 $\\displaystyle\\sum_{n=1}^\\infty\\frac n{2^n}$ 的敛散性。",
+      "steps": [
+        {
+          "text": "$\\dfrac{u_{n+1}}{u_n}=\\dfrac{(n+1)/2^{n+1}}{n/2^n}=\\dfrac{n+1}{2n}\\to\\dfrac12$。",
+          "why": "通项含 $2^n$，比值法合适。"
+        },
+        {
+          "text": "$\\rho=\\dfrac12<1$，级数**收敛**。",
+          "why": "通项含 $2^n$（指数），比值法最直接；前几项 $\\frac12,\\frac24,\\frac38,\\frac4{16},\\dots$ 也确实在快速变小。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，极限已用 sympy 复核"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（比较判别法）",
+      "problem": "判断 $\\displaystyle\\sum_{n=1}^\\infty\\frac1{n^2+1}$ 的敛散性。",
+      "steps": [
+        {
+          "text": "$0<\\dfrac1{n^2+1}<\\dfrac1{n^2}$，而 $\\sum\\dfrac1{n^2}$ 是 $p=2>1$ 的 $p$ 级数，收敛。",
+          "why": "放大分母变小：通项小于一个收敛级数的通项。"
+        },
+        {
+          "text": "由比较判别法，$\\sum\\dfrac1{n^2+1}$ **收敛**。",
+          "why": "也可用极限形式：$\\lim\\frac{1/(n^2+1)}{1/n^2}=1\\in(0,\\infty)$，同敛散。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；比较判别法"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（绝对收敛与条件收敛）",
+      "problem": "判断 (1) $\\displaystyle\\sum_{n=1}^\\infty\\frac{(-1)^{n-1}}n$；(2) $\\displaystyle\\sum_{n=1}^\\infty\\frac{(-1)^{n-1}}{n^2}$ 是绝对收敛、条件收敛还是发散。",
+      "steps": [
+        {
+          "text": "(1) 交错级数，$\\frac1n$ 单调减且 $\\to0$，由莱布尼茨判别法收敛。但 $\\sum\\left|\\frac{(-1)^{n-1}}n\\right|=\\sum\\frac1n$ 发散。所以**条件收敛**。",
+          "why": "收敛靠正负相消，去掉符号就发散。"
+        },
+        {
+          "text": "(2) 同样收敛；$\\sum\\frac1{n^2}$ 收敛，所以**绝对收敛**。",
+          "why": "绝对收敛比条件收敛强。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；绝对收敛与条件收敛的经典对照"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0602a",
+      "knowledge": [
+        "advmath.positive_series"
+      ],
+      "stem": "用比值判别法判断 $\\displaystyle\\sum_{n=1}^\\infty\\frac n{2^n}$，$\\rho=\\displaystyle\\lim_{n\\to\\infty}\\frac{u_{n+1}}{u_n}=$",
+      "answer": {
+        "type": "numeric",
+        "value": 0.5
+      },
+      "solution": "$\\dfrac{n+1}{2n}\\to\\dfrac12$。$\\rho=\\frac12<1$，收敛。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "比值的极限：分子分母同阶时看系数比"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0602b",
+      "knowledge": [
+        "advmath.positive_series"
+      ],
+      "stem": "$\\displaystyle\\sum_{n=1}^\\infty\\frac{3^n}{n!}$ 用比值判别法，$\\rho=$",
+      "answer": {
+        "type": "numeric",
+        "value": 0
+      },
+      "solution": "$\\dfrac{3^{n+1}/(n+1)!}{3^n/n!}=\\dfrac3{n+1}\\to0<1$，收敛。（和是 $\\mathrm e^3-1$。）",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "含阶乘：比值是 $1/(n+1)$ 的量级，极限为 0"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0602c",
+      "knowledge": [
+        "advmath.positive_series"
+      ],
+      "stem": "设 $u_n>0$，比值判别法得 $\\rho=\\displaystyle\\lim\\frac{u_{n+1}}{u_n}=1$，则 $\\sum u_n$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "收敛",
+          "发散",
+          "不能由此判断",
+          "条件收敛"
+        ],
+        "correct": 2
+      },
+      "solution": "$\\rho=1$ 时比值法失效。$\\sum\\frac1n$ 与 $\\sum\\frac1{n^2}$ 的 $\\rho$ 都是 1，一个发散一个收敛。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：比值法的失效情形"
+        }
+      ],
+      "varies": "两个反例的存在说明不能下结论"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0602d",
+      "knowledge": [
+        "advmath.alternating_abs"
+      ],
+      "stem": "级数 $\\displaystyle\\sum_{n=1}^\\infty\\frac{(-1)^{n-1}}n$ 是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "绝对收敛",
+          "条件收敛",
+          "发散",
+          "和为 0"
+        ],
+        "correct": 1
+      },
+      "solution": "收敛（莱布尼茨），但取绝对值得调和级数 $\\sum\\frac1n$ 发散，所以是条件收敛。（它的和是 $\\ln2$。）",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：条件收敛"
+        }
+      ],
+      "varies": "先判本身是否收敛，再判绝对值级数"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0602e",
+      "knowledge": [
+        "advmath.alternating_abs"
+      ],
+      "stem": "若 $\\displaystyle\\sum_{n=1}^\\infty|u_n|$ 收敛，则 $\\displaystyle\\sum_{n=1}^\\infty u_n$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "一定收敛",
+          "一定发散",
+          "不一定收敛",
+          "条件收敛"
+        ],
+        "correct": 0
+      },
+      "solution": "绝对收敛的级数一定收敛。反过来不成立（条件收敛）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：绝对收敛蕴含收敛"
+        }
+      ],
+      "varies": "方向：绝对收敛 $\\Rightarrow$ 收敛，反之不然"
+    }
+  ]
+}

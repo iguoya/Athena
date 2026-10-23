@@ -1,0 +1,212 @@
+{
+  "id": "ch6-sec4",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0604",
+      "prompt": "先猜再验：$\\mathrm e^x$ 的幂级数展开式是下面哪一个？",
+      "options": [
+        "$1+x+\\dfrac{x^2}{2!}+\\dfrac{x^3}{3!}+\\cdots$",
+        "$1+x+x^2+x^3+\\cdots$",
+        "$x-\\dfrac{x^3}{3!}+\\dfrac{x^5}{5!}-\\cdots$",
+        "$1-\\dfrac{x^2}{2!}+\\dfrac{x^4}{4!}-\\cdots$"
+      ],
+      "correct": 0,
+      "explain": "$f(x)=\\mathrm e^x$ 的任意阶导数在 0 处都是 1，麦克劳林系数 $\\dfrac{f^{(n)}(0)}{n!}=\\dfrac1{n!}$。B 是 $\\frac1{1-x}$；C 是 $\\sin x$；D 是 $\\cos x$。",
+      "knowledge": [
+        "advmath.maclaurin_basic"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜 e^x 的展开式，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**函数展开成幂级数**\n\n**麦克劳林级数**：$f(x)$ 在 $x=0$ 处任意阶可导，\n$$f(x)=\\sum_{n=0}^\\infty\\frac{f^{(n)}(0)}{n!}x^n,$$\n在收敛区间内且余项趋于 0 时成立（泰勒级数是在 $x_0$ 处的类似形式，系数 $f^{(n)}(x_0)/n!$）。**展开式是唯一的**：同一个函数在 $x=0$ 处的幂级数展开式只有一个，所以**系数可以用任何方法求得**。\n\n**常用展开式（必须熟记，括号里是成立范围）**\n- $\\mathrm e^x=\\displaystyle\\sum_{n=0}^\\infty\\frac{x^n}{n!}$  $(-\\infty,+\\infty)$\n- $\\sin x=\\displaystyle\\sum_{n=0}^\\infty\\frac{(-1)^nx^{2n+1}}{(2n+1)!}$  $(-\\infty,+\\infty)$\n- $\\cos x=\\displaystyle\\sum_{n=0}^\\infty\\frac{(-1)^nx^{2n}}{(2n)!}$  $(-\\infty,+\\infty)$\n- $\\dfrac1{1-x}=\\displaystyle\\sum_{n=0}^\\infty x^n$  $(-1,1)$\n- $\\ln(1+x)=\\displaystyle\\sum_{n=1}^\\infty\\frac{(-1)^{n-1}x^n}{n}$  $(-1,1]$\n- $(1+x)^\\alpha=1+\\alpha x+\\dfrac{\\alpha(\\alpha-1)}{2!}x^2+\\cdots$  $(-1,1)$\n\n**间接展开法**（优先用）：从上面的展开式出发，通过**代换**（$x\\to-x,\\ x^2,\\ 2x$）、**逐项求导/积分**、四则运算得到新的展开式；展开范围随代换变化。\n\n**应用**：近似计算（取前几项）、求高阶导数 $f^{(n)}(0)=n!\\cdot(x^n\\text{ 的系数})$。\n\n**泰勒公式\\***（选学）：$f(x)=\\sum_{k=0}^n\\dfrac{f^{(k)}(x_0)}{k!}(x-x_0)^k+R_n(x)$，$R_n$ 是余项；它给出用多项式近似 $f$ 时的误差。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$\\dfrac1{1+x^2}=1+x^2+x^4+\\cdots$（直接套 $\\dfrac1{1-x}$ 的展开式，把 $x$ 换成 $x^2$）。",
+      "why_wrong": "代换要和原式一致。$\\dfrac1{1-u}=\\sum u^n$ 里的 $u$ 要使 $1-u=1+x^2$，即 $u=-x^2$。所以 $\\dfrac1{1+x^2}=\\sum(-x^2)^n=1-x^2+x^4-x^6+\\cdots$，符号**交替**，范围 $|x|<1$。把 $u$ 取成 $x^2$ 得到的是 $\\dfrac1{1-x^2}$ 的展开式。",
+      "right": "先把函数写成 $\\dfrac1{1-u}$ 的形式，找出 $u$，再代入 $\\sum u^n$。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（代换）",
+      "problem": "把 $\\dfrac1{1+x^2}$ 与 $\\mathrm e^{-x^2}$ 展开成 $x$ 的幂级数。",
+      "steps": [
+        {
+          "text": "$\\dfrac1{1+x^2}=\\dfrac1{1-(-x^2)}=\\displaystyle\\sum_{n=0}^\\infty(-x^2)^n=\\sum_{n=0}^\\infty(-1)^nx^{2n}$，$|x|<1$。",
+          "why": "令 $u=-x^2$，要求 $|u|<1$ 即 $|x|<1$。"
+        },
+        {
+          "text": "$\\mathrm e^{-x^2}=\\displaystyle\\sum_{n=0}^\\infty\\frac{(-x^2)^n}{n!}=\\sum_{n=0}^\\infty\\frac{(-1)^nx^{2n}}{n!}=1-x^2+\\frac{x^4}{2}-\\cdots$，$x\\in(-\\infty,+\\infty)$。",
+          "why": "$\\mathrm e^u$ 对一切 $u$ 成立，所以代换后对一切 $x$ 成立。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，前几项已用 sympy 复核"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（逐项积分）",
+      "problem": "把 $\\arctan x$ 展开成 $x$ 的幂级数。",
+      "steps": [
+        {
+          "text": "$(\\arctan x)'=\\dfrac1{1+x^2}=\\sum_{n=0}^\\infty(-1)^nx^{2n}$，$|x|<1$。",
+          "why": "先求导，得到已知的展开式（例 1）。"
+        },
+        {
+          "text": "逐项积分（$\\arctan0=0$）：$\\arctan x=\\displaystyle\\sum_{n=0}^\\infty\\frac{(-1)^nx^{2n+1}}{2n+1}=x-\\frac{x^3}3+\\frac{x^5}5-\\cdots$，$|x|<1$（端点 $x=\\pm1$ 也收敛，成立范围 $[-1,1]$）。",
+          "why": "取 $x=1$：$\\frac\\pi4=1-\\frac13+\\frac15-\\cdots$，莱布尼茨级数。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，前几项已用 sympy 复核"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（近似计算）",
+      "problem": "用前两项估计 $\\sin0.1$，并估计误差。",
+      "steps": [
+        {
+          "text": "$\\sin x=x-\\dfrac{x^3}{6}+\\dfrac{x^5}{120}-\\cdots$。取前两项：$\\sin0.1\\approx0.1-\\dfrac{0.001}{6}=0.0998333\\cdots$。",
+          "why": "代入 $x=0.1$。"
+        },
+        {
+          "text": "这是交错级数，误差小于第一个舍去的项的绝对值 $\\dfrac{0.1^5}{120}\\approx8.3\\times10^{-8}$。",
+          "why": "交错级数的余项不超过首项被舍去项的大小。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造，已复算（sin 0.1 = 0.0998334166…）"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0604a",
+      "knowledge": [
+        "advmath.maclaurin_basic"
+      ],
+      "stem": "$\\mathrm e^{3x}$ 的幂级数展开式中 $x^2$ 的系数为",
+      "answer": {
+        "type": "numeric",
+        "value": 4.5
+      },
+      "solution": "$\\mathrm e^{3x}=\\sum\\dfrac{(3x)^n}{n!}$，$x^2$ 项：$\\dfrac{3^2}{2!}x^2=\\dfrac92x^2$，系数 $4.5$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "代换 $x\\to3x$：系数乘上 $3^n$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0604b",
+      "knowledge": [
+        "advmath.indirect_expansion"
+      ],
+      "stem": "$\\dfrac1{1-2x}$ 的幂级数展开式中 $x^3$ 的系数为",
+      "answer": {
+        "type": "numeric",
+        "value": 8
+      },
+      "solution": "$\\dfrac1{1-2x}=\\sum(2x)^n=\\sum2^nx^n$，$x^3$ 的系数 $2^3=8$。收敛范围 $|2x|<1$，即 $|x|<\\frac12$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "代换后范围也变：$|x|<\\frac12$，不是 $|x|<1$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0604c",
+      "knowledge": [
+        "advmath.indirect_expansion"
+      ],
+      "stem": "$f(x)=x\\mathrm e^x$ 的三阶导数 $f'''(0)=$",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "$x\\mathrm e^x=\\sum\\dfrac{x^{n+1}}{n!}$，$x^3$ 的系数是 $\\dfrac1{2!}=\\dfrac12$。$f'''(0)=3!\\times\\dfrac12=3$。直接求导验证：$f'''(x)=(x+3)\\mathrm e^x$，$f'''(0)=3$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "由展开式系数反求高阶导数：$f^{(n)}(0)=n!\\cdot a_n$"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0604d",
+      "knowledge": [
+        "advmath.indirect_expansion"
+      ],
+      "stem": "$\\dfrac1{1+x^2}$ 的幂级数展开式是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$1-x^2+x^4-x^6+\\cdots,\\ |x|<1$",
+          "$1+x^2+x^4+x^6+\\cdots,\\ |x|<1$",
+          "$1-x+x^2-x^3+\\cdots,\\ |x|<1$",
+          "$1-x^2+\\dfrac{x^4}{2!}-\\cdots,\\ x\\in\\mathbb R$"
+        ],
+        "correct": 0
+      },
+      "solution": "例 1：令 $u=-x^2$，$\\sum(-x^2)^n$。B 缺符号；C 是 $\\frac1{1+x}$ 的展开式；D 是 $\\mathrm e^{-x^2}$ 的展开式。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：代换的符号"
+        }
+      ],
+      "varies": "四个选项来自四个不同函数的展开式"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0604e",
+      "knowledge": [
+        "advmath.maclaurin_basic"
+      ],
+      "stem": "下列展开式**正确**的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\cos x=1-\\dfrac{x^2}{2!}+\\dfrac{x^4}{4!}-\\cdots$",
+          "$\\cos x=1+\\dfrac{x^2}{2!}+\\dfrac{x^4}{4!}+\\cdots$",
+          "$\\sin x=x+\\dfrac{x^3}{3!}+\\dfrac{x^5}{5!}+\\cdots$",
+          "$\\ln(1+x)=x+\\dfrac{x^2}2+\\dfrac{x^3}3+\\cdots$"
+        ],
+        "correct": 0
+      },
+      "solution": "$\\cos x$ 只含偶次项且符号交替。B 缺符号（那是 $\\cosh x$）；C 缺符号（那是 $\\sinh x$）；D 缺交替符号（$\\ln(1+x)$ 是 $x-\\frac{x^2}2+\\frac{x^3}3-\\cdots$，$-\\ln(1-x)$ 才全是正号）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：常用展开式的符号"
+        }
+      ],
+      "varies": "符号规律：奇偶性（$\\sin$ 奇函数只有奇次项，$\\cos$ 偶函数只有偶次项）加交替"
+    }
+  ]
+}
