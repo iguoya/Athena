@@ -1,0 +1,177 @@
+{
+  "id": "ch1-sec4",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0104",
+      "prompt": "先猜再验：方程 $x^2+y^2=4$ 在**空间直角坐标系**里表示什么图形？",
+      "options": [
+        "一个圆",
+        "一个圆柱面",
+        "一个球面",
+        "一个抛物面"
+      ],
+      "correct": 1,
+      "explain": "方程里**没有 $z$**，意思是 $z$ 取任何值都满足，所以整条平行于 $z$ 轴的直线上的点都在图形上。在 $xOy$ 平面内它是半径为 2 的圆；沿 $z$ 轴方向把这个圆拉开，得到**圆柱面**。要得到那个圆，必须再加条件 $z=0$。",
+      "knowledge": [
+        "advmath.cylinder_rotation"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜缺一个变量的方程的含义，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**曲面方程与空间曲线**\n\n**曲面的方程**：曲面 $S$ 上的点的坐标满足 $F(x,y,z)=0$，不在 $S$ 上的点不满足。\n- **球面**：球心 $(a,b,c)$、半径 $R$：$(x-a)^2+(y-b)^2+(z-c)^2=R^2$。一般式 $x^2+y^2+z^2+Dx+Ey+Fz+G=0$ 要**配方**成标准式才能读出球心与半径。\n- **柱面**：方程中缺哪个变量，母线就平行于哪个坐标轴。$F(x,y)=0$ 是母线平行于 $z$ 轴的柱面，准线就是 $xOy$ 面上的曲线 $F(x,y)=0$。\n- **旋转曲面**：坐标面上的曲线绕坐标轴旋转。例如 $yOz$ 面上的曲线 $f(y,z)=0$ 绕 **$z$ 轴**旋转，方程是把 $y$ 换成 $\\pm\\sqrt{x^2+y^2}$：$f\\left(\\pm\\sqrt{x^2+y^2},\\ z\\right)=0$（**绕哪个轴，哪个变量不动，另一个变量换成「到轴的距离」**）。\n\n**空间曲线**\n- 一般方程：两个曲面的交线 $\\begin{cases}F(x,y,z)=0\\\\G(x,y,z)=0\\end{cases}$。\n- 参数方程：$x=x(t),\\ y=y(t),\\ z=z(t)$。\n- **在坐标面上的投影**：从方程组里**消去 $z$**，得到过曲线、母线平行于 $z$ 轴的**投影柱面** $H(x,y)=0$；它与 $z=0$ 联立 $\\begin{cases}H(x,y)=0\\\\z=0\\end{cases}$ 就是曲线在 $xOy$ 面上的投影曲线。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch1-sec4-surfaces.svg",
+      "caption": "左：圆柱面 $x^2+y^2=1$（方程缺 $z$，母线平行于 $z$ 轴）。右：旋转抛物面 $z=x^2+y^2$（抛物线 $z=y^2$ 绕 $z$ 轴旋转而成）。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "空间中 $x^2+y^2=4$ 表示一个圆。",
+      "why_wrong": "在平面 $xOy$ 里才是圆。空间里它缺 $z$，$z$ 可以取任意值，图形是圆柱面。一条**空间曲线**需要**两个**方程：圆写成 $\\begin{cases}x^2+y^2=4\\\\z=0\\end{cases}$。",
+      "right": "一个方程对应一张**曲面**，两个方程联立才是**曲线**。看方程时先问：在哪个空间里？"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（配方求球心与半径）",
+      "problem": "方程 $x^2+y^2+z^2-2x+4y-6z=11$ 表示什么曲面？",
+      "steps": [
+        {
+          "text": "按 $x,y,z$ 分别配方：$(x-1)^2+(y+2)^2+(z-3)^2=11+1+4+9=25$。",
+          "why": "$x^2-2x$ 补 $1$，$y^2+4y$ 补 $4$，$z^2-6z$ 补 $9$，右边同时加上。"
+        },
+        {
+          "text": "这是球心 $(1,-2,3)$、半径 $5$ 的球面。",
+          "why": "标准式右边是 $R^2=25$，所以 $R=5$，而不是 25。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，配方已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（旋转曲面）",
+      "problem": "$yOz$ 面上的抛物线 $z=y^2$（$x=0$）绕 $z$ 轴旋转，求旋转曲面的方程。",
+      "steps": [
+        {
+          "text": "绕 $z$ 轴旋转，$z$ 不变，$y$ 换成 $\\pm\\sqrt{x^2+y^2}$：$z=\\left(\\pm\\sqrt{x^2+y^2}\\right)^2=x^2+y^2$。",
+          "why": "曲面上任一点到 $z$ 轴的距离是 $\\sqrt{x^2+y^2}$，它在原来曲线上对应的是 $|y|$。"
+        },
+        {
+          "text": "旋转曲面方程 $z=x^2+y^2$（旋转抛物面）。",
+          "why": "同样的方法，$yOz$ 面上的直线 $z=y$ 绕 $z$ 轴旋转得 $z^2=x^2+y^2$（圆锥面）。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；旋转曲面的标准算法"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（空间曲线在坐标面上的投影）",
+      "problem": "求曲线 $\\begin{cases}x^2+y^2+z^2=1\\\\x+z=1\\end{cases}$ 在 $xOy$ 面上的投影曲线方程。",
+      "steps": [
+        {
+          "text": "由第二式 $z=1-x$，代入第一式消去 $z$：$x^2+y^2+(1-x)^2=1$，整理得 $2x^2-2x+y^2=0$。",
+          "why": "这是投影柱面方程，母线平行于 $z$ 轴。"
+        },
+        {
+          "text": "投影曲线 $\\begin{cases}2x^2-2x+y^2=0\\\\z=0\\end{cases}$。",
+          "why": "柱面与 $xOy$ 面（$z=0$）的交线。别漏掉 $z=0$，否则只是柱面。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；消元法求投影曲线，展开已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0104a",
+      "knowledge": [
+        "advmath.surface_eq"
+      ],
+      "stem": "球面 $x^2+y^2+z^2+4x-2y=4$ 的半径为",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "配方：$(x+2)^2+(y-1)^2+z^2=4+4+1=9$，$R=3$，球心 $(-2,1,0)$。注意 $z$ 没有一次项，球心的 $z$ 坐标是 0。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，配方已复算"
+        }
+      ],
+      "varies": "缺少一次项的变量：球心该坐标为 0，不要漏掉右边补的项"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0104b",
+      "knowledge": [
+        "advmath.cylinder_rotation"
+      ],
+      "stem": "$xOy$ 面上的椭圆 $\\dfrac{x^2}{4}+\\dfrac{y^2}{9}=1$ 绕 $y$ 轴旋转，所得旋转曲面方程为",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\dfrac{x^2+z^2}{4}+\\dfrac{y^2}{9}=1$",
+          "$\\dfrac{x^2}{4}+\\dfrac{y^2+z^2}{9}=1$",
+          "$\\dfrac{x^2}{4}+\\dfrac{y^2}{9}+z^2=1$",
+          "$\\dfrac{x^2}{4}+\\dfrac{y^2}{9}=1$"
+        ],
+        "correct": 0
+      },
+      "solution": "绕 $y$ 轴旋转，$y$ 不变，$x$ 换成 $\\pm\\sqrt{x^2+z^2}$：$\\dfrac{x^2+z^2}{4}+\\dfrac{y^2}{9}=1$。B 把旋转轴搞反了（那是绕 $x$ 轴）；C 不是旋转曲面；D 是椭圆柱面（缺 $z$）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：绕哪个轴，哪个变量不动"
+        }
+      ],
+      "varies": "旋转轴决定哪个变量保持不变"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0104c",
+      "knowledge": [
+        "advmath.space_curve"
+      ],
+      "stem": "曲线 $\\begin{cases}x^2+y^2+z^2=1\\\\x+z=1\\end{cases}$ 在 $xOy$ 面上的投影曲线是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\begin{cases}2x^2-2x+y^2=0\\\\z=0\\end{cases}$",
+          "$2x^2-2x+y^2=0$",
+          "$\\begin{cases}x^2+y^2=1\\\\z=0\\end{cases}$",
+          "$\\begin{cases}x^2+y^2+(1-x)^2=0\\\\z=0\\end{cases}$"
+        ],
+        "correct": 0
+      },
+      "solution": "由例 3：消去 $z$ 得 $2x^2-2x+y^2=0$，再与 $z=0$ 联立。B 少了 $z=0$，那是柱面；C 没有消去 $z$ 就直接令 $z=0$（把 $x+z=1$ 弄丢了）；D 右边应为 1 而不是 0。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：投影曲线 = 投影柱面 + 坐标面"
+        }
+      ],
+      "varies": "两个方程联立的曲线：去掉 $z$ 后还要补上 $z=0$"
+    }
+  ]
+}

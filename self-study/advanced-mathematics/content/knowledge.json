@@ -16,9 +16,220 @@
       "type": "技能",
       "difficulty": 1,
       "target": "熟练掌握",
-      "requires": ["advmath.coord_sys"],
+      "requires": [
+        "advmath.coord_sys"
+      ],
       "textbook_ref": "教材 §1.1",
       "syllabus_ref": "空间解析几何与向量代数：两点间距离公式"
+    },
+    {
+      "id": "advmath.vec_basic",
+      "title": "向量的概念：模、单位向量、相等",
+      "type": "概念",
+      "difficulty": 1,
+      "target": "掌握",
+      "requires": [
+        "advmath.coord_sys"
+      ],
+      "textbook_ref": "教材 第 1 章 §2",
+      "syllabus_ref": "空间解析几何与向量代数：向量的概念"
+    },
+    {
+      "id": "advmath.vec_linear",
+      "title": "向量的加法、减法与数乘",
+      "type": "技能",
+      "difficulty": 1,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.vec_basic"
+      ],
+      "textbook_ref": "教材 第 1 章 §2",
+      "syllabus_ref": "空间解析几何与向量代数：向量的线性运算"
+    },
+    {
+      "id": "advmath.vec_coord_norm",
+      "title": "向量的坐标、模与由两点求向量",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.vec_linear",
+        "advmath.point_distance"
+      ],
+      "textbook_ref": "教材 第 1 章 §2",
+      "syllabus_ref": "空间解析几何与向量代数：向量的坐标"
+    },
+    {
+      "id": "advmath.dir_cosine",
+      "title": "方向角与方向余弦",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.vec_coord_norm"
+      ],
+      "textbook_ref": "教材 第 1 章 §2",
+      "syllabus_ref": "空间解析几何与向量代数：方向余弦"
+    },
+    {
+      "id": "advmath.projection",
+      "title": "向量在轴上的投影",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "掌握",
+      "requires": [
+        "advmath.vec_coord_norm"
+      ],
+      "textbook_ref": "教材 第 1 章 §2",
+      "syllabus_ref": "空间解析几何与向量代数：向量的投影"
+    },
+    {
+      "id": "advmath.dot_product",
+      "title": "数量积及其坐标计算",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.vec_coord_norm"
+      ],
+      "textbook_ref": "教材 第 1 章 §3",
+      "syllabus_ref": "空间解析几何与向量代数：数量积"
+    },
+    {
+      "id": "advmath.angle_perp",
+      "title": "夹角、垂直与向量在向量上的投影",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.dot_product",
+        "advmath.projection"
+      ],
+      "textbook_ref": "教材 第 1 章 §3",
+      "syllabus_ref": "空间解析几何与向量代数：数量积的应用"
+    },
+    {
+      "id": "advmath.cross_product",
+      "title": "向量积（选学）",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "掌握",
+      "requires": [
+        "advmath.dot_product"
+      ],
+      "textbook_ref": "教材 第 1 章 §3",
+      "syllabus_ref": "空间解析几何与向量代数：向量积（选学）"
+    },
+    {
+      "id": "advmath.cross_applications",
+      "title": "向量积的应用：面积与法向量",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "掌握",
+      "requires": [
+        "advmath.cross_product"
+      ],
+      "textbook_ref": "教材 第 1 章 §3",
+      "syllabus_ref": "空间解析几何与向量代数：向量积（选学）"
+    },
+    {
+      "id": "advmath.surface_eq",
+      "title": "曲面方程与球面（配方）",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.point_distance"
+      ],
+      "textbook_ref": "教材 第 1 章 §4",
+      "syllabus_ref": "空间解析几何与向量代数：曲面方程"
+    },
+    {
+      "id": "advmath.cylinder_rotation",
+      "title": "柱面与旋转曲面",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.surface_eq"
+      ],
+      "textbook_ref": "教材 第 1 章 §4",
+      "syllabus_ref": "空间解析几何与向量代数：柱面、旋转曲面"
+    },
+    {
+      "id": "advmath.space_curve",
+      "title": "空间曲线的方程与在坐标面上的投影",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.surface_eq"
+      ],
+      "textbook_ref": "教材 第 1 章 §4",
+      "syllabus_ref": "空间解析几何与向量代数：空间曲线"
+    },
+    {
+      "id": "advmath.plane_eq",
+      "title": "平面方程（点法式、一般式、截距式）",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.dot_product",
+        "advmath.cross_applications"
+      ],
+      "textbook_ref": "教材 第 1 章 §5",
+      "syllabus_ref": "空间解析几何与向量代数：平面方程"
+    },
+    {
+      "id": "advmath.line_eq",
+      "title": "直线方程（点向式、参数式、一般式）",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.plane_eq"
+      ],
+      "textbook_ref": "教材 第 1 章 §5",
+      "syllabus_ref": "空间解析几何与向量代数：直线方程"
+    },
+    {
+      "id": "advmath.plane_line_relation",
+      "title": "平面、直线的位置关系与点到平面的距离",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "advmath.plane_eq",
+        "advmath.line_eq",
+        "advmath.angle_perp"
+      ],
+      "textbook_ref": "教材 第 1 章 §5",
+      "syllabus_ref": "空间解析几何与向量代数：平面与直线的位置关系"
+    },
+    {
+      "id": "advmath.quadric_standard",
+      "title": "五种标准二次曲面",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "掌握",
+      "requires": [
+        "advmath.surface_eq"
+      ],
+      "textbook_ref": "教材 第 1 章 §6",
+      "syllabus_ref": "空间解析几何与向量代数：二次曲面"
+    },
+    {
+      "id": "advmath.quadric_sections",
+      "title": "用截痕法认识曲面",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "掌握",
+      "requires": [
+        "advmath.quadric_standard"
+      ],
+      "textbook_ref": "教材 第 1 章 §6",
+      "syllabus_ref": "空间解析几何与向量代数：二次曲面"
     }
   ]
 }

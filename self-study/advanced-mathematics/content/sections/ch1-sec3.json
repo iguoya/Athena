@@ -1,0 +1,199 @@
+{
+  "id": "ch1-sec3",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0103",
+      "prompt": "先猜再验：两个**非零**向量 $\\boldsymbol a,\\boldsymbol b$ 满足 $\\boldsymbol a\\cdot\\boldsymbol b=0$，它们的位置关系是",
+      "options": [
+        "平行",
+        "垂直",
+        "相等",
+        "反向"
+      ],
+      "correct": 1,
+      "explain": "$\\boldsymbol a\\cdot\\boldsymbol b=|\\boldsymbol a||\\boldsymbol b|\\cos\\theta=0$，两个模都非零，只能是 $\\cos\\theta=0$，$\\theta=90^\\circ$，垂直。数量积是判断垂直的工具。",
+      "knowledge": [
+        "advmath.angle_perp"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜数量积为零的含义，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**数量积（点乘）**\n\n$\\boldsymbol a\\cdot\\boldsymbol b=|\\boldsymbol a||\\boldsymbol b|\\cos\\theta$（$\\theta$ 为两向量夹角），结果是一个**数**。用坐标：\n$$\\boldsymbol a\\cdot\\boldsymbol b=x_1x_2+y_1y_2+z_1z_2.$$\n- $\\boldsymbol a\\cdot\\boldsymbol a=|\\boldsymbol a|^2$；交换律、分配律成立。\n- 夹角：$\\cos\\theta=\\dfrac{\\boldsymbol a\\cdot\\boldsymbol b}{|\\boldsymbol a||\\boldsymbol b|}$。\n- 垂直：$\\boldsymbol a\\perp\\boldsymbol b\\iff\\boldsymbol a\\cdot\\boldsymbol b=0$。\n- 投影：$\\operatorname{Prj}_{\\boldsymbol b}\\boldsymbol a=\\dfrac{\\boldsymbol a\\cdot\\boldsymbol b}{|\\boldsymbol b|}$（$\\boldsymbol a$ 在 $\\boldsymbol b$ 方向上的投影，一个数）。\n\n**向量积（叉乘）\\***（教材选学）$\\boldsymbol a\\times\\boldsymbol b$ 是一个**向量**：模 $|\\boldsymbol a||\\boldsymbol b|\\sin\\theta$；方向同时垂直于 $\\boldsymbol a$ 和 $\\boldsymbol b$，由**右手法则**确定（四指从 $\\boldsymbol a$ 转向 $\\boldsymbol b$，拇指所指）。坐标计算：\n$$\\boldsymbol a\\times\\boldsymbol b=\\begin{vmatrix}\\boldsymbol i&\\boldsymbol j&\\boldsymbol k\\\\x_1&y_1&z_1\\\\x_2&y_2&z_2\\end{vmatrix}=(y_1z_2-z_1y_2,\\ z_1x_2-x_1z_2,\\ x_1y_2-y_1x_2).$$\n- 反交换：$\\boldsymbol b\\times\\boldsymbol a=-\\boldsymbol a\\times\\boldsymbol b$；$\\boldsymbol a\\parallel\\boldsymbol b\\iff\\boldsymbol a\\times\\boldsymbol b=\\boldsymbol0$。\n- **面积**：$\\boldsymbol a,\\boldsymbol b$ 为邻边的平行四边形面积 $=|\\boldsymbol a\\times\\boldsymbol b|$，三角形面积是它的一半。\n- 求同时垂直于两个向量的向量（平面的法向量），用叉乘。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch1-sec3-cross.svg",
+      "caption": "$\\boldsymbol a=(2.6,0,0)$，$\\boldsymbol b=(0.8,2.2,0)$ 在 $xOy$ 平面内，它们围成的平行四边形面积等于 $|\\boldsymbol a\\times\\boldsymbol b|$；$\\boldsymbol a\\times\\boldsymbol b$ 沿 $z$ 轴正方向，与这个平面垂直（右手系）。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$\\boldsymbol a\\cdot\\boldsymbol b=0$，所以 $\\boldsymbol a=\\boldsymbol0$ 或 $\\boldsymbol b=\\boldsymbol0$。",
+      "why_wrong": "数量积为 0 的另一种可能是两个向量**垂直**。例：$\\boldsymbol a=(1,0,0),\\ \\boldsymbol b=(0,1,0)$，$\\boldsymbol a\\cdot\\boldsymbol b=0$，两个向量都不是零向量。",
+      "right": "$\\boldsymbol a\\cdot\\boldsymbol b=0\\iff\\boldsymbol a=\\boldsymbol0$ 或 $\\boldsymbol b=\\boldsymbol0$ 或 $\\boldsymbol a\\perp\\boldsymbol b$。两个非零向量，数量积为 0 就是垂直。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（夹角与投影）",
+      "problem": "设 $\\boldsymbol a=(1,2,3),\\ \\boldsymbol b=(2,-1,2)$，求 $\\boldsymbol a\\cdot\\boldsymbol b$、夹角余弦、以及 $\\boldsymbol a$ 在 $\\boldsymbol b$ 上的投影。",
+      "steps": [
+        {
+          "text": "$\\boldsymbol a\\cdot\\boldsymbol b=1\\cdot2+2\\cdot(-1)+3\\cdot2=6$。",
+          "why": "对应分量相乘再相加。"
+        },
+        {
+          "text": "$|\\boldsymbol a|=\\sqrt{14},\\ |\\boldsymbol b|=3$，$\\cos\\theta=\\dfrac{6}{3\\sqrt{14}}=\\dfrac{2}{\\sqrt{14}}=\\dfrac{\\sqrt{14}}7$。",
+          "why": "$\\cos\\theta>0$，夹角为锐角。"
+        },
+        {
+          "text": "$\\operatorname{Prj}_{\\boldsymbol b}\\boldsymbol a=\\dfrac{\\boldsymbol a\\cdot\\boldsymbol b}{|\\boldsymbol b|}=\\dfrac63=2$。",
+          "why": "投影是数。除以的是 $|\\boldsymbol b|$ 而不是 $|\\boldsymbol a|$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（向量积与法向量）",
+      "problem": "求同时垂直于 $\\boldsymbol a=(1,2,3)$ 和 $\\boldsymbol b=(2,-1,2)$ 的向量。",
+      "steps": [
+        {
+          "text": "$\\boldsymbol a\\times\\boldsymbol b=\\begin{vmatrix}\\boldsymbol i&\\boldsymbol j&\\boldsymbol k\\\\1&2&3\\\\2&-1&2\\end{vmatrix}=(2\\cdot2-3\\cdot(-1),\\ 3\\cdot2-1\\cdot2,\\ 1\\cdot(-1)-2\\cdot2)=(7,4,-5)$。",
+          "why": "按第 1 行展开，$\\boldsymbol j$ 的系数带负号：$-(1\\cdot2-3\\cdot2)=4$，与公式 $z_1x_2-x_1z_2=6-2$ 一致。"
+        },
+        {
+          "text": "检验：$(7,4,-5)\\cdot(1,2,3)=7+8-15=0$，$(7,4,-5)\\cdot(2,-1,2)=14-4-10=0$。",
+          "why": "叉乘结果必须与两个因子都垂直，用数量积一验就知道有没有算错。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 3（用向量积求三角形面积）",
+      "problem": "求以 $A(1,0,0),\\ B(0,2,0),\\ C(0,0,3)$ 为顶点的三角形面积。",
+      "steps": [
+        {
+          "text": "$\\overrightarrow{AB}=(-1,2,0),\\ \\overrightarrow{AC}=(-1,0,3)$。",
+          "why": "取两条从 $A$ 出发的边。"
+        },
+        {
+          "text": "$\\overrightarrow{AB}\\times\\overrightarrow{AC}=(2\\cdot3-0\\cdot0,\\ 0\\cdot(-1)-(-1)\\cdot3,\\ (-1)\\cdot0-2\\cdot(-1))=(6,3,2)$，模 $\\sqrt{36+9+4}=7$。",
+          "why": "$(6,3,2)$ 也是这个三角形所在平面的法向量（§5 例 1 会用到）。"
+        },
+        {
+          "text": "面积 $S=\\dfrac12\\times7=\\dfrac72$。",
+          "why": "三角形面积是平行四边形的一半。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0103a",
+      "knowledge": [
+        "advmath.dot_product"
+      ],
+      "stem": "设 $\\boldsymbol a=(1,-2,3),\\ \\boldsymbol b=(2,1,-1)$，则 $\\boldsymbol a\\cdot\\boldsymbol b=$",
+      "answer": {
+        "type": "numeric",
+        "value": -3
+      },
+      "solution": "$1\\cdot2+(-2)\\cdot1+3\\cdot(-1)=2-2-3=-3$。结果是数，不是向量。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "含负分量；负的数量积说明夹角为钝角"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0103b",
+      "knowledge": [
+        "advmath.angle_perp"
+      ],
+      "stem": "设 $\\boldsymbol a=(k,2,-1)$ 与 $\\boldsymbol b=(3,1,-4)$ 垂直，则 $k=$",
+      "answer": {
+        "type": "numeric",
+        "value": -2
+      },
+      "solution": "垂直 $\\iff\\boldsymbol a\\cdot\\boldsymbol b=3k+2+4=0$，$k=-2$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值：用数量积为 0 判断垂直"
+        }
+      ],
+      "varies": "垂直用数量积，平行用分量成比例（§2），不要混用"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0103c",
+      "knowledge": [
+        "advmath.cross_applications"
+      ],
+      "stem": "以 $A(1,1,1),\\ B(2,3,1),\\ C(3,1,1)$ 为顶点的三角形面积为",
+      "answer": {
+        "type": "numeric",
+        "value": 2
+      },
+      "solution": "$\\overrightarrow{AB}=(1,2,0),\\ \\overrightarrow{AC}=(2,0,0)$，$\\overrightarrow{AB}\\times\\overrightarrow{AC}=(0,0,-4)$，模 4，面积 $\\frac12\\times4=2$。三点的 $z$ 坐标都是 1，在同一个水平面上，也可以直接用「底 2 × 高 2 ÷ 2」验证。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "三角形面积是叉乘模的一半，别忘了除以 2"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0103d",
+      "knowledge": [
+        "advmath.cross_product"
+      ],
+      "stem": "下列关于向量积的说法**正确**的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\boldsymbol a\\times\\boldsymbol b=\\boldsymbol b\\times\\boldsymbol a$",
+          "$\\boldsymbol a\\times\\boldsymbol b=-\\boldsymbol b\\times\\boldsymbol a$",
+          "$\\boldsymbol a\\times\\boldsymbol b$ 是一个数",
+          "$\\boldsymbol a\\times\\boldsymbol b$ 与 $\\boldsymbol a$ 平行"
+        ],
+        "correct": 1
+      },
+      "solution": "向量积**反交换**：交换两个因子，方向反过来，所以差一个负号。它是向量（不是数）；它**垂直**于 $\\boldsymbol a$ 和 $\\boldsymbol b$（不是平行）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：向量积的性质"
+        }
+      ],
+      "varies": "向量积与数量积的区别：前者是向量、反交换，后者是数、可交换"
+    }
+  ]
+}

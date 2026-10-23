@@ -1,0 +1,194 @@
+{
+  "id": "ch1-sec2",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "advmath.ret.0102",
+      "prompt": "先猜再验：向量 $\\boldsymbol a=(3,4,0)$ 的**模**（长度）是多少？",
+      "options": [
+        "7",
+        "5",
+        "3",
+        "12"
+      ],
+      "correct": 1,
+      "explain": "向量的模就是它的长度。在 $xOy$ 平面里，$(3,4)$ 是直角边为 3、4 的直角三角形的斜边：$\\sqrt{3^2+4^2}=5$。空间里再加一项 $z^2$：$|\\boldsymbol a|=\\sqrt{x^2+y^2+z^2}$。",
+      "knowledge": [
+        "advmath.vec_coord_norm"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜向量模的公式，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**向量：有大小、有方向的量**\n\n只有大小的量叫数量（质量、温度），既有大小又有方向的量叫**向量**（位移、速度、力）。向量 $\\boldsymbol a$ 的大小叫**模** $|\\boldsymbol a|$。模为 1 的叫**单位向量**，模为 0 的叫**零向量** $\\boldsymbol0$（方向任意）。方向相同、大小相等的向量**相等**，与起点位置无关。\n\n**线性运算**\n- **加法**：平行四边形法则（或三角形法则）：把 $\\boldsymbol b$ 的起点放在 $\\boldsymbol a$ 的终点，$\\boldsymbol a+\\boldsymbol b$ 从 $\\boldsymbol a$ 的起点指向 $\\boldsymbol b$ 的终点。减法 $\\boldsymbol a-\\boldsymbol b=\\boldsymbol a+(-\\boldsymbol b)$。\n- **数乘**：$\\lambda\\boldsymbol a$ 的模是 $|\\lambda||\\boldsymbol a|$，$\\lambda>0$ 时同向，$\\lambda<0$ 时反向。\n- $\\boldsymbol a\\parallel\\boldsymbol b$（$\\boldsymbol b\\neq\\boldsymbol 0$）$\\iff\\boldsymbol a=\\lambda\\boldsymbol b$。\n\n**坐标表示**：以 $\\boldsymbol i,\\boldsymbol j,\\boldsymbol k$ 表示三条坐标轴正方向上的单位向量，$\\boldsymbol a=x\\boldsymbol i+y\\boldsymbol j+z\\boldsymbol k=(x,y,z)$。\n- 运算按分量：$(x_1,y_1,z_1)\\pm(x_2,y_2,z_2)=(x_1\\pm x_2,\\ y_1\\pm y_2,\\ z_1\\pm z_2)$，$\\lambda(x,y,z)=(\\lambda x,\\lambda y,\\lambda z)$。\n- 起点 $A(x_1,y_1,z_1)$、终点 $B(x_2,y_2,z_2)$ 的向量 $\\overrightarrow{AB}=(x_2-x_1,\\ y_2-y_1,\\ z_2-z_1)$（**终点减起点**）。\n- 模 $|\\boldsymbol a|=\\sqrt{x^2+y^2+z^2}$；单位向量 $\\boldsymbol a^0=\\boldsymbol a/|\\boldsymbol a|$。\n- $\\boldsymbol a\\parallel\\boldsymbol b\\iff$ 对应分量成比例。\n\n**方向角与方向余弦**：$\\boldsymbol a$ 与三条坐标轴正向的夹角 $\\alpha,\\beta,\\gamma$ 叫方向角，\n$$\\cos\\alpha=\\frac{x}{|\\boldsymbol a|},\\ \\cos\\beta=\\frac{y}{|\\boldsymbol a|},\\ \\cos\\gamma=\\frac{z}{|\\boldsymbol a|},\\qquad\\cos^2\\alpha+\\cos^2\\beta+\\cos^2\\gamma=1.$$\n单位向量就是 $(\\cos\\alpha,\\cos\\beta,\\cos\\gamma)$。\n\n**投影**：向量 $\\boldsymbol a$ 在某条轴 $u$ 上的**投影**是一个**数** $\\operatorname{Prj}_u\\boldsymbol a=|\\boldsymbol a|\\cos\\theta$（$\\theta$ 为 $\\boldsymbol a$ 与轴正向的夹角），可正可负。$\\boldsymbol a=(x,y,z)$ 在 $x,y,z$ 轴上的投影就是三个坐标分量。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch1-sec2-vector-add.svg",
+      "caption": "$\\boldsymbol a=(3,1)$、$\\boldsymbol b=(1,2)$ 的平行四边形法则：和向量 $\\boldsymbol a+\\boldsymbol b=(4,3)$ 是对角线；差向量 $\\boldsymbol a-\\boldsymbol b$（虚线箭头）从 $\\boldsymbol b$ 的终点指向 $\\boldsymbol a$ 的终点，等于 $(2,-1)$。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$|\\boldsymbol a+\\boldsymbol b|=|\\boldsymbol a|+|\\boldsymbol b|$。",
+      "why_wrong": "和向量的模一般**小于**两个模之和（三角形两边之和大于第三边）。例：$\\boldsymbol a=(1,0,0),\\ \\boldsymbol b=(0,1,0)$，$|\\boldsymbol a+\\boldsymbol b|=\\sqrt2\\approx1.41$，而 $|\\boldsymbol a|+|\\boldsymbol b|=2$。只有 $\\boldsymbol a,\\boldsymbol b$ **同向**时等号才成立。",
+      "right": "$|\\boldsymbol a+\\boldsymbol b|\\le|\\boldsymbol a|+|\\boldsymbol b|$（三角不等式）。求和向量的模，要先按分量相加，再求模。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（由两点求向量、模、方向余弦）",
+      "problem": "已知 $A(1,2,3)$，$B(4,6,3)$，求 $\\overrightarrow{AB}$、$|\\overrightarrow{AB}|$ 及同方向的单位向量。",
+      "steps": [
+        {
+          "text": "$\\overrightarrow{AB}=(4-1,\\ 6-2,\\ 3-3)=(3,4,0)$。",
+          "why": "终点减起点；$z$ 分量为 0 说明 $AB$ 平行于 $xOy$ 平面。"
+        },
+        {
+          "text": "$|\\overrightarrow{AB}|=\\sqrt{3^2+4^2+0^2}=5$。",
+          "why": "与预测题同一组数。"
+        },
+        {
+          "text": "单位向量 $\\overrightarrow{AB}^0=\\left(\\dfrac35,\\dfrac45,0\\right)$，即方向余弦 $\\cos\\alpha=\\frac35,\\ \\cos\\beta=\\frac45,\\ \\cos\\gamma=0$（$\\gamma=90^\\circ$）。",
+          "why": "检验：$\\frac9{25}+\\frac{16}{25}+0=1$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（向量的线性运算与方向余弦）",
+      "problem": "设 $\\boldsymbol a=(1,2,3),\\ \\boldsymbol b=(-2,1,0)$，求 $2\\boldsymbol a-3\\boldsymbol b$；再求 $\\boldsymbol c=(2,-1,2)$ 的方向余弦。",
+      "steps": [
+        {
+          "text": "$2\\boldsymbol a-3\\boldsymbol b=(2+6,\\ 4-3,\\ 6-0)=(8,1,6)$。",
+          "why": "数乘每个分量；减去 $3\\boldsymbol b$ 即减去 $(-6,3,0)$，第一个分量 $2-(-6)=8$。"
+        },
+        {
+          "text": "$|\\boldsymbol c|=\\sqrt{4+1+4}=3$，方向余弦 $\\left(\\dfrac23,-\\dfrac13,\\dfrac23\\right)$。",
+          "why": "检验：$\\frac49+\\frac19+\\frac49=1$。$\\beta$ 是钝角，因为 $\\cos\\beta<0$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0102a",
+      "knowledge": [
+        "advmath.vec_coord_norm"
+      ],
+      "stem": "向量 $\\boldsymbol a=(-2,3,6)$ 的模 $|\\boldsymbol a|=$",
+      "answer": {
+        "type": "numeric",
+        "value": 7
+      },
+      "solution": "$\\sqrt{(-2)^2+3^2+6^2}=\\sqrt{4+9+36}=\\sqrt{49}=7$。负号平方后消失。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算"
+        }
+      ],
+      "varies": "含负分量：平方后与符号无关"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0102b",
+      "knowledge": [
+        "advmath.vec_linear"
+      ],
+      "stem": "设 $\\boldsymbol a=(1,2,3),\\ \\boldsymbol b=(-2,1,0)$，则 $2\\boldsymbol a-3\\boldsymbol b$ 的第 1 个分量为",
+      "answer": {
+        "type": "numeric",
+        "value": 8
+      },
+      "solution": "第 1 个分量：$2\\times1-3\\times(-2)=2+6=8$。（完整结果 $(8,1,6)$，见例 2。）",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，已复算（与例 2 同题，只问一个分量）"
+        }
+      ],
+      "varies": "$-3\\times(-2)$ 的符号：减去负数相当于加"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0102c",
+      "knowledge": [
+        "advmath.vec_linear"
+      ],
+      "stem": "设 $\\boldsymbol a=(1,-2,k)$ 与 $\\boldsymbol b=(2,-4,6)$ 平行，则 $k=$",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "平行 $\\iff$ 对应分量成比例：$\\dfrac12=\\dfrac{-2}{-4}=\\dfrac k6$，所以 $k=3$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值：用分量成比例判断平行"
+        }
+      ],
+      "varies": "前两个分量的比 $\\frac12$ 是已知条件，用来确定第三个分量"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0102d",
+      "knowledge": [
+        "advmath.dir_cosine"
+      ],
+      "stem": "设向量的三个方向角为 $\\alpha,\\beta,\\gamma$，则下列等式**恒成立**的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\cos\\alpha+\\cos\\beta+\\cos\\gamma=1$",
+          "$\\cos^2\\alpha+\\cos^2\\beta+\\cos^2\\gamma=1$",
+          "$\\alpha+\\beta+\\gamma=\\pi$",
+          "$\\sin^2\\alpha+\\sin^2\\beta+\\sin^2\\gamma=1$"
+        ],
+        "correct": 1
+      },
+      "solution": "方向余弦是单位向量 $(\\cos\\alpha,\\cos\\beta,\\cos\\gamma)$ 的三个分量，它的模为 1，所以平方和为 1。D 错：$\\sin^2$ 之和是 $3-1=2$。A、C 对一般向量不成立。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：方向余弦的平方和"
+        }
+      ],
+      "varies": "方向角之间没有『和为 $\\pi$』这类关系，约束只有余弦的平方和"
+    },
+    {
+      "kind": "exercise",
+      "id": "advmath.ex.0102e",
+      "knowledge": [
+        "advmath.projection"
+      ],
+      "stem": "向量 $\\boldsymbol a=(2,-3,5)$ 在 $y$ 轴上的投影为",
+      "answer": {
+        "type": "numeric",
+        "value": -3
+      },
+      "solution": "向量在坐标轴上的投影就是对应的坐标分量：$y$ 轴上为 $-3$。投影是数，可以为负，表示 $\\boldsymbol a$ 与 $y$ 轴正向的夹角为钝角。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；投影与坐标分量的关系"
+        }
+      ],
+      "varies": "投影是带符号的数，不是向量，也不是长度"
+    }
+  ]
+}
