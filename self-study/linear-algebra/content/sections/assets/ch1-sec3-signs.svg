@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 250" font-family="Noto Sans SC, sans-serif" font-size="15">
+  <rect width="460" height="250" fill="#ffffff"/>
+  <!-- 4×4 符号棋盘：位置 (i,j) 的符号是 (-1)^(i+j)，格子 56px，原点 (40,30) -->
+  <g stroke="#e3e8ee" stroke-width="1">
+    <path d="M40 30 H264 M40 70 H264 M40 110 H264 M40 150 H264 M40 190 H264"/>
+    <path d="M40 30 V190 M80 30 V190 M120 30 V190 M160 30 V190 M200 30 V190"/>
+  </g>
+  <!-- 高亮 a23：第 2 行第 3 列，符号 -，删去第 2 行第 3 列 -->
+  <rect x="40" y="70" width="160" height="40" fill="#fdecea" fill-opacity="0.8"/>
+  <rect x="120" y="30" width="40" height="160" fill="#fdecea" fill-opacity="0.8"/>
+  <rect x="120" y="70" width="40" height="40" fill="#fff3e0" stroke="#c62828" stroke-width="2"/>
+  <g text-anchor="middle" font-weight="700" fill="#24292f">
+    <text x="60" y="56">+</text><text x="100" y="56" fill="#c62828">−</text><text x="140" y="56">+</text><text x="180" y="56" fill="#c62828">−</text>
+    <text x="60" y="96" fill="#c62828">−</text><text x="100" y="96">+</text><text x="140" y="96" fill="#c62828" font-size="20">−</text><text x="180" y="96">+</text>
+    <text x="60" y="136">+</text><text x="100" y="136" fill="#c62828">−</text><text x="140" y="136">+</text><text x="180" y="136" fill="#c62828">−</text>
+    <text x="60" y="176" fill="#c62828">−</text><text x="100" y="176">+</text><text x="140" y="176" fill="#c62828">−</text><text x="180" y="176">+</text>
+  </g>
+  <text x="222" y="56" fill="#24292f">符号规则：</text>
+  <text x="222" y="80" fill="#24292f">(i,j) 位置为 (−1)^(i+j)</text>
+  <text x="222" y="104" fill="#24292f">左上角为 +，</text>
+  <text x="222" y="128" fill="#24292f">横向、纵向相邻交替</text>
+  <text x="222" y="158" fill="#c62828">框出 a₂₃：</text>
+  <text x="222" y="180" fill="#c62828">划去第 2 行、第 3 列，</text>
+  <text x="222" y="202" fill="#c62828">剩下的 3 阶是余子式 M₂₃，</text>
+  <text x="222" y="224" fill="#c62828">A₂₃ = (−1)^(2+3) M₂₃ = −M₂₃</text>
+</svg>

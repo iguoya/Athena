@@ -1,0 +1,190 @@
+{
+  "id": "ch1-sec3",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0103",
+      "prompt": "先猜再验：把 3 阶行列式沿**第 1 行**展开，要拆成几个 **2 阶**行列式的组合？",
+      "options": [
+        "1 个",
+        "2 个",
+        "3 个",
+        "6 个"
+      ],
+      "correct": 2,
+      "explain": "第 1 行有 3 个元素，每个元素对应划去它所在行列后剩下的一个 2 阶行列式，共 3 个。这就是「降阶」：$n$ 阶化成 $n$ 个 $(n-1)$ 阶。",
+      "knowledge": [
+        "linalg.det_cofactor"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜降阶个数，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**余子式、代数余子式与展开**\n\n在 $n$ 阶行列式 $D$ 中划去元素 $a_{ij}$ 所在的第 $i$ 行、第 $j$ 列，剩下的 $n-1$ 阶行列式叫 $a_{ij}$ 的**余子式** $M_{ij}$；带上符号\n\n$$A_{ij}=(-1)^{i+j}M_{ij}$$\n\n叫**代数余子式**。符号只取决于位置，见下图。\n\n**展开定理**：行列式等于任意一行（列）的各元素与各自代数余子式乘积之和：\n\n$$D=a_{i1}A_{i1}+a_{i2}A_{i2}+\\cdots+a_{in}A_{in}\\quad(\\text{按第 }i\\text{ 行}),$$\n\n$$D=a_{1j}A_{1j}+a_{2j}A_{2j}+\\cdots+a_{nj}A_{nj}\\quad(\\text{按第 }j\\text{ 列}).$$\n\n**怎么选行（列）**：挑零最多的一行（列）；没有零就先用性质 5 造零——这是降阶真正省力的做法。"
+    },
+    {
+      "kind": "figure",
+      "file": "ch1-sec3-signs.svg",
+      "caption": "代数余子式的符号棋盘。框出的 $a_{23}$ 在第 2 行第 3 列，$i+j=5$ 为奇数，符号取负，$A_{23}=-M_{23}$。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "按第 2 行展开，写成 $D=a_{21}M_{21}+a_{22}M_{22}+a_{23}M_{23}$（直接用余子式）。",
+      "why_wrong": "漏了符号 $(-1)^{i+j}$。验证：$D=\\begin{vmatrix}1&2\\\\3&4\\end{vmatrix}=-2$，按第 2 行：用余子式得 $3\\times2+4\\times1=10$，错；用代数余子式得 $-3\\times2+4\\times1=-2$，对。",
+      "right": "展开式里乘的是**代数余子式** $A_{ij}=(-1)^{i+j}M_{ij}$；先判符号再算 $M_{ij}$，两件事分开做。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（沿含零的行展开）",
+      "problem": "计算 $D=\\begin{vmatrix} 1 & 2 & 3\\\\ 0 & 4 & 0\\\\ 5 & 6 & 7 \\end{vmatrix}$。",
+      "steps": [
+        {
+          "text": "第 2 行只有 $a_{22}=4$ 非零，按第 2 行展开：$D=4A_{22}$。",
+          "why": "两个零项连余子式都不用算。"
+        },
+        {
+          "text": "$A_{22}=(-1)^{2+2}\\begin{vmatrix}1&3\\\\5&7\\end{vmatrix}=7-15=-8$。",
+          "why": "$i+j=4$ 为偶，符号为正；划去第 2 行第 2 列剩下四个角上的数。"
+        },
+        {
+          "text": "$D=4\\times(-8)=-32$。",
+          "why": "复核：对角线法则 $1\\cdot4\\cdot7+2\\cdot0\\cdot5+3\\cdot0\\cdot6-3\\cdot4\\cdot5-1\\cdot0\\cdot6-2\\cdot0\\cdot7=28-60=-32$，一致。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（先化零再展开）",
+      "problem": "计算 $D=\\begin{vmatrix} 2 & 1 & 0 & 3\\\\ 1 & 2 & 1 & 0\\\\ 3 & 0 & 1 & 2\\\\ 1 & 1 & 2 & 1 \\end{vmatrix}$。",
+      "steps": [
+        {
+          "text": "第 1 列里 $a_{21}=1$，用第 2 行消去该列其余元素：$r_1-2r_2,\\ r_3-3r_2,\\ r_4-r_2$，得 $D=\\begin{vmatrix} 0 & -3 & -2 & 3\\\\ 1 & 2 & 1 & 0\\\\ 0 & -6 & -2 & 2\\\\ 0 & -1 & 1 & 1 \\end{vmatrix}$。",
+          "why": "取 1 做主元，消元时不出现分数。"
+        },
+        {
+          "text": "按第 1 列展开，只剩 $a_{21}=1$：$D=1\\times(-1)^{2+1}\\begin{vmatrix} -3 & -2 & 3\\\\ -6 & -2 & 2\\\\ -1 & 1 & 1 \\end{vmatrix}=-\\begin{vmatrix} -3 & -2 & 3\\\\ -6 & -2 & 2\\\\ -1 & 1 & 1 \\end{vmatrix}$。",
+          "why": "$(2,1)$ 位置符号为负，别漏。"
+        },
+        {
+          "text": "3 阶用对角线法则：$(-3)(-2)(1)+(-2)(2)(-1)+3(-6)(1)-3(-2)(-1)-(-3)(2)(1)-(-2)(-6)(1)=6+4-18-6+6-12=-20$。所以 $D=-(-20)=20$。",
+          "why": "每项都是「不同行不同列」三个数之积，正负按对角线法则。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值；做法为教材展开定理的标准用法"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**异乘为零**\n\n用第 $k$ 行的代数余子式去配第 $i$ 行的元素（$i\\neq k$）：\n\n$$a_{i1}A_{k1}+a_{i2}A_{k2}+\\cdots+a_{in}A_{kn}=0\\quad(i\\neq k).$$\n\n理由：左边正是「把 $D$ 的第 $k$ 行换成第 $i$ 行」所得行列式按第 $k$ 行展开的结果；这个行列式有两行相同，值为 0。\n\n这给出一个常用技巧：求 $A_{k1}+A_{k2}+\\cdots+A_{kn}$ 时，不必逐个算余子式，它等于把第 $k$ 行换成全 1 后的行列式。"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0103a",
+      "knowledge": [
+        "linalg.det_expansion"
+      ],
+      "stem": "计算 4 阶行列式 $D=\\begin{vmatrix}-2 & 3 & 0 & 0 \\\\ 1 & -2 & 3 & 0 \\\\ 0 & 1 & -2 & 3 \\\\ 0 & 0 & 1 & -2\\end{vmatrix}$。",
+      "answer": {
+        "type": "numeric",
+        "value": -11
+      },
+      "solution": "按第 1 行展开：$D=-2\\begin{vmatrix}-2&3&0\\\\1&-2&3\\\\0&1&-2\\end{vmatrix}-3\\begin{vmatrix}1&3&0\\\\0&-2&3\\\\0&1&-2\\end{vmatrix}$。第一个 3 阶再展开得 $-2(4-3)-3(-2)=4$；第二个按第 1 列展开得 $1\\times(4-3)=1$。故 $D=-2\\times4-3\\times1=-11$。",
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 16 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ],
+      "varies": "三对角行列式：用展开把它降成同型的低阶，看出递推 $D_n=-2D_{n-1}-3D_{n-2}$"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0103b",
+      "knowledge": [
+        "linalg.det_expansion"
+      ],
+      "stem": "设 $f(x)=\\begin{vmatrix}1 & 2 & 3 \\\\ 2 & 3 & x \\\\ 3 & x & 8\\end{vmatrix}$，则方程 $f(x)=0$ 的全部根为",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$-5,\\ -7$",
+          "$5,\\ 7$",
+          "$1,\\ 35$",
+          "$5,\\ -7$"
+        ],
+        "correct": 1
+      },
+      "solution": "按第 1 行展开：$f(x)=1\\cdot(24-x^2)-2(16-3x)+3(2x-9)=-x^2+12x-35=-(x-5)(x-7)$，根为 $5,\\ 7$。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "locator": "全国 2018 年 4 月 第 6 题",
+          "note": "原题为填空题，这里改成选择题并自拟干扰项；题干与行列式原样不变"
+        }
+      ],
+      "varies": "含参数的行列式：展开成关于 $x$ 的多项式，再解方程，与数值题相比多一步因式分解"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0103c",
+      "knowledge": [
+        "linalg.det_alien_cofactor"
+      ],
+      "stem": "设 $D=\\begin{vmatrix}1 & 2 & 3\\\\ 4 & 5 & 6\\\\ 7 & 8 & 10\\end{vmatrix}$，$A_{ij}$ 是 $a_{ij}$ 的代数余子式，则 $4A_{11}+5A_{12}+6A_{13}=$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$-3$",
+          "$0$",
+          "$4$",
+          "$D$"
+        ],
+        "correct": 1
+      },
+      "solution": "系数 $4,5,6$ 是第 **2** 行的元素，却配了第 **1** 行的代数余子式，属于异乘，结果为 0。（若系数是 $1,2,3$，则等于 $D=-3$。）",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：区分同行（得 D）与异行（得 0）"
+        }
+      ],
+      "varies": "不计算任何余子式，只看系数来自哪一行"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0103d",
+      "knowledge": [
+        "linalg.det_alien_cofactor"
+      ],
+      "stem": "设 $D$ 为例 2 中的 4 阶行列式，$A_{2j}$ 是第 2 行元素的代数余子式，则 $A_{21}+A_{22}+A_{23}+A_{24}=$",
+      "answer": {
+        "type": "numeric",
+        "value": 4
+      },
+      "solution": "它等于把 $D$ 的第 2 行换成 $(1,1,1,1)$ 后的行列式：$\\begin{vmatrix}2&1&0&3\\\\1&1&1&1\\\\3&0&1&2\\\\1&1&2&1\\end{vmatrix}=4$。做法：$r_1-2r_2,\\ r_3-3r_2,\\ r_4-r_2$ 后第 1 列只剩 $a_{21}=1$，按第 1 列展开得 $-\\begin{vmatrix}-1&-2&1\\\\-3&-2&-1\\\\0&1&0\\end{vmatrix}$；再按第 3 行展开，该 3 阶值为 $-(1+3)=-4$，故结果为 $4$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造：异乘技巧的数值应用，与例 2 同一个行列式"
+        }
+      ],
+      "varies": "把「求代数余子式之和」翻译成「换一行再求值」"
+    }
+  ]
+}

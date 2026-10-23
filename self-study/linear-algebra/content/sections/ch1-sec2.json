@@ -1,0 +1,176 @@
+{
+  "id": "ch1-sec2",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0102",
+      "prompt": "先猜再验：把 2 阶行列式 $\\begin{vmatrix} a & b\\\\ c & d \\end{vmatrix}$ 的**两行互换**，得到 $\\begin{vmatrix} c & d\\\\ a & b \\end{vmatrix}$。它的值相对原来怎样？",
+      "options": [
+        "不变",
+        "变号",
+        "变为 0",
+        "变为原来的 2 倍"
+      ],
+      "correct": 1,
+      "explain": "互换后是 $cb-da=-(ad-bc)$，恰好差一个负号。这不是 2 阶的巧合，对任意阶都成立，是下面性质 2 的来源。",
+      "knowledge": [
+        "linalg.det_props"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：用 §1.1 的二阶公式就能验证，先猜后验，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**五条性质，对行成立的对列也成立**\n\n$D^{\\mathrm T}$ 是把 $D$ 的行写成列所得的行列式（转置）。\n\n1. **转置不变**：$D^{\\mathrm T}=D$。所以下面凡对「行」成立的结论，对「列」同样成立。\n2. **互换两行变号**：互换两行（列），行列式变号。推论：两行（列）相同时 $D=-D$，即 $D=0$。\n3. **公因子提出**：某一行（列）的所有元素乘 $k$，等于整个行列式乘 $k$；反过来，某行的公因子可以提到行列式外面。推论：某行全为 0，或两行成比例，则 $D=0$。\n4. **拆分**：某一行的每个元素写成两数之和，行列式等于两个行列式之和（其余行不动）：\n\n$$\\begin{vmatrix} a+a' & b+b'\\\\ c & d \\end{vmatrix}=\\begin{vmatrix} a & b\\\\ c & d \\end{vmatrix}+\\begin{vmatrix} a' & b'\\\\ c & d \\end{vmatrix}.$$\n\n5. **倍加不变**：把某一行的 $k$ 倍加到另一行，行列式的值不变。\n\n三种行变换对值的影响，记成一句：**互换变号、倍乘同乘、倍加不变**。\n\n还有一个终点：**上（下）三角行列式等于主对角线元素之积**。化简的目标就是用性质 2、3、5 把行列式变成三角形，再读出对角线乘积。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$n$ 阶行列式的每个元素都乘 $k$，行列式的值也只乘 $k$，即 $|kA|=k|A|$。",
+      "why_wrong": "性质 3 说的是**某一行**乘 $k$ 才整体乘 $k$。每个元素乘 $k$ 意味着 $n$ 行各提出一个 $k$，共提 $n$ 次。验证：$\\begin{vmatrix} 2 & 4\\\\ 6 & 8 \\end{vmatrix}=16-24=-8$，而 $\\begin{vmatrix} 1 & 2\\\\ 3 & 4 \\end{vmatrix}=-2$，$-8=2^2\\times(-2)$。",
+      "right": "$|kA|=k^n|A|$（$n$ 为阶数）。只乘一行才是 $k$ 倍。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（化成上三角）",
+      "problem": "计算 $D=\\begin{vmatrix} 2 & 4 & 6\\\\ 1 & 3 & 5\\\\ 3 & 5 & 8 \\end{vmatrix}$。",
+      "steps": [
+        {
+          "text": "第 1 行有公因子 2，提出：$D=2\\begin{vmatrix} 1 & 2 & 3\\\\ 1 & 3 & 5\\\\ 3 & 5 & 8 \\end{vmatrix}$。",
+          "why": "性质 3：先把数变小，后面的运算少出错；同时第 1 行首元素变成 1，方便消元。"
+        },
+        {
+          "text": "$r_2-r_1,\\ r_3-3r_1$：$D=2\\begin{vmatrix} 1 & 2 & 3\\\\ 0 & 1 & 2\\\\ 0 & -1 & -1 \\end{vmatrix}$。",
+          "why": "性质 5：倍加不变。用第 1 行把第 1 列的其余元素消成 0。$r_3-3r_1=(3-3,\\ 5-6,\\ 8-9)=(0,-1,-1)$。"
+        },
+        {
+          "text": "$r_3+r_2$：$D=2\\begin{vmatrix} 1 & 2 & 3\\\\ 0 & 1 & 2\\\\ 0 & 0 & 1 \\end{vmatrix}=2\\times(1\\times1\\times1)=2$。",
+          "why": "已成上三角，读对角线乘积。复核：对原行列式用 §1.1 的对角线法则，$2\\cdot3\\cdot8+4\\cdot5\\cdot3+6\\cdot1\\cdot5-6\\cdot3\\cdot3-2\\cdot5\\cdot5-4\\cdot1\\cdot8=48+60+30-54-50-32=2$，两种方法一致。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值；教材同类例题的做法，数字不同"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（各行元素之和相等）",
+      "problem": "计算 $D=\\begin{vmatrix} 3 & 1 & 1 & 1\\\\ 1 & 3 & 1 & 1\\\\ 1 & 1 & 3 & 1\\\\ 1 & 1 & 1 & 3 \\end{vmatrix}$。",
+      "steps": [
+        {
+          "text": "把第 2、3、4 列都加到第 1 列：第 1 列变成 $6,6,6,6$，提出 6：$D=6\\begin{vmatrix} 1 & 1 & 1 & 1\\\\ 1 & 3 & 1 & 1\\\\ 1 & 1 & 3 & 1\\\\ 1 & 1 & 1 & 3 \\end{vmatrix}$。",
+          "why": "每一行元素之和都是 $3+1+1+1=6$，这是看出该做列加法的信号。列变换与行变换性质相同（性质 1）。"
+        },
+        {
+          "text": "$r_2-r_1,\\ r_3-r_1,\\ r_4-r_1$：$D=6\\begin{vmatrix} 1 & 1 & 1 & 1\\\\ 0 & 2 & 0 & 0\\\\ 0 & 0 & 2 & 0\\\\ 0 & 0 & 0 & 2 \\end{vmatrix}=6\\times(1\\times2\\times2\\times2)=48$。",
+          "why": "消元后成上三角。检验：此类行列式对角元为 $x$、其余为 $a$ 时，结果是 $(x+3a)(x-a)^3$，代入 $x=3,a=1$ 得 $6\\times 8=48$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；这是自考线代的常考套路（各行/列元素和相等，先加到一列）"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0102a",
+      "knowledge": [
+        "linalg.det_props"
+      ],
+      "stem": "设 2 阶行列式 $\\begin{vmatrix}2a_{21} & 2a_{22} \\\\ a_{21}-a_{11} & a_{22}-a_{12}\\end{vmatrix} = m$，则 $\\begin{vmatrix}a_{11} & a_{12} \\\\ a_{21} & a_{22}\\end{vmatrix} =$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$-2m$",
+          "$-\\dfrac{m}{2}$",
+          "$\\dfrac{m}{2}$",
+          "$2m$"
+        ],
+        "correct": 2
+      },
+      "solution": "第 1 行提出 2（性质 3）：$m=2\\begin{vmatrix}a_{21} & a_{22} \\\\ a_{21}-a_{11} & a_{22}-a_{12}\\end{vmatrix}$。再 $r_2-r_1$（性质 5）：$m=2\\begin{vmatrix}a_{21} & a_{22} \\\\ -a_{11} & -a_{12}\\end{vmatrix}$。第 2 行提出 $-1$（性质 3）得 $m=-2\\begin{vmatrix}a_{21} & a_{22} \\\\ a_{11} & a_{12}\\end{vmatrix}$，互换两行（性质 2）再变一次号：$m=2\\begin{vmatrix}a_{11} & a_{12} \\\\ a_{21} & a_{22}\\end{vmatrix}$。所求为 $m/2$。",
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 1 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ],
+      "varies": "把三条性质（提公因子、倍加、互换）按顺序连用，而不是单用一条"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0102b",
+      "knowledge": [
+        "linalg.det_props"
+      ],
+      "stem": "已知 3 阶行列式 $|A|=5$，将它的**每个元素**都乘以 $-2$ 得到行列式 $|B|$，则 $|B|=$",
+      "answer": {
+        "type": "numeric",
+        "value": -40
+      },
+      "solution": "三行各提出一个 $-2$，共提 3 次：$|B|=(-2)^3|A|=-8\\times5=-40$。若误按「只乘一行」算成 $-10$，就掉进了上面的陷阱。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造：针对 |kA| = k^n|A| 的误解设计"
+        }
+      ],
+      "varies": "阶数 3 与系数 -2 都会影响符号，奇数阶保留负号"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0102c",
+      "knowledge": [
+        "linalg.det_props"
+      ],
+      "stem": "下列行列式中，值**一定**为 0 的是（不要求算出具体值）",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\begin{vmatrix} 1 & 2 & 3\\\\ 4 & 5 & 6\\\\ 7 & 8 & 10 \\end{vmatrix}$",
+          "$\\begin{vmatrix} 1 & 0 & 0\\\\ 0 & 1 & 0\\\\ 0 & 0 & 2 \\end{vmatrix}$",
+          "$\\begin{vmatrix} 1 & 2 & 3\\\\ 2 & 4 & 6\\\\ 7 & 8 & 9 \\end{vmatrix}$",
+          "$\\begin{vmatrix} 1 & 1 & 1\\\\ 1 & 2 & 3\\\\ 1 & 4 & 9 \\end{vmatrix}$"
+        ],
+        "correct": 2
+      },
+      "solution": "第 2 行是第 1 行的 2 倍，两行成比例，值为 0（性质 3 推论）。其余三项分别是 $-3,\\ 2,\\ 2$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题；干扰项取自本节与 §1.1 例题已算过的行列式"
+        }
+      ],
+      "varies": "不动笔，靠识别「成比例」直接判断"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0102d",
+      "knowledge": [
+        "linalg.det_row_ops"
+      ],
+      "stem": "计算 $\\begin{vmatrix} 1 & 2 & 3 & 4\\\\ 2 & 3 & 4 & 1\\\\ 3 & 4 & 1 & 2\\\\ 4 & 1 & 2 & 3 \\end{vmatrix}$。",
+      "answer": {
+        "type": "numeric",
+        "value": 160
+      },
+      "solution": "每行元素之和都是 10：把各列加到第 1 列并提出 10，再 $r_2-r_1,\\ r_3-r_1,\\ r_4-r_1$，得 $10\\begin{vmatrix} 1 & 2 & 3 & 4\\\\ 0 & 1 & 1 & -3\\\\ 0 & 2 & -2 & -2\\\\ 0 & -1 & -1 & -1 \\end{vmatrix}$。右下 3 阶再 $r_2-2r_1,\\ r_3+r_1$ 成上三角 $\\begin{vmatrix}1&1&-3\\\\0&-4&4\\\\0&0&-4\\end{vmatrix}=16$，所以 $D=10\\times16=160$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；与例 2 同一套路，换成循环矩阵，对照练习"
+        }
+      ],
+      "varies": "例 2 的套路换了形状：元素不再是「对角 x、其余 a」，先看出行和相等"
+    }
+  ]
+}

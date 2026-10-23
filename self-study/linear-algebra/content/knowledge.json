@@ -16,7 +16,9 @@
       "type": "技能",
       "difficulty": 2,
       "target": "掌握",
-      "requires": ["linalg.det2x2"],
+      "requires": [
+        "linalg.det2x2"
+      ],
       "textbook_ref": "教材 §1.1",
       "syllabus_ref": "行列式：三阶行列式"
     },
@@ -26,9 +28,97 @@
       "type": "概念",
       "difficulty": 2,
       "target": "了解",
-      "requires": ["linalg.det2x2"],
+      "requires": [
+        "linalg.det2x2"
+      ],
       "textbook_ref": "教材 §1.1（几何解释为讲解侧自编补充）",
       "syllabus_ref": "行列式：二阶行列式"
+    },
+    {
+      "id": "linalg.det_props",
+      "title": "行列式的五条性质",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.det3x3"
+      ],
+      "textbook_ref": "教材 §1.2",
+      "syllabus_ref": "行列式：行列式的性质"
+    },
+    {
+      "id": "linalg.det_row_ops",
+      "title": "用行（列）变换化三角求值",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.det_props"
+      ],
+      "textbook_ref": "教材 §1.2",
+      "syllabus_ref": "行列式：行列式的计算"
+    },
+    {
+      "id": "linalg.det_cofactor",
+      "title": "余子式与代数余子式",
+      "type": "概念",
+      "difficulty": 2,
+      "target": "掌握",
+      "requires": [
+        "linalg.det3x3"
+      ],
+      "textbook_ref": "教材 §1.3",
+      "syllabus_ref": "行列式：余子式与代数余子式"
+    },
+    {
+      "id": "linalg.det_expansion",
+      "title": "行列式按一行（列）展开",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.det_cofactor",
+        "linalg.det_row_ops"
+      ],
+      "textbook_ref": "教材 §1.3",
+      "syllabus_ref": "行列式：按行（列）展开"
+    },
+    {
+      "id": "linalg.det_alien_cofactor",
+      "title": "异乘为零",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "掌握",
+      "requires": [
+        "linalg.det_expansion"
+      ],
+      "textbook_ref": "教材 §1.3",
+      "syllabus_ref": "行列式：按行（列）展开"
+    },
+    {
+      "id": "linalg.cramer",
+      "title": "克拉默法则",
+      "type": "技能",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.det_expansion",
+        "linalg.det3x3"
+      ],
+      "textbook_ref": "教材 §1.5",
+      "syllabus_ref": "行列式：克拉默法则"
+    },
+    {
+      "id": "linalg.cramer_homogeneous",
+      "title": "齐次方程组与行列式（有无非零解）",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "掌握",
+      "requires": [
+        "linalg.cramer"
+      ],
+      "textbook_ref": "教材 §1.5",
+      "syllabus_ref": "行列式：克拉默法则"
     }
   ]
 }
