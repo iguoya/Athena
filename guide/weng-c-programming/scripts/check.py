@@ -83,7 +83,7 @@ def check_structure() -> dict:
     return {i: load(CONTENT / "lessons" / f"{i}.json") for i in ids if (CONTENT / "lessons" / f"{i}.json").is_file()}
 
 
-def check_check(c: dict, where: str) -> None:
+def check_check(c: dict, where: str, require_why: bool = True) -> None:
     kind = c.get("kind")
     if kind == "numbers":
         if not c.get("answer") or not all(isinstance(x, (int, float)) for x in c["answer"]):
@@ -92,8 +92,9 @@ def check_check(c: dict, where: str) -> None:
             fail(f"{where}: numbers 需要 ask（告诉学习者答案写成什么形式）")
     elif kind == "choice":
         opts = c.get("options", [])
-        if len(opts) < 2 or sum(1 for o in opts if o.get("ok")) != 1 or any(not o.get("why") or not o.get("text") for o in opts):
-            fail(f"{where}: choice 需要 ≥2 个选项、恰好 1 个 ok，且每项都有 text 与 why")
+        # 预测题的 why 可以留空：作答后不逐项解释，由 reveal 统一讲（开场预测不剧透）
+        if len(opts) < 2 or sum(1 for o in opts if o.get("ok")) != 1 or any(not o.get("text") or (require_why and not o.get("why")) for o in opts):
+            fail(f"{where}: choice 需要 ≥2 个选项、恰好 1 个 ok，且每项都有 text{' 与 why' if require_why else ''}")
     elif kind == "output":
         if not str(c.get("expected", "")).strip() or not str(c.get("ask", "")).strip():
             fail(f"{where}: output 需要 ask 与 expected")
@@ -218,7 +219,7 @@ def check_lessons(lessons: dict) -> None:
                 if kind == "doit":
                     heavy += 1
                 if kind == "predict":
-                    check_check(t.get("check", {}), tw)
+                    check_check(t.get("check", {}), tw, require_why=False)
                     if t["check"].get("kind") == "output":
                         fail(f"{tw}: 预测题只许选择/数值（机器可判），不许贴输出")
                     if not str(t.get("reveal", "")).strip():
