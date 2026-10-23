@@ -1,0 +1,163 @@
+{
+  "id": "ch6-sec3",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0603",
+      "prompt": "先猜再验：二次型 $f=(x_1-x_2)^2$ 对**任意非零**向量 $(x_1,x_2)$，值是否总大于 0？",
+      "options": [
+        "是，平方总是正的",
+        "否，取 $(1,1)$ 时 $f=0$",
+        "否，取 $(1,-1)$ 时 $f<0$",
+        "无法判断"
+      ],
+      "correct": 1,
+      "explain": "平方只保证 $f\\ge0$。$x_1=x_2=1$ 时 $f=0$，但向量不是零向量，所以 $f$ **不是正定**的（是半正定）。正定要求：**只有 $\\boldsymbol x=\\boldsymbol0$ 时 $f=0$**。",
+      "knowledge": [
+        "linalg.pos_def_concept"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜正定的含义，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**正定二次型与正定矩阵**\n\n若对任意**非零**向量 $\\boldsymbol x$，都有 $f(\\boldsymbol x)=\\boldsymbol x^{\\mathrm T}A\\boldsymbol x>0$，则称 $f$ **正定**，$A$ 为**正定矩阵**。\n\n**判别（$A$ 为 $n$ 阶实对称矩阵，下面任一条都等价于正定）**\n1. $A$ 的特征值**全大于 0**。\n2. 正惯性指数 $p=n$（规范形是 $z_1^2+\\cdots+z_n^2$）。\n3. $A$ 的**各阶顺序主子式**全大于 0：$a_{11}>0,\\ \\begin{vmatrix}a_{11}&a_{12}\\\\a_{21}&a_{22}\\end{vmatrix}>0,\\ \\dots,\\ |A|>0$（左上角的 $1,2,\\dots,n$ 阶子式）。\n\n**必要条件**（用来快速排除）：$a_{ii}>0$；$|A|>0$。\n\n**负定**：$-A$ 正定。判别：奇数阶顺序主子式 $<0$，偶数阶 $>0$。\n\n**性质**：$A$ 正定则 $A$ 可逆，$A^{-1}$、$A^k$、$kA$（$k>0$）也正定。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$A$ 的对角线元素全是正数，所以 $A$ 正定。",
+      "why_wrong": "对角线为正只是**必要**条件。反例：$A=\\begin{pmatrix}1&2\\\\2&1\\end{pmatrix}$，对角线 $1,1>0$，但 $|A|=-3<0$（特征值 $3,-1$），取 $\\boldsymbol x=(1,-1)^{\\mathrm T}$ 得 $f=1-4+1=-2<0$。",
+      "right": "必须检查**全部顺序主子式**（或全部特征值）。只看对角线只能用来排除。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（含参数的正定）",
+      "problem": "设二次型 $f(x_1,x_2)=tx_1^2+x_2^2-4tx_1x_2$ 正定，求实数 $t$ 的取值范围。",
+      "steps": [
+        {
+          "text": "矩阵 $A=\\begin{pmatrix}t&-2t\\\\-2t&1\\end{pmatrix}$（交叉项 $-4t$ 的一半是 $-2t$）。",
+          "why": "先写对称矩阵：交叉项系数要平分。"
+        },
+        {
+          "text": "顺序主子式：一阶 $t>0$；二阶 $\\begin{vmatrix}t&-2t\\\\-2t&1\\end{vmatrix}=t-4t^2=t(1-4t)>0$。",
+          "why": "正定当且仅当全部顺序主子式大于 0。"
+        },
+        {
+          "text": "由 $t>0$ 且 $t(1-4t)>0$ 得 $1-4t>0$，即 $t<\\frac14$。所以 $0<t<\\dfrac14$。",
+          "why": "$t>0$ 时可以约去 $t$，不等号方向不变。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 15 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（三阶的顺序主子式）",
+      "problem": "判断 $A=\\begin{pmatrix}2&-1&0\\\\-1&2&-1\\\\0&-1&2\\end{pmatrix}$ 是否正定。",
+      "steps": [
+        {
+          "text": "一阶 $2>0$；二阶 $\\begin{vmatrix}2&-1\\\\-1&2\\end{vmatrix}=3>0$；三阶 $|A|=2(4-1)-(-1)(-2-0)=6-2=4>0$。",
+          "why": "三阶按第 1 行展开：$2\\cdot\\begin{vmatrix}2&-1\\\\-1&2\\end{vmatrix}-(-1)\\cdot\\begin{vmatrix}-1&-1\\\\0&2\\end{vmatrix}=2\\cdot3+(-2)=4$。"
+        },
+        {
+          "text": "三个顺序主子式都大于 0，$A$ 正定。",
+          "why": "不用求特征值。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，顺序主子式已复算（2, 3, 4）"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0603a",
+      "knowledge": [
+        "linalg.pos_def_test"
+      ],
+      "stem": "设二次型 $f(x_1,x_2)=tx_1^2+x_2^2-4tx_1x_2$ 正定，则实数 $t$ 的取值范围是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$t>0$",
+          "$0<t<\\dfrac14$",
+          "$t<\\dfrac14$",
+          "$t>\\dfrac14$"
+        ],
+        "correct": 1
+      },
+      "solution": "矩阵 $\\begin{pmatrix}t&-2t\\\\-2t&1\\end{pmatrix}$，顺序主子式 $t>0$ 且 $t(1-4t)>0$，得 $0<t<\\frac14$。A、C 只用了一个条件；D 把不等号反了。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "locator": "全国 2018 年 4 月 第 15 题",
+          "note": "原题为填空题，这里改为选择题并自拟三个干扰项；二次型原样不变"
+        }
+      ],
+      "varies": "两个顺序主子式同时成立：只满足其一的选项都是陷阱"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0603b",
+      "knowledge": [
+        "linalg.pos_def_test"
+      ],
+      "stem": "设 $A=\\begin{pmatrix}2&1\\\\1&k\\end{pmatrix}$ 正定，则 $k$ 应满足",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$k>0$",
+          "$k>\\dfrac12$",
+          "$k>1$",
+          "$k>2$"
+        ],
+        "correct": 1
+      },
+      "solution": "一阶顺序主子式 $2>0$ 已满足；二阶 $\\begin{vmatrix}2&1\\\\1&k\\end{vmatrix}=2k-1>0$，得 $k>\\frac12$。选 A 是只用了 $a_{22}>0$（必要但不充分）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：必要条件与充要条件"
+        }
+      ],
+      "varies": "对角线为正只是必要条件，行列式条件才给出范围"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0603c",
+      "knowledge": [
+        "linalg.pos_def_concept"
+      ],
+      "stem": "下列实对称矩阵中，**正定**的是",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$\\begin{pmatrix}1&2\\\\2&1\\end{pmatrix}$",
+          "$\\begin{pmatrix}1&2\\\\2&4\\end{pmatrix}$",
+          "$\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}$",
+          "$\\begin{pmatrix}-1&0\\\\0&-1\\end{pmatrix}$"
+        ],
+        "correct": 2
+      },
+      "solution": "C：特征值 $3,1$ 都大于 0（顺序主子式 $2,3$）。A：特征值 $3,-1$。B：特征值 $5,0$，只是半正定（$|A|=0$）。D：特征值 $-1,-1$，负定。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：正定、半正定、不定、负定"
+        }
+      ],
+      "varies": "四个选项各代表一类：不定、半正定、正定、负定"
+    }
+  ]
+}

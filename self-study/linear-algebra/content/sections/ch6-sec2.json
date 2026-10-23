@@ -1,0 +1,161 @@
+{
+  "id": "ch6-sec2",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0602",
+      "prompt": "先猜再验：二次型 $f=(x_1+x_2)^2$ 的矩阵 $A=\\begin{pmatrix}1&1\\\\1&1\\end{pmatrix}$ 的**秩**是",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "不确定"
+      ],
+      "correct": 1,
+      "explain": "两行相同，秩为 1。这个二次型只有 1 个独立的平方项：令 $y=x_1+x_2$，$f=y^2$。秩等于标准形里**非零平方项的个数**，这就是下面规范形里 $p+q$ 的含义。",
+      "knowledge": [
+        "linalg.standard_form"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜秩与平方项个数的关系，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**标准形、规范形与惯性定理**\n\n**标准形**：只含平方项的二次型 $d_1y_1^2+d_2y_2^2+\\cdots+d_ny_n^2$。每个实二次型都可经可逆线性变换化成标准形。\n\n**方法一：正交变换法**。$A$ 实对称，由 §5.3，存在正交矩阵 $Q$ 使 $Q^{\\mathrm T}AQ=\\operatorname{diag}(\\lambda_1,\\dots,\\lambda_n)$。作正交变换 $\\boldsymbol x=Q\\boldsymbol y$：\n$$f=\\lambda_1y_1^2+\\lambda_2y_2^2+\\cdots+\\lambda_ny_n^2,$$\n系数就是 $A$ 的特征值。步骤同 §5.3 的正交对角化。\n\n**方法二：配方法**。把含 $x_1$ 的项配成一个完全平方，再对剩下的变量重复；每个平方里的线性式取作新变量。（没有平方项、只有交叉项时，先作 $x_1=y_1+y_2,\\ x_2=y_1-y_2$ 造出平方项。）\n\n**规范形**：标准形的系数只取 $1,-1,0$：\n$$z_1^2+\\cdots+z_p^2-z_{p+1}^2-\\cdots-z_{p+q}^2.$$\n**惯性定理**：规范形里的 $p$（**正惯性指数**）与 $q$（**负惯性指数**）由 $f$ 唯一决定，与所用的可逆线性变换无关；$p+q=r(A)$。正惯性指数就是 $A$ 的**正特征值个数**，负惯性指数是**负特征值个数**。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "二次型的标准形是唯一的。",
+      "why_wrong": "不唯一。$f=x_1^2+4x_2^2$ 本身就是标准形；令 $y_1=x_1,\\ y_2=2x_2$ 得到另一个标准形 $y_1^2+y_2^2$。系数可以随变换改变，但**系数中正数的个数、负数的个数不变**（惯性定理）。",
+      "right": "唯一的是**规范形**（和正、负惯性指数）。写标准形时要说明用的是哪一个变换。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（正交变换化标准形）",
+      "problem": "求正交变换 $\\boldsymbol x=Q\\boldsymbol y$，将二次型 $f(x_1,x_2,x_3)=x_1^2+x_2^2+x_3^2+2x_1x_2+2x_1x_3+2x_2x_3$ 化为标准形。",
+      "steps": [
+        {
+          "text": "$f$ 的矩阵 $A=\\begin{pmatrix}1&1&1\\\\1&1&1\\\\1&1&1\\end{pmatrix}$（全 1 矩阵），特征多项式 $|\\lambda E-A|=\\lambda^2(\\lambda-3)$，特征值 $3,0,0$。",
+          "why": "迹检验：$3+0+0=3=1+1+1$。也可以看出 $f=(x_1+x_2+x_3)^2$，秩为 1。"
+        },
+        {
+          "text": "$\\lambda=3$：$\\boldsymbol\\xi_1=(1,1,1)^{\\mathrm T}$。$\\lambda=0$：$A\\boldsymbol x=\\boldsymbol0$ 即 $x_1+x_2+x_3=0$，两个线性无关解且彼此正交：取 $\\boldsymbol\\xi_2=(1,-1,0)^{\\mathrm T},\\ \\boldsymbol\\xi_3=(1,1,-2)^{\\mathrm T}$。",
+          "why": "二重根要正交化。这里直接取了一对已经正交的解：$1-1+0=0$，且都与 $\\boldsymbol\\xi_1$ 正交（和为 0）。"
+        },
+        {
+          "text": "单位化：$Q=\\begin{pmatrix}\\frac1{\\sqrt3}&\\frac1{\\sqrt2}&\\frac1{\\sqrt6}\\\\\\frac1{\\sqrt3}&-\\frac1{\\sqrt2}&\\frac1{\\sqrt6}\\\\\\frac1{\\sqrt3}&0&-\\frac2{\\sqrt6}\\end{pmatrix}$，$\\boldsymbol x=Q\\boldsymbol y$ 化为标准形 $f=3y_1^2$。",
+          "why": "特征值 0 对应的平方项系数为 0。列的符号与零特征值子空间内的正交基的选法都可以不同，答案不唯一。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 22 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ]
+    },
+    {
+      "kind": "example",
+      "title": "例 2（配方法）",
+      "problem": "用配方法把 $f=x_1^2+2x_1x_2+2x_2^2+4x_2x_3+5x_3^2$ 化为标准形，并写出所用的线性变换。",
+      "steps": [
+        {
+          "text": "先配含 $x_1$ 的项：$f=(x_1+x_2)^2+x_2^2+4x_2x_3+5x_3^2$。",
+          "why": "$(x_1+x_2)^2=x_1^2+2x_1x_2+x_2^2$ 吸收了 $x_1$ 的全部项，剩下的不再含 $x_1$。"
+        },
+        {
+          "text": "再配含 $x_2$ 的项：$x_2^2+4x_2x_3+5x_3^2=(x_2+2x_3)^2+x_3^2$，所以 $f=(x_1+x_2)^2+(x_2+2x_3)^2+x_3^2$。",
+          "why": "$(x_2+2x_3)^2=x_2^2+4x_2x_3+4x_3^2$，余下 $5x_3^2-4x_3^2=x_3^2$。"
+        },
+        {
+          "text": "令 $y_1=x_1+x_2,\\ y_2=x_2+2x_3,\\ y_3=x_3$（可逆：系数矩阵是上三角、对角线为 1），$f=y_1^2+y_2^2+y_3^2$。",
+          "why": "新变量必须是原变量的**可逆**线性组合，否则不是合法变换。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；展开已复算（三个平方展开与原式一致）"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0602a",
+      "knowledge": [
+        "linalg.inertia"
+      ],
+      "stem": "设矩阵 $A=\\begin{pmatrix}1&-2&0\\\\-2&4&0\\\\0&0&1\\end{pmatrix}$，则二次型 $\\boldsymbol x^{\\mathrm T}A\\boldsymbol x$ 的规范形为",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$z_1^2+z_2^2+z_3^2$",
+          "$z_1^2+z_2^2-z_3^2$",
+          "$z_1^2-z_2^2$",
+          "$z_1^2+z_2^2$"
+        ],
+        "correct": 3
+      },
+      "solution": "分块对角：$\\begin{pmatrix}1&-2\\\\-2&4\\end{pmatrix}$ 的特征值 $0,5$（迹 5，行列式 0），再加 $(1)$。所以 $A$ 的特征值为 $5,0,1$：正惯性指数 $p=2$，负惯性指数 $q=0$，规范形 $z_1^2+z_2^2$。",
+      "source_refs": [
+        {
+          "relation": "verbatim",
+          "locator": "全国 2018 年 4 月 第 5 题",
+          "note": "整卷见 content/exams/2018-04.json"
+        }
+      ],
+      "varies": "规范形里的项数是秩（2），而不是阶数（3）；零特征值不产生平方项"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0602b",
+      "knowledge": [
+        "linalg.inertia"
+      ],
+      "stem": "二次型 $f=x_1^2+4x_1x_2+x_2^2$ 的规范形为",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "$z_1^2+z_2^2$",
+          "$z_1^2-z_2^2$",
+          "$-z_1^2-z_2^2$",
+          "$z_1^2$"
+        ],
+        "correct": 1
+      },
+      "solution": "矩阵 $\\begin{pmatrix}1&2\\\\2&1\\end{pmatrix}$ 的特征值 $3,-1$（迹 2，行列式 $-3$）：一正一负，$p=q=1$，规范形 $z_1^2-z_2^2$。注意不能因为平方项系数 $1,1$ 都是正就判断为 $z_1^2+z_2^2$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造辨析题：交叉项会改变正负惯性指数"
+        }
+      ],
+      "varies": "判断规范形看特征值的符号，不是看平方项系数"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0602c",
+      "knowledge": [
+        "linalg.completing_square"
+      ],
+      "stem": "对 $f=x_1^2+2x_1x_2+2x_2^2+4x_2x_3+5x_3^2$（例 2），经可逆线性变换 $y_1=x_1+x_2,\\ y_2=x_2+2x_3,\\ y_3=x_3$ 得到标准形 $y_1^2+y_2^2+y_3^2$。则 $f$ 的正惯性指数为",
+      "answer": {
+        "type": "numeric",
+        "value": 3
+      },
+      "solution": "标准形的 3 个系数都是 $+1$，所以 $p=3$，$q=0$，$r(f)=3$。这也说明 $f$ 是正定的（下一节）。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；由标准形读出惯性指数"
+        }
+      ],
+      "varies": "惯性指数由标准形系数的符号个数读出，与用的哪种方法无关"
+    }
+  ]
+}

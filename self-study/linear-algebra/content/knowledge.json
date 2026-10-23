@@ -647,6 +647,121 @@
       ],
       "textbook_ref": "教材 §5.3",
       "syllabus_ref": "矩阵的相似对角化：实对称矩阵的对角化"
+    },
+    {
+      "id": "linalg.quadratic_def",
+      "title": "二次型的概念",
+      "type": "概念",
+      "difficulty": 2,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.mat_transpose"
+      ],
+      "textbook_ref": "教材 §6.1",
+      "syllabus_ref": "实二次型：二次型的定义及其矩阵表示"
+    },
+    {
+      "id": "linalg.quadratic_matrix",
+      "title": "二次型的矩阵表示（交叉项系数平分）",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.quadratic_def",
+        "linalg.special_matrices"
+      ],
+      "textbook_ref": "教材 §6.1",
+      "syllabus_ref": "实二次型：二次型的定义及其矩阵表示"
+    },
+    {
+      "id": "linalg.congruence",
+      "title": "线性变换与合同",
+      "type": "概念",
+      "difficulty": 4,
+      "target": "掌握",
+      "requires": [
+        "linalg.quadratic_matrix",
+        "linalg.mat_mul"
+      ],
+      "textbook_ref": "教材 §6.1",
+      "syllabus_ref": "实二次型：二次型的定义及其矩阵表示"
+    },
+    {
+      "id": "linalg.standard_form",
+      "title": "二次型的标准形与规范形",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.quadratic_matrix"
+      ],
+      "textbook_ref": "教材 §6.2",
+      "syllabus_ref": "实二次型：实二次型的标准形"
+    },
+    {
+      "id": "linalg.orth_transform",
+      "title": "正交变换化二次型为标准形",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.orthogonal_diagonalize",
+        "linalg.quadratic_matrix"
+      ],
+      "textbook_ref": "教材 §6.2",
+      "syllabus_ref": "实二次型：实二次型的标准形"
+    },
+    {
+      "id": "linalg.completing_square",
+      "title": "配方法化二次型为标准形",
+      "type": "技能",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.quadratic_matrix"
+      ],
+      "textbook_ref": "教材 §6.2",
+      "syllabus_ref": "实二次型：实二次型的标准形"
+    },
+    {
+      "id": "linalg.inertia",
+      "title": "惯性定理与正、负惯性指数",
+      "type": "概念",
+      "difficulty": 4,
+      "target": "掌握",
+      "requires": [
+        "linalg.standard_form",
+        "linalg.eigen_def"
+      ],
+      "textbook_ref": "教材 §6.2",
+      "syllabus_ref": "实二次型：实二次型的标准形"
+    },
+    {
+      "id": "linalg.pos_def_concept",
+      "title": "正定二次型与正定矩阵的概念",
+      "type": "概念",
+      "difficulty": 3,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.quadratic_matrix",
+        "linalg.inertia"
+      ],
+      "textbook_ref": "教材 §6.3",
+      "syllabus_ref": "实二次型：正定二次型与正定矩阵"
+    },
+    {
+      "id": "linalg.pos_def_test",
+      "title": "正定的判别（特征值、顺序主子式）",
+      "type": "技能",
+      "difficulty": 4,
+      "target": "熟练掌握",
+      "requires": [
+        "linalg.pos_def_concept",
+        "linalg.det_expansion",
+        "linalg.eigen_compute"
+      ],
+      "textbook_ref": "教材 §6.3",
+      "syllabus_ref": "实二次型：正定二次型与正定矩阵"
     }
   ]
 }

@@ -1,0 +1,124 @@
+{
+  "id": "ch6-sec1",
+  "blocks": [
+    {
+      "kind": "retrieval",
+      "id": "linalg.ret.0601",
+      "prompt": "先猜再验：二次型 $f=x_1^2+4x_1x_2+x_2^2$ 写成 $f=\\boldsymbol x^{\\mathrm T}A\\boldsymbol x$（$A$ 为**对称**矩阵）时，$A$ 的元素 $a_{12}$ 是",
+      "options": [
+        "4",
+        "2",
+        "1",
+        "0"
+      ],
+      "correct": 1,
+      "explain": "交叉项 $4x_1x_2$ 由 $a_{12}x_1x_2+a_{21}x_2x_1=2a_{12}x_1x_2$ 贡献，所以 $2a_{12}=4$，$a_{12}=a_{21}=2$。直接把 4 写进矩阵，是最常见的错误。",
+      "knowledge": [
+        "linalg.quadratic_matrix"
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "预测题：先猜交叉项系数与矩阵元素的关系，不判掌握度，如实标自造"
+        }
+      ]
+    },
+    {
+      "kind": "prose",
+      "text": "**二次型与它的矩阵**\n\n$n$ 个变量的**二次型**是只含二次项的多项式\n$$f(x_1,\\dots,x_n)=\\sum_{i=1}^n\\sum_{j=1}^na_{ij}x_ix_j\\quad(a_{ij}=a_{ji}).$$\n写成矩阵形式：\n$$f=\\boldsymbol x^{\\mathrm T}A\\boldsymbol x,\\qquad A=(a_{ij})\\ \\text{为对称矩阵},\\quad\\boldsymbol x=(x_1,\\dots,x_n)^{\\mathrm T}.$$\n**写矩阵的规则**：平方项 $x_i^2$ 的系数放在对角线位置 $a_{ii}$；**交叉项 $x_ix_j$（$i\\neq j$）的系数的一半**分别放在 $a_{ij}$ 与 $a_{ji}$。对称矩阵与二次型一一对应。二次型的**秩**就是 $A$ 的秩 $r(A)$。\n\n**线性变换与合同**：作可逆线性变换 $\\boldsymbol x=C\\boldsymbol y$，则\n$$f=\\boldsymbol y^{\\mathrm T}(C^{\\mathrm T}AC)\\boldsymbol y.$$\n$B=C^{\\mathrm T}AC$ 叫与 $A$ **合同**。合同矩阵的秩相同，且合同后仍是对称矩阵。化简二次型，就是找 $C$ 使 $C^{\\mathrm T}AC$ 尽量简单（对角）。"
+    },
+    {
+      "kind": "pitfall",
+      "wrong": "$f=2x_1^2-x_2^2+4x_1x_2$ 的矩阵是 $A=\\begin{pmatrix}2&4\\\\0&-1\\end{pmatrix}$。",
+      "why_wrong": "这个 $A$ 不是对称矩阵。虽然 $\\boldsymbol x^{\\mathrm T}A\\boldsymbol x$ 也能展开得到同一个 $f$，但二次型的矩阵**规定**是对称的，这样才唯一，而且后面的特征值、正交变换才用得上。",
+      "right": "交叉项系数 4 平分：$A=\\begin{pmatrix}2&2\\\\2&-1\\end{pmatrix}$。验证：$\\boldsymbol x^{\\mathrm T}A\\boldsymbol x=2x_1^2+2\\cdot2x_1x_2-x_2^2$。"
+    },
+    {
+      "kind": "example",
+      "title": "例 1（二次型与对称矩阵互相写出）",
+      "problem": "(1) 写出 $f=x_1^2-2x_2^2+3x_3^2+4x_1x_2-6x_2x_3$ 的矩阵 $A$；(2) 写出矩阵 $\\begin{pmatrix}1&1&0\\\\1&0&-2\\\\0&-2&3\\end{pmatrix}$ 对应的二次型。",
+      "steps": [
+        {
+          "text": "(1) 平方项系数 $1,-2,3$ 是对角线；$4x_1x_2$ 的一半 2 放在 $a_{12}=a_{21}$；$-6x_2x_3$ 的一半 $-3$ 放在 $a_{23}=a_{32}$；缺少 $x_1x_3$ 项，$a_{13}=a_{31}=0$。$A=\\begin{pmatrix}1&2&0\\\\2&-2&-3\\\\0&-3&3\\end{pmatrix}$。",
+          "why": "缺项的位置补 0，不要漏。"
+        },
+        {
+          "text": "(2) 对角线 $1,0,3$：$x_1^2+0\\cdot x_2^2+3x_3^2$；交叉项是矩阵元素的 **2 倍**：$2\\cdot1\\,x_1x_2+2\\cdot0\\,x_1x_3+2\\cdot(-2)\\,x_2x_3$。$f=x_1^2+3x_3^2+2x_1x_2-4x_2x_3$。",
+          "why": "矩阵里一对对称元素 $a_{ij}=a_{ji}$ 合起来贡献 $2a_{ij}x_ix_j$。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值，展开已复算"
+        }
+      ]
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0601a",
+      "knowledge": [
+        "linalg.quadratic_matrix"
+      ],
+      "stem": "二次型 $f=x_1^2-6x_1x_2+5x_2^2$ 的矩阵 $A$ 中，$a_{12}=$",
+      "answer": {
+        "type": "numeric",
+        "value": -3
+      },
+      "solution": "交叉项系数 $-6$ 的一半：$a_{12}=a_{21}=-3$。$A=\\begin{pmatrix}1&-3\\\\-3&5\\end{pmatrix}$。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造数值：交叉项系数的一半"
+        }
+      ],
+      "varies": "交叉项系数带负号：一半也带负号"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0601b",
+      "knowledge": [
+        "linalg.quadratic_matrix"
+      ],
+      "stem": "二次型 $f=(x_1-x_2)^2+(x_2-x_3)^2$ 的秩为",
+      "answer": {
+        "type": "numeric",
+        "value": 2
+      },
+      "solution": "展开：$f=x_1^2+2x_2^2+x_3^2-2x_1x_2-2x_2x_3$，$A=\\begin{pmatrix}1&-1&0\\\\-1&2&-1\\\\0&-1&1\\end{pmatrix}$。$r_2+r_1,\\ r_3+r_2$ 化成 $\\begin{pmatrix}1&-1&0\\\\0&1&-1\\\\0&0&0\\end{pmatrix}$（先把第 2 行加第 1 行得 $(0,1,-1)$，再把第 3 行加新第 2 行得零行），秩为 2。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造；先展开写矩阵，再求秩"
+        }
+      ],
+      "varies": "二次型以平方和形式给出但变量相关：3 个变量的平方和不一定秩为 3"
+    },
+    {
+      "kind": "exercise",
+      "id": "linalg.ex.0601c",
+      "knowledge": [
+        "linalg.congruence"
+      ],
+      "stem": "设 $A$ 是对称矩阵，$C$ 可逆，则 $C^{\\mathrm T}AC$",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "是对称矩阵，且 $r(C^{\\mathrm T}AC)=r(A)$",
+          "一定等于 $A$",
+          "一定是对角矩阵",
+          "一定不是对称矩阵"
+        ],
+        "correct": 0
+      },
+      "solution": "$(C^{\\mathrm T}AC)^{\\mathrm T}=C^{\\mathrm T}A^{\\mathrm T}C=C^{\\mathrm T}AC$，仍是对称矩阵。左右各乘可逆矩阵 $C^{\\mathrm T},C$ 不改变秩。其余三项都过强或错误。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "note": "自造概念题：合同保持对称性和秩"
+        }
+      ],
+      "varies": "用 $(XYZ)^{\\mathrm T}=Z^{\\mathrm T}Y^{\\mathrm T}X^{\\mathrm T}$ 验证对称性"
+    }
+  ]
+}
