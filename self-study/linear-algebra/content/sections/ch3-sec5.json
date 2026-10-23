@@ -28,6 +28,11 @@
       "text": "**内积、正交与标准正交基**\n\n$\\boldsymbol\\alpha=(a_1,\\dots,a_n)^{\\mathrm T},\\ \\boldsymbol\\beta=(b_1,\\dots,b_n)^{\\mathrm T}$ 的**内积**\n$$(\\boldsymbol\\alpha,\\boldsymbol\\beta)=a_1b_1+\\cdots+a_nb_n=\\boldsymbol\\alpha^{\\mathrm T}\\boldsymbol\\beta.$$\n**长度**（范数）$\\|\\boldsymbol\\alpha\\|=\\sqrt{(\\boldsymbol\\alpha,\\boldsymbol\\alpha)}$；长度为 1 的叫**单位向量**，$\\boldsymbol\\alpha/\\|\\boldsymbol\\alpha\\|$ 是 $\\boldsymbol\\alpha$ 的**单位化**。$(\\boldsymbol\\alpha,\\boldsymbol\\beta)=0$ 称**正交**。\n\n**正交向量组**：两两正交的**非零**向量组，必线性无关。若再都是单位向量，称**标准正交向量组**；$\\mathbb R^n$ 里 $n$ 个这样的向量组成**标准正交基**。\n\n**施密特（Schmidt）正交化**：把线性无关的 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\alpha_3$ 变成正交组：\n$$\\boldsymbol\\beta_1=\\boldsymbol\\alpha_1,\\quad\\boldsymbol\\beta_2=\\boldsymbol\\alpha_2-\\frac{(\\boldsymbol\\alpha_2,\\boldsymbol\\beta_1)}{(\\boldsymbol\\beta_1,\\boldsymbol\\beta_1)}\\boldsymbol\\beta_1,\\quad\\boldsymbol\\beta_3=\\boldsymbol\\alpha_3-\\frac{(\\boldsymbol\\alpha_3,\\boldsymbol\\beta_1)}{(\\boldsymbol\\beta_1,\\boldsymbol\\beta_1)}\\boldsymbol\\beta_1-\\frac{(\\boldsymbol\\alpha_3,\\boldsymbol\\beta_2)}{(\\boldsymbol\\beta_2,\\boldsymbol\\beta_2)}\\boldsymbol\\beta_2.$$\n每一步都是「减去在已有方向上的分量」。最后把 $\\boldsymbol\\beta_i$ **单位化**，得到标准正交基。\n\n**正交矩阵**：$Q^{\\mathrm T}Q=E$（即 $Q^{-1}=Q^{\\mathrm T}$）的方阵。它的**列向量组**（行向量组也一样）是标准正交基。性质：$|Q|=\\pm1$；正交矩阵的乘积、逆、转置仍是正交矩阵。第 5、6 章的正交变换要用它。"
     },
     {
+      "kind": "figure",
+      "file": "ch3-sec5-gram-schmidt.svg",
+      "caption": "施密特正交化的几何意义：$\\boldsymbol\\alpha_2$ 减去它在 $\\boldsymbol\\beta_1=\\boldsymbol\\alpha_1$ 方向上的投影（绿色），剩下的 $\\boldsymbol\\beta_2=\\boldsymbol\\alpha_2-\\frac{(\\boldsymbol\\alpha_2,\\boldsymbol\\beta_1)}{(\\boldsymbol\\beta_1,\\boldsymbol\\beta_1)}\\boldsymbol\\beta_1$（红色）与 $\\boldsymbol\\beta_1$ 垂直。图中 $\\boldsymbol\\alpha_1=(3,1)$，$\\boldsymbol\\alpha_2=(1,2)$，$\\boldsymbol\\beta_2=(-0.5,1.5)$。"
+    },
+    {
       "kind": "pitfall",
       "wrong": "两两正交的向量组一定线性无关。",
       "why_wrong": "漏了「非零」。含零向量的组也满足两两内积为 0（零向量与任何向量内积为 0），但含零向量的组线性相关。例：$\\{(1,0)^{\\mathrm T},(0,0)^{\\mathrm T}\\}$。",

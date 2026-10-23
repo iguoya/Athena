@@ -28,6 +28,11 @@
       "text": "**非齐次线性方程组 $A\\boldsymbol x=\\boldsymbol b$**\n\n**判别定理**\n- 有解 $\\iff r(A)=r(A\\,|\\,\\boldsymbol b)$；\n- 有解时：$r(A)=n\\Rightarrow$ **唯一解**；$r(A)<n\\Rightarrow$ **无穷多解**；\n- 无解 $\\iff r(A)<r(A\\,|\\,\\boldsymbol b)$（此时 $r(A\\,|\\,\\boldsymbol b)=r(A)+1$）。\n\n**解的结构**：设 $\\boldsymbol\\eta^*$ 是 $A\\boldsymbol x=\\boldsymbol b$ 的一个**特解**，$A\\boldsymbol x=\\boldsymbol0$（**导出组**）的基础解系是 $\\boldsymbol\\xi_1,\\dots,\\boldsymbol\\xi_{n-r}$，则通解为\n$$\\boldsymbol x=\\boldsymbol\\eta^*+k_1\\boldsymbol\\xi_1+\\cdots+k_{n-r}\\boldsymbol\\xi_{n-r}.$$\n原因：任意两个解的**差**是导出组的解。\n\n**解题步骤**：(1) 增广矩阵化行阶梯形，用 $r(A)$ 与 $r(A\\,|\\,\\boldsymbol b)$ 判断有无解；(2) 化行最简形，令自由未知量为 0 得一个特解；(3) 去掉常数列，求导出组基础解系；(4) 写通解。\n\n含参数的方程组：方阵情形先用行列式把「有唯一解」的参数范围排除（克拉默法则，§1.5），再把使行列式为 0 的**每个**参数值代回去，逐一判断无解还是无穷多解。"
     },
     {
+      "kind": "figure",
+      "file": "ch4-sec3-planes.svg",
+      "caption": "三个方程各表示一个平面，三个平面的位置关系对应方程组的三种解：交于一点（**唯一解**）；两两相交但交线互相平行、没有公共点（**无解**）；共有一条直线（**无穷多解**）。具体是哪一种，由 $r(A)$ 与 $r(A\\,|\\,\\boldsymbol b)$ 决定。"
+    },
+    {
       "kind": "pitfall",
       "wrong": "非齐次方程组 $A\\boldsymbol x=\\boldsymbol b$ 的通解就是 $k_1\\boldsymbol\\xi_1+\\cdots+k_{n-r}\\boldsymbol\\xi_{n-r}$（$\\boldsymbol\\xi_i$ 是基础解系）。",
       "why_wrong": "这是导出组 $A\\boldsymbol x=\\boldsymbol0$ 的通解，漏了特解。例：$x_1+x_2=2$，$\\boldsymbol\\xi=(-1,1)^{\\mathrm T}$。只写 $k\\boldsymbol\\xi$，取 $k=1$ 得 $(-1,1)$，代入左边得 $0\\neq2$，不是解。正确通解是 $(2,0)^{\\mathrm T}+k(-1,1)^{\\mathrm T}$。",

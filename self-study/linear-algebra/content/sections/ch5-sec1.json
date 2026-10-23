@@ -28,6 +28,11 @@
       "text": "**特征值与特征向量**\n\n对 $n$ 阶方阵 $A$，若存在数 $\\lambda$ 和**非零**向量 $\\boldsymbol x$ 使\n$$A\\boldsymbol x=\\lambda\\boldsymbol x,$$\n则称 $\\lambda$ 为 $A$ 的**特征值**，$\\boldsymbol x$ 是属于 $\\lambda$ 的**特征向量**。零向量总满足上式，但**不算**特征向量。\n\n**求法**：$A\\boldsymbol x=\\lambda\\boldsymbol x\\iff(\\lambda E-A)\\boldsymbol x=\\boldsymbol0$。要它有非零解，必须 $|\\lambda E-A|=0$（§4.2：方阵的齐次方程组有非零解 $\\iff$ 行列式为 0）。\n1. 解**特征方程** $|\\lambda E-A|=0$（左边叫特征多项式，$n$ 次），得特征值；$\\lambda_i$ 作为根的重数叫**代数重数**。\n2. 对每个特征值 $\\lambda_i$，解齐次方程组 $(\\lambda_iE-A)\\boldsymbol x=\\boldsymbol0$，其**基础解系**的任意非零线性组合都是属于 $\\lambda_i$ 的特征向量。\n\n**性质**（$\\lambda_1,\\dots,\\lambda_n$ 为 $A$ 的 $n$ 个特征值，计重数）：\n- $\\lambda_1+\\cdots+\\lambda_n=\\operatorname{tr}A$（对角线元素之和），$\\lambda_1\\lambda_2\\cdots\\lambda_n=|A|$。\n- $A$ 可逆 $\\iff0$ 不是特征值。\n- 若 $A\\boldsymbol x=\\lambda\\boldsymbol x$，则 $kA,\\ A^m,\\ f(A)$（$f$ 为多项式）、$A^{-1}$、$A^{*}$ 有同一个特征向量 $\\boldsymbol x$，特征值依次为 $k\\lambda,\\ \\lambda^m,\\ f(\\lambda),\\ \\lambda^{-1},\\ |A|/\\lambda$。\n- $A$ 与 $A^{\\mathrm T}$ 有相同的特征值。\n- **属于不同特征值的特征向量线性无关。**"
     },
     {
+      "kind": "figure",
+      "file": "ch5-sec1-eigen.svg",
+      "caption": "$A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}$ 把单位圆变成椭圆。沿 $(1,1)$ 方向被拉长 3 倍（$\\lambda=3$），沿 $(1,-1)$ 方向长度不变（$\\lambda=1$）：在这两个方向上 $A\\boldsymbol x$ 与 $\\boldsymbol x$ 共线，其余方向都被「扭」到了别的方向。这就是特征向量的几何意义。"
+    },
+    {
       "kind": "pitfall",
       "wrong": "$\\boldsymbol\\xi_1,\\boldsymbol\\xi_2$ 是属于不同特征值的特征向量，那么 $\\boldsymbol\\xi_1+\\boldsymbol\\xi_2$ 也是 $A$ 的特征向量。",
       "why_wrong": "反例：$A=\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}$，$\\boldsymbol\\xi_1=(1,0)^{\\mathrm T}$（$\\lambda=1$），$\\boldsymbol\\xi_2=(0,1)^{\\mathrm T}$（$\\lambda=2$）。$A(\\boldsymbol\\xi_1+\\boldsymbol\\xi_2)=(1,2)^{\\mathrm T}$，不是 $\\boldsymbol\\xi_1+\\boldsymbol\\xi_2=(1,1)^{\\mathrm T}$ 的倍数。",

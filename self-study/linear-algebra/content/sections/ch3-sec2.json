@@ -28,6 +28,11 @@
       "text": "**线性相关与线性无关**\n\n若存在**不全为零**的数 $k_1,\\dots,k_s$，使 $k_1\\boldsymbol\\alpha_1+\\cdots+k_s\\boldsymbol\\alpha_s=\\boldsymbol0$，称向量组 $\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s$ **线性相关**；若上式**只有** $k_1=\\cdots=k_s=0$ 时才成立，称**线性无关**。\n\n直观：相关表示组里有「多余」的向量，**线性相关 $\\iff$ 至少有一个向量能由其余向量线性表出**；无关表示每个向量都提供新方向。\n\n**判定**\n- $n$ 个 $n$ 维向量：以它们为列作行列式，**$|\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_n|\\neq0\\iff$ 线性无关**（理由：$A\\boldsymbol x=\\boldsymbol0$ 只有零解 $\\iff|A|\\neq0$，见 §1.5 与第 4 章）。\n- 一般情形用秩：向量组的秩小于向量个数则相关，等于则无关（§3.4）。\n\n**常用性质**\n- 含零向量的向量组必相关；单个向量相关 $\\iff$ 它是零向量。\n- 两个向量相关 $\\iff$ 对应分量成比例。\n- 向量个数**大于**维数，必相关（例如 4 个 3 维向量）。\n- **部分相关则整体相关**；**整体无关则部分无关**。\n- 若 $\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s$ 无关而 $\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s,\\boldsymbol\\beta$ 相关，则 $\\boldsymbol\\beta$ 能由 $\\boldsymbol\\alpha_1,\\dots,\\boldsymbol\\alpha_s$ **唯一**线性表出。"
     },
     {
+      "kind": "figure",
+      "file": "ch3-sec2-dependence.svg",
+      "caption": "左：$\\boldsymbol a_1=(2,1)$、$\\boldsymbol a_2=(1,2)$ 不共线，**线性无关**，它们的线性组合能到达平面内的任何向量（浅蓝平行四边形是系数在 $[0,1]$ 内的组合）。右：$\\boldsymbol b_2=2\\boldsymbol b_1$ 共线，**线性相关**（$2\\boldsymbol b_1-\\boldsymbol b_2=\\boldsymbol0$），组合只能落在一条直线上。"
+    },
+    {
       "kind": "pitfall",
       "wrong": "向量组 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\alpha_3$ 线性相关，所以其中**每一个**向量都能由其余两个线性表出。",
       "why_wrong": "相关只保证**至少有一个**能被其余表出。反例：$\\boldsymbol\\alpha_1=(1,0)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(2,0)^{\\mathrm T},\\ \\boldsymbol\\alpha_3=(0,1)^{\\mathrm T}$。3 个 2 维向量必相关；$\\boldsymbol\\alpha_1=\\frac12\\boldsymbol\\alpha_2$ 可以表出，但 $\\boldsymbol\\alpha_3$ 不能由 $\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2$ 表出（它们的第 2 分量都是 0）。",
