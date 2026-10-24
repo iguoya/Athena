@@ -82,6 +82,8 @@ guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，�
 lecture/<id>/   视频课：以一套外部视频课为底本、视频（播放窗格或外链）是界面的一部分；内容单位是集/节拍/任务，出处挂「分集号 + 时间」；目录表达形态，科目看 app.json 的 group（ADR 0184）
   chen-linear-algebra-mooc/ 西电慕课《实用大众线性代数（MATLAB版）》视频课精读：周→节、课件精读 + Octave 上机，视频只登记外链（Tauri 2 + React，「数学」圈，ADR 0180）
   weng-c-programming/       浙大翁恺《C语言程序设计》视频课·课堂工作台：视频是界面里的一个窗格，节拍 + 任务驱动（Tauri 2 + React，「程序设计」圈，ADR 0182）
+  advanced-mathematics-video/ 自考高等数学（工本）视频课：暂停在讲师解题前让你先动笔，再核对（Tauri 2 + React + 多 webview，「自考」圈，ADR 0185）
+  linear-algebra-video/     自考线性代数（工）视频课：宋浩《线性代数》3.0 对照申亚男教材六章，先自己算再核对（Tauri 2 + React + 多 webview，「自考」圈，ADR 0185）
 tools/         配套工具：做出能用的工具，不建进度库（ADR 0146）
   math-tools/  数学工具（Tauri 2 + React）——数学学习的配套工具（ADR 0084、0146）
   comms-console/ 协作观察台（Tauri 2 + React，只读）——多智能体协作的任务、决策与
@@ -143,6 +145,8 @@ archive/       历史归档，不参与构建
 | `chen-linear-algebra` | 大众线性代数精读（陈怀琛，「数学」圈，ADR 0177） | `athena-chen-linear-algebra` | `chen.` |
 | `chen-linear-algebra-mooc` | 大众线性代数·视频课（西电慕课，「数学」圈，ADR 0180） | `athena-chen-linear-algebra-mooc` | `chenmooc.` |
 | `weng-c-programming` | 翁恺 C 语言·课堂工作台（视频课，「程序设计」圈，ADR 0182） | `athena-weng-c-programming` | `wengc.` |
+| `advanced-mathematics-video` | 高等数学（工本）·视频课（自考，「自考」圈，ADR 0185） | `athena-advanced-mathematics-video` | `advvideo.` |
+| `linear-algebra-video` | 线性代数（工）·视频课（自考，「自考」圈，ADR 0185） | `athena-linear-algebra-video` | `lavideo.` |
 | `axler-linear-algebra` | Axler 线性代数精读（「数学」圈，ADR 0179） | `athena-axler-linear-algebra` | `axler.` |
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
 | `organization` | 计算机组成原理（408，ADR 0115） | `athena-organization` | `org.` |

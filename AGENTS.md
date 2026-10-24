@@ -54,7 +54,7 @@ guide/<id>/     手册类教程：跟随一本外部手册/官方教程精读，
 lecture/<id>/   视频课（ADR 0184）：以一套外部视频课为底本、视频是界面一部分，目录表达形态、科目看 app.json 的 group；
                 chen-linear-algebra-mooc（西电慕课《实用大众线性代数》视频课精读，「数学」圈，ADR 0180）、weng-c-programming
                 （翁恺《C语言程序设计》视频课·课堂工作台，视频是界面窗格，「程序设计」圈，ADR 0182）；
-                自考高数（工本）、线代（工）视频课将建于此（视频底本待选）
+                advanced-mathematics-video、linear-algebra-video（自考高数、线代视频课，先动笔再核对，「自考」圈，ADR 0185）
 mentor/<id>/    导师类（图谱/参考类）：polaris（路线图与指南针）、competitions（「大赛」圈的赛历，
                 ADR 0114）、jiuzhou（「兴趣」圈的九州历史地理图鉴，ADR 0156）、
                 mathematics-compass（数学罗盘，数学学习导引，「数学」圈，ADR 0174）；
