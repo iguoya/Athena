@@ -179,3 +179,4 @@
 | [0183](0183-weng-player-uses-video-page.md) | 修订 0182：翁恺应用的播放窗格改载 B 站视频页（外链播放器登录后仍不能切清晰度，`requestQuality` 被拒；视频页登录后 720p 可切）；登录改为窗格内导航（独立窗口实测空白）；放行来源为 www.bilibili.com，命令仍只有 bridge_report；用站点自己的「网页全屏」专注 | 已接受 |
 | [0184](0184-lecture-directory-for-video-courses.md) | 视频课应用单独成顶层目录 `lecture/`：迁入 `weng-c-programming`、`chen-linear-algebra-mooc`（id 与进度不变），自考高数（工本）、线代（工）视频课将建于此；启动器、检查脚本、工作区同步登记 |
 | [0185](0185-selfstudy-math-video-lectures.md) | 新增 `lecture/advanced-mathematics-video`、`lecture/linear-algebra-video`：自考高数（工本）、线代（工）视频课——底本选定（高数 BV1UU4y1t7ix P40–P58 正课，线代 BV1d7wAzsE8V P1–P36）、课节切段、问题解决主原型（暂停后先动笔）、sympy 机器核对、题源只取视频例题与复制来的真题、转写只用于定位；先落试点课节再建应用 |
+| [0186](0186-selfstudy-survey.md) | 新增 `mentor/selfstudy-survey`（自考专业调查，「自考」圈，端口 1535）：调查 2025–2026 年全国各省计算机类（0809）、电子信息类（0807）自考本科的开设格局、主考院校、课程计划、实践环节、教材大纲、报考毕业条件与变动；图谱/参考类，数据带 verify 分级（official/notice/report/pending），课程表只收官方来源，查不到标待查不推断；开 comms 舱 `selfstudy-survey`（leader claude-code，worker zcode）分波次采集 | 已接受 |
