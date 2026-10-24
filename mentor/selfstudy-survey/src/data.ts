@@ -1,8 +1,6 @@
 // 内容在构建期由 Vite 打进前端：数据是几十个 JSON，不值得走一趟运行期读取（ADR 0174 同款）。
 // 省份文件一省一份，glob 引入；缺文件不会报错，所以覆盖率在界面上如实显示，而不是在这里兜底。
 import scopeJson from "../content/scope.json";
-import coursesJson from "../content/courses.json";
-import textbooksJson from "../content/textbooks.json";
 import athenaJson from "../content/athena-map.json";
 import type {
   CourseInfo,
@@ -15,9 +13,16 @@ import type {
 } from "./types";
 
 export const scope = scopeJson as unknown as Scope;
-export const courses = (coursesJson as unknown as { courses: Record<string, CourseInfo> }).courses;
-export const textbooks = (textbooksJson as unknown as { textbooks: Record<string, Textbook> })
-  .textbooks;
+// 课程库与教材库按成员分文件存放（两个代理并行采集，同一个 JSON 会读改写互相覆盖），读取时合并。
+const courseFiles = import.meta.glob("../content/courses/*.json", { eager: true, import: "default" });
+const textbookFiles = import.meta.glob("../content/textbooks/*.json", { eager: true, import: "default" });
+function merge<T>(files: Record<string, unknown>, key: string): Record<string, T> {
+  const out: Record<string, T> = {};
+  for (const f of Object.values(files)) Object.assign(out, (f as Record<string, Record<string, T>>)[key]);
+  return out;
+}
+export const courses = merge<CourseInfo>(courseFiles, "courses");
+export const textbooks = merge<Textbook>(textbookFiles, "textbooks");
 export const athenaMap = (athenaJson as unknown as { map: Record<string, string[]> }).map;
 
 const modules = import.meta.glob("../content/provinces/*.json", { eager: true, import: "default" });
@@ -31,6 +36,13 @@ const ORDER = [
 export const provinces: Province[] = (Object.values(modules) as Province[]).sort(
   (a, b) => ORDER.indexOf(a.id) - ORDER.indexOf(b.id),
 );
+
+// 计划的主考院校：以 offerings 为准（主考变动频繁、有自己的核对记录），plan 级只在计划间确有差异时写。
+export function planHosts(province: Province, plan: Plan): string[] {
+  if (plan.hosts?.length) return plan.hosts;
+  const o = province.offerings.find((x) => x.plans?.includes(plan.id));
+  return o?.hosts ?? [];
+}
 
 export const majorName = (code: string) => scope.majors.find((m) => m.code === code)?.name ?? code;
 export const majorsOfClass = (cls: string) => scope.majors.filter((m) => m.class === cls);

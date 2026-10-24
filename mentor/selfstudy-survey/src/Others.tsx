@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   allPlans,
+  planHosts,
   coverage,
   courses,
   CATEGORY_LABEL,
@@ -136,7 +137,7 @@ export function Practice({ go }: { go: Go }) {
             {grads.map(({ province, plan }) => (
               <li key={plan.id}>
                 <b>
-                  {province.name} · {majorName(plan.major)} · {plan.hosts.join("、")}
+                  {province.name} · {majorName(plan.major)} · {planHosts(province, plan).join("、")}
                 </b>
                 ：{plan.graduation!.thesis ? "有毕业设计（论文）" : "无毕业设计（论文）"}
                 {plan.graduation!.credits ? `，${plan.graduation!.credits} 学分` : ""}。{plan.graduation!.note ?? ""}

@@ -10,7 +10,11 @@ const SYMBOL: Record<OfferStatus, string> = { open: "●", upcoming: "◐", stop
 export function Overview({ go }: { go: Go }) {
   const [cls, setCls] = useState<string>("all");
   const cov = coverage();
-  const majors = scope.majors.filter((m) => cls === "all" || m.class === cls);
+  const [onlyOpen, setOnlyOpen] = useState(true);
+  // 目录里有 50 个专业，绝大多数自考根本没开：默认只列「至少一个省有开考/停考/新计划记录」的专业，免得矩阵全是点。
+  const hasRecord = (code: string) =>
+    provinces.some((p) => offeringsOf(p, code).some((o) => o.status === "open" || o.status === "upcoming" || o.status === "stopped"));
+  const majors = scope.majors.filter((m) => (cls === "all" || m.class === cls) && (!onlyOpen || hasRecord(m.code)));
 
   return (
     <>
@@ -46,6 +50,10 @@ export function Overview({ go }: { go: Go }) {
               {c.tier === "edge" ? "（对照）" : ""}
             </button>
           ))}
+          <label className="toggle">
+            <input type="checkbox" checked={onlyOpen} onChange={(e) => setOnlyOpen(e.target.checked)} />
+            只看有开考记录的专业（{scope.majors.filter((m) => hasRecord(m.code)).length}/{scope.majors.length}）
+          </label>
           <span className="legend">
             {LEGEND.map((s) => (
               <span key={s} className={`chip chip-${s}`}>

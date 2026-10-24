@@ -197,8 +197,11 @@ offerings = [
     OFFER("080903", "stopped", ["广东外语外贸大学", "华南师范大学"], None, V(D, "2025 年 4、10 月课程表标「#」＝限期停考专业，不接受新生报名；2026 年表不再列")),
     OFFER("080801", "stopped", ["广东工业大学"], None, V(D, "2025 年 4、10 月课程表标「#」＝限期停考专业，不接受新生报名；2026 年表不再列")),
 ]
-for m in ("080904K", "080910T", "080911TK", "080702", "080703", "080714T", "080717T", "080710T"):
-    offerings.append(OFFER(m, "none", [], None, V(C, NONE_NOTE)))
+scope = json.loads((OUT / "scope.json").read_text(encoding="utf-8"))
+listed = {o["major"] for o in offerings}
+for m in scope["majors"]:
+    if m["code"] not in listed:
+        offerings.append(OFFER(m["code"], "none", [], None, V(C, NONE_NOTE)))
 
 events = [
     {"date": "2023-09-27", "kind": "new-plan", "major": "080701", "text": "粤考委〔2023〕4号：新开考电子信息工程（专升本），主考学校佛山科学技术学院、广东技术师范大学，首次开考 2024 年 10 月。", "verify": V(N1)},
@@ -230,10 +233,12 @@ prov = {
 
 (OUT / "provinces").mkdir(parents=True, exist_ok=True)
 (OUT / "provinces" / "guangdong.json").write_text(json.dumps(prov, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-cdoc = json.loads((OUT / "courses.json").read_text(encoding="utf-8"))
+CF = OUT / "courses" / "claude-code.json"
+cdoc = json.loads(CF.read_text(encoding="utf-8"))
 cdoc["courses"] = dict(sorted({**cdoc.get("courses", {}), **courses}.items()))
-(OUT / "courses.json").write_text(json.dumps(cdoc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-bdoc = json.loads((OUT / "textbooks.json").read_text(encoding="utf-8"))
+CF.write_text(json.dumps(cdoc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+BF = OUT / "textbooks" / "claude-code.json"
+bdoc = json.loads(BF.read_text(encoding="utf-8"))
 bdoc["textbooks"] = dict(sorted({**bdoc.get("textbooks", {}), **books}.items()))
-(OUT / "textbooks.json").write_text(json.dumps(bdoc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+BF.write_text(json.dumps(bdoc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 print(len(plans), "plans", len(courses), "courses", len(books), "books")

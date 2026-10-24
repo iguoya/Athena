@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { allPlans, athenaMap, CATEGORY_LABEL, courses, EXAM_LABEL, majorName, textbooks } from "./data";
+import { allPlans, athenaMap, planHosts, CATEGORY_LABEL, courses, EXAM_LABEL, majorName, textbooks } from "./data";
 import type { Go } from "./nav";
 import { Empty, Section } from "./ui";
 
@@ -82,7 +82,7 @@ export function Courses({ course, go }: { course?: string; go: Go }) {
                               {majorName(plan.major)}
                             </button>
                           </td>
-                          <td>{plan.hosts.join("、")}</td>
+                          <td>{planHosts(province, plan).join("、")}</td>
                           <td>{c.credits}</td>
                           <td>{CATEGORY_LABEL[c.category]}</td>
                           <td>{c.exam ? EXAM_LABEL[c.exam] : "—"}</td>

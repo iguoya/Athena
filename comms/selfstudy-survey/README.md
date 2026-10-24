@@ -8,10 +8,12 @@
 | 成员 | 角色 | 名下路径 |
 |---|---|---|
 | claude-code | leader：ADR、数据模型、采集规程、应用代码与界面、验收（抽查原文） | `mentor/selfstudy-survey/`（除下行），`artifacts/claude-code/` |
-| zcode | worker：按规程逐省采集，交证据与结构化数据 | `mentor/selfstudy-survey/content/provinces/`、`content/courses.json`、`content/textbooks.json`，`artifacts/zcode/` |
+| zcode | worker：按规程逐省采集，交证据与结构化数据 | 省份文件见下「分省」，`content/courses/zcode.json`、`content/textbooks/zcode.json`，`artifacts/zcode/` |
 
-- 试点阶段（广东、江苏）leader 先自己写 `content/provinces/guangdong.json`、`jiangsu.json`，用来验证模型；zcode 同时独立采集同一批
-  数据存到 `artifacts/zcode/`，两边**交叉核对**，差异即验收材料。试点验收后这两个文件移交 zcode 维护。
+- 试点（广东）leader 先自己写，zcode 同时独立采集同一批数据存到 `artifacts/zcode/`，两边**交叉核对**，差异即验收材料（T-001 已完成，无事实冲突）。
+- **分省（T-002 起，使用者要求 leader 分担）**：zcode 负责 江苏 湖北 四川 北京 天津 河北 山西 内蒙古 辽宁 吉林 黑龙江 上海 浙江 安徽 福建 江西；
+  claude-code 负责 广东 山东 河南 湖南 广西 海南 重庆 贵州 云南 西藏 陕西 甘肃 青海 宁夏 新疆。互不动对方的省份文件。
+- 调查范围：目录里 0807 电子信息类、0809 计算机类的**全部专业**，加 0808 自动化类对照（共 50 个，见 `content/scope.json`）。
 - 一个省一个文件（`content/provinces/<id>.json`），所以多个会话并行采集不同省份也不会撞车。
 - cursor 暂不入舱（额度见 2026-10 的协作记录）；有额度后可作为第二个 worker，按省份分段。
 - 任务号段：claude-code T-9xx，zcode T-0xx。

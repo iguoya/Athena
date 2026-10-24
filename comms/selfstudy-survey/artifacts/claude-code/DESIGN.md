@@ -47,8 +47,8 @@
 ```
 scope.json            leader   专业类与专业（教育部目录）、核心/边缘分级
 athena-map.json       leader   课程代码 → Athena 课程显示名（只写显示名，ADR 0032）
-courses.json          zcode    课程库：课程代码 → 名称等
-textbooks.json        zcode    教材库
+courses/<成员>.json     各自   课程库分片：课程代码 → 名称等（两个代理并行，分文件防覆盖；读取时合并，同键须同内容）
+textbooks/<成员>.json   各自   教材库分片
 provinces/<id>.json   zcode    一个省一个文件：考试院、考期、政策、开设、计划、变动
 ```
 

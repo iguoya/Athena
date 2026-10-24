@@ -16,7 +16,7 @@
 
 ## 数据纪律（本应用的核心约束）
 
-- 数据在 `content/`：`scope.json`（范围）、`courses.json`、`textbooks.json`、`athena-map.json`、`provinces/<id>.json`
+- 数据在 `content/`：`scope.json`（范围）、`courses/<成员>.json`、`textbooks/<成员>.json`（分片，读取时合并，同键须同内容）、`athena-map.json`、`provinces/<id>.json`
   （一省一份，含考试院、考期、政策、开设、计划、变动）。
 - **每条事实带 `verify`**：`official`（省考试院或主考院校原文）/ `notice`（教育部考试中心、考试院主管的官方门户）/
   `report`（第三方自考网，只作线索）/ `pending`。非 `pending` 必须有 https 来源与 `YYYY-MM-DD` 核对日期（核对当日）；

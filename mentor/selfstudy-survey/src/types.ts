@@ -46,6 +46,11 @@ export interface Offering {
   local_code?: string;
   status: OfferStatus;
   hosts: string[];
+  // 办学类型（四川社会型/应用型等），同专业不同类型各一条
+  mode?: string | null;
+  // 本省专业码映射到国标专业的依据（北京自有码靠「旧专业名称」列）
+  matched_by?: string;
+  complete?: { courses?: boolean; credits?: boolean; textbook?: boolean };
   plans?: string[];
   verify: Verify;
 }
@@ -74,7 +79,7 @@ export interface Plan {
   id: string;
   major: string;
   track: string | null;
-  hosts: string[];
+  hosts?: string[];
   version: string;
   effective: string | null;
   state: "current" | "legacy" | "upcoming" | "superseded";
@@ -100,6 +105,8 @@ export interface Province {
   id: string;
   name: string;
   authority: Authority;
+  // 除考试院外的自考官方门户/管理系统（往往才是计划与教材的存放地）
+  selfstudy_portal?: { name: string; url: string; verify: Verify } | null;
   calendar: CalendarEntry[];
   policy: Policy;
   offerings: Offering[];

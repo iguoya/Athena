@@ -1,4 +1,4 @@
-import { allPlans, CATEGORY_LABEL, courses, majorName, provinces, scope, STATUS_LABEL } from "./data";
+import { allPlans, planHosts, CATEGORY_LABEL, courses, majorName, provinces, scope, STATUS_LABEL } from "./data";
 import type { Go } from "./nav";
 import type { PlanCourse } from "./types";
 import { Empty, Section, StatusChip, VerifyBadge } from "./ui";
@@ -123,7 +123,7 @@ export function Majors({ major, province, go }: { major?: string; province?: str
                       <th key={plan.id} className={p.id === province ? "hl" : ""}>
                         {p.name.slice(0, 2)}
                         <small>
-                          {plan.hosts.join("、")}
+                          {planHosts(p, plan).join("、")}
                           {plan.track ? `·${plan.track}` : ""}
                           <br />
                           {plan.version}
@@ -184,7 +184,7 @@ export function Majors({ major, province, go }: { major?: string; province?: str
             <ul className="plain">
               {plans.map(({ province: p, plan }) => (
                 <li key={plan.id}>
-                  {p.name} · {plan.hosts.join("、")} · {plan.version}（{PLAN_STATE[plan.state]}）{" "}
+                  {p.name} · {planHosts(p, plan).join("、")} · {plan.version}（{PLAN_STATE[plan.state]}）{" "}
                   <VerifyBadge v={plan.verify} />
                 </li>
               ))}

@@ -31,6 +31,7 @@ PROVINCES = [
     "hubei", "hunan", "guangdong", "guangxi", "hainan", "chongqing", "sichuan", "guizhou",
     "yunnan", "xizang", "shaanxi", "gansu", "qinghai", "ningxia", "xinjiang",
 ]
+CATALOG_PROV = PROVINCES
 LEVELS = {"official", "notice", "report", "pending"}
 HARD_LEVELS = {"official", "notice"}  # 课程表、政策只收这两级
 STATUS = {"open", "stopped", "upcoming", "none", "pending"}
@@ -107,11 +108,27 @@ def check_identity() -> None:
             fail(f"{path.relative_to(ROOT)}: 找不到端口 {EXPECTED_PORT}（三处必须一致）")
 
 
+def merge_shards(key: str) -> dict | None:
+    """content/<key>/*.json 按成员分文件存放，合并读取；同键必须同内容，否则是两边采集口径冲突。"""
+    merged: dict = {}
+    owner: dict[str, str] = {}
+    for f in sorted((CONTENT / key).glob("*.json")):
+        d = load(f)
+        if d is None:
+            return None
+        for k, v in (d.get(key) or {}).items():
+            if k in merged and merged[k] != v:
+                fail(f"{key}[{k}]: {owner[k]} 与 {f.name} 的内容不一致，请协调后统一")
+            merged[k] = v
+            owner.setdefault(k, f.name)
+    return {key: merged}
+
+
 def check_data() -> None:
     print("== 数据校验 ==", flush=True)
     scope = load(CONTENT / "scope.json")
-    courses_doc = load(CONTENT / "courses.json")
-    books_doc = load(CONTENT / "textbooks.json")
+    courses_doc = merge_shards("courses")
+    books_doc = merge_shards("textbooks")
     athena = load(CONTENT / "athena-map.json")
     if not (scope and courses_doc is not None and books_doc is not None and athena is not None):
         return
@@ -156,7 +173,7 @@ def check_data() -> None:
 
     for code, names in athena.get("map", {}).items():
         if code not in courses:
-            fail(f"athena-map: 课程代码 {code} 不在 courses.json")
+            fail(f"athena-map: 课程代码 {code} 不在课程库（content/courses/*.json）")
         if not isinstance(names, list) or not all(isinstance(n, str) and n for n in names):
             fail(f"athena-map[{code}]: 必须是显示名字符串数组")
 
@@ -190,6 +207,11 @@ def check_data() -> None:
                 fail(f"{where}.authority: 缺 name")
             if auth.get("url") is not None and not str(auth["url"]).startswith("https://"):
                 fail(f"{where}.authority: url 只收 https")
+        portal = d.get("selfstudy_portal")
+        if portal is not None:
+            if not str(portal.get("url", "")).startswith("https://") and not str(portal.get("url", "")).startswith("http://"):
+                fail(f"{where}.selfstudy_portal: 需要 url")
+            check_verify(portal.get("verify"), f"{where}.selfstudy_portal.verify", HARD_LEVELS, need_real=True)
         seen_sessions: set[str] = set()
         for c in d.get("calendar", []):
             w = f"{where}.calendar[{c.get('session')}]"
@@ -220,6 +242,13 @@ def check_data() -> None:
                 fail(f"{w}: status 只能是 {sorted(STATUS)}")
             if not isinstance(o.get("hosts"), list):
                 fail(f"{w}: hosts 必须是数组")
+            if o.get("mode") is not None and not str(o["mode"]).strip():
+                fail(f"{w}: mode 不能是空串（四川社会型/应用型这类办学类型，没有就省略）")
+            if o.get("matched_by") is not None and not str(o["matched_by"]).strip():
+                fail(f"{w}: matched_by 不能是空串（本省专业码映射到国标专业的依据，如「旧专业名称」）")
+            comp = o.get("complete")
+            if comp is not None and not (isinstance(comp, dict) and set(comp) <= {"courses", "credits", "textbook"} and all(isinstance(v, bool) for v in comp.values())):
+                fail(f"{w}: complete 只能是 {{courses, credits, textbook}} 三个布尔")
             if o.get("status") == "pending":
                 check_verify(o.get("verify"), f"{w}.verify", {"pending"})
             else:
@@ -265,8 +294,8 @@ def plan_check(p: dict, w: str, pid: str, majors, courses, books, plan_ids: set[
         fail(f"{w}: state 只能是 {sorted(PLAN_STATE)}")
     if not str(p.get("version", "")).strip():
         fail(f"{w}: version 不能为空（版本看不出写「未标注」）")
-    if not (isinstance(p.get("hosts"), list) and p["hosts"] and all(isinstance(h, str) and h for h in p["hosts"])):
-        fail(f"{w}: hosts 必须是非空字符串数组（计划全省唯一时列出全部主考院校）")
+    if p.get("hosts") is not None and not (isinstance(p["hosts"], list) and all(isinstance(h, str) and h for h in p["hosts"])):
+        fail(f"{w}: hosts 若写必须是字符串数组（主考院校以 offerings.hosts 为准，plan 级只在计划间确有差异时写）")
     if p.get("source_files") is not None and not isinstance(p["source_files"], list):
         fail(f"{w}: source_files 必须是数组（证据文件名）")
     for k in ("total_credits", "required_credits"):
@@ -285,7 +314,7 @@ def plan_check(p: dict, w: str, pid: str, majors, courses, books, plan_ids: set[
             fail(f"{cw}: 本计划内课程重复")
         codes.add(code)
         if code not in courses:
-            fail(f"{cw}: 课程代码不在 courses.json（先登记课程库）")
+            fail(f"{cw}: 课程代码不在课程库（content/courses/*.json）（先登记课程库）")
         elif c.get("name") != courses[code].get("name") and c.get("name") not in courses[code].get("aliases", []):
             fail(f"{cw}: 名称 {c.get('name')!r} 与课程库 {courses[code].get('name')!r} 不一致（不同写法登记为 aliases）")
         if not isinstance(c.get("credits"), (int, float)) or c["credits"] < 0:
@@ -295,7 +324,7 @@ def plan_check(p: dict, w: str, pid: str, majors, courses, books, plan_ids: set[
         if c.get("exam") not in EXAM:
             fail(f"{cw}: exam 只能是 unified/provincial/host/null")
         if c.get("textbook") is not None and c["textbook"] not in books:
-            fail(f"{cw}: 教材 {c['textbook']!r} 不在 textbooks.json")
+            fail(f"{cw}: 教材 {c['textbook']!r} 不在教材库（content/textbooks/*.json）")
         if c.get("pair") is not None and c["pair"] not in codes_all:
             fail(f"{cw}: pair {c['pair']!r} 不在本计划课程里")
         if c.get("pair") is not None and c.get("category") != "practice":

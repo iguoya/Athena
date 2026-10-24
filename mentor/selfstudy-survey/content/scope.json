@@ -1,27 +1,331 @@
 {
-  "_": "调查范围（ADR 0186 决策 2）。classes 是专业类，majors 是专业：code 为教育部《普通高等学校本科专业目录》代码，tier 为 core（核心）/ edge（边缘，只收各省实际开考的作对照）。0806 电气类以强电为主，不在范围。catalog 记录目录代码的核对状态：目录代码首批按公开目录登记，波 B 采集时由 zcode 对照教育部目录原文逐个核对，核对前 catalog.verified 为 false。采集中遇到目录里没有的自设方向，登记在 offerings 的 track，不新造专业代码。",
+  "_": "调查范围（ADR 0186 决策 2）：目录中属于 0807 电子信息类、0809 计算机类的专业全部在范围内（core）；0808 自动化类全部收录作对照（edge）；0806 电气类以强电为主，不收。code 为教育部《普通高等学校本科专业目录（2026 年）》代码，专业代码后 T＝特设专业、K＝国家控制布点。绝大多数专业自考并未开考，开设矩阵里没有开考记录的格子显示「待查」，核实不开设的写 status none 并挂各省开考专业总表为依据。采集中遇到目录里没有的自设方向，登记在 offerings 的 track，不新造专业代码。",
   "schema": 1,
   "updated": "2026-10-24",
-  "catalog": { "name": "普通高等学校本科专业目录", "verified": false },
+  "catalog": {
+    "name": "普通高等学校本科专业目录（2026年）",
+    "verified": true,
+    "source": "https://iepi.ncepu.edu.cn/docs/2026-09/7c881c700a0047c98a5a566c284f665e.pdf",
+    "note": "教育部 2026 年 4 月文件，取自高校网站转载的全文 PDF；与教育部官网 2025 年版（http://www.moe.gov.cn/srcsite/A08/moe_1034/s4930/202504/W020250422312780837078.pdf）逐项比对，2026 年版在 0807 类新增 080723TK 半导体工艺与装备，其余同 2025 年版",
+    "date": "2026-10-24"
+  },
   "classes": [
-    { "code": "0809", "name": "计算机类", "tier": "core" },
-    { "code": "0807", "name": "电子信息类", "tier": "core" },
-    { "code": "0808", "name": "自动化类", "tier": "edge" }
+    {
+      "code": "0809",
+      "name": "计算机类",
+      "tier": "core"
+    },
+    {
+      "code": "0807",
+      "name": "电子信息类",
+      "tier": "core"
+    },
+    {
+      "code": "0808",
+      "name": "自动化类",
+      "tier": "edge"
+    }
   ],
   "majors": [
-    { "code": "080901", "name": "计算机科学与技术", "class": "0809", "tier": "core" },
-    { "code": "080902", "name": "软件工程", "class": "0809", "tier": "core" },
-    { "code": "080903", "name": "网络工程", "class": "0809", "tier": "core" },
-    { "code": "080904K", "name": "信息安全", "class": "0809", "tier": "core" },
-    { "code": "080905", "name": "物联网工程", "class": "0809", "tier": "core" },
-    { "code": "080910T", "name": "数据科学与大数据技术", "class": "0809", "tier": "core" },
-    { "code": "080911TK", "name": "网络空间安全", "class": "0809", "tier": "core" },
-    { "code": "080701", "name": "电子信息工程", "class": "0807", "tier": "core" },
-    { "code": "080702", "name": "电子科学与技术", "class": "0807", "tier": "core" },
-    { "code": "080703", "name": "通信工程", "class": "0807", "tier": "core" },
-    { "code": "080714T", "name": "电子信息科学与技术", "class": "0807", "tier": "core" },
-    { "code": "080717T", "name": "人工智能", "class": "0807", "tier": "core" },
-    { "code": "080710T", "name": "集成电路设计与集成系统", "class": "0807", "tier": "core" },
-    { "code": "080801", "name": "自动化", "class": "0808", "tier": "edge" }
+    {
+      "code": "080901",
+      "name": "计算机科学与技术",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080902",
+      "name": "软件工程",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080903",
+      "name": "网络工程",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080904K",
+      "name": "信息安全",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080905",
+      "name": "物联网工程",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080906",
+      "name": "数字媒体技术",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080907T",
+      "name": "智能科学与技术",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080908T",
+      "name": "空间信息与数字技术",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080909T",
+      "name": "电子与计算机工程",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080910T",
+      "name": "数据科学与大数据技术",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080911TK",
+      "name": "网络空间安全",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080912T",
+      "name": "新媒体技术",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080913T",
+      "name": "电影制作",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080914TK",
+      "name": "保密技术",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080915T",
+      "name": "服务科学与工程",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080916T",
+      "name": "虚拟现实技术",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080917T",
+      "name": "区块链工程",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080918TK",
+      "name": "密码科学与技术",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080919T",
+      "name": "工业软件",
+      "class": "0809",
+      "tier": "core"
+    },
+    {
+      "code": "080701",
+      "name": "电子信息工程",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080702",
+      "name": "电子科学与技术",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080703",
+      "name": "通信工程",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080704",
+      "name": "微电子科学与工程",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080705",
+      "name": "光电信息科学与工程",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080706",
+      "name": "信息工程",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080707T",
+      "name": "广播电视工程",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080708T",
+      "name": "水声工程",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080709T",
+      "name": "电子封装技术",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080710T",
+      "name": "集成电路设计与集成系统",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080711T",
+      "name": "医学信息工程",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080712T",
+      "name": "电磁场与无线技术",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080713T",
+      "name": "电波传播与天线",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080714T",
+      "name": "电子信息科学与技术",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080715T",
+      "name": "电信工程及管理",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080716T",
+      "name": "应用电子技术教育",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080717T",
+      "name": "人工智能",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080718T",
+      "name": "海洋信息工程",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080719T",
+      "name": "柔性电子学",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080720T",
+      "name": "智能测控工程",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080721T",
+      "name": "智能视觉工程",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080722T",
+      "name": "智能视听工程",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080723TK",
+      "name": "半导体工艺与装备",
+      "class": "0807",
+      "tier": "core"
+    },
+    {
+      "code": "080801",
+      "name": "自动化",
+      "class": "0808",
+      "tier": "edge"
+    },
+    {
+      "code": "080802T",
+      "name": "轨道交通信号与控制",
+      "class": "0808",
+      "tier": "edge"
+    },
+    {
+      "code": "080803T",
+      "name": "机器人工程",
+      "class": "0808",
+      "tier": "edge"
+    },
+    {
+      "code": "080804T",
+      "name": "邮政工程",
+      "class": "0808",
+      "tier": "edge"
+    },
+    {
+      "code": "080805T",
+      "name": "核电技术与控制工程",
+      "class": "0808",
+      "tier": "edge"
+    },
+    {
+      "code": "080806T",
+      "name": "智能装备与系统",
+      "class": "0808",
+      "tier": "edge"
+    },
+    {
+      "code": "080807T",
+      "name": "工业智能",
+      "class": "0808",
+      "tier": "edge"
+    },
+    {
+      "code": "080808T",
+      "name": "智能工程与创意设计",
+      "class": "0808",
+      "tier": "edge"
+    }
   ]
 }
