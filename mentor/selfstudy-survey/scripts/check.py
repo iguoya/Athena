@@ -253,8 +253,8 @@ def check_data() -> None:
                 check_verify(o.get("verify"), f"{w}.verify", {"pending"})
             else:
                 check_verify(o.get("verify"), f"{w}.verify", need_real=True)
-                if o.get("status") == "open" and o.get("verify", {}).get("level") != "report" and not o.get("hosts"):
-                    fail(f"{w}: 开考且来源可靠时必须写主考院校 hosts")
+                if o.get("status") == "open" and o.get("verify", {}).get("level") != "report" and not o.get("hosts")                         and "主考院校待查" not in str(o.get("verify", {}).get("note", "")):
+                    fail(f"{w}: 开考且来源可靠时必须写主考院校 hosts；确实查不到的在 verify.note 写「主考院校待查」")
             for ref in o.get("plans", []) or []:
                 lp = local_plans.get(ref)
                 if lp is None:
