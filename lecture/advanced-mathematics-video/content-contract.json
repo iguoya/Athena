@@ -1,0 +1,22 @@
+{
+  "_": "跨应用「内容必须有出处」检查的接入声明（主仓库 ADR 0043、0089）。本应用对应真实考试，档位 exam（ADR 0185 决策 10）；判分题的题源是应用级硬门禁：只收 verbatim/adapted，locator 写「P<分集> <mm:ss>」且必须落在字幕里讲师讲到的位置，authored 不入库。跨应用检查不扫 lecture/，阻断由本应用 scripts/check.py 执行，这里 blocking=true 表达同样的语义。",
+  "tier": "exam",
+  "contentDir": "content",
+  "sourceField": "source_refs",
+  "relationField": "relation",
+  "sourceIdField": "source_id",
+  "locatorFields": [
+    "locator"
+  ],
+  "urlFields": [
+    "url"
+  ],
+  "whyFields": [
+    "note"
+  ],
+  "itemMarkers": [
+    "stem"
+  ],
+  "blocking": true,
+  "legacyUnsourced": []
+}

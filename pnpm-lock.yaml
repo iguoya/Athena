@@ -648,58 +648,6 @@ importers:
         specifier: 'catalog:'
         version: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)
 
-  lecture/chen-linear-algebra-mooc:
-    dependencies:
-      '@athena/app-update':
-        specifier: 'workspace:'
-        version: link:../../packages/app-update
-      '@fontsource/noto-sans-sc':
-        specifier: 'catalog:'
-        version: 5.3.1
-      '@tauri-apps/api':
-        specifier: 'catalog:'
-        version: 2.12.3
-      '@tauri-apps/plugin-process':
-        specifier: 'catalog:'
-        version: 2.4.0
-      '@tauri-apps/plugin-updater':
-        specifier: 'catalog:'
-        version: 2.13.3
-      katex:
-        specifier: ^0.18.2
-        version: 0.18.11
-      lucide-react:
-        specifier: 'catalog:'
-        version: 1.55.0(@types/react@19.3.0)(react@19.3.0)
-      react:
-        specifier: 'catalog:'
-        version: 19.3.0
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.3.0(react@19.3.0)
-    devDependencies:
-      '@tauri-apps/cli':
-        specifier: 'catalog:'
-        version: 2.12.2
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.3.0
-      '@types/react-dom':
-        specifier: 'catalog:'
-        version: 19.3.0(@types/react@19.3.0)
-      '@vitejs/plugin-react':
-        specifier: 'catalog:'
-        version: 6.1.2(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0))
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-      vite:
-        specifier: 'catalog:'
-        version: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)
-
   guide/gtkmm:
     dependencies:
       '@athena/app-update':
@@ -972,7 +920,59 @@ importers:
         specifier: 'catalog:'
         version: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)
 
-  lecture/weng-c-programming:
+  launcher/webui:
+    dependencies:
+      '@athena/app-update':
+        specifier: 'workspace:'
+        version: link:../../packages/app-update
+      '@react-three/drei':
+        specifier: 'catalog:'
+        version: 10.7.9(@react-three/fiber@9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.182.0))(@types/react@19.3.0)(@types/three@0.182.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.182.0)
+      '@react-three/fiber':
+        specifier: 'catalog:'
+        version: 9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.182.0)
+      '@tauri-apps/api':
+        specifier: 'catalog:'
+        version: 2.12.3
+      '@tauri-apps/plugin-process':
+        specifier: 'catalog:'
+        version: 2.4.0
+      '@tauri-apps/plugin-updater':
+        specifier: 'catalog:'
+        version: 2.13.3
+      react:
+        specifier: 'catalog:'
+        version: 19.3.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.0(react@19.3.0)
+      three:
+        specifier: 'catalog:'
+        version: 0.182.0
+    devDependencies:
+      '@tauri-apps/cli':
+        specifier: 'catalog:'
+        version: 2.12.2
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.3.0(@types/react@19.3.0)
+      '@types/three':
+        specifier: 'catalog:'
+        version: 0.182.0
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 6.1.2(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0))
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vite:
+        specifier: 'catalog:'
+        version: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)
+
+  lecture/advanced-mathematics-video:
     dependencies:
       '@athena/app-update':
         specifier: 'workspace:'
@@ -1024,17 +1024,14 @@ importers:
         specifier: 'catalog:'
         version: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)
 
-  launcher/webui:
+  lecture/chen-linear-algebra-mooc:
     dependencies:
       '@athena/app-update':
         specifier: 'workspace:'
         version: link:../../packages/app-update
-      '@react-three/drei':
+      '@fontsource/noto-sans-sc':
         specifier: 'catalog:'
-        version: 10.7.9(@react-three/fiber@9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.182.0))(@types/react@19.3.0)(@types/three@0.182.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.182.0)
-      '@react-three/fiber':
-        specifier: 'catalog:'
-        version: 9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.182.0)
+        version: 5.3.1
       '@tauri-apps/api':
         specifier: 'catalog:'
         version: 2.12.3
@@ -1044,15 +1041,18 @@ importers:
       '@tauri-apps/plugin-updater':
         specifier: 'catalog:'
         version: 2.13.3
+      katex:
+        specifier: ^0.18.2
+        version: 0.18.11
+      lucide-react:
+        specifier: 'catalog:'
+        version: 1.55.0(@types/react@19.3.0)(react@19.3.0)
       react:
         specifier: 'catalog:'
         version: 19.3.0
       react-dom:
         specifier: 'catalog:'
         version: 19.3.0(react@19.3.0)
-      three:
-        specifier: 'catalog:'
-        version: 0.182.0
     devDependencies:
       '@tauri-apps/cli':
         specifier: 'catalog:'
@@ -1063,12 +1063,116 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
-      '@types/three':
-        specifier: 'catalog:'
-        version: 0.182.0
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 6.1.2(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0))
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vite:
+        specifier: 'catalog:'
+        version: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)
+
+  lecture/linear-algebra-video:
+    dependencies:
+      '@athena/app-update':
+        specifier: 'workspace:'
+        version: link:../../packages/app-update
+      '@fontsource/noto-sans-sc':
+        specifier: 'catalog:'
+        version: 5.3.1
+      '@tauri-apps/api':
+        specifier: 'catalog:'
+        version: 2.12.3
+      '@tauri-apps/plugin-process':
+        specifier: 'catalog:'
+        version: 2.4.0
+      '@tauri-apps/plugin-updater':
+        specifier: 'catalog:'
+        version: 2.13.3
+      katex:
+        specifier: ^0.18.2
+        version: 0.18.11
+      lucide-react:
+        specifier: 'catalog:'
+        version: 1.55.0(@types/react@19.3.0)(react@19.3.0)
+      react:
+        specifier: 'catalog:'
+        version: 19.3.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.0(react@19.3.0)
+    devDependencies:
+      '@tauri-apps/cli':
+        specifier: 'catalog:'
+        version: 2.12.2
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.3.0(@types/react@19.3.0)
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 6.1.2(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0))
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vite:
+        specifier: 'catalog:'
+        version: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)
+
+  lecture/weng-c-programming:
+    dependencies:
+      '@athena/app-update':
+        specifier: 'workspace:'
+        version: link:../../packages/app-update
+      '@fontsource/noto-sans-sc':
+        specifier: 'catalog:'
+        version: 5.3.1
+      '@tauri-apps/api':
+        specifier: 'catalog:'
+        version: 2.12.3
+      '@tauri-apps/plugin-process':
+        specifier: 'catalog:'
+        version: 2.4.0
+      '@tauri-apps/plugin-updater':
+        specifier: 'catalog:'
+        version: 2.13.3
+      katex:
+        specifier: ^0.18.2
+        version: 0.18.11
+      lucide-react:
+        specifier: 'catalog:'
+        version: 1.55.0(@types/react@19.3.0)(react@19.3.0)
+      react:
+        specifier: 'catalog:'
+        version: 19.3.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.0(react@19.3.0)
+    devDependencies:
+      '@tauri-apps/cli':
+        specifier: 'catalog:'
+        version: 2.12.2
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.3.0(@types/react@19.3.0)
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 6.1.2(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0))
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
