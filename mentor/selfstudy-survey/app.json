@@ -1,0 +1,57 @@
+{
+ "id": "selfstudy-survey",
+ "title": "自考专业调查",
+ "group": "自考",
+ "description": "自考专业调查：2025–2026 年全国各省计算机类、电子信息类自考本科的开设格局、主考院校、课程计划、实践环节与参考教材，可跨省比较。数据逐条带来源与核对日期，查不到的如实标待查。只供查阅，不教课。",
+ "icon": {
+  "type": "theme",
+  "name": "view-list-symbolic",
+  "symbol": "fact_check",
+  "letter": "查",
+  "accent": "#2E6B5E",
+  "file": "icon.svg",
+  "renders": {
+   "src-tauri/icons/32x32.png": 32,
+   "src-tauri/icons/128x128.png": 128,
+   "src-tauri/icons/128x128@2x.png": 256,
+   "src-tauri/icons/icon.png": 512,
+   "src-tauri/icons/icon.ico": "ico",
+   "src-tauri/icons/icon.icns": "icns",
+   "src-tauri/icons/StoreLogo.png": 50,
+   "src-tauri/icons/Square30x30Logo.png": 30,
+   "src-tauri/icons/Square44x44Logo.png": 44,
+   "src-tauri/icons/Square71x71Logo.png": 71,
+   "src-tauri/icons/Square89x89Logo.png": 89,
+   "src-tauri/icons/Square107x107Logo.png": 107,
+   "src-tauri/icons/Square142x142Logo.png": 142,
+   "src-tauri/icons/Square150x150Logo.png": 150,
+   "src-tauri/icons/Square284x284Logo.png": 284,
+   "src-tauri/icons/Square310x310Logo.png": 310
+  }
+ },
+ "dev": {
+  "env": {
+   "ATHENA_SELFSTUDY_SURVEY_ROOT": "${dir}"
+  },
+  "prepare": [
+   {
+    "when_missing": "node_modules",
+    "run": [
+     "pnpm",
+     "install"
+    ],
+    "label": "安装前端依赖"
+   }
+  ],
+  "run": [
+   "pnpm",
+   "run",
+   "tauri:dev"
+  ],
+  "ready": {
+   "http": "http://localhost:1535"
+  },
+  "match": "src-tauri/target",
+  "binary": "athena-selfstudy-survey"
+ }
+}

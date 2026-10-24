@@ -1,0 +1,27 @@
+{
+  "_": "调查范围（ADR 0186 决策 2）。classes 是专业类，majors 是专业：code 为教育部《普通高等学校本科专业目录》代码，tier 为 core（核心）/ edge（边缘，只收各省实际开考的作对照）。0806 电气类以强电为主，不在范围。catalog 记录目录代码的核对状态：目录代码首批按公开目录登记，波 B 采集时由 zcode 对照教育部目录原文逐个核对，核对前 catalog.verified 为 false。采集中遇到目录里没有的自设方向，登记在 offerings 的 track，不新造专业代码。",
+  "schema": 1,
+  "updated": "2026-10-24",
+  "catalog": { "name": "普通高等学校本科专业目录", "verified": false },
+  "classes": [
+    { "code": "0809", "name": "计算机类", "tier": "core" },
+    { "code": "0807", "name": "电子信息类", "tier": "core" },
+    { "code": "0808", "name": "自动化类", "tier": "edge" }
+  ],
+  "majors": [
+    { "code": "080901", "name": "计算机科学与技术", "class": "0809", "tier": "core" },
+    { "code": "080902", "name": "软件工程", "class": "0809", "tier": "core" },
+    { "code": "080903", "name": "网络工程", "class": "0809", "tier": "core" },
+    { "code": "080904K", "name": "信息安全", "class": "0809", "tier": "core" },
+    { "code": "080905", "name": "物联网工程", "class": "0809", "tier": "core" },
+    { "code": "080910T", "name": "数据科学与大数据技术", "class": "0809", "tier": "core" },
+    { "code": "080911TK", "name": "网络空间安全", "class": "0809", "tier": "core" },
+    { "code": "080701", "name": "电子信息工程", "class": "0807", "tier": "core" },
+    { "code": "080702", "name": "电子科学与技术", "class": "0807", "tier": "core" },
+    { "code": "080703", "name": "通信工程", "class": "0807", "tier": "core" },
+    { "code": "080714T", "name": "电子信息科学与技术", "class": "0807", "tier": "core" },
+    { "code": "080717T", "name": "人工智能", "class": "0807", "tier": "core" },
+    { "code": "080710T", "name": "集成电路设计与集成系统", "class": "0807", "tier": "core" },
+    { "code": "080801", "name": "自动化", "class": "0808", "tier": "edge" }
+  ]
+}

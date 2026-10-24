@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  selfstudy-survey（自考专业调查）的应用图标：一块带引脚的芯片，中间是对勾核对符号——计算机/电子信息类专业，逐条核对。
+  墨绿与沙金，与界面令牌同源。本应用自绘，无第三方素材。
+  改完跑 `launcher icons` 重新生成 app.json 里 icon.renders 声明的位图（主仓库 ADR 0065 三处同源）。
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#F6F4EE"/>
+  <!-- 引脚 -->
+  <g stroke="#2E6B5E" stroke-width="22" stroke-linecap="round">
+    <line x1="176" y1="64" x2="176" y2="112"/><line x1="256" y1="64" x2="256" y2="112"/><line x1="336" y1="64" x2="336" y2="112"/>
+    <line x1="176" y1="400" x2="176" y2="448"/><line x1="256" y1="400" x2="256" y2="448"/><line x1="336" y1="400" x2="336" y2="448"/>
+    <line x1="64" y1="176" x2="112" y2="176"/><line x1="64" y1="256" x2="112" y2="256"/><line x1="64" y1="336" x2="112" y2="336"/>
+    <line x1="400" y1="176" x2="448" y2="176"/><line x1="400" y1="256" x2="448" y2="256"/><line x1="400" y1="336" x2="448" y2="336"/>
+  </g>
+  <!-- 芯片本体 -->
+  <rect x="112" y="112" width="288" height="288" rx="36" fill="#2E6B5E"/>
+  <!-- 核对符号 -->
+  <polyline points="184,262 236,314 332,200" fill="none" stroke="#C8A45E" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
