@@ -80,8 +80,8 @@ def check_verify(v, where: str, allowed: set[str] = LEVELS, need_real: bool = Fa
         if v.get("source") or v.get("date"):
             fail(f"{where}: pending 不该带 source/date")
         return
-    if not str(v.get("source", "")).startswith("https://"):
-        fail(f"{where}: 需要 https 来源")
+    if not str(v.get("source", "")).startswith(("https://", "http://")):
+        fail(f"{where}: 需要 http(s) 来源")  # 部分省考试院只提供 http，不强求 https
     d = str(v.get("date", ""))
     if not DATE.match(d):
         fail(f"{where}: verify.date 必须是 YYYY-MM-DD")
@@ -205,8 +205,8 @@ def check_data() -> None:
         else:
             if not auth.get("name"):
                 fail(f"{where}.authority: 缺 name")
-            if auth.get("url") is not None and not str(auth["url"]).startswith("https://"):
-                fail(f"{where}.authority: url 只收 https")
+            if auth.get("url") is not None and not str(auth["url"]).startswith(("https://", "http://")):
+                fail(f"{where}.authority: url 只收 http(s)")
         portal = d.get("selfstudy_portal")
         if portal is not None:
             if not str(portal.get("url", "")).startswith("https://") and not str(portal.get("url", "")).startswith("http://"):
