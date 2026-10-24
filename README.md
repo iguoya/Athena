@@ -58,6 +58,7 @@
 | [`mentor/competitions`](mentor/competitions) | 赛历（竞赛清单与参赛资格，图谱/参考类，ADR 0114、0144） | Tauri 2 + Vite |
 | [`mentor/jiuzhou`](mentor/jiuzhou) | 九州（中国历史地理图鉴，「兴趣」圈，ADR 0156） | Tauri 2 + React + MapLibre |
 | [`mentor/mathematics-compass`](mentor/mathematics-compass) | 数学罗盘（数学学习导引，「数学」圈，ADR 0174） | Tauri 2 + React |
+| [`mentor/selfstudy-survey`](mentor/selfstudy-survey) | 自考专业调查（各省计算机、电子信息类自考本科调查，「自考」圈，ADR 0186） | Tauri 2 + React |
 | [`programming/design-patterns`](programming/design-patterns) | 设计模式与程序组织（「程序设计」圈，ADR 0121） | Tauri 2 + Vite |
 | [`practice/pocket_cube`](practice/pocket_cube) | 2 阶魔方（旧版，供参考；新版见 pocket-cube-solver） | GTK4 / gtkmm |
 | [`practice/nas_admin`](practice/nas_admin) | 驾考中心服务后台 | Flask-AppBuilder |

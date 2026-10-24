@@ -57,7 +57,8 @@ lecture/<id>/   视频课（ADR 0184）：以一套外部视频课为底本、�
                 advanced-mathematics-video、linear-algebra-video（自考高数、线代视频课，先动笔再核对，「自考」圈，ADR 0185）
 mentor/<id>/    导师类（图谱/参考类）：polaris（路线图与指南针）、competitions（「大赛」圈的赛历，
                 ADR 0114）、jiuzhou（「兴趣」圈的九州历史地理图鉴，ADR 0156）、
-                mathematics-compass（数学罗盘，数学学习导引，「数学」圈，ADR 0174）；
+                mathematics-compass（数学罗盘，数学学习导引，「数学」圈，ADR 0174）、
+                selfstudy-survey（自考专业调查，各省计算机、电子信息类自考本科调查，「自考」圈，ADR 0186）；
                 给方向和查阅依据，不教课、不建进度库（ADR 0144）
 practice/<id>/  项目应用：pocket_cube nas_admin c-gui-lab（ADR 0060）、earth（真实比例的
                 地球分层 3D 可视化，自 subjects/ 迁入，ADR 0128）、cpp（旧 gtkmm 窗口，ADR 0141）

@@ -71,6 +71,7 @@ mentor/<id>/   导师类（图谱/参考类）：给方向和查阅依据，不�
   competitions/  赛历（Tauri 2 + Vite）——「大赛」圈的竞赛清单，图谱/参考类，不是学习应用（ADR 0114）
   jiuzhou/       九州（Tauri 2 + React + MapLibre）——中国历史地理图鉴，「兴趣」圈，图谱/参考类（ADR 0156）
   mathematics-compass/ 数学罗盘（Tauri 2 + React）——数学学习导引：五个数学学习应用的推荐路径、学习目的、要点与取舍（ADR 0174）
+  selfstudy-survey/ 自考专业调查（Tauri 2 + React）——2025–2026 年各省计算机、电子信息类自考本科的开设、课程、实践、教材调查，「自考」圈，图谱/参考类（ADR 0186）
 guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，章节结构与编号以原书为准（ADR 0143）
   gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）——《Programming with gtkmm 4》全量翻译为编排基准
   selinger-linear-algebra/  Selinger《Linear Algebra: A First Course》按考研数学二线代考纲裁剪的精读（Tauri 2 + React，「数学」圈，ADR 0162）
@@ -162,6 +163,7 @@ archive/       历史归档，不参与构建
 | `linear-algebra` | 线性代数（自考，「自考」圈，ADR 0175） | `athena-linear-algebra` | `linalg.` |
 | `advanced-mathematics` | 高等数学（工本）（「自考」圈，ADR 0175） | `athena-advanced-mathematics` | `advmath.` |
 | `mathematics-compass` | 数学罗盘（「数学」圈，ADR 0174） | `athena-mathematics-compass` | （无进度库） |
+| `selfstudy-survey` | 自考专业调查（「自考」圈，ADR 0186） | `athena-selfstudy-survey` | （无进度库） |
 
 `driver` 是机动车理论考试，不是设备驱动；Dart 包名仍是 `athena_driver`（包名不能有连字符）。
 C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。进程和发行包文件名是
@@ -187,7 +189,8 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   **图谱/参考类应用**：仍受「独立应用」一节的平级、隔离、`app.json` 启动规则约束，
   但**不**掌握度、不进度库、不激励——「跨应用教学规范」一节对它不生效，具体规则
   以它自己的 `AGENTS.md` 为准。当前：`polaris`、`competitions`（赛历，ADR 0114）、
-  `jiuzhou`（九州，ADR 0156，「兴趣」圈）、`mathematics-compass`（数学罗盘，数学学习导引，ADR 0174）
+  `jiuzhou`（九州，ADR 0156，「兴趣」圈）、`mathematics-compass`（数学罗盘，数学学习导引，ADR 0174）、
+  `selfstudy-survey`（自考专业调查，「自考」圈，ADR 0186）
   住在 `mentor/`（ADR 0144）；
   `math-tools` 是数学学习的配套工具，目录在 `tools/math-tools`（ADR 0146）。
   地球分层可视化 `earth` 由使用者迁到 `practice/earth`（ADR 0128 补记）；预期后期迁入「兴趣」圈（ADR 0156）。
