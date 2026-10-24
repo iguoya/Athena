@@ -3,7 +3,8 @@ import type { Go } from "./nav";
 import type { PlanCourse } from "./types";
 import { Empty, Section, StatusChip, VerifyBadge } from "./ui";
 
-const CAT_ORDER = ["public", "required", "basic", "core", "elective", "practice", "graduation"];
+const PLAN_STATE = { current: "现行", legacy: "旧计划（过渡期可考）", upcoming: "待生效", superseded: "已被取代" };
+const CAT_ORDER = ["public", "required", "basic", "core", "elective", "topup", "practice", "graduation"];
 
 interface Row {
   code: string;
@@ -122,7 +123,7 @@ export function Majors({ major, province, go }: { major?: string; province?: str
                       <th key={plan.id} className={p.id === province ? "hl" : ""}>
                         {p.name.slice(0, 2)}
                         <small>
-                          {plan.host}
+                          {plan.hosts.join("、")}
                           {plan.track ? `·${plan.track}` : ""}
                           <br />
                           {plan.version}
@@ -183,7 +184,7 @@ export function Majors({ major, province, go }: { major?: string; province?: str
             <ul className="plain">
               {plans.map(({ province: p, plan }) => (
                 <li key={plan.id}>
-                  {p.name} · {plan.host} · {plan.version}（{plan.state === "current" ? "现行" : plan.state === "upcoming" ? "待生效" : "旧版"}）{" "}
+                  {p.name} · {plan.hosts.join("、")} · {plan.version}（{PLAN_STATE[plan.state]}）{" "}
                   <VerifyBadge v={plan.verify} />
                 </li>
               ))}

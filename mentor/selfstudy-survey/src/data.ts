@@ -67,6 +67,7 @@ export const STATUS_LABEL: Record<OfferStatus, string> = {
 export const CATEGORY_LABEL: Record<string, string> = {
   public: "公共课",
   required: "必考",
+  topup: "加考",
   basic: "专业基础",
   core: "专业核心",
   elective: "选考",

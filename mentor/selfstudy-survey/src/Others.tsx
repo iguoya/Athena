@@ -136,7 +136,7 @@ export function Practice({ go }: { go: Go }) {
             {grads.map(({ province, plan }) => (
               <li key={plan.id}>
                 <b>
-                  {province.name} · {majorName(plan.major)} · {plan.host}
+                  {province.name} · {majorName(plan.major)} · {plan.hosts.join("、")}
                 </b>
                 ：{plan.graduation!.thesis ? "有毕业设计（论文）" : "无毕业设计（论文）"}
                 {plan.graduation!.credits ? `，${plan.graduation!.credits} 学分` : ""}。{plan.graduation!.note ?? ""}

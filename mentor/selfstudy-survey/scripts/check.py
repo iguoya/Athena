@@ -34,15 +34,15 @@ PROVINCES = [
 LEVELS = {"official", "notice", "report", "pending"}
 HARD_LEVELS = {"official", "notice"}  # 课程表、政策只收这两级
 STATUS = {"open", "stopped", "upcoming", "none", "pending"}
-CATEGORY = {"public", "basic", "core", "required", "elective", "practice", "graduation"}
+CATEGORY = {"public", "basic", "core", "required", "elective", "topup", "practice", "graduation"}
 EXAM = {"unified", "provincial", "host", None}
-PLAN_STATE = {"current", "superseded", "upcoming"}
+PLAN_STATE = {"current", "legacy", "upcoming", "superseded"}
 COURSE_KIND = {"theory", "practice", "mixed", "graduation"}
 TEXTBOOK_KIND = {"national", "host", "provincial", "other", None}  # None＝来源未标明教材性质
 EVENT_KIND = {"new-plan", "stop", "code-change", "policy", "other"}
 DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 MONTH_OR_DATE = re.compile(r"^\d{4}-\d{2}(-\d{2})?$")
-SESSION = re.compile(r"^\d{4}-(01|04|07|10)$")
+SESSION = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
 COURSE_CODE = re.compile(r"^\d{5}$")
 PLAN_ID = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)+$")
 BANNED = ("TODO", "待补", "占位", "FIXME")
@@ -194,7 +194,7 @@ def check_data() -> None:
         for c in d.get("calendar", []):
             w = f"{where}.calendar[{c.get('session')}]"
             if not SESSION.match(str(c.get("session", ""))):
-                fail(f"{w}: session 必须是 YYYY-01/04/07/10")
+                fail(f"{w}: session 必须是 YYYY-MM")
             if c.get("session") in seen_sessions:
                 fail(f"{w}: 考期重复")
             seen_sessions.add(c.get("session"))
@@ -263,9 +263,12 @@ def plan_check(p: dict, w: str, pid: str, majors, courses, books, plan_ids: set[
         fail(f"{w}: 专业 {p.get('major')!r} 不在 scope.json")
     if p.get("state") not in PLAN_STATE:
         fail(f"{w}: state 只能是 {sorted(PLAN_STATE)}")
-    for k in ("host", "version"):
-        if not str(p.get(k, "")).strip():
-            fail(f"{w}: {k} 不能为空（版本看不出写「未标注」）")
+    if not str(p.get("version", "")).strip():
+        fail(f"{w}: version 不能为空（版本看不出写「未标注」）")
+    if not (isinstance(p.get("hosts"), list) and p["hosts"] and all(isinstance(h, str) and h for h in p["hosts"])):
+        fail(f"{w}: hosts 必须是非空字符串数组（计划全省唯一时列出全部主考院校）")
+    if p.get("source_files") is not None and not isinstance(p["source_files"], list):
+        fail(f"{w}: source_files 必须是数组（证据文件名）")
     for k in ("total_credits", "required_credits"):
         v = p.get(k)
         if v is not None and not (isinstance(v, (int, float)) and v >= 0):

@@ -173,7 +173,7 @@ for major, p in PLANS.items():
     total = sum(c["credits"] for c in crow)
     assert total == p["ver_total"], (major, total)
     plans.append({
-        "id": p["id"], "major": major, "track": None, "host": p["hosts"],
+        "id": p["id"], "major": major, "track": None, "hosts": p["hosts"].split("、"),
         "version": f"{p['doc']}，思政课按粤考委〔2024〕5号调整",
         "effective": p["effective"], "state": "current",
         "total_credits": total, "required_credits": total,

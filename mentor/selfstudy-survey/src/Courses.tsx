@@ -82,7 +82,7 @@ export function Courses({ course, go }: { course?: string; go: Go }) {
                               {majorName(plan.major)}
                             </button>
                           </td>
-                          <td>{plan.host}</td>
+                          <td>{plan.hosts.join("、")}</td>
                           <td>{c.credits}</td>
                           <td>{CATEGORY_LABEL[c.category]}</td>
                           <td>{c.exam ? EXAM_LABEL[c.exam] : "—"}</td>

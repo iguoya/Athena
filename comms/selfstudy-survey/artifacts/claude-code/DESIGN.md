@@ -25,6 +25,8 @@
 | `report` | 第三方自考网转载（edu-edu、zikao365、自考本科网等） | **只能作线索**，不能单独写进 `plans`；开设矩阵里可写 `status` 但 `verify.level` 必须是 report，界面会标「待官方核对」 |
 | `pending` | 没查过 | 不得带 source/date |
 
+`verify.date` 就抄证据文件头的 `fetched`（同一天）；证据文件头的 `sha256` 定义为「去掉 `sha256:` 那一行后其余全部字节的哈希」，可复现。每省证据目录放一个 `index.md`：证据文件 → 覆盖了哪些字段，抽查直接按它回原文，**抽查以快照为准、不以线上为准**（页面会改版）。
+
 规则：
 - 非 `pending` 的条目必须有 `https` 来源和 `YYYY-MM-DD` 核对日期（抓取当日）。
 - **绝不凭印象、凭邻省、凭往年推断补空**。同一个专业同一个省，页面上看不出是 2025 版还是 2026 版的，要写进 `note`，并把 `version` 写「未标注」。
@@ -67,7 +69,7 @@ provinces/<id>.json   zcode    一个省一个文件：考试院、考期、政�
   "id": "guangdong",
   "name": "广东省",
   "authority": { "name": "广东省教育考试院", "url": "https://…", "verify": V },   // 自考主管机构与入口页
-  "calendar": [                                                                   // 2025-04 … 2026-10 每个考期一条
+  "calendar": [                                                                   // 2025-04 起至 2026-10 的现行安排，一省有几个考期写几条（广东有 1 月，江苏有 1/7 月）
     { "session": "2026-04", "exam": "2026-04-11~12", "register": "2026-03-01~03-10", "note": "", "verify": V }
   ],
   "policy": {                                                                     // 每项独立 verify；查不到整项 null
@@ -99,13 +101,13 @@ provinces/<id>.json   zcode    一个省一个文件：考试院、考期、政�
 
 ```jsonc
 {
-  "id": "gd-080901-scut-2021",       // 省前缀-专业-主考院校简称-版本，全局唯一
+  "id": "gd-080901-2026",            // 省前缀-专业-版本，全局唯一；计划全省统一时一省一专业一份，主考院校间计划确有差异才拆多份并在 id 里加院校简称
   "major": "080901",
   "track": null,
-  "host": "华南理工大学",
+  "hosts": ["华南理工大学", "广东外语外贸大学"],   // 主考院校，全省统一的计划列出全部
   "version": "2021版",                // 页面标明的版本；看不出写「未标注」
   "effective": "2021-04",            // 生效考期，不明写 null
-  "state": "current",                // current 现行 | superseded 已被新计划取代但仍有考生在考 | upcoming
+  "state": "current",                // current 现行 | legacy 旧计划（过渡期内仍可报考/考完，与新计划并存时两份都写，用 events 说明切换）| upcoming 已公布未生效 | superseded 已完全取代只留档
   "total_credits": 73,               // 计划规定的总学分（含公共课），不明写 null
   "required_credits": 73,            // 毕业最低学分，不明写 null；与 total 不同时在 rules 解释
   "rules": "选考门数与学分要求的原话要点",
@@ -114,9 +116,9 @@ provinces/<id>.json   zcode    一个省一个文件：考试院、考期、政�
       "code": "15040",
       "name": "习近平新时代中国特色社会主义思想概论",   // 与 courses.json 的 name 一致；该计划里写法不同，放 alias
       "credits": 3,
-      "category": "public",          // public 公共课 | basic 专业基础 | core 专业核心 | elective 选考 | practice 独立实践课 | graduation 毕业环节
+      "category": "public",          // public 公共课 | required 必考（计划未细分基础/核心时用）| basic 专业基础 | core 专业核心 | elective 选考 | topup 加考（专科不对口须加考的课）| practice 实践课（理论课配套的实践课行带 pair=理论课代码）| graduation 毕业环节
       "elective_group": null,        // 选考组名，必考为 null
-      "exam": "unified",             // unified 全国统考 | provincial 省统考 | host 主考院校命题 | null 不明
+      "exam": null,                  // unified | provincial | host；省级课程表通常不标，页面没写就 null，不靠课程代码反推
       "practice": null,              // 课程内含实践考核时：{"type": "上机|实验|设计|项目", "credits": 1, "note": ""}
       "textbook": "tb-xxxxxx",       // textbooks.json 的 id；不明 null
       "note": ""
@@ -127,6 +129,7 @@ provinces/<id>.json   zcode    一个省一个文件：考试院、考期、政�
     "credits": 0,
     "note": "毕业设计（07999），不计学分，由主考院校组织答辩"
   },
+  "source_files": ["gd602026.txt"],   // 可选：计划原文在证据目录里的文件名，便于抽查直接定位
   "verify": V                         // level 只能是 official / notice
 }
 ```
@@ -215,4 +218,15 @@ leader 维护，zcode 不改。`scope.json` 列出专业类（`0807`、`0808`、
 
 ## 修订
 
-（待 T-001 反馈后追加）
+- 2026-10-24（采纳 zcode 评审 REVIEW.md）：
+  1. 考期不固定四个，一省有几个写几条（`session` 为 `YYYY-MM`）。
+  2. 新增 `topup`（加考）类别；新增计划 `state: legacy`（过渡期旧计划）。
+  3. 计划全省统一：`host` 改 `hosts[]`，id 去掉院校简称（有差异才拆）。
+  4. `exam` 接受大面积 null，不反推。
+  5. `verify.date` 抄 `fetched`；sha256 定义与每省证据 `index.md`；抽查以快照为准；计划可挂 `source_files`。
+  6. `status: none` 的核实依据强制挂「全省开考专业总表」URL（广东即 2026 年 4、10 月课程表）。
+  7. 波 A 与波 B 合并采集（同一批页面，数据仍分层写）；波 D 先采教育部教育考试院的全国统考教材目录，再逐省补省编/院校教材。
+  8. 实践视图保留（数据已有广东实践课行单列代码，不薄），若采集后仍薄再并入专业详情。
+  9. 新增 `required`（必考，计划未细分基础/核心时用）与实践课行 `pair`（广东实践课与理论课各有课程代码、学分）。
+- 经验（leader 的广东试点）：省考试院「新开考专业通知」「专业调整通知」「年度开考课程与教材通知」三类公告的 PDF 附件基本能覆盖计划、课程、教材、主考院校；
+  官方站点需带浏览器 User-Agent 才能下载 PDF；第三方自考网证书过期等问题不要绕过，改找官方 PDF。

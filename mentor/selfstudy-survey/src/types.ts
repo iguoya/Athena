@@ -11,7 +11,7 @@ export interface Verify {
 }
 
 export type OfferStatus = "open" | "stopped" | "upcoming" | "none" | "pending";
-export type Category = "public" | "basic" | "core" | "required" | "elective" | "practice" | "graduation";
+export type Category = "public" | "basic" | "core" | "required" | "elective" | "topup" | "practice" | "graduation";
 export type ExamKind = "unified" | "provincial" | "host" | null;
 
 export interface TextItem {
@@ -74,10 +74,11 @@ export interface Plan {
   id: string;
   major: string;
   track: string | null;
-  host: string;
+  hosts: string[];
   version: string;
   effective: string | null;
-  state: "current" | "superseded" | "upcoming";
+  state: "current" | "legacy" | "upcoming" | "superseded";
+  source_files?: string[];
   total_credits: number | null;
   required_credits: number | null;
   rules?: string;
