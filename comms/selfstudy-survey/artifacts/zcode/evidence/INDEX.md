@@ -41,3 +41,17 @@
 | jiangsu/jseea-7196401301607944192.html | 25235 | 6ad4e9eb5a157ffb… |
 | sichuan/sce-080701-2025.docx | 374010 | 9d19194adf949fab… |
 | sichuan/sce-080901-2025.docx | 407441 | e9204fbfe68a7aee… |
+
+## 2026-10-31 核实轮补抓（zcode）
+
+sha256 按 DESIGN 定义：文件去掉 `sha256:` 那一行后其余全部字节的哈希（与上表「文件原样字节」口径不同）。
+
+| 文件 | 字节 | sha256 |
+|---|---|---|
+| qinghai/qh_5706_notice.txt | 5756 | 4611729a754121be… |
+| shandong/sd-6367-notice.txt | 9745 | fe363678e0dfd152… |
+| shandong/sd-7094-notice.txt | 10707 | 2e98381be842eb8a… |
+| shandong/sd-7204-notice.txt | 10149 | f4b1fe3396c2da38… |
+| xinjiang/xj-494952-page.txt | 3180 | b5725c550b7936ec… |
+| guangdong/gd-post_4641808-yuekaowei-2024-5.html.txt | 7052 | 4f1115a25758c4fc… |
+
