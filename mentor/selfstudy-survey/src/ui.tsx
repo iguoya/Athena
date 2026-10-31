@@ -50,8 +50,10 @@ export function StatusChip({ s }: { s: OfferStatus }) {
   return <span className={`chip chip-${s}`}>{STATUS_LABEL[s]}</span>;
 }
 
+// 「还没有数据」的占位提示。这类提示都表示信息未确定（不是「没有」），统一加问号前缀，
+// 与已核实条目（VerifyBadge 带来源链接）形成一眼可辨的对照。
 export function Empty({ children }: { children: ReactNode }) {
-  return <div className="empty">{children}</div>;
+  return <div className="empty">? {children}</div>;
 }
 
 export function Section({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {

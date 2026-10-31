@@ -76,7 +76,7 @@ export const STATUS_LABEL: Record<OfferStatus, string> = {
   stopped: "停考",
   upcoming: "新计划",
   none: "未开设",
-  pending: "待查",
+  pending: "? 待查",
 };
 
 export const CATEGORY_LABEL: Record<string, string> = {
@@ -93,8 +93,8 @@ export const CATEGORY_LABEL: Record<string, string> = {
 export const LEVEL_LABEL: Record<string, string> = {
   official: "官方原文",
   notice: "官方发布",
-  report: "第三方线索",
-  pending: "待核对",
+  report: "? 第三方线索",
+  pending: "? 待核对",
 };
 
 export const EXAM_LABEL: Record<string, string> = {

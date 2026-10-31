@@ -14,12 +14,23 @@ const POLICY_LABEL: [keyof Province["policy"], string][] = [
   ["exemption", "免考与互认"],
 ];
 
-function PolicyRow({ label, item }: { label: string; item: TextItem | null }) {
+function PolicyRow({ label, item, go }: { label: string; item: TextItem | null; go: Go }) {
   return (
     <tr>
       <th>{label}</th>
-      <td>{item ? item.text : <span className="muted">待查</span>}</td>
-      <td>{item ? <VerifyBadge v={item.verify} /> : null}</td>
+      <td>
+        {item ? (
+          item.text
+        ) : (
+          <span className="muted">
+            ? 未取得——
+            <button className="link" onClick={() => go({ view: "verify" })}>
+              见待人工核实
+            </button>
+          </span>
+        )}
+      </td>
+      <td>{item ? <VerifyBadge v={item.verify} /> : "?"}</td>
     </tr>
   );
 }
@@ -91,7 +102,7 @@ export function Provinces({ province, go }: { province?: string; go: Go }) {
           <table className="tbl kv">
             <tbody>
               {POLICY_LABEL.map(([k, label]) => (
-                <PolicyRow key={k} label={label} item={p.policy[k]} />
+                <PolicyRow key={k} label={label} item={p.policy[k]} go={go} />
               ))}
             </tbody>
           </table>

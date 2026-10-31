@@ -5,7 +5,7 @@ import { Section } from "./ui";
 import type { OfferStatus } from "./types";
 
 const LEGEND: OfferStatus[] = ["open", "upcoming", "stopped", "none", "pending"];
-const SYMBOL: Record<OfferStatus, string> = { open: "●", upcoming: "◐", stopped: "▼", none: "—", pending: "·" };
+const SYMBOL: Record<OfferStatus, string> = { open: "●", upcoming: "◐", stopped: "▼", none: "—", pending: "?" };
 
 export function Overview({ go }: { go: Go }) {
   const [cls, setCls] = useState<string>("all");
