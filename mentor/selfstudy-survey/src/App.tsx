@@ -5,6 +5,7 @@ import { VIEWS, type Route } from "./nav";
 import { Events, Method, Practice, Textbooks } from "./Others";
 import { Overview } from "./Overview";
 import { Provinces } from "./Provinces";
+import { Verify } from "./Verify";
 
 export default function App() {
   const [route, setRoute] = useState<Route>({ view: "overview" });
@@ -40,6 +41,7 @@ export default function App() {
         {route.view === "textbooks" && <Textbooks go={go} />}
         {route.view === "practice" && <Practice go={go} />}
         {route.view === "events" && <Events go={go} />}
+        {route.view === "verify" && <Verify go={go} />}
         {route.view === "method" && <Method go={go} />}
       </main>
     </div>

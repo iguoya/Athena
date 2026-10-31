@@ -6,6 +6,7 @@ export type ViewId =
   | "textbooks"
   | "practice"
   | "events"
+  | "verify"
   | "method";
 
 export interface Route {
@@ -25,5 +26,6 @@ export const VIEWS: { id: ViewId; label: string; hint: string }[] = [
   { id: "textbooks", label: "教材", hint: "指定教材与版次" },
   { id: "practice", label: "实践环节", hint: "实践考核与毕业设计" },
   { id: "events", label: "变动", hint: "新旧计划与停考" },
+  { id: "verify", label: "待人工核实", hint: "查不到的缺口，请帮忙确认" },
   { id: "method", label: "方法与来源", hint: "核对规则与覆盖率" },
 ];

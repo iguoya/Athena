@@ -2,10 +2,12 @@
 // 省份文件一省一份，glob 引入；缺文件不会报错，所以覆盖率在界面上如实显示，而不是在这里兜底。
 import scopeJson from "../content/scope.json";
 import athenaJson from "../content/athena-map.json";
+import pendingJson from "../content/pending.json";
 import type {
   CourseInfo,
   Offering,
   OfferStatus,
+  PendingDoc,
   Plan,
   Province,
   Scope,
@@ -13,6 +15,7 @@ import type {
 } from "./types";
 
 export const scope = scopeJson as unknown as Scope;
+export const pending = pendingJson as unknown as PendingDoc;
 // 课程库与教材库按成员分文件存放（两个代理并行采集，同一个 JSON 会读改写互相覆盖），读取时合并。
 const courseFiles = import.meta.glob("../content/courses/*.json", { eager: true, import: "default" });
 const textbookFiles = import.meta.glob("../content/textbooks/*.json", { eager: true, import: "default" });

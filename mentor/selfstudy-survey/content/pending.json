@@ -1,0 +1,231 @@
+{
+  "_": "待人工核实清单（2026-10-31 zcode 核实轮整理）。本轮已完成：40 个来源 URL 全部复核可达；15 个已入库省对照证据快照逐条核对（发现并修正湖南 080802T 误标未开设、新疆毕业办理时间语义、青海山东广西三处来源指向，青海 49 条「未逐项核对」已落实为已核对）。本清单列出的是代理查不到或未取证、需要人用浏览器（或打电话）确认的缺口：每一项写明缺什么、试过什么渠道、建议怎么查。核实后请把结论与来源（截图、PDF、网址）发给协作舱 zcode（comms/selfstudy-survey），或直接在对话里转告，由采集方回写数据并注明来源与日期。",
+  "schema": 1,
+  "updated": "2026-10-31",
+  "groups": [
+    {
+      "id": "human",
+      "label": "需要人工核实",
+      "desc": "代理已到渠道边界：官网反爬（412）、附件未公开、或需要逐页翻 PDF。有人帮忙打开真浏览器确认一次，数据就能落定。"
+    },
+    {
+      "id": "todo",
+      "label": "采集排期中",
+      "desc": "不是查不到，是还没轮到：协作采集按波次推进（基线 → 开设矩阵 → 课程计划 → 教材）。列出以如实展示缺口，无需人工介入；愿意帮忙查考试院入口当然更快。"
+    }
+  ],
+  "items": [
+    {
+      "id": "gansu-portal",
+      "group": "human",
+      "province": "gansu",
+      "priority": "high",
+      "scope": "authority、calendar、policy、offerings 全部",
+      "title": "甘肃省教育考试院官网整站打不开（412 反爬），基线信息缺",
+      "detail": "缺：2026 年下半年报考简章（甘教考自〔2026〕3号，含考试日期与开考专业）、开考专业总表、报考条件/毕业/学位/免考四项政策、主考院校。目前甘肃只有从靖远县政府网转载的「网报须知」核出的报名缴费时间与一个事件。",
+      "tried": "www.ganseea.cn 与报名平台 kw.ganseea.cn 用程序直连和抓取通道均被 WAF 挡回 412，需要真浏览器。",
+      "howto": "浏览器打开 https://www.ganseea.cn/，进「自学考试」栏目：①找《2026 年下半年高等教育自学考试报考简章》（甘教考自〔2026〕3号）；②找开考专业目录/专业总表；③报考须知、毕业申请、免考办法通知。下载 PDF 或复制链接发回即可。"
+    },
+    {
+      "id": "henan-baseline",
+      "group": "human",
+      "province": "henan",
+      "priority": "high",
+      "scope": "offerings.hosts、policy、calendar、开考专业总表",
+      "title": "河南省：6 个开考专业的主考院校、全部政策、报名与考期信息缺",
+      "detail": "河南 2026 上半年考试日程表已核出 6 个范围内专业开考（计算机科学与技术、软件工程、电子科学与技术、电子信息工程等，一个专业对应多个省内原代码），但日程表不含主考学校；报考条件/毕业/学位/免考四项政策全空；2026-04 报名时间未取得；2026-10 考期日程未采；其余 44 个专业是否开设未核。",
+      "tried": "河南省教育考试院附件（haeea.cn）可下载，但考生服务平台 zkwb.haeea.cn 与主站对程序请求返回 412；官网内未搜到主考院校一览表。",
+      "howto": "浏览器打开 https://www.haeea.cn/ 自学考试栏目：①「专业考试计划」或「主考院校」类通知（河南省自考本科各专业主考学校一览）；②2026 年 4 月考试报名通知（报名时间）；③2026 下半年考试日程安排 PDF；④报考须知/毕业/学位/免考规定。"
+    },
+    {
+      "id": "hunan-080802t-plan",
+      "group": "human",
+      "province": "hunan",
+      "priority": "medium",
+      "scope": "080802T 轨道交通信号与控制的课程计划",
+      "title": "湖南 080802T（中南大学，助学型）开考已确认，课程计划未逐行取证",
+      "detail": "zcode 核实轮把该专业从「未开设」更正为「开考」（依据 2026 年 10 月报考简章附表 1 序号 31、附表 3★、10 月课程安排表 10 门课程），但 2024 版课程计划的逐门课程/学分还没有取证，未建计划条目。",
+      "tried": "湘教考自字〔2024〕6号附件（86 个专业计划）已抽文本，其中 080802T 页未入库。",
+      "howto": "打开 https://jyt.hunan.gov.cn/jyt/sjyt/hnsjyksy/web/ksyzkzx/202412/t20241202_33515314.html 的附件《湖南省高等教育自学考试专业考试计划（2024年版）》，翻到 080802T 轨道交通信号与控制（专升本），抄录课程表（或截图）。"
+    },
+    {
+      "id": "hunan-textbooks",
+      "group": "human",
+      "province": "hunan",
+      "priority": "medium",
+      "scope": "textbooks 7 条版次",
+      "title": "湖南 7 门课程的教材版次无当次目录对照",
+      "detail": "08244、08241、13237、13009、14263、13247、13958 七门课的教材条目已入库（含版次），但当次（2026-10）教材目录没有这些课（当次未开考），版次无从与官方目录对照。",
+      "tried": "2026 年 10 月课程安排与教材表已全查，无这 7 门。",
+      "howto": "找湖南省 2025 年 4 月 / 2025 年 10 月 / 2026 年 4 月任一期《开考课程安排及教材目录》（jyt.hunan.gov.cn 或 hneeb.cn 自考栏目），对照这 7 门课的教材版次是否一致。"
+    },
+    {
+      "id": "hunan-april-count",
+      "group": "human",
+      "province": "hunan",
+      "priority": "low",
+      "scope": "offerings none 判定的旁证",
+      "title": "「湖南 2026 年 4 月开考 96 个专业」的 4 月侧无快照附表",
+      "detail": "10 月侧已验证（附表 1+2 去重 96），4 月报考简章的附表没有入库，「4 月同样 96 个专业」只依据通知正文文字。",
+      "tried": "已有 4 月考期报名/考试时间快照，附表未含。",
+      "howto": "打开湖南省 2026 年 4 月报考简章（hneeb.cn 自考栏目），清点附表开考专业数是否 96。"
+    },
+    {
+      "id": "guizhou-attachment",
+      "group": "human",
+      "province": "guizhou",
+      "priority": "low",
+      "scope": "events 的附件证据",
+      "title": "贵州 43 专业调整通知的附件（345 页 PDF）未入库",
+      "detail": "变动记录末句「附件调整列表中无 0807/0809 类专业」是核对结论，但调整列表附件本身没有存档；贵州的报考条件、毕业规定也缺（现有 2024 调整通知只覆盖学位咨询与免考顶替）。",
+      "tried": "通知页（zsksy.guizhou.gov.cn）已核，附件大未下载。",
+      "howto": "打开 http://zsksy.guizhou.gov.cn/zxks/ksjh/202404/t20240410_84187881.html 下载附件，检索 0807/0808/0809 开头的专业代码；顺带找贵州报考简章补报考条件与毕业规定。"
+    },
+    {
+      "id": "yunnan-portal",
+      "group": "human",
+      "province": "yunnan",
+      "priority": "low",
+      "scope": "selfstudy_portal",
+      "title": "云南自考管理平台网址未经打开核实",
+      "detail": "zk.ynzs.cn（云南省高等教育自学考试管理平台）的名称与网址取自搜索结果标题，域名属考试院但页面没有打开看过。",
+      "tried": "程序请求未能确认该平台可达性。",
+      "howto": "浏览器打开 http://zk.ynzs.cn/，确认页面标题与用途（报名/成绩/转考平台）。"
+    },
+    {
+      "id": "policy-qinghai",
+      "group": "human",
+      "province": "qinghai",
+      "priority": "medium",
+      "scope": "policy.entry、policy.exemption",
+      "title": "青海缺：报考条件、课程免考规定",
+      "detail": "毕业与学位已有（2026 上半年成绩发布及毕业申请通告），报考的基本条件（专科前置、跨专业加考）与免考办法未取得。",
+      "tried": "来源页 qhjyks.com/ztzl/zxksz/5706.htm 与《专业考试计划》PDF 均已核，未含这两项。",
+      "howto": "qhjyks.com 自学考试专题找「报名报考简章」「课程免考」通知；青海省《高等教育自学考试免考课程实施细则》类文件。"
+    },
+    {
+      "id": "policy-chongqing",
+      "group": "human",
+      "province": "chongqing",
+      "priority": "medium",
+      "scope": "policy.graduate、policy.degree、policy.exemption",
+      "title": "重庆缺：毕业规定、学位条件、免考办法",
+      "detail": "报名须知（2026-07-24）只覆盖报考环节；毕业审定、学士学位授予、免考三项未取得。",
+      "tried": "cqksy.cn 报名须知已核，未含。",
+      "howto": "cqksy.cn 自学考试栏目找「毕业审定工作通知」「免考办理」；学位条件查主考院校（如重庆大学、重庆邮电大学）继续教育学院官网。"
+    },
+    {
+      "id": "policy-guizhou",
+      "group": "human",
+      "province": "guizhou",
+      "priority": "medium",
+      "scope": "policy.entry、policy.graduate",
+      "title": "贵州缺：报考条件、毕业规定",
+      "detail": "学位与免考顶替已有（2024 调整通知），报考基本条件与毕业审定要求未取得。",
+      "tried": "现有来源（调整通知）未含这两项。",
+      "howto": "zsksy.guizhou.gov.cn 自考栏目找「报名报考简章」「毕业审查/毕业申请通知」。"
+    },
+    {
+      "id": "policy-xizang",
+      "group": "human",
+      "province": "xizang",
+      "priority": "medium",
+      "scope": "policy.graduate、policy.exemption",
+      "title": "西藏缺：毕业规定、免考办法",
+      "detail": "报考条件与学位归属已有（报名公告），毕业审定流程与免考未取得。",
+      "tried": "来源页 zsks.edu.xizang.gov.cn 报名公告已核，未含。",
+      "howto": "zsks.edu.xizang.gov.cn 自考栏目找「毕业审定」「课程免考」通知。"
+    },
+    {
+      "id": "policy-shaanxi",
+      "group": "human",
+      "province": "shaanxi",
+      "priority": "medium",
+      "scope": "policy.graduate、policy.degree、policy.exemption",
+      "title": "陕西缺：毕业规定、学位条件、免考办法",
+      "detail": "报考条件已有（2026 报名通知）；毕业、学位、免考三项未取得。",
+      "tried": "sneea.cn 的课程安排与报名通知已核，未含这三项。",
+      "howto": "sneea.cn（陕西省教育考试院）自考栏目找「毕业审定」「免考细则」；学位条件查西北工业大学、西安电子科技大学等主考院校继教院。"
+    },
+    {
+      "id": "policy-ningxia",
+      "group": "human",
+      "province": "ningxia",
+      "priority": "medium",
+      "scope": "policy.degree、policy.exemption",
+      "title": "宁夏缺：学位条件、免考办法",
+      "detail": "报考条件与毕业审定已有（报考通告、毕业审定通告）；学位与免考未取得。",
+      "tried": "nxzsks.cn 两份通告已核，未含。",
+      "howto": "nxzsks.cn 自考栏目找「免考课程实施办法」；学位条件查宁夏大学继续教育学院。"
+    },
+    {
+      "id": "policy-guangdong",
+      "group": "human",
+      "province": "guangdong",
+      "priority": "medium",
+      "scope": "policy.exemption",
+      "title": "广东缺：课程免考规定",
+      "detail": "报考、毕业、学位三项已有（粤考委文件与报考须知）；免考办法未取得。",
+      "tried": "eea.gd.gov.cn 已核文件未含免考细则。",
+      "howto": "eea.gd.gov.cn 自考栏目找「高等教育自学考试课程免考」规定（广东省自考课程免考暂行规定类文件）。"
+    },
+    {
+      "id": "policy-hunan",
+      "group": "human",
+      "province": "hunan",
+      "priority": "medium",
+      "scope": "policy.degree",
+      "title": "湖南缺：学士学位授予条件",
+      "detail": "报考、毕业、免考顶替已有（2024 版计划通知与报考须知）；学位授予条件未取得（湖南学位由各主考院校自行规定）。",
+      "tried": "现有通知未含；「课程免考顶替办法」附件已入库。",
+      "howto": "查主考院校（中南大学、湘潭大学、长沙理工大学等）继续教育学院官网的「自学考试本科毕业生学士学位申请」通知。"
+    },
+    {
+      "id": "policy-shandong",
+      "group": "human",
+      "province": "shandong",
+      "priority": "medium",
+      "scope": "policy.entry、policy.exemption",
+      "title": "山东缺：报考条件、课程免考规定",
+      "detail": "毕业环节归属与学位咨询已有（计划调整通知与三十问）；报考基本条件与免考细则未取得。",
+      "tried": "sdzk.cn 已核通知未含这两项。",
+      "howto": "sdzk.cn 自考栏目找「报名报考条件」「课程免考实施细则」通知。"
+    },
+    {
+      "id": "collect-baseline-16",
+      "group": "todo",
+      "priority": "high",
+      "provinces": [
+        "beijing", "tianjin", "hebei", "shanxi", "neimenggu", "liaoning", "jilin",
+        "heilongjiang", "shanghai", "jiangsu", "zhejiang", "anhui", "fujian",
+        "jiangxi", "hubei", "sichuan"
+      ],
+      "scope": "authority、calendar、policy、offerings",
+      "title": "16 个省的基线与开设矩阵尚未采集",
+      "detail": "北京、天津、河北、山西、内蒙古、辽宁、吉林、黑龙江、上海、江苏、浙江、安徽、福建、江西、湖北、四川。这 16 省在总览矩阵里全部显示「待查」，是采集波次（T-002，16 省基线与开设矩阵）正在进行的工作，不是查不到。",
+      "tried": "未开始。",
+      "howto": "由 zcode 按波次采集；如愿意帮忙，各省教育考试院官网的「自学考试」栏目入口与年度开考课程表最有用。"
+    },
+    {
+      "id": "collect-matrix-small",
+      "group": "todo",
+      "priority": "high",
+      "provinces": ["hainan", "chongqing", "guizhou", "xizang", "ningxia", "gansu", "yunnan"],
+      "scope": "offerings 开设矩阵",
+      "title": "7 个省的开设矩阵未采或只采了个别专业",
+      "detail": "海南、重庆、贵州、西藏、宁夏、甘肃还没有任何开设记录（矩阵全「待查」）；云南只核了 080901 一个专业；河南只有 6 条开考记录、其余专业与「未开设」结论未核。",
+      "tried": "这些省的基线（考试院入口、考期或政策）已有，开设总表/课程表文件未取得。",
+      "howto": "由 zcode 按波次采集：各省年度《开考专业课程安排表》或《报考简章》是判定「开设/不开设」的一手依据。"
+    },
+    {
+      "id": "collect-textbooks",
+      "group": "todo",
+      "priority": "medium",
+      "scope": "textbooks、课程行教材引用",
+      "title": "123 门已入库课程还没挂教材（教材波次未完成）",
+      "detail": "山东 13、湖南 27、广东 24、广西 20、青海 20、云南 19 门课程的 textbook 为空。其中云南官方明确「教材于当次考试发布报考简章时公布」，需要逐期简章补。",
+      "tried": "各省现行教材目录已采的部分已入库（教材库现有 91 本）。",
+      "howto": "由 zcode 按教材波次采集；有当期《自学考试教材目录》PDF 或纸质书版权页可拍照对照。"
+    }
+  ]
+}

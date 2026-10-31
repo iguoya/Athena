@@ -138,3 +138,25 @@ export interface Textbook {
   outline?: string;
   verify: Verify;
 }
+
+// 待人工核实清单（content/pending.json）：代理查不到或未取证、需要人确认的缺口，
+// 与按波次推进的采集排期，分组列出。字段含义以文件内 "_" 说明为准。
+export interface PendingItem {
+  id: string;
+  group: "human" | "todo";
+  province?: string;
+  provinces?: string[];
+  priority?: "high" | "medium" | "low";
+  scope?: string;
+  title: string;
+  detail?: string;
+  tried?: string;
+  howto?: string;
+}
+
+export interface PendingDoc {
+  schema: number;
+  updated: string;
+  groups: { id: string; label: string; desc: string }[];
+  items: PendingItem[];
+}

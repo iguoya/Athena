@@ -336,6 +336,38 @@ def plan_check(p: dict, w: str, pid: str, majors, courses, books, plan_ids: set[
         fail(f"{w}: 计划没有课程行")
 
 
+def check_pending() -> None:
+    """待人工核实清单（content/pending.json）：结构、分组与省份引用。"""
+    path = CONTENT / "pending.json"
+    d = load(path)
+    if d is None:
+        return
+    if d.get("schema") != 1:
+        fail("pending: schema 应为 1")
+    if not DATE.match(str(d.get("updated", ""))):
+        fail("pending: updated 必须是 YYYY-MM-DD")
+    groups = {g.get("id") for g in d.get("groups", [])}
+    if len(groups) != len(d.get("groups", [])):
+        fail("pending: groups id 重复")
+    seen: set[str] = set()
+    for it in d.get("items", []):
+        w = f"pending[{it.get('id')}]"
+        if not it.get("id") or it["id"] in seen:
+            fail(f"{w}: id 缺失或重复")
+        seen.add(it.get("id"))
+        if it.get("group") not in groups:
+            fail(f"{w}: group {it.get('group')!r} 不在 groups")
+        if not str(it.get("title", "")).strip():
+            fail(f"{w}: title 不能为空")
+        if it.get("priority") not in {"high", "medium", "low", None}:
+            fail(f"{w}: priority 只能是 high/medium/low")
+        provs = it.get("provinces") or ([it["province"]] if it.get("province") else [])
+        for pid in provs:
+            if pid not in PROVINCES:
+                fail(f"{w}: 省份 {pid!r} 不在省 id 集合")
+    print(f"待人工核实清单 {len(seen)} 项（human {sum(1 for i in d.get('items', []) if i.get('group') == 'human')}）")
+
+
 def run(cmd: list[str], step: str) -> None:
     print(f"== {step}", flush=True)
     exe = shutil.which(cmd[0])
@@ -357,6 +389,7 @@ def main() -> int:
     args = ap.parse_args()
     check_identity()
     check_data()
+    check_pending()
     if not ERRORS and not args.data_only:
         if not (ROOT / "node_modules").is_dir():
             run(["pnpm", "install"], "安装前端依赖")
