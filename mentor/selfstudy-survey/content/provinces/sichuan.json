@@ -1,22 +1,700 @@
 {
-  "schema": 1,
-  "id": "sichuan",
-  "name": "四川省",
-  "authority": {
-    "name": null,
-    "url": null,
-    "verify": {
-      "level": "pending"
+ "schema": 1,
+ "id": "sichuan",
+ "name": "四川省",
+ "authority": {
+  "name": "四川省教育考试院",
+  "url": "https://www.sceea.cn/Html/ZXKS.html",
+  "verify": {
+   "level": "official",
+   "source": "https://www.sceea.cn/Html/ZXKS.html",
+   "date": "2026-11-02"
+  }
+ },
+ "selfstudy_portal": {
+  "name": "四川省高等教育自学考试系统（自学考试系统）",
+  "url": "https://zk.sceea.cn/",
+  "verify": {
+   "level": "official",
+   "source": "https://www.sceea.cn/Html/202608/Newsdetail_4929.html",
+   "date": "2026-11-02",
+   "note": "注册、报考、免试申请均在此系统"
+  }
+ },
+ "calendar": [
+  {
+   "session": "2025-04",
+   "exam": "2025-04-12~13",
+   "note": "251 次（2025 上半年）报考通告",
+   "verify": {
+    "level": "official",
+    "source": "https://www.sceea.cn/Html/202502/Newsdetail_4145.html",
+    "date": "2026-11-02"
+   }
+  },
+  {
+   "session": "2026-10",
+   "exam": "2026-10-24~25",
+   "note": "262 次（2026 下半年）报考通告；2025-10（252 次）与 2026-04（261 次）的官方通告原文未定位到，留空待采",
+   "verify": {
+    "level": "official",
+    "source": "https://www.sceea.cn/Html/202608/Newsdetail_4929.html",
+    "date": "2026-11-02"
+   }
+  }
+ ],
+ "policy": {
+  "entry": {
+   "text": "凡长期在四川省居住和工作的中华人民共和国公民（含港澳台同胞），不受性别、年龄、民族、信仰、职业和已受教育程度的限制，均可注册报考。社会型专业一个身份证只能注册一个准考证号，可报考当次开考的所有社会型专业课程；应用型专业最多可注册一个应用型专科及一个应用型专升本准考证，注册及报考事宜咨询主考学校。注册与报考在自学考试系统（zk.sceea.cn）进行。",
+   "verify": {
+    "level": "official",
+    "source": "https://www.sceea.cn/Html/202608/Newsdetail_4929.html",
+    "date": "2026-11-02",
+    "note": "2026 下半年报考通告一·新生注册"
+   }
+  },
+  "graduate": {
+   "text": "专升本专业课程门数不少于 14 门（不包括毕业论文、毕业设计），总学分（不包括毕业论文、毕业设计的学分数）不低于 73 学分；各专业均设 15040 习近平新时代中国特色社会主义思想概论并纳入毕业条件。过渡期内未毕业在籍考生已合格课程按衔接表顶替，成绩全部合格后按新计划申请毕业。",
+   "verify": {
+    "level": "official",
+    "source": "https://www.sceea.cn/Html/202507/Newsdetail_4372.html",
+    "date": "2026-11-02",
+    "note": "2025 版计划通告一、二；完整毕业条件表述未在已采文本中出现"
+   }
+  },
+  "degree": null,
+  "exemption": {
+   "text": "课程免试分四个类型：自学考试毕业证书类（2005-06-30 以后四川省自考毕业证凭身份证办理；更早或外省自考毕业证须学信网可查毕业证书与标识免试课程的成绩档案）、其他学历证书类（毕业证须学信网可查，附标注免试课程的成绩档案；结业/肄业证书须本科及以上）、非学历证书类（中国教育考试网可查实的笔试成绩报告单或合格证书）和其他类型。免试审定费 8 元/科（川发改价格〔2022〕484号）。",
+   "verify": {
+    "level": "official",
+    "source": "https://www.sceea.cn/Html/202609/Newsdetail_4958.html",
+    "date": "2026-11-02",
+    "note": "2026 下半年课程免试通告；办理时间以每期通告为准（每年 4 次）"
+   }
+  }
+ },
+ "offerings": [
+  {
+   "major": "080901",
+   "track": null,
+   "status": "open",
+   "hosts": [],
+   "plans": [
+    "sc-080901-2025"
+   ],
+   "local_code": "H080901 / W080901",
+   "mode": "社会型（H 码，面向社会）与应用型（W 码，高校助学）双轨，课程设置共用 2025 版计划",
+   "complete": {
+    "courses": true,
+    "credits": true,
+    "textbook": false
+   },
+   "matched_by": "2025 版计划正文直接使用国标专业代码，衔接表标注 H（社会型）/W（应用型）省码",
+   "verify": {
+    "level": "official",
+    "source": "https://www.sceea.cn/FileUpload/file/ZXKSshx.pdf",
+    "date": "2026-11-02",
+    "note": "主考院校待查（汇编不载主考；社会型专业主考学校与应用型各主考高校名单未采集）"
+   }
+  },
+  {
+   "major": "080701",
+   "track": null,
+   "status": "open",
+   "hosts": [],
+   "plans": [
+    "sc-080701-2025"
+   ],
+   "local_code": "H080701 / W080701",
+   "mode": "社会型（H 码，面向社会）与应用型（W 码，高校助学）双轨，课程设置共用 2025 版计划",
+   "complete": {
+    "courses": true,
+    "credits": true,
+    "textbook": false
+   },
+   "matched_by": "2025 版计划正文直接使用国标专业代码，衔接表标注 H（社会型）/W（应用型）省码",
+   "verify": {
+    "level": "official",
+    "source": "https://www.sceea.cn/FileUpload/file/ZXKSshx.pdf",
+    "date": "2026-11-02",
+    "note": "主考院校待查（汇编不载主考；社会型专业主考学校与应用型各主考高校名单未采集）"
+   }
+  }
+ ],
+ "plans": [
+  {
+   "id": "sc-080701-2025",
+   "major": "080701",
+   "track": null,
+   "hosts": null,
+   "version": "《四川省高等教育自学考试社会型专业考试计划汇编（2025版）》",
+   "effective": "2025-10",
+   "state": "current",
+   "total_credits": 85,
+   "required_credits": 85,
+   "rules": "2025 年版计划（2025 年 7 月公布），2025 年 10 月起全面执行；2023 年 10 月至 2025 年 9 月为新旧计划过渡期，旧计划课程按《对应衔接表》顶替（对应顶替 1 门顶 1 门、选择顶替区自主选择，不得跨专业顶替；2025 年 9 月起注册的新生直接按新计划报考）。新计划专升本不少于 14 门（不含毕业论文、毕业设计）、总学分不低于 73 学分（不含毕业论文学分），各专业均设 15040 并纳入毕业条件。合计学分为官方原表「合计」栏（含毕业考核 10 学分，不含加考课程）。教材：笔试课程使用教材以省教育考试院当次考试公布为准，本轮未采集课程级教材表，各行教材暂空。 选考组（不考 00023 者）：09097 数学思想与方法（4）、05826 数学思考与问题解决（4）、03216 数学文化（4）、11153 数学史与数学方法论（5）、04222 信息管理概论（6）、02117 信息组织（6）、03298 创新思维理论与方法（6），选考学分不低于 10 学分。衔接：旧 B080738（社会型）→H080701、Y080738（应用型）→W080701。",
+   "courses": [
+    {
+     "code": "13000",
+     "name": "英语（专升本）",
+     "credits": 7,
+     "category": "public",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": "不考英语（专升本）者加考 06737、10397"
+    },
+    {
+     "code": "00023",
+     "name": "高等数学（工本）",
+     "credits": 10,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": "不考者从选考组选不低于 10 学分"
+    },
+    {
+     "code": "14026",
+     "name": "模拟电子技术",
+     "credits": 4,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "14027",
+     "name": "模拟电子技术",
+     "credits": 1,
+     "category": "practice",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": "14026",
+     "note": ""
+    },
+    {
+     "code": "14260",
+     "name": "数字电路与逻辑设计",
+     "credits": 4,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "14261",
+     "name": "数字电路与逻辑设计",
+     "credits": 1,
+     "category": "practice",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": "14260",
+     "note": ""
+    },
+    {
+     "code": "02354",
+     "name": "信号与系统",
+     "credits": 4,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "02355",
+     "name": "信号与系统",
+     "credits": 1,
+     "category": "practice",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": "02354",
+     "note": ""
+    },
+    {
+     "code": "15040",
+     "name": "习近平新时代中国特色社会主义思想概论",
+     "credits": 3,
+     "category": "public",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "15043",
+     "name": "中国近现代史纲要",
+     "credits": 3,
+     "category": "public",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "15044",
+     "name": "马克思主义基本原理",
+     "credits": 3,
+     "category": "public",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "02363",
+     "name": "通信原理",
+     "credits": 4,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "08947",
+     "name": "电路分析",
+     "credits": 3,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "08948",
+     "name": "电路分析",
+     "credits": 1,
+     "category": "practice",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": "08947",
+     "note": ""
+    },
+    {
+     "code": "01447",
+     "name": "信息技术应用",
+     "credits": 6,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "13011",
+     "name": "人工智能与大数据",
+     "credits": 6,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "01644",
+     "name": "单片机原理与接口技术",
+     "credits": 4,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "01645",
+     "name": "单片机原理与接口技术",
+     "credits": 2,
+     "category": "practice",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": "01644",
+     "note": ""
+    },
+    {
+     "code": "07025",
+     "name": "数据通信与网络",
+     "credits": 5,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "08631",
+     "name": "求职择业创业指导",
+     "credits": 3,
+     "category": "practice",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "06737",
+     "name": "创新思维",
+     "credits": 5,
+     "category": "topup",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": "不考英语（专升本）者的加考课程"
+    },
+    {
+     "code": "10397",
+     "name": "论文写作研究",
+     "credits": 5,
+     "category": "topup",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": "不考英语（专升本）者的加考课程"
+    },
+    {
+     "code": "00000",
+     "name": "毕业考核（或论文、综合实践、实验、实习等）",
+     "credits": 10,
+     "category": "graduation",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
     }
+   ],
+   "source_files": [
+    "sc-huibian.pdf"
+   ],
+   "verify": {
+    "level": "official",
+    "source": "https://www.sceea.cn/FileUpload/file/ZXKSshx.pdf",
+    "date": "2026-11-02",
+    "note": "汇编（2025版）第 87-88 页，文本层直读；逐门相加（不含加考 2 门）85 学分与合计栏一致"
+   }
   },
-  "calendar": [],
-  "policy": {
-    "entry": null,
-    "graduate": null,
-    "degree": null,
-    "exemption": null
-  },
-  "offerings": [],
-  "plans": [],
-  "events": []
+  {
+   "id": "sc-080901-2025",
+   "major": "080901",
+   "track": null,
+   "hosts": null,
+   "version": "《四川省高等教育自学考试社会型专业考试计划汇编（2025版）》",
+   "effective": "2025-10",
+   "state": "current",
+   "total_credits": 84,
+   "required_credits": 84,
+   "rules": "2025 年版计划（2025 年 7 月公布），2025 年 10 月起全面执行；2023 年 10 月至 2025 年 9 月为新旧计划过渡期，旧计划课程按《对应衔接表》顶替（对应顶替 1 门顶 1 门、选择顶替区自主选择，不得跨专业顶替；2025 年 9 月起注册的新生直接按新计划报考）。新计划专升本不少于 14 门（不含毕业论文、毕业设计）、总学分不低于 73 学分（不含毕业论文学分），各专业均设 15040 并纳入毕业条件。合计学分为官方原表「合计」栏（含毕业考核 10 学分，不含加考课程）。教材：笔试课程使用教材以省教育考试院当次考试公布为准，本轮未采集课程级教材表，各行教材暂空。 选考组（不考 00023/02324 者）：09097 数学思想与方法（4）、05826 数学思考与问题解决（4）、03216 数学文化（4）、11153 数学史与数学方法论（5）、04222 信息管理概论（6）、02117 信息组织（6）、03298 创新思维理论与方法（6），选考学分不低于原数学课程学分。衔接：旧 B082208 计算机信息管理、B080702 计算机及应用（社会型）→H080901；Y082208、Y080702、Y080787 移动商务技术、Y080789 嵌入式技术（应用型）→W080901。",
+   "courses": [
+    {
+     "code": "00023",
+     "name": "高等数学（工本）",
+     "credits": 10,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": "不考者从选考组选考，学分不低于原数学课程"
+    },
+    {
+     "code": "02324",
+     "name": "离散数学",
+     "credits": 4,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": "同上（与 00023 一并适用于选考规则）"
+    },
+    {
+     "code": "13000",
+     "name": "英语（专升本）",
+     "credits": 7,
+     "category": "public",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": "不考者加考 06737、10397"
+    },
+    {
+     "code": "13003",
+     "name": "数据结构与算法",
+     "credits": 4,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "13004",
+     "name": "数据结构与算法",
+     "credits": 2,
+     "category": "practice",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": "13003",
+     "note": ""
+    },
+    {
+     "code": "13013",
+     "name": "高级语言程序设计",
+     "credits": 4,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "13014",
+     "name": "高级语言程序设计",
+     "credits": 2,
+     "category": "practice",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": "13013",
+     "note": ""
+    },
+    {
+     "code": "13015",
+     "name": "计算机系统原理",
+     "credits": 4,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "13180",
+     "name": "操作系统",
+     "credits": 4,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "15040",
+     "name": "习近平新时代中国特色社会主义思想概论",
+     "credits": 3,
+     "category": "public",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "15043",
+     "name": "中国近现代史纲要",
+     "credits": 3,
+     "category": "public",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "15044",
+     "name": "马克思主义基本原理",
+     "credits": 3,
+     "category": "public",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "04959",
+     "name": "软件工程综合实践",
+     "credits": 4,
+     "category": "practice",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "06976",
+     "name": "计算机网络安全与管理",
+     "credits": 5,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "08695",
+     "name": "数据库及其应用操作（实践）",
+     "credits": 6,
+     "category": "practice",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "13011",
+     "name": "人工智能与大数据",
+     "credits": 6,
+     "category": "required",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "08631",
+     "name": "求职择业创业指导",
+     "credits": 3,
+     "category": "practice",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    },
+    {
+     "code": "06737",
+     "name": "创新思维",
+     "credits": 5,
+     "category": "topup",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": "不考英语（专升本）者的加考课程"
+    },
+    {
+     "code": "10397",
+     "name": "论文写作研究",
+     "credits": 5,
+     "category": "topup",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": "不考英语（专升本）者的加考课程"
+    },
+    {
+     "code": "00000",
+     "name": "毕业考核（或论文、综合实践、实验、实习等）",
+     "credits": 10,
+     "category": "graduation",
+     "elective_group": null,
+     "exam": null,
+     "practice": null,
+     "textbook": null,
+     "pair": null,
+     "note": ""
+    }
+   ],
+   "source_files": [
+    "sc-huibian.pdf"
+   ],
+   "verify": {
+    "level": "official",
+    "source": "https://www.sceea.cn/FileUpload/file/ZXKSshx.pdf",
+    "date": "2026-11-02",
+    "note": "汇编（2025版）第 90-91 页，文本层直读；逐门相加（不含加考 2 门）84 学分与合计栏一致"
+   }
+  }
+ ],
+ "events": [
+  {
+   "date": "2025-07-04",
+   "kind": "policy",
+   "text": "省教育考试院公布高等教育自学考试专业考试计划（2025 年版）及衔接表：专升本不少于 14 门、总学分不低于 73 学分（均不含毕业论文/设计）；各专业设 15040；2023-10 至 2025-09 为过渡期，2025 年 10 月起全面执行新计划；顶替限同专业内。",
+   "verify": {
+    "level": "official",
+    "source": "https://www.sceea.cn/Html/202507/Newsdetail_4372.html",
+    "date": "2026-11-02"
+   }
+  }
+ ]
 }

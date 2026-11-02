@@ -1,0 +1,105 @@
+<html>
+<head>
+<title>ZKZY0030_new</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="author" content="FineReport" />
+<meta name="Copyright" content="FineReport" />
+<meta name="description" content="FineReport--Web Reporting Tool" />
+<meta name="keywords" content="FineReport,Web Reporting Tool" />
+	<link rel="stylesheet" type="text/css" href="/ReportServer?op=resource&resource=/com/fr/web/core/page.css"></link>
+	<link rel="stylesheet" type="text/css" href="/ReportServer?op=resource&resource=/com/fr/web/load.css"></link>
+	
+	<script type="text/javascript" src="/ReportServer?op=resource&resource=/com/fr/web/load.js"></script>
+	
+<script type="text/javascript">	
+	$(function() {
+	var $reportPane = $("<div class='reportPane'></div>").PagePane();
+	var mainEl = $reportPane.data("PagePane");
+	
+	$reportPane.PagePane("load", '/ReportServer?sessionID=1792813060533_867')
+	mainEl.on("init", function() {
+		var contentItems = new Array();
+		contentItems[0] = { region : "center", el : $reportPane };
+		
+		if(false){
+			var $toolbar  = $("<div></div>").FRToolBar();
+			// ��buttons����toolbar������
+			(function(buttonOs) {
+				if (buttonOs.constructor == Array) {
+					$.each(buttonOs, function(idx, conf) {
+						if (idx > 0) {
+							$toolbar.FRToolBar("addSep");
+						}
+					
+						if (conf.type == 'textfield') {
+							var $text = $("<input type='text'>").css("text-align", "center");
+							$toolbar.FRToolBar("addJQuery", $text);
+							$text.TextEditor(conf);
+						
+							mainEl.on("afterload", function() {
+								$text.TextEditor("setValues", (mainEl.currentPageIndex + 1) + "/" + mainEl.reportTotalPage)
+							})
+							return;
+						}
+					
+						var $button = $("<button type='button'/>");
+						$toolbar.FRToolBar("addJQuery", $button);
+						$button.FRButton(conf);
+					
+					// ����,$button��������������������button��
+						var match = false;
+					// ��������������
+						$.each([[mainEl.gotoFirstPage, function() {
+							return mainEl.currentPageIndex == 0;
+						}], [mainEl.gotoPreviousPage, function() {
+							return mainEl.currentPageIndex == 0;
+						}], [mainEl.gotoNextPage, function() {
+							return mainEl.currentPageIndex >= mainEl.reportTotalPage - 1;
+						}], [mainEl.gotoLastPage, function() {
+							return mainEl.currentPageIndex >= mainEl.reportTotalPage - 1;
+						}]
+						], function(nfi, nf_array) { // nf_array:[button����������,
+													// disabled������]
+						if (conf.handler == nf_array[0]) {
+							// ��disable��
+							$button.FRButton("disable", true);
+							
+							mainEl.on("afterload", function() {
+								$button.FRButton("disable", nf_array[1].apply());
+							})
+							match = true;
+							return false;
+						}
+					})
+					
+					if (!match) {
+						mainEl.on("afterload", function() {
+							$button.FRButton("disable", false);
+							mainEl.un("afterload", arguments.callee);
+						})
+					}
+					// $button������������,disable��
+					$button.FRButton("disable", true);
+				})
+			} else {
+				arguments.callee.apply(this, [$buttons])
+			}
+		})([{text:'首页',icon:'/ReportServer?op=resource&resource=/com/fr/web/images/first.png',handler:mainEl.gotoFirstPage,scope:mainEl},{text:'上一页',icon:'/ReportServer?op=resource&resource=/com/fr/web/images/previous.png',handler:mainEl.gotoPreviousPage,scope:mainEl},{type:'textfield', width:50, editable:false, render:false},{text:'下一页',icon:'/ReportServer?op=resource&resource=/com/fr/web/images/next.png',handler:mainEl.gotoNextPage,scope:mainEl},{text:'末页',icon:'/ReportServer?op=resource&resource=/com/fr/web/images/last.png',handler:mainEl.gotoLastPage,scope:mainEl}])
+		  contentItems[1] = { region : "north", el : $toolbar };
+		}
+
+		// ����
+		var $container = $("<div>").appendTo($("body")).css({height:"100%", width:"100%"}).__border__(contentItems);
+		$container.doLayout();
+		$(window).resize(function() {
+			$container.doLayout();
+		})
+	
+	});
+})
+
+</script>
+</head>
+<body>
+</body>
+</html>
