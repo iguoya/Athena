@@ -27,12 +27,12 @@
     {
       "session": "2026-10",
       "exam": "2026-10-24~25",
-      "note": "开考课程安排称将于 2026-06-30 前公布（本轮未取得）",
+      "note": "各专业课程日程见沪教考院自考通知《2026 年 10 月上海市高等教育自学考试各专业课程考试日程安排表》（上午 9:00-11:30、下午 14:30-17:00，两天各两个时段）",
       "verify": {
         "level": "official",
-        "source": "https://www.shmeea.edu.cn/page/04100/20260121/20022.html",
+        "source": "https://www.shmeea.edu.cn/page/04200/20260520/20257.html",
         "date": "2026-11-02",
-        "note": "工作提示「考试时间及课程安排」"
+        "note": "上海市教育考试院 2026-05-20 发布；附件 PDF https://www.shmeea.edu.cn/download/20260520/1.pdf"
       }
     }
   ],
@@ -59,19 +59,22 @@
       "hosts": [
         "上海交通大学"
       ],
-      "plans": [],
+      "plans": [
+        "sh-080901-sjtu-2026"
+      ],
       "matched_by": null,
       "complete": {
-        "courses": false,
-        "credits": false,
+        "courses": true,
+        "credits": true,
         "textbook": false
       },
       "verify": {
         "level": "official",
-        "source": "https://www.shmeea.edu.cn/page/04100/20260121/20022.html",
+        "source": "https://ce.sjtu.edu.cn/zxks/jxjh/1068",
         "date": "2026-11-02",
-        "note": "《开考专业信息汇总表（2026年）》序号 12：上海交通大学，专升本，080901 计算机科学与技术，执行新考试计划（2026 年起）；https://www.shmeea.edu.cn/download/20260121/01.pdf；专业考试计划与课程表本轮未取得"
-      }
+        "note": "上海交通大学主考、面向社会开考，官网称目前处于预警状态；上海市教育考试院 2025 年专业分类表（https://www.shmeea.edu.cn/download/20250221/2.pdf）将其列入「预警专业」；2026 年 10 月课程日程（https://www.shmeea.edu.cn/download/20260520/1.pdf）：02324、15044、13215、02318（J）、13011、15040、00023、13003、13017、13176（J）、15043、13180、04737、13175、14260、13000、13005、13015、13170"
+      },
+      "mode": "面向社会"
     },
     {
       "major": "080902",
@@ -711,7 +714,359 @@
       }
     }
   ],
-  "plans": [],
+  "plans": [
+    {
+      "id": "sh-080901-sjtu-2026",
+      "major": "080901",
+      "track": null,
+      "version": "上海交通大学考试计划（本计划 2026 年起开始实施）",
+      "effective": "2026-01",
+      "state": "current",
+      "total_credits": null,
+      "required_credits": 73,
+      "rules": "官方页没有给总学分。必考课（含思政 4 门 16 学分，其中 15043 写 2 学分、15044 写 4 学分，与全国 2025 年起思政课口径不同，按官方页照录）逐行相加 73 学分，为核算值，官方原表未直接给出；13011 人工智能与大数据、14260 数字电路与逻辑设计二选一（通过任一门即可）；电子技术基础（13176/13177）、计算机组成原理（02318）为加考，非理工类专科起点才需要，本科和理工类专科生不需要。老考生旧计划中通过的科目可对应新计划；外省转入时 2025 年及以前通过的旧计划理论课可接收，2026 年及以后通过的理论课仅同新计划课程代码者可接收，外省实践课一律不接收；与上海市教育考试院信息不一致以教育考试院为准。",
+      "courses": [
+        {
+          "code": "15040",
+          "name": "习近平新时代中国特色社会主义思想概论",
+          "credits": 3,
+          "category": "public",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "15043",
+          "name": "中国近现代史纲要",
+          "credits": 2,
+          "category": "public",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": "官方页写 2 学分（可替换旧课程 03708）"
+        },
+        {
+          "code": "15044",
+          "name": "马克思主义基本原理",
+          "credits": 4,
+          "category": "public",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": "官方页写 4 学分、名称「马克思主义基本原理概论」（可替换旧课程 03709）；官方页课程名写作「马克思主义基本原理概论」"
+        },
+        {
+          "code": "13000",
+          "name": "英语（专升本）",
+          "credits": 7,
+          "category": "public",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "00023",
+          "name": "高等数学（工本）",
+          "credits": 10,
+          "category": "required",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "02324",
+          "name": "离散数学",
+          "credits": 4,
+          "category": "required",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "04737",
+          "name": "C++程序设计",
+          "credits": 3,
+          "category": "required",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "04738",
+          "name": "C++程序设计",
+          "credits": 2,
+          "category": "practice",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": "04737",
+          "note": ""
+        },
+        {
+          "code": "13003",
+          "name": "数据结构与算法",
+          "credits": 4,
+          "category": "required",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "13004",
+          "name": "数据结构与算法",
+          "credits": 2,
+          "category": "practice",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": "13003",
+          "note": ""
+        },
+        {
+          "code": "13015",
+          "name": "计算机系统原理",
+          "credits": 4,
+          "category": "required",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "13180",
+          "name": "操作系统",
+          "credits": 4,
+          "category": "required",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "02327",
+          "name": "操作系统",
+          "credits": 1,
+          "category": "practice",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": "13180",
+          "note": ""
+        },
+        {
+          "code": "13170",
+          "name": "数据库及其应用",
+          "credits": 4,
+          "category": "required",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "13171",
+          "name": "数据库及其应用",
+          "credits": 1,
+          "category": "practice",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": "13170",
+          "note": ""
+        },
+        {
+          "code": "13005",
+          "name": "软件工程",
+          "credits": 3,
+          "category": "required",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "13006",
+          "name": "软件工程",
+          "credits": 2,
+          "category": "practice",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": "13005",
+          "note": ""
+        },
+        {
+          "code": "13017",
+          "name": "计算机网络与信息安全",
+          "credits": 6,
+          "category": "required",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "13215",
+          "name": "Java语言程序设计",
+          "credits": 3,
+          "category": "required",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "13216",
+          "name": "Java语言程序设计",
+          "credits": 1,
+          "category": "practice",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": "13215",
+          "note": ""
+        },
+        {
+          "code": "13175",
+          "name": "线性代数（工）",
+          "credits": 3,
+          "category": "required",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": ""
+        },
+        {
+          "code": "13011",
+          "name": "人工智能与大数据",
+          "credits": 6,
+          "category": "elective",
+          "elective_group": "二选一（通过 13011、14260 中任一门即可）",
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": "与 14260 二选一，通过其中任一门即可"
+        },
+        {
+          "code": "14260",
+          "name": "数字电路与逻辑设计",
+          "credits": 4,
+          "category": "elective",
+          "elective_group": "二选一（通过 13011、14260 中任一门即可）",
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": "与 13011 二选一，通过其中任一门即可"
+        },
+        {
+          "code": "13176",
+          "name": "电子技术基础",
+          "credits": 4,
+          "category": "topup",
+          "elective_group": "加考（非理工类专科起点才需加试）",
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": "加考：非理工类专科起点才需加试，本科和理工类专科生不需要"
+        },
+        {
+          "code": "13177",
+          "name": "电子技术基础",
+          "credits": 2,
+          "category": "practice",
+          "elective_group": "加考（非理工类专科起点才需加试）",
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": "13176",
+          "note": "加考：非理工类专科起点才需加试"
+        },
+        {
+          "code": "02318",
+          "name": "计算机组成原理",
+          "credits": 4,
+          "category": "topup",
+          "elective_group": "加考（非理工类专科起点才需加试）",
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": "加考：非理工类专科起点才需加试"
+        },
+        {
+          "code": "11689",
+          "name": "计算机科学与技术（本科）毕业论文",
+          "credits": 0,
+          "category": "graduation",
+          "elective_group": null,
+          "exam": null,
+          "practice": null,
+          "textbook": null,
+          "pair": null,
+          "note": "官方页写作「毕业设计」，原 10203"
+        }
+      ],
+      "graduation": {
+        "thesis": true,
+        "credits": 0,
+        "note": "毕业设计（11689）为必考环节，学分 0。"
+      },
+      "source_files": [
+        "sh_sjtu_plan_1068.html.txt"
+      ],
+      "verify": {
+        "level": "official",
+        "source": "https://ce.sjtu.edu.cn/zxks/jxjh/1068",
+        "date": "2026-11-02",
+        "note": "上海交通大学终身教育学院官网「考试计划-计算机科学与技术（专升本）」（主考院校原文），截至 2026-11-02 页面显示本专业处于预警状态"
+      }
+    }
+  ],
   "events": [
     {
       "date": "2026-01-01",
