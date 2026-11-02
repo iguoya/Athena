@@ -45,7 +45,9 @@
 
 「开机自启」在托盘菜单里，默认关。勾选状态以系统实况为准，启动器不另记账：macOS 写
 `~/Library/LaunchAgents/athena-launcher.plist`（LaunchAgent，指向当前这份可执行文件），
-Windows 写 HKCU 的 Run 键，Linux 写 XDG autostart。登录拉起时窗口不弹出，点托盘或
+Windows 写 HKCU 的 Run 键，Linux 写 XDG autostart。注册的是勾选那一刻的二进制路径，
+所以启动器每次启动都会把已启用的注册项对齐到当前这份可执行文件（幂等重写）——二进制
+挪过位置后不用重新勾选。登录拉起时窗口不弹出，点托盘或
 Dock 再打开。开发调试版依赖 vite，勾了自启后下次登录会拉起这份 debug 二进制；日常
 自启用带 `custom-protocol` 的 release。
 
@@ -114,7 +116,8 @@ Windows 任务栏用同一张 256px 的 `webui/src-tauri/icons/icon.png`。裸�
 
 Rust 构建产物不进 `launcher/target/`：仓库根 `.cargo/config.toml` 把本仓库所有
 Rust 构建指到共享缓存 `.cache/cargo-target/`（ADR 0140、0063），下面所有命令的
-产物都在 `.cache/cargo-target/release/` 里。
+产物都在 `.cache/cargo-target/release/` 里。磁盘上若还有 `launcher/target/`，那是
+ADR 0140 生效前的遗留——里面的二进制认的是旧目录结构，直接删掉，别执行。
 
 ```sh
 cargo build --release --features custom-protocol --manifest-path launcher/Cargo.toml
@@ -140,8 +143,8 @@ launcher/macos/scripts/install.sh
 ```sh
 .cache/cargo-target/release/launcher list        # 谁在跑、谁没跑
 .cache/cargo-target/release/launcher list --json # 同上，机器读的格式（前端用它）
-.cache/cargo-target/release/launcher open dsa    # 打开；已在跑的只把窗口叫到前面
-.cache/cargo-target/release/launcher stop dsa    # 连同构建期拉起的那一串一起收掉
+.cache/cargo-target/release/launcher open driver  # 打开；已在跑的只把窗口叫到前面
+.cache/cargo-target/release/launcher stop driver  # 连同构建期拉起的那一串一起收掉
 .cache/cargo-target/release/launcher logs dsa    # 日志文件路径
 .cache/cargo-target/release/launcher sync        # 提交并推送学习进度（只剩未迁走的应用）
 .cache/cargo-target/release/launcher progress sync [id]   # 本地进度库与路由器对一遍

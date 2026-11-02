@@ -459,6 +459,8 @@ pub fn run() {
         .setup(move |app| {
             let window = app.get_webview_window("main").expect("主窗口缺失");
             app_icon::install(&window);
+            // 注册项指向的二进制可能已过期，每次启动都对一遍（幂等）。
+            resident::heal_autostart(app.handle());
             let hidden = resident::launched_hidden();
             if !hidden {
                 let _ = window.show();

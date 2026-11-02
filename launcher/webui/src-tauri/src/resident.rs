@@ -236,3 +236,18 @@ fn toggle_autostart(app: &AppHandle) {
         eprintln!("开机自启切换失败：{error}");
     }
 }
+
+/// 自启注册项可能与当前二进制脱节：注册的是勾选那一刻的 `current_exe`，
+/// 二进制换了位置（构建输出目录迁移、重装）后，旧注册项仍会把旧版拉起来，
+/// 而单实例机制又把新版静默弹掉——「明明重编了，跑的还是旧的」。已启用就
+/// 重新 enable 一遍：插件按当前 `current_exe` 幂等重写注册项（macOS 直接
+/// 截断覆盖 plist），让它自动跟上，不依赖使用者记得重新勾选。
+pub fn heal_autostart(app: &AppHandle) {
+    let auto = app.autolaunch();
+    if !auto.is_enabled().unwrap_or(false) {
+        return;
+    }
+    if let Err(error) = auto.enable() {
+        eprintln!("开机自启注册项没能更新到当前二进制：{error}");
+    }
+}
