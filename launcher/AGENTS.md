@@ -9,7 +9,7 @@
 | 目录 | 是什么 |
 |---|---|
 | `core/` | 编排器 `launcher`（Rust）：发现应用、准备、启动、判断状态、日志、`sync`、`icons` |
-| `webui/` | 跨平台启动器（Tauri 2 + React + Three.js）：3D 领域轨道环 + 2D 平铺（ADR 0125），主线前端 |
+| `webui/` | 跨平台启动器（Tauri 2 + React + Three.js）：3D 星系（恒星—行星—卫星）+ 2D 平铺（ADR 0125），主线前端 |
 | `gui/` | 旧前端（Rust + Slint）：已退役（ADR 0127）——源码留档、不参与构建，运行入口是 webui |
 | `macos/` | 菜单栏启动器（Swift），macOS 专属（ADR 0048） |
 
@@ -52,7 +52,7 @@
   不要在界面里按应用 id 写位置。改了布局先跑 `cargo test -p launcher-core mindmap`。
 - **绑定位由 `app.json` 的 `anchor` 声明，不按应用 id 写分支。** `center` 取代椭圆导图中心的
   虎头（目前是 `polaris`），`group` 让分组本身成为某应用的入口（目前 `selfstudy-survey` 绑「自考」、
-  `mathematics-compass` 绑「数学」）。分出清单的逻辑是 `mindmap::split_anchors`（纯函数、有测试），
+  `mathematics-compass` 绑「数学」）；3D 里 center 是恒星、绑定了应用的分组是行星本身、组内其余应用是卫星（布局在 `core/src/layout3d.rs`，测试守邻轨不相碰）。分出清单的逻辑是 `mindmap::split_anchors`（纯函数、有测试），
   `layout` 只看到分出后的清单；改了 `anchor` 要重跑 `launcher catalog`。
 - **应用图标原样显示，不表达运行状态**（ADR 0065）。`icon.svg` 自带颜色，图块不垫底色、
   不加光环、不随状态放大；运行态只由状态点表达。`accent` + `letter` 只给没有图标的应用兜底。

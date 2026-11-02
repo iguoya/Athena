@@ -196,6 +196,42 @@ pub fn group_name_of(app: &App) -> String {
         .to_string()
 }
 
+/// 分组归属：返回（分组名按首次出现排序，每个应用所在分组的下标）。规则与 `layout` 相同——
+/// 挂靠节点（`parent` 解析得到且挂靠者自己不是挂靠节点）不登记分组、沿用挂靠者的分组。
+/// 3D 星系按它分行星，与导图的分组、配色保持一致。
+pub fn group_assignment(apps: &[App]) -> (Vec<String>, Vec<usize>) {
+    let index_of = |id: &str| apps.iter().position(|app| app.id == id);
+    let raw: Vec<Option<usize>> = apps.iter().map(|app| app.parent.as_deref().and_then(index_of)).collect();
+    let attached: Vec<Option<usize>> = raw
+        .iter()
+        .map(|target| match target {
+            Some(p) if raw[*p].is_none() => Some(*p),
+            _ => None,
+        })
+        .collect();
+    let mut names: Vec<String> = Vec::new();
+    let mut group_of = vec![0; apps.len()];
+    for (i, app) in apps.iter().enumerate() {
+        if attached[i].is_some() {
+            continue;
+        }
+        let name = group_name_of(app);
+        group_of[i] = match names.iter().position(|n| *n == name) {
+            Some(index) => index,
+            None => {
+                names.push(name);
+                names.len() - 1
+            }
+        };
+    }
+    for (i, target) in attached.iter().enumerate() {
+        if let Some(p) = target {
+            group_of[i] = group_of[*p];
+        }
+    }
+    (names, group_of)
+}
+
 /// 把绑定位（`Anchor`）的应用从清单里分出来：它们不再作为普通图块进 `layout`。
 ///
 /// - `center`：取代画布中心的虎头；多个只认第一个，其余照普通应用排。
@@ -1049,6 +1085,17 @@ mod tests {
         let mut a = app(id, Some(group), None, &[]);
         a.anchor = anchor;
         a
+    }
+
+    #[test]
+    fn 分组归属与导图布局一致() {
+        let mut child = app("kid", Some("丙"), None, &[]);
+        child.parent = Some("a".to_string());
+        let apps = vec![app("a", Some("甲"), None, &[]), app("b", Some("乙"), None, &[]), child, app("c", None, None, &[])];
+        let (names, group_of) = group_assignment(&apps);
+        let map = layout(&apps);
+        assert_eq!(names, map.groups.iter().map(|g| g.name.clone()).collect::<Vec<_>>());
+        assert_eq!(group_of, map.nodes.iter().take(apps.len()).map(|n| n.group).collect::<Vec<_>>());
     }
 
     #[test]

@@ -19,9 +19,26 @@ export interface AppDto {
   state: RunState;
   /** 安装模式下是否已装（ADR 0173）；仓库模式为 null。未装的淡显，点击指路 Releases。 */
   installed: boolean | null;
-  pos: [number, number, number];
+  /** 星系角色：star = 中心恒星，planet = 绑定到分组的应用（分组本身），moon = 组内其余应用。 */
+  role: "star" | "planet" | "moon";
+  /** 卫星绕本组行星的轨道；只有 moon 有。 */
+  moon: MoonDto | null;
+}
+
+export interface MoonDto {
+  group: number;
+  radius: number;
+  theta: number;
+  ring: number;
+}
+
+/** 一个分组 = 一颗行星；appId 为空表示没有绑定应用，只是标识用的组球。 */
+export interface PlanetDto {
+  group: string;
+  color: string;
   orbit: number;
   theta: number;
+  appId: string | null;
 }
 
 export interface OrbitDto {
@@ -37,6 +54,7 @@ export interface CatalogDto {
   /** "repo" | "installed" */
   mode: string;
   apps: AppDto[];
+  planets: PlanetDto[];
   orbits: OrbitDto[];
 }
 

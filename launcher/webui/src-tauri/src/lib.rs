@@ -35,7 +35,7 @@ pub struct AppDto {
     group_index: usize,
     letter: String,
     accent: String,
-    /// 领域组色（同组同色，来自 mindmap 色板）：3D 行星的球面底色。
+    /// 领域组色（同组同色，来自 mindmap 色板）：3D 球面的底色。
     #[serde(rename = "groupColor")]
     group_color: String,
     /// icon.svg 的 data URL（骨架阶段每次 catalog 现读；体量大了换 fingerprint 缓存）。
@@ -47,12 +47,32 @@ pub struct AppDto {
     state: String,
     /// 安装模式下是否已装（ADR 0173）；仓库模式为 null。未装的应用前端淡显，点击指路 Releases。
     installed: Option<bool>,
-    /// 3D 轨道布局里的世界坐标。
-    pos: [f32; 3],
-    /// 公转动画参数：所在轨道下标与初始参数角（rad）。前端每帧
-    /// theta = theta0 + omega·t 后套与布局相同的正变换得到当前位置。
-    orbit: usize,
+    /// 星系里的角色：star（`anchor: center`）/ planet（`anchor: group`，分组本身）/ moon（组内其余应用）。
+    role: &'static str,
+    /// 卫星绕本组行星的轨道参数；只有 moon 有。
+    moon: Option<MoonDto>,
+}
+
+/// 卫星轨道：环半径、起始角（rad）、第几环。公转角速度由前端按半径推。
+#[derive(serde::Serialize)]
+pub struct MoonDto {
+    group: usize,
+    radius: f32,
     theta: f32,
+    ring: usize,
+}
+
+/// 一个分组 = 一颗行星。绑定了应用的分组 `app_id` 指向那个应用，否则是只作标识的组球。
+#[derive(serde::Serialize)]
+pub struct PlanetDto {
+    group: String,
+    color: String,
+    /// 所在轨道下标（等于分组下标）。
+    orbit: usize,
+    /// 公转起始参数角（rad）；前端每帧 theta = theta0 + omega·t 后套与布局相同的正变换。
+    theta: f32,
+    #[serde(rename = "appId")]
+    app_id: Option<String>,
 }
 
 #[derive(serde::Serialize)]
@@ -69,7 +89,9 @@ pub struct CatalogDto {
     repo: String,
     /// "repo" / "installed"（Mode::key）。
     mode: String,
+    /// 全部可启动的应用（恒星、行星应用、卫星），状态补丁按它整体打。
     apps: Vec<AppDto>,
+    planets: Vec<PlanetDto>,
     orbits: Vec<OrbitDto>,
 }
 
@@ -77,7 +99,7 @@ pub struct CatalogDto {
 /// 同模块里定义并引用会撞名（Tauri 2 的既知约束）。
 pub mod commands {
     use super::cache;
-    use super::{AppDto, CatalogDto, OrbitDto, Ws};
+    use super::{AppDto, CatalogDto, MoonDto, OrbitDto, PlanetDto, Ws};
     use launcher_core::{layout3d, manifest, mindmap, runner, LaunchError};
     use tauri::State;
 
@@ -86,83 +108,81 @@ pub mod commands {
         let apps = ws.0.apps();
         crate::watch::remember(&apps);
         // 归档（ADR 0139）与隐藏（ADR 0093）都不进 3D 视图；归档在思维导图可开关查看。
-        let visible: Vec<&manifest::App> = apps
+        let visible: Vec<manifest::App> = apps
             .iter()
             .filter(|a| !a.hidden && a.lifecycle != manifest::Lifecycle::Archived)
+            .cloned()
             .collect();
 
-        // 分组：领域名按首次出现序登记（与 core 的 mindmap 分组同规则），挂靠应用
-        // （有 parent）骨架阶段同圈排布，挂靠语义的专门表达留待下一轮。
-        let mut group_names: Vec<String> = Vec::new();
-        let mut group_colors: Vec<String> = Vec::new();
-        let mut group_of: Vec<usize> = Vec::with_capacity(visible.len());
-        for app in &visible {
-            let name = app.group.clone().unwrap_or_else(|| "其他".into());
-            let idx = match group_names.iter().position(|g| g == &name) {
-                Some(i) => i,
-                None => {
-                    group_names.push(name.clone());
-                    // 组色按组序取 mindmap 色板（与 mindmap::layout 同规则），同组同色。
-                    group_colors.push(
-                        launcher_core::mindmap::PALETTE
-                            [(group_names.len() - 1) % launcher_core::mindmap::PALETTE.len()]
-                        .to_string(),
-                    );
-                    group_names.len() - 1
-                }
-            };
-            group_of.push(idx);
+        // 星系：绑定到中心的应用是恒星，每个分组一颗行星（绑定到分组的应用就是行星本身），
+        // 组内其余应用是卫星。分组与配色规则同思维导图（mindmap::group_assignment）。
+        let split = mindmap::split_anchors(&visible);
+        let (group_names, group_of) = mindmap::group_assignment(&split.rest);
+        let mut moon_counts = vec![0usize; group_names.len()];
+        for &g in &group_of {
+            moon_counts[g] += 1;
         }
-        let sizes: Vec<usize> = {
-            let mut v = vec![0usize; group_names.len()];
-            for &g in &group_of {
-                v[g] += 1;
-            }
-            v
-        };
-        let layout = layout3d::orbit_layout(&sizes);
+        let layout = layout3d::system_layout(&moon_counts);
+        let color_of = |g: usize| mindmap::PALETTE[g % mindmap::PALETTE.len()].to_string();
 
         let states = cache::states(&apps);
+        let state_of = |id: &str| -> String {
+            apps.iter()
+                .position(|a| a.id == id)
+                .map(|i| states[i].key().to_string())
+                .unwrap_or_else(|| "stopped".into())
+        };
+        let dto = |app: &manifest::App, g: usize, role: &'static str, moon: Option<MoonDto>| AppDto {
+            id: app.id.clone(),
+            title: app.title.clone(),
+            summary: app.summary.clone(),
+            group: group_names.get(g).cloned(),
+            group_index: g,
+            group_color: color_of(g),
+            letter: app.letter.clone(),
+            accent: app.accent.clone(),
+            icon: app
+                .icon_file
+                .as_deref()
+                .and_then(cache::icon_data_url)
+                .or_else(|| app.embedded_icon.clone()),
+            lifecycle: app.lifecycle.key().to_string(),
+            state: state_of(&app.id),
+            installed: app.install.as_ref().map(|install| install.installed),
+            role,
+            moon,
+        };
 
-        // 组内成员按清单序占位：第 g 组的第 k 个成员落轨道 g 的第 k 个节点。
+        let mut out: Vec<AppDto> = Vec::new();
+        if let Some(star) = &split.center {
+            out.push(dto(star, 0, "star", None));
+        }
+        let mut planets = Vec::with_capacity(group_names.len());
+        for (g, name) in group_names.iter().enumerate() {
+            let bound = split.group_apps.iter().find(|a| mindmap::group_name_of(a) == *name);
+            if let Some(app) = bound {
+                out.push(dto(app, g, "planet", None));
+            }
+            planets.push(PlanetDto {
+                group: name.clone(),
+                color: color_of(g),
+                orbit: g,
+                theta: layout.planets[g].theta,
+                app_id: bound.map(|a| a.id.clone()),
+            });
+        }
+        // 卫星按组内清单序占位：第 g 组的第 k 个成员落第 g 组的第 k 颗卫星。
         let mut cursor = vec![0usize; group_names.len()];
-        let mut out = Vec::with_capacity(visible.len());
-        for (i, app) in visible.iter().enumerate() {
-            let g = group_of[i];
+        for (app, &g) in split.rest.iter().zip(&group_of) {
             let slot = cursor[g];
             cursor[g] += 1;
-            let node = layout
-                .nodes
-                .iter()
-                .find(|n| n.group == g && n.slot == slot)
-                .copied()
-                .unwrap_or(layout3d::OrbitNode {
-                    group: g,
-                    slot,
-                    pos: [0.0; 3],
-                    theta: 0.0,
-                });
-            out.push(AppDto {
-                id: app.id.clone(),
-                title: app.title.clone(),
-                summary: app.summary.clone(),
-                group: Some(group_names[g].clone()),
-                group_index: g,
-                group_color: group_colors[g].clone(),
-                letter: app.letter.clone(),
-                accent: app.accent.clone(),
-                icon: app
-                    .icon_file
-                    .as_deref()
-                    .and_then(cache::icon_data_url)
-                    .or_else(|| app.embedded_icon.clone()),
-                lifecycle: app.lifecycle.key().to_string(),
-                state: states[i].key().to_string(),
-                installed: app.install.as_ref().map(|install| install.installed),
-                pos: node.pos,
-                orbit: node.group,
-                theta: node.theta,
-            });
+            let m = layout.moons.iter().find(|m| m.group == g && m.slot == slot);
+            out.push(dto(
+                app,
+                g,
+                "moon",
+                m.map(|m| MoonDto { group: g, radius: m.radius, theta: m.theta, ring: m.ring }),
+            ));
         }
 
         Ok(CatalogDto {
@@ -171,13 +191,9 @@ pub mod commands {
             orbits: layout
                 .orbits
                 .iter()
-                .map(|o| OrbitDto {
-                    a: o.a,
-                    b: o.b,
-                    c: o.c,
-                    tilt: o.tilt,
-                })
+                .map(|o| OrbitDto { a: o.a, b: o.b, c: o.c, tilt: o.tilt })
                 .collect(),
+            planets,
             apps: out,
         })
     }
