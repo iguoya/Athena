@@ -50,6 +50,10 @@
 - **学习应用面板的布局是 `core/src/mindmap.rs` 的纯函数**（ADR 0083）：位置、分组、连线都在那里算、
   有单元测试，GUI 只填数据；分组和关系来自 `app.json` 的 `group` / `related` / `evolves_from`，
   不要在界面里按应用 id 写位置。改了布局先跑 `cargo test -p launcher-core mindmap`。
+- **绑定位由 `app.json` 的 `anchor` 声明，不按应用 id 写分支。** `center` 取代椭圆导图中心的
+  虎头（目前是 `polaris`），`group` 让分组本身成为某应用的入口（目前 `selfstudy-survey` 绑「自考」、
+  `mathematics-compass` 绑「数学」）。分出清单的逻辑是 `mindmap::split_anchors`（纯函数、有测试），
+  `layout` 只看到分出后的清单；改了 `anchor` 要重跑 `launcher catalog`。
 - **应用图标原样显示，不表达运行状态**（ADR 0065）。`icon.svg` 自带颜色，图块不垫底色、
   不加光环、不随状态放大；运行态只由状态点表达。`accent` + `letter` 只给没有图标的应用兜底。
 - **图标位图由 `launcher icons` 生成**，按各应用 `icon.renders` 声明写进应用自己的目录

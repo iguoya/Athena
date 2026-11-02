@@ -206,6 +206,10 @@ struct RawManifest {
     /// open/stop 与 dev 编排照常可用——隐藏是显示层的事，不是下线。
     #[serde(default)]
     hidden: bool,
+    /// 绑定位：`center` 取代导图/轨道的中心；`group` 绑定到自己所在的分组本身。省略即不绑定。
+    /// 收 String 再手动转枚举：未知值点名回退，而不是让整个 app.json 读不动。
+    #[serde(default)]
+    anchor: Option<String>,
     /// 学习生命周期（ADR 0139）：active / built / archived。省略即 active。
     /// 收 String 再手动转枚举：未知值点名回退，而不是让整个 app.json 读不动。
     #[serde(default)]
@@ -256,6 +260,8 @@ pub struct App {
     pub also_in: Vec<String>,
     /// 显示层隐藏（ADR 0093）：不进任何面板，清单与编排仍可见。
     pub hidden: bool,
+    /// 绑定位：应用兼任分组或中心的入口。绑定的应用不再作为普通图块出现。
+    pub anchor: Anchor,
     /// 学习生命周期（ADR 0139）：活跃学习 / 建成待学 / 冻结归档。
     pub lifecycle: Lifecycle,
     /// 本地进度库的同步声明（ADR 0155）；没有就不参与同步。
@@ -347,6 +353,47 @@ pub fn discover_in(apps_root: &Path) -> Vec<App> {
     entries.iter().filter_map(|dir| parse(dir)).collect()
 }
 
+/// 应用在面板里兼任的入口角色。
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum Anchor {
+    #[default]
+    None,
+    /// 取代中心的虎头。
+    Center,
+    /// 绑定到自己所在的分组：分组的图标就是这个应用，点分组即打开它。
+    Group,
+}
+
+impl Anchor {
+    pub fn key(self) -> &'static str {
+        match self {
+            Anchor::None => "",
+            Anchor::Center => "center",
+            Anchor::Group => "group",
+        }
+    }
+
+    pub fn from_key(key: &str) -> Anchor {
+        match key {
+            "center" => Anchor::Center,
+            "group" => Anchor::Group,
+            _ => Anchor::None,
+        }
+    }
+}
+
+fn parse_anchor(raw: Option<&str>, dir: &Path) -> Anchor {
+    match raw {
+        None | Some("") => Anchor::None,
+        Some("center") => Anchor::Center,
+        Some("group") => Anchor::Group,
+        Some(other) => {
+            eprintln!("{} 的 anchor「{other}」：只认 center / group，按不绑定处理", dir.display());
+            Anchor::None
+        }
+    }
+}
+
 fn parse(dir: &Path) -> Option<App> {
     let text = std::fs::read_to_string(dir.join("app.json")).ok()?;
     let raw: RawManifest = match serde_json::from_str(&text) {
@@ -416,6 +463,7 @@ fn parse(dir: &Path) -> Option<App> {
         also_under: raw.also_under,
         also_in: raw.also_in,
         hidden: raw.hidden,
+        anchor: parse_anchor(raw.anchor.as_deref(), dir),
         lifecycle,
         progress: raw.progress,
         install: None,
@@ -470,6 +518,7 @@ mod tests {
             also_under: Vec::new(),
             also_in: Vec::new(),
             hidden: false,
+            anchor: Anchor::None,
             lifecycle: Lifecycle::Active,
             progress: None,
             install: None,

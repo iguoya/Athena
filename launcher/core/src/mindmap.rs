@@ -30,7 +30,7 @@ const CONTENT_HALF_W: f32 = 54.0;
 const CONTENT_ABOVE: f32 = 30.0;
 const CONTENT_BELOW: f32 = 64.0;
 /// 分组胶囊的高度（与 `launcher.slint` 里的 `GroupPill` 同高）；宽度按文字算，见 `pill_width`。
-pub const PILL_H: f32 = 32.0;
+pub const PILL_H: f32 = 44.0;
 /// 同一圈上相邻两个胶囊之间至少留的空隙。
 const PILL_GAP: f32 = 8.0;
 /// 中心虎头的半径。
@@ -177,10 +177,66 @@ pub struct GroupNode {
     pub apps: usize,
 }
 
-/// 胶囊宽度：汉字按 14px、其余按 8px 估（13px 字号），两边各留 14px。
+/// 分组图标章（压在胶囊左端的圆形图标）占的宽度。
+pub const PILL_ICON_W: f32 = 44.0;
+
+/// 胶囊宽度：汉字按 14px、其余按 8px 估（13px 字号），右边留 14px，左边让出图标章的位置。
 pub fn pill_width(name: &str) -> f32 {
     let text: f32 = name.chars().map(|c| if c.is_ascii() { 8.0 } else { 14.0 }).sum();
-    (text + 28.0).clamp(64.0, 150.0)
+    (text + PILL_ICON_W + 14.0).clamp(92.0, 190.0)
+}
+
+/// 应用在分组里的名字，与 `layout` 登记分组用同一条规则（省略归「其他」）。
+pub fn group_name_of(app: &App) -> String {
+    app.group
+        .as_deref()
+        .map(str::trim)
+        .filter(|name| !name.is_empty())
+        .unwrap_or(DEFAULT_GROUP)
+        .to_string()
+}
+
+/// 把绑定位（`Anchor`）的应用从清单里分出来：它们不再作为普通图块进 `layout`。
+///
+/// - `center`：取代画布中心的虎头；多个只认第一个，其余照普通应用排。
+/// - `group`：绑定到自己所在的分组，点分组即打开它；一个分组只认第一个。分组里必须
+///   还有别的普通成员，否则分出去会让整个分组消失，这时它仍照普通应用排。
+pub struct AnchorSplit {
+    pub rest: Vec<App>,
+    pub center: Option<App>,
+    /// 绑定到分组的应用；分组名用 `group_name_of` 取。
+    pub group_apps: Vec<App>,
+}
+
+pub fn split_anchors(apps: &[App]) -> AnchorSplit {
+    use crate::manifest::Anchor;
+    let center = apps.iter().position(|a| a.anchor == Anchor::Center);
+    let mut bound: Vec<usize> = Vec::new();
+    let mut bound_groups: Vec<String> = Vec::new();
+    for (i, app) in apps.iter().enumerate() {
+        if app.anchor != Anchor::Group {
+            continue;
+        }
+        let name = group_name_of(app);
+        let supported = apps.iter().enumerate().any(|(j, other)| {
+            j != i && other.anchor == Anchor::None && other.parent.is_none() && group_name_of(other) == name
+        });
+        if supported && !bound_groups.contains(&name) {
+            bound_groups.push(name);
+            bound.push(i);
+        }
+    }
+    let mut split = AnchorSplit { rest: Vec::new(), center: None, group_apps: Vec::new() };
+    for (i, app) in apps.iter().enumerate() {
+        if Some(i) == center {
+            split.center = Some(app.clone());
+        } else if bound.contains(&i) {
+            split.group_apps.push(app.clone());
+        } else {
+            split.rest.push(app.clone());
+        }
+    }
+    split
 }
 
 /// 两个胶囊（中心 a、b，宽 wa、wb）是否重叠，含间隙。
@@ -936,6 +992,7 @@ mod tests {
             also_under: Vec::new(),
             also_in: Vec::new(),
             hidden: false,
+            anchor: crate::manifest::Anchor::None,
             lifecycle: crate::manifest::Lifecycle::Active,
             progress: None,
             install: None,
@@ -986,6 +1043,45 @@ mod tests {
                 assert!(point.x >= 0.0 && point.y >= 0.0 && point.x <= map.width && point.y <= map.height, "连线出了画布");
             }
         }
+    }
+
+    fn anchored(id: &str, group: &str, anchor: crate::manifest::Anchor) -> App {
+        let mut a = app(id, Some(group), None, &[]);
+        a.anchor = anchor;
+        a
+    }
+
+    #[test]
+    fn 绑定位的应用分出清单_中心取第一个() {
+        use crate::manifest::Anchor;
+        let apps = vec![
+            anchored("hub", "图谱", Anchor::Center),
+            anchored("hub2", "图谱", Anchor::Center),
+            anchored("x", "甲", Anchor::None),
+            anchored("g", "甲", Anchor::Group),
+        ];
+        let split = split_anchors(&apps);
+        assert_eq!(split.center.as_ref().map(|a| a.id.as_str()), Some("hub"));
+        assert_eq!(split.group_apps.iter().map(|a| a.id.as_str()).collect::<Vec<_>>(), ["g"]);
+        assert_eq!(split.rest.iter().map(|a| a.id.as_str()).collect::<Vec<_>>(), ["hub2", "x"]);
+    }
+
+    #[test]
+    fn 分组里没有别的成员时绑定不生效() {
+        use crate::manifest::Anchor;
+        let apps = vec![anchored("g", "孤", Anchor::Group), anchored("x", "甲", Anchor::None)];
+        let split = split_anchors(&apps);
+        assert!(split.group_apps.is_empty(), "分走会让整个分组消失");
+        assert_eq!(split.rest.len(), 2);
+        // 一个分组只认第一个绑定者。
+        let apps = vec![
+            anchored("g1", "甲", Anchor::Group),
+            anchored("g2", "甲", Anchor::Group),
+            anchored("x", "甲", Anchor::None),
+        ];
+        let split = split_anchors(&apps);
+        assert_eq!(split.group_apps.len(), 1);
+        assert_eq!(split.group_apps[0].id, "g1");
     }
 
     #[test]

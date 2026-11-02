@@ -31,6 +31,9 @@ pub struct CatalogEntry {
     pub also_under: Vec<String>,
     pub also_in: Vec<String>,
     pub hidden: bool,
+    /// 绑定位（`Anchor::key`）：空串、center、group。旧清单没有这一项，按空串读。
+    #[serde(default)]
+    pub anchor: String,
     /// active / built / archived（`Lifecycle::key`）。
     pub lifecycle: String,
     /// 发布清单里的 kind：tauri / ascent / cpp / driver / electron。决定安装模式能不能启动它。
@@ -106,6 +109,7 @@ pub fn generate(repo: &Path) -> Result<Vec<CatalogEntry>, String> {
             also_under: app.also_under.clone(),
             also_in: app.also_in.clone(),
             hidden: app.hidden,
+            anchor: app.anchor.key().to_string(),
             lifecycle: app.lifecycle.key().to_string(),
             kind: release.kind,
             product_name,
@@ -251,6 +255,7 @@ pub fn into_apps(entries: Vec<CatalogEntry>, locate: impl Fn(&CatalogEntry) -> O
                 also_under: entry.also_under,
                 also_in: entry.also_in,
                 hidden: entry.hidden,
+                anchor: manifest::Anchor::from_key(&entry.anchor),
                 lifecycle: parse_lifecycle(&entry.lifecycle),
                 progress: entry.progress,
                 install: Some(Install { installed: exe.is_some(), exe, supported, kind: entry.kind }),
@@ -332,6 +337,7 @@ mod tests {
             also_under: vec![],
             also_in: vec![],
             hidden: false,
+            anchor: String::new(),
             lifecycle: "built".into(),
             kind: "tauri".into(),
             product_name: Some("贪吃蛇".into()),

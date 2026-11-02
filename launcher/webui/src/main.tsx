@@ -40,6 +40,34 @@ style.textContent = `
 .tile[data-state="ready"] .dot { background: #2e9e44; }
 .tile[data-state="starting"] .dot { background: #e8940f; }
 .tile[data-state="stopped"] .dot { background: #b0b4c8; }
+/* 分组图标章：圆形图标压在胶囊左端；占位与 core 的 PILL_H / PILL_ICON_W 一致。 */
+.group-badge .pill {
+  position: absolute; left: 22px; right: 0; top: 8px; bottom: 8px;
+  display: flex; align-items: center; padding-left: 30px; border-radius: 14px;
+  color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap;
+}
+.group-badge .medal {
+  position: absolute; left: 0; top: 0; width: 44px; height: 44px; box-sizing: border-box;
+  display: grid; place-items: center; border: 3px solid; border-radius: 50%;
+  background: #fff; overflow: hidden; font-weight: 700; font-size: 18px;
+  transition: transform 120ms ease-out;
+}
+.group-badge .medal img { width: 34px; height: 34px; object-fit: contain; }
+.group-badge .dot, .hub .dot {
+  position: absolute; width: 9px; height: 9px; border-radius: 50%;
+  border: 1.5px solid #fff; box-sizing: content-box;
+}
+.group-badge .dot { left: 33px; top: 33px; }
+.clickable { cursor: pointer; }
+.group-badge.clickable:hover .medal { transform: scale(1.12); }
+.hub { position: absolute; width: 72px; height: 72px; }
+.hub img, .hub .fallback {
+  width: 72px; height: 72px; object-fit: contain; display: grid; place-items: center;
+  border-radius: 18px; font-weight: 600; color: #fff; font-size: 28px;
+  transition: transform 120ms ease-out;
+}
+.hub:hover img, .hub:hover .fallback { transform: scale(1.1); }
+.hub .dot { right: 2px; bottom: 2px; }
 `;
 document.head.appendChild(style);
 

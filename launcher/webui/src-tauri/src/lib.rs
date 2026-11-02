@@ -240,6 +240,19 @@ pub mod commands {
         y: f32,
     }
 
+    /// 绑定位上的应用（中心或分组）：前端据此画图标、点击打开、右键停止。
+    #[derive(serde::Serialize)]
+    pub struct MindAnchorDto {
+        id: String,
+        title: String,
+        letter: String,
+        accent: String,
+        icon: Option<String>,
+        lifecycle: String,
+        state: String,
+        installed: Option<bool>,
+    }
+
     #[derive(serde::Serialize)]
     pub struct MindGroupDto {
         name: String,
@@ -247,6 +260,8 @@ pub mod commands {
         x: f32,
         y: f32,
         w: f32,
+        /// 绑定到这个分组的应用；没有就是只读的图标章。
+        app: Option<MindAnchorDto>,
     }
 
     #[derive(serde::Serialize)]
@@ -282,6 +297,8 @@ pub mod commands {
         height: f32,
         center_x: f32,
         center_y: f32,
+        /// 取代中心虎头的应用；没有就画虎头。
+        hub: Option<MindAnchorDto>,
         nodes: Vec<MindNodeDto>,
         groups: Vec<MindGroupDto>,
         links: Vec<MindLinkDto>,
@@ -322,6 +339,9 @@ pub mod commands {
             })
             .cloned()
             .collect();
+        // 绑定位的应用不进图块：中心的取代虎头，分组的变成分组图标（点分组即打开）。
+        let split = mindmap::split_anchors(&visible);
+        let visible = split.rest;
         let map = mindmap::layout(&visible);
 
         let states = cache::states(&apps);
@@ -330,6 +350,20 @@ pub mod commands {
                 .position(|a| a.id == id)
                 .map(|i| states[i].key().to_string())
                 .unwrap_or_else(|| "stopped".into())
+        };
+        let anchor_dto = |app: &manifest::App| MindAnchorDto {
+            id: app.id.clone(),
+            title: app.title.clone(),
+            letter: app.letter.clone(),
+            accent: app.accent.clone(),
+            icon: app
+                .icon_file
+                .as_deref()
+                .and_then(cache::icon_data_url)
+                .or_else(|| app.embedded_icon.clone()),
+            lifecycle: app.lifecycle.key().to_string(),
+            state: state_of_id(&app.id),
+            installed: app.install.as_ref().map(|install| install.installed),
         };
 
         let mut nodes = Vec::new();
@@ -369,6 +403,11 @@ pub mod commands {
                 x: g.at.x,
                 y: g.at.y,
                 w: g.width,
+                app: split
+                    .group_apps
+                    .iter()
+                    .find(|a| mindmap::group_name_of(a) == g.name)
+                    .map(&anchor_dto),
             })
             .collect();
 
@@ -411,6 +450,7 @@ pub mod commands {
             height: map.height,
             center_x: map.center.x,
             center_y: map.center.y,
+            hub: split.center.as_ref().map(&anchor_dto),
             nodes,
             groups,
             links,

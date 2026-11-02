@@ -117,6 +117,7 @@ mod tests {
             also_under: vec![],
             also_in: vec![],
             hidden: false,
+            anchor: String::new(),
             lifecycle: "active".into(),
             kind: "tauri".into(),
             product_name: Some("贪吃蛇".into()),

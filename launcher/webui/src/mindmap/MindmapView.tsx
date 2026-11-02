@@ -21,12 +21,26 @@ export interface MindNodeDto {
   y: number;
 }
 
+/** 绑定位上的应用（中心或分组）。 */
+export interface MindAnchorDto {
+  id: string;
+  title: string;
+  letter: string;
+  accent: string;
+  icon: string | null;
+  lifecycle: Lifecycle;
+  state: RunState;
+  installed: boolean | null;
+}
+
 export interface MindGroupDto {
   name: string;
   color: string;
   x: number;
   y: number;
   w: number;
+  /** 绑定到这个分组的应用；没有就是只读的图标章。 */
+  app: MindAnchorDto | null;
 }
 
 export interface MindLinkDto {
@@ -51,6 +65,8 @@ export interface MindmapDto {
   height: number;
   center_x: number;
   center_y: number;
+  /** 取代中心虎头的应用；没有就画虎头。 */
+  hub: MindAnchorDto | null;
   nodes: MindNodeDto[];
   groups: MindGroupDto[];
   links: MindLinkDto[];
@@ -126,6 +142,55 @@ function Tile({
   );
 }
 
+const ANCHOR_HINT = (app: MindAnchorDto) =>
+  `${app.title}${LIFECYCLE_HINT[app.lifecycle] ?? ""}${app.installed === false ? "（未安装，点击打开 Releases 页）" : ""}`;
+
+// 绑定应用的点击行为与图块一致：左键打开，右键停止。
+function anchorHandlers(app: MindAnchorDto) {
+  return {
+    onClick: () => openApp(app.id).catch(console.error),
+    onContextMenu: (e: React.MouseEvent) => {
+      e.preventDefault();
+      if (app.state !== "stopped") stopApp(app.id).catch(console.error);
+    },
+  };
+}
+
+// 分组图标章：圆形图标压在胶囊左端。绑定了应用的用应用图标、可点；没绑定的
+// 用组色底的组名首字，只是标识。框的几何（宽、PILL_H 高）与 core 的胶囊占位一致。
+function GroupBadge({ group }: { group: MindGroupDto }) {
+  const app = group.app;
+  const dim = app?.installed === false ? 0.45 : 1;
+  return (
+    <div
+      className={app ? "group-badge clickable" : "group-badge"}
+      title={app ? ANCHOR_HINT(app) : group.name}
+      style={{
+        position: "absolute",
+        left: group.x - group.w / 2,
+        top: group.y - 22,
+        width: group.w,
+        height: 44,
+        opacity: dim,
+        filter: app?.installed === false ? "grayscale(0.9)" : undefined,
+      }}
+      {...(app ? anchorHandlers(app) : {})}
+    >
+      <span className="pill" style={{ background: group.color }}>
+        {group.name}
+      </span>
+      <span className="medal" style={{ borderColor: group.color }}>
+        {app?.icon ? (
+          <img src={app.icon} alt="" />
+        ) : (
+          <span style={{ color: group.color }}>{app ? app.letter : group.name.slice(0, 1)}</span>
+        )}
+      </span>
+      {app && <span className="dot" style={{ background: STATE_COLOR[app.state] }} />}
+    </div>
+  );
+}
+
 // 椭圆导图：同心环底图（core 预渲染 PNG）→ 连线（默认虚线，悬停节点点亮相关线为
 // 实线）→ 领域胶囊 → 虎头 → 图块。节点下标即连线端点下标（nodes 与 ends 同一序列）。
 export default function MindmapView({ paused, showArchived }: { paused: boolean; showArchived: boolean }) {
@@ -155,7 +220,22 @@ export default function MindmapView({ paused, showArchived }: { paused: boolean;
       setMap((prev) => {
         if (!prev) return prev;
         const nodes = patchStates(prev.nodes, event.payload);
-        return nodes ? { ...prev, nodes } : prev;
+        const hub = prev.hub ? patchStates([prev.hub], event.payload)?.[0] : undefined;
+        const groupApps = prev.groups.map((g) => g.app);
+        const patched = patchStates(
+          groupApps.flatMap((a) => (a ? [a] : [])),
+          event.payload,
+        );
+        if (!nodes && !hub && !patched) return prev;
+        const byId = new Map((patched ?? []).map((a) => [a.id, a]));
+        return {
+          ...prev,
+          nodes: nodes ?? prev.nodes,
+          hub: hub ?? prev.hub,
+          groups: patched
+            ? prev.groups.map((g) => (g.app ? { ...g, app: byId.get(g.app.id) ?? g.app } : g))
+            : prev.groups,
+        };
       });
     });
     return () => {
@@ -229,33 +309,40 @@ export default function MindmapView({ paused, showArchived }: { paused: boolean;
               </g>
             );
           })}
-          {map.groups.map((g, i) => (
-            <g key={i}>
-              <rect
-                x={g.x - g.w / 2} y={g.y - 16} width={g.w} height={32} rx={16}
-                fill={g.color}
-              />
-              <text
-                x={g.x} y={g.y} textAnchor="middle" dominantBaseline="central"
-                fill="white" fontSize={13} fontWeight={600}
-              >
-                {g.name}
-              </text>
-            </g>
-          ))}
         </svg>
-        <img
-          src="/tiger-mark.png"
-          alt=""
-          style={{
-            position: "absolute",
-            left: map.center_x - 36,
-            top: map.center_y - 36,
-            width: 72,
-            height: 72,
-            pointerEvents: "none",
-          }}
-        />
+        {map.groups.map((g, i) => (
+          <GroupBadge key={`${g.name}-${i}`} group={g} />
+        ))}
+        {map.hub ? (
+          <div
+            className="hub clickable"
+            title={ANCHOR_HINT(map.hub)}
+            style={{ left: map.center_x - 36, top: map.center_y - 36 }}
+            {...anchorHandlers(map.hub)}
+          >
+            {map.hub.icon ? (
+              <img src={map.hub.icon} alt="" />
+            ) : (
+              <div className="fallback" style={{ background: map.hub.accent }}>
+                {map.hub.letter}
+              </div>
+            )}
+            <span className="dot" style={{ background: STATE_COLOR[map.hub.state] }} />
+          </div>
+        ) : (
+          <img
+            src="/tiger-mark.png"
+            alt=""
+            style={{
+              position: "absolute",
+              left: map.center_x - 36,
+              top: map.center_y - 36,
+              width: 72,
+              height: 72,
+              pointerEvents: "none",
+            }}
+          />
+        )}
         {map.nodes.map((n, i) => (
           <Tile
             key={`${n.id}-${i}`}

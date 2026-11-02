@@ -20,6 +20,6 @@ pub mod progress_sync;
 pub mod runner;
 pub mod workspace;
 
-pub use manifest::{discover, discover_all, discover_in, fingerprint, App, Lifecycle, RenderSpec};
+pub use manifest::{discover, discover_all, discover_in, fingerprint, Anchor, App, Lifecycle, RenderSpec};
 pub use runner::{activate, launch, stop, ProcessSnapshot, RunState};
 pub use workspace::{LaunchError, Mode, Workspace};
