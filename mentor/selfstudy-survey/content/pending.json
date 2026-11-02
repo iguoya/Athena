@@ -141,17 +141,13 @@
       "group": "todo",
       "priority": "high",
       "provinces": [
-        "beijing",
         "tianjin",
-        "hebei",
         "shanxi",
         "neimenggu",
         "liaoning",
         "jilin",
         "heilongjiang",
-        "shanghai",
         "jiangsu",
-        "zhejiang",
         "anhui",
         "fujian",
         "jiangxi",
@@ -159,8 +155,8 @@
         "sichuan"
       ],
       "scope": "authority、calendar、policy、offerings",
-      "title": "16 个省的基线与开设矩阵尚未采集",
-      "detail": "北京、天津、河北、山西、内蒙古、辽宁、吉林、黑龙江、上海、江苏、浙江、安徽、福建、江西、湖北、四川。这 16 省在总览矩阵里全部显示「待查」，是采集波次（T-002，16 省基线与开设矩阵）正在进行的工作，不是查不到。",
+      "title": "12 个省的基线与开设矩阵尚未采集",
+      "detail": "还没有完整基线的省份：tianjin、shanxi、neimenggu、liaoning、jilin、heilongjiang、jiangsu、anhui、fujian、jiangxi、hubei、sichuan。北京、上海、浙江、河北已于 2026-11-02 补入官方开设矩阵（天津只有第三方线索）；江苏、湖北、四川等由 zcode 按波次采集（T-002）。",
       "tried": "未开始。",
       "howto": "由 zcode 按波次采集；如愿意帮忙，各省教育考试院官网的「自学考试」栏目入口与年度开考课程表最有用。"
     },
@@ -200,6 +196,72 @@
       "detail": "已核出 2026 年停考的本科专业（通信工程、网络工程、英语、金融学）。其余范围内专业（080901 计算机科学与技术等）是否开设、谁主考，在「西藏自治区高等教育自学考试信息发布平台」的专业信息里，该平台对程序请求返回 404。",
       "tried": "考试院官网「专业信息」页只给了跳转链接 http://zksk.zsks.edu.xizang.gov.cn:8082/zxks_student/front/couresList；链接直接请求 404，10 月报名公告写「各专业考试课程安排详见信息管理综合平台」。",
       "howto": "浏览器打开 http://zsks.edu.xizang.gov.cn/92/94/4119.html 点链接进入平台，查看本科专业列表（计算机科学与技术、软件工程、电子信息类等是否在列、主考院校），截图或抄录发回。"
+    },
+    {
+      "id": "tianjin-official",
+      "group": "human",
+      "province": "tianjin",
+      "priority": "high",
+      "scope": "authority、calendar、policy、offerings 官方一览表",
+      "title": "天津缺：官方开考专业一览表、报考须知（招考资讯网打不开）",
+      "detail": "天津市教育招生考试院的招考资讯网 www.zhaokao.net 对程序请求连接超时，官方原文一概未取得。目前只有第三方转载的 2026 年下半年一览表作线索（080901 天津工业大学、天津师范大学；080902 天津理工大学；080701 中国民航大学已停止新生报名），按纪律只能标线索，不能当结论。",
+      "tried": "程序直连 zhaokao.net 超时；搜索只找到第三方转载（华夏大地教育网等），没有官方页面的 URL。",
+      "howto": "浏览器打开 https://www.zhaokao.net/ →「自学考试」：①《2026 年下半年天津市高等教育自学考试报考须知》及附件 3《专业一览表》；②2026 年上半年报考须知；③免考、毕业、学位规定；④计算机科学与技术（080901）专业课程计划（天津师范大学继续教育学院页面 https://jxjy.tjnu.edu.cn/info/1103/2817.htm 也有）。保存页面和附件发回即可。"
+    },
+    {
+      "id": "shanxi-official",
+      "group": "human",
+      "province": "shanxi",
+      "priority": "high",
+      "scope": "全部",
+      "title": "山西缺：基线、开考专业、政策（山西招生考试管理中心官网连不上）",
+      "detail": "山西省招生考试管理中心 www.sxkszx.cn 对程序请求连接超时，整省一项官方数据都没取到。第三方称山西 2026 年有 6 所主考院校、28 个开考专业，080901 计算机科学与技术主考院校为太原理工大学，只能作线索未入库。",
+      "tried": "程序直连 sxkszx.cn 超时；搜索未得官方页面。",
+      "howto": "浏览器打开 https://www.sxkszx.cn/ →「自学考试」：①2026 年报考简章及附件（开考专业与课程安排）；②《山西省高等教育自学考试专业计划课程设置表》；③2026 年下半年报名公告；④毕业、学位、免考规定。山西自学考试信息服务平台为 zikao.sxkszx.cn。"
+    },
+    {
+      "id": "zhejiang-calendar",
+      "group": "human",
+      "province": "zhejiang",
+      "priority": "medium",
+      "scope": "calendar、policy.graduate、policy.exemption 全文、2026 年报考简章",
+      "title": "浙江缺：2026 年报名与考期、毕业规定、免考规定全文",
+      "detail": "已入库官方专业考试计划（080901，主考浙江工业大学、宁波工程学院，73 学分）与专业对应表。报考简章在 zk.zjzs.net 动态页（报名－报考简章），程序读不到，所以考期、报名时间、毕业申请规定缺；免考规定全文（浙教试院〔2023〕108号）未取。",
+      "tried": "zjzs.net 静态页可读；zk.zjzs.net 为登录/动态系统。",
+      "howto": "浏览器打开 https://zk.zjzs.net/ 「报名－报考简章」取 2026 年 4 月、10 月简章；https://www.zjzs.net/art/2024/1/4/art_41_3670.html 取免考、顶替规定附件。"
+    },
+    {
+      "id": "beijing-plan",
+      "group": "human",
+      "province": "beijing",
+      "priority": "medium",
+      "scope": "080901 主考院校与课程计划、calendar 报名时间、全部 policy",
+      "title": "北京缺：080901 主考院校与课程计划、报名时间、各项政策",
+      "detail": "已入库官方 2026 年考试安排通知（44 个专业全表、4/10 月开考课程）。专业考试计划（学分、必考选考）在 zkxcx.bjeea.cn 的交互报表里，程序抓不到；主考院校不在通知里。",
+      "tried": "通知附件已全取；计划查询系统是帆软报表会话接口。",
+      "howto": "浏览器打开 http://zkxcx.bjeea.cn/ 「专业计划查询」选计算机科学与技术（专升本），截图课程表与主考院校；报考、毕业、学位、免考规定见 https://www.bjeea.cn/html/selfstudy/index.html 的政策栏。"
+    },
+    {
+      "id": "shanghai-plan",
+      "group": "human",
+      "province": "shanghai",
+      "priority": "medium",
+      "scope": "080901 课程计划、2026-10 课程日程、policy",
+      "title": "上海缺：080901 课程计划、2026 年 10 月开考课程、各项政策",
+      "detail": "已入库官方 2026 年开考专业汇总表（080901 只有上海交通大学开考，其余写不开设）。专业考试计划（2026 版，沪自考委〔2024〕1号）与 10 月课程日程未取得。",
+      "tried": "汇总表与工作提示页已取；计划 PDF 页面链接指向的是图片版附件。",
+      "howto": "浏览器打开 https://www.shmeea.edu.cn/ 自学考试栏目，找「上海市高等教育自学考试专业考试计划（2026 版）」中上海交通大学计算机科学与技术（专升本）计划，以及 2026 年 10 月各专业课程考试日程安排表；报考、毕业、学位规定见同栏目。"
+    },
+    {
+      "id": "hebei-plan",
+      "group": "human",
+      "province": "hebei",
+      "priority": "medium",
+      "scope": "080901/080701 新计划课程表、2026-10 考期、policy.graduate/degree/exemption",
+      "title": "河北缺：2026 年新专业考试计划、下半年简章、毕业学位免考规定",
+      "detail": "已入库官方 2026 年上半年简章的开考专业全表（080901 河北大学、080701 河北科技大学）。2026 年起执行的新专业考试计划（学分、必考选考）、2026 年下半年简章、毕业/学位/免考规定未取得。",
+      "tried": "保定市教育考试院转载的上半年简章 PDF 已取；zk.hebeea.edu.cn 为动态系统。",
+      "howto": "浏览器打开 https://zk.hebeea.edu.cn 「考生必读→开考专业」下载 2026 版专业考试计划，「查询中心→报考简章」取 2026 年下半年简章；毕业、免考规定见同站「政策法规」。"
     }
   ]
 }
