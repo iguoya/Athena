@@ -46,7 +46,7 @@ export function Overview({ go }: { go: Go }) {
               {c.tier === "edge" ? "（对照）" : ""}
             </button>
           ))}
-          <span className="legend-note">只列至少 {MIN_PROVINCES} 个省开设过的专业（电子信息类、自动化类有一个省开设就列）</span>
+          <span className="legend-note">只列至少 {MIN_PROVINCES} 个省开设过的专业（电子相关类有一个省开设就列）</span>
           <span className="legend">
             {LEGEND.map((s) => (
               <span key={s} className={`chip chip-${s}`}>

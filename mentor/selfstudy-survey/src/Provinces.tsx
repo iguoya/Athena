@@ -1,4 +1,4 @@
-import { cellStatus, majorName, provinces, shownMajors } from "./data";
+import { cellStatus, EXCLUDED_MAJORS, majorName, provinces, shownMajors } from "./data";
 import type { Go } from "./nav";
 import type { Province, TextItem } from "./types";
 import { Empty, Link, Section, StatusChip, VerifyBadge } from "./ui";
@@ -40,7 +40,7 @@ export function Provinces({ province, go }: { province?: string; go: Go }) {
   // 省份视图的开考专业表：不列「所有省都没开、只有个别省开」的专业的「不开设」「待查」行（使用者 2026-11-03 裁决），
   // 这类专业若在本省真有开考记录（open/upcoming/stopped）仍照列。
   const shownCodes = new Set(shownMajors.map((m) => m.code));
-  const rows = p.offerings.filter((o) => shownCodes.has(o.major) || (o.status !== "none" && o.status !== "pending"));
+  const rows = p.offerings.filter((o) => !EXCLUDED_MAJORS.includes(o.major) && (shownCodes.has(o.major) || (o.status !== "none" && o.status !== "pending")));
   return (
     <div className="split">
       <aside className="picker">

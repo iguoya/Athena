@@ -133,9 +133,12 @@ export function coverage() {
 export const MIN_PROVINCES = 3;
 export const majorProvinceCount = (code: string) =>
   provinces.filter((p) => offeringsOf(p, code).some((o) => o.status === "open" || o.status === "upcoming" || o.status === "stopped")).length;
-// 电子相关专业稀缺，使用者要求尽量都列：电子信息类（0807）、自动化类（0808）只要有一个省开设过就列。
-export const ALWAYS_CLASSES = ["0807", "0808"];
+// 电子相关专业稀缺，使用者要求尽量都列：电子信息类（0807）、自动化类（0808）、电气类（0806）和带电类课程的机械类（0802）只要有一个省开设过就列（ADR 0187）。
+export const ALWAYS_CLASSES = ["0807", "0808", "0806", "0802"];
+// 使用者逐个裁决「太小众、不列」的专业：数据保留，界面一律不显示（2026-11-03：轨道交通信号与控制）。
+export const EXCLUDED_MAJORS = ["080802T"];
 export const shownMajors = scope.majors.filter((m) => {
+  if (EXCLUDED_MAJORS.includes(m.code)) return false;
   const n = majorProvinceCount(m.code);
   return n >= MIN_PROVINCES || (ALWAYS_CLASSES.includes(m.class) && n >= 1);
 });
