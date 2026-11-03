@@ -37,6 +37,10 @@ function PolicyRow({ label, item, go }: { label: string; item: TextItem | null; 
 
 export function Provinces({ province, go }: { province?: string; go: Go }) {
   const p = provinces.find((x) => x.id === province) ?? provinces[0];
+  // 省份视图的开考专业表：不列「所有省都没开、只有个别省开」的专业的「不开设」「待查」行（使用者 2026-11-03 裁决），
+  // 这类专业若在本省真有开考记录（open/upcoming/stopped）仍照列。
+  const shownCodes = new Set(shownMajors.map((m) => m.code));
+  const rows = p.offerings.filter((o) => shownCodes.has(o.major) || (o.status !== "none" && o.status !== "pending"));
   return (
     <div className="split">
       <aside className="picker">
@@ -109,7 +113,7 @@ export function Provinces({ province, go }: { province?: string; go: Go }) {
         </Section>
 
         <Section title="开考专业" hint="没有记录的专业见总览矩阵，显示为待查">
-          {p.offerings.length === 0 ? (
+          {rows.length === 0 ? (
             <Empty>这个省的开设信息还没有采集。</Empty>
           ) : (
             <table className="tbl">
@@ -124,7 +128,7 @@ export function Provinces({ province, go }: { province?: string; go: Go }) {
                 </tr>
               </thead>
               <tbody>
-                {p.offerings.map((o, i) => (
+                {rows.map((o, i) => (
                   <tr key={i}>
                     <td>
                       <button className="link" onClick={() => go({ view: "majors", major: o.major, province: p.id })}>
