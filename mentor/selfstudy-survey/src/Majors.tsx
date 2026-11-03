@@ -35,6 +35,9 @@ export function Majors({ major, province, go }: { major?: string; province?: str
   const offerings = provinces.flatMap((p) =>
     p.offerings.filter((o) => o.major === code).map((o) => ({ p, o })),
   );
+  // 「未开设」不一行一省地铺开：它们的依据都是各省的开考专业总表，合成一句话列出省份。
+  const rowsShown = offerings.filter((x) => x.o.status !== "none");
+  const noneList = offerings.filter((x) => x.o.status === "none");
   const count = (s: string) => offerings.filter((x) => x.o.status === s).length;
   const hosts = new Set(offerings.filter((x) => x.o.status === "open").flatMap((x) => x.o.hosts));
 
@@ -74,6 +77,8 @@ export function Majors({ major, province, go }: { major?: string; province?: str
         <Section title="各省开设情况" hint="只列已有记录的省；其余省份见总览矩阵的「待查」">
           {offerings.length === 0 ? (
             <Empty>这个专业还没有任何省份的开设记录，等待采集。</Empty>
+          ) : rowsShown.length === 0 ? (
+            <Empty>已核对的省份都没有开设这个专业。</Empty>
           ) : (
             <div className="scroll">
               <table className="tbl">
@@ -87,7 +92,7 @@ export function Majors({ major, province, go }: { major?: string; province?: str
                   </tr>
                 </thead>
                 <tbody>
-                  {offerings.map(({ p, o }, i) => (
+                  {rowsShown.map(({ p, o }, i) => (
                     <tr key={i} className={p.id === province ? "hl" : ""}>
                       <td>
                         <button className="link" onClick={() => go({ view: "provinces", province: p.id })}>
@@ -108,13 +113,19 @@ export function Majors({ major, province, go }: { major?: string; province?: str
               </table>
             </div>
           )}
+          {noneList.length > 0 && (
+            <p className="none-line">
+              <b>核对未开设（{noneList.length} 个省）：</b>
+              {noneList.map(({ p }) => p.name.replace(/(省|市|壮族自治区|回族自治区|维吾尔自治区|自治区)$/, "")).join("、")}。
+              依据是各省自己的开考专业总表，逐省的来源与日期在省份视图的开考专业表里。
+            </p>
+          )}
         </Section>
 
         <Section title="课程计划对比" hint="行是课程（按课程代码取并集），列是各省各版计划；格内是学分，✎ 表示含实践考核">
           {plans.length === 0 ? (
             <Empty>
-              这个专业还没有入库的课程计划。课程表只收省考试院或主考院校的原文来源，第三方转载不算；
-              采集进度见「方法与来源」。
+              这个专业还没有入库的课程计划，采集进度见「方法与来源」。
             </Empty>
           ) : (
             <div className="scroll">
