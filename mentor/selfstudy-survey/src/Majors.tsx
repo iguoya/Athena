@@ -61,7 +61,7 @@ export function Majors({ major, province, go }: { major?: string; province?: str
           </div>
         ))}
         <p className="picker-note">
-          只列至少 {MIN_PROVINCES} 个省开设过的专业；电子相关类（电子信息、自动化、电气、带电类机械）有一个省开设就列；另 {hiddenMajorCount} 个专业没有省份开设或只有个别省份开设，不在此列。
+          只列至少 {MIN_PROVINCES} 个省开设过的专业；电子相关类（电子信息、电气、机械大类含自动化）有一个省开设就列；另 {hiddenMajorCount} 个专业没有省份开设或只有个别省份开设，不在此列。
         </p>
       </aside>
 
