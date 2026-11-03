@@ -388,7 +388,17 @@ thead .stick {
   color: var(--muted);
   font-size: 12px;
 }
+.picker > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 .picker button {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
   text-align: left;
   border: 0;
   background: none;
