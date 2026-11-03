@@ -1,10 +1,10 @@
-import { cellStatus, majorName, provinces, scope } from "./data";
+import { cellStatus, majorName, provinces, shownMajors } from "./data";
 import type { Go } from "./nav";
 import type { Province, TextItem } from "./types";
 import { Empty, Link, Section, StatusChip, VerifyBadge } from "./ui";
 
 function known(p: Province) {
-  return scope.majors.filter((m) => cellStatus(p, m.code) !== "pending").length;
+  return shownMajors.filter((m) => cellStatus(p, m.code) !== "pending").length;
 }
 
 const POLICY_LABEL: [keyof Province["policy"], string][] = [
@@ -44,7 +44,7 @@ export function Provinces({ province, go }: { province?: string; go: Go }) {
           <button key={x.id} className={x.id === p.id ? "on" : ""} onClick={() => go({ view: "provinces", province: x.id })}>
             {x.name.replace(/(省|市|壮族自治区|回族自治区|维吾尔自治区|自治区)$/, "")}
             <small>
-              {known(x)}/{scope.majors.length}
+              {known(x)}/{shownMajors.length}
             </small>
           </button>
         ))}

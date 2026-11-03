@@ -1,4 +1,4 @@
-import { allPlans, planHosts, CATEGORY_LABEL, courses, majorName, provinces, scope, STATUS_LABEL } from "./data";
+import { allPlans, planHosts, CATEGORY_LABEL, courses, hiddenMajorCount, majorName, MIN_PROVINCES, provinces, scope, shownMajors, STATUS_LABEL } from "./data";
 import type { Go } from "./nav";
 import type { PlanCourse } from "./types";
 import { Empty, Section, StatusChip, VerifyBadge } from "./ui";
@@ -15,7 +15,7 @@ interface Row {
 }
 
 export function Majors({ major, province, go }: { major?: string; province?: string; go: Go }) {
-  const code = major ?? scope.majors[0].code;
+  const code = major ?? shownMajors[0].code;
   const plans = allPlans.filter((r) => r.plan.major === code);
 
   // 课程对比矩阵的行：按课程代码取并集；同一代码在不同计划里类别可能不同，取第一次出现的类别排位。
@@ -41,13 +41,13 @@ export function Majors({ major, province, go }: { major?: string; province?: str
   return (
     <div className="split">
       <aside className="picker">
-        {scope.classes.map((c) => (
+        {scope.classes.filter((c) => shownMajors.some((m) => m.class === c.code)).map((c) => (
           <div key={c.code}>
             <h4>
               {c.name}
               {c.tier === "edge" ? "（对照）" : ""}
             </h4>
-            {scope.majors
+            {shownMajors
               .filter((m) => m.class === c.code)
               .map((m) => (
                 <button key={m.code} className={m.code === code ? "on" : ""} onClick={() => go({ view: "majors", major: m.code })}>
@@ -57,6 +57,9 @@ export function Majors({ major, province, go }: { major?: string; province?: str
               ))}
           </div>
         ))}
+        <p className="picker-note">
+          只列至少 {MIN_PROVINCES} 个省开设过的专业；另 {hiddenMajorCount} 个专业没有省份开设或只有个别省份开设，不在此列。
+        </p>
       </aside>
 
       <div className="pane">

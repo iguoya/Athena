@@ -111,7 +111,7 @@ export function isStale(date?: string): boolean {
 
 // 覆盖率：矩阵格子里「有人核对过」的比例，以及其中官方来源的比例。
 export function coverage() {
-  const majors = scope.majors;
+  const majors = shownMajors;
   const total = provinces.length * majors.length;
   let known = 0;
   let official = 0;
@@ -126,3 +126,12 @@ export function coverage() {
   }
   return { total, known, official, plans: allPlans.length };
 }
+
+// 左侧菜单、总览矩阵只列「至少 MIN_PROVINCES 个省开设过（开考、新计划或已停考）」的专业：
+// 目录里 50 个专业，所有省都没开的、只有个别省开的没必要逐个列出（使用者 2026-11-03 裁决）。
+// 数据随采集增长自动重算，哪个专业凑够了省份就会自己出现；被隐藏专业的记录仍在各省视图里。
+export const MIN_PROVINCES = 3;
+export const majorProvinceCount = (code: string) =>
+  provinces.filter((p) => offeringsOf(p, code).some((o) => o.status === "open" || o.status === "upcoming" || o.status === "stopped")).length;
+export const shownMajors = scope.majors.filter((m) => majorProvinceCount(m.code) >= MIN_PROVINCES);
+export const hiddenMajorCount = scope.majors.length - shownMajors.length;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { cellStatus, coverage, offeringsOf, provinces, scope, STATUS_LABEL } from "./data";
+import { cellStatus, coverage, hiddenMajorCount, MIN_PROVINCES, offeringsOf, provinces, scope, shownMajors, STATUS_LABEL } from "./data";
 import type { Go } from "./nav";
 import { Section } from "./ui";
 import type { OfferStatus } from "./types";
@@ -10,11 +10,7 @@ const SYMBOL: Record<OfferStatus, string> = { open: "●", upcoming: "◐", stop
 export function Overview({ go }: { go: Go }) {
   const [cls, setCls] = useState<string>("all");
   const cov = coverage();
-  const [onlyOpen, setOnlyOpen] = useState(true);
-  // 目录里有 50 个专业，绝大多数自考根本没开：默认只列「至少一个省有开考/停考/新计划记录」的专业，免得矩阵全是点。
-  const hasRecord = (code: string) =>
-    provinces.some((p) => offeringsOf(p, code).some((o) => o.status === "open" || o.status === "upcoming" || o.status === "stopped"));
-  const majors = scope.majors.filter((m) => (cls === "all" || m.class === cls) && (!onlyOpen || hasRecord(m.code)));
+  const majors = shownMajors.filter((m) => cls === "all" || m.class === cls);
 
   return (
     <>
@@ -24,8 +20,8 @@ export function Overview({ go }: { go: Go }) {
           <span>个省级行政区</span>
         </div>
         <div>
-          <b>{scope.majors.length}</b>
-          <span>个调查专业</span>
+          <b>{shownMajors.length}</b>
+          <span>个专业（另 {hiddenMajorCount} 个无省份或仅个别省开设，未列）</span>
         </div>
         <div>
           <b>
@@ -44,16 +40,13 @@ export function Overview({ go }: { go: Go }) {
           <button className={cls === "all" ? "on" : ""} onClick={() => setCls("all")}>
             全部
           </button>
-          {scope.classes.map((c) => (
+          {scope.classes.filter((c) => shownMajors.some((m) => m.class === c.code)).map((c) => (
             <button key={c.code} className={cls === c.code ? "on" : ""} onClick={() => setCls(c.code)}>
               {c.name}
               {c.tier === "edge" ? "（对照）" : ""}
             </button>
           ))}
-          <label className="toggle">
-            <input type="checkbox" checked={onlyOpen} onChange={(e) => setOnlyOpen(e.target.checked)} />
-            只看有开考记录的专业（{scope.majors.filter((m) => hasRecord(m.code)).length}/{scope.majors.length}）
-          </label>
+          <span className="legend-note">只列至少 {MIN_PROVINCES} 个省开设过的专业</span>
           <span className="legend">
             {LEGEND.map((s) => (
               <span key={s} className={`chip chip-${s}`}>
