@@ -29,14 +29,15 @@ def build_plan(pid, major, version, effective, total, required, rules, rows, gra
         n = lib[code]["name"] if code in lib else base
         notes = note
         if n != base and n != name:
-            notes = (notes + "；" if notes else "") + f"官方写作「{name}」"
+            notes = (notes + "；" if notes else "") + f"原页面写作「{name}」"
         courses.add(code, {"name": n, "aliases": [], "kind": "practice" if cat == "practice" else "theory", "note": ""})
         crow.append(course_row(code, n, cr, cat, pair=pair, textbook=None, note=notes, elective_group=eg))
-    gc, gn, gnote = grad
+    gc, gn, gnote = grad[:3]
+    gcr = grad[3] if len(grad) > 3 else 0
     gn = norm(gn)
     gname = lib[gc]["name"] if gc in lib else gn
     courses.add(gc, {"name": gname, "aliases": [], "kind": "graduation", "note": ""})
-    crow.append(course_row(gc, gname, 0, "graduation", note=(gnote + "；" if gnote else "") + (f"官方写作「{gn}」" if gname != gn else ""), elective_group=None))
+    crow.append(course_row(gc, gname, gcr, "graduation", note=(gnote + "；" if gnote else "") + (f"原页面写作「{gn}」" if gname != gn else ""), elective_group=None))
     plan = {"id": pid, "major": major, "track": None, "version": version, "effective": effective, "state": "current",
             "total_credits": total, "required_credits": required, "rules": rules, "courses": crow,
             "graduation": {"thesis": True, "credits": 0, "note": graduation_note}, "source_files": source_files, "verify": verify}

@@ -93,7 +93,7 @@ export const CATEGORY_LABEL: Record<string, string> = {
 export const LEVEL_LABEL: Record<string, string> = {
   official: "官方原文",
   notice: "官方发布",
-  report: "? 第三方线索",
+  report: "第三方转载",
   pending: "? 待核对",
 };
 

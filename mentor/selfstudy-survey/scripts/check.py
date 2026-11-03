@@ -33,7 +33,7 @@ PROVINCES = [
 ]
 CATALOG_PROV = PROVINCES
 LEVELS = {"official", "notice", "report", "pending"}
-HARD_LEVELS = {"official", "notice"}  # 课程表、政策只收这两级
+HARD_LEVELS = {"official", "notice", "report"}  # 使用者 2026-11-03 裁决：第三方自考网页面可信，report 级也可作课程表、政策、「不开设」的来源（级别照实标，界面显示「第三方」）
 STATUS = {"open", "stopped", "upcoming", "none", "pending"}
 CATEGORY = {"public", "basic", "core", "required", "elective", "topup", "practice", "graduation"}
 EXAM = {"unified", "provincial", "host", None}

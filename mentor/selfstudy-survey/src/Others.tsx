@@ -181,7 +181,7 @@ export function Method({ go }: { go: Go }) {
           <li>
             每条事实数据带来源等级与核对日期。<b>{LEVEL_LABEL.official}</b>：省教育考试院或主考院校的原文；
             <b>{LEVEL_LABEL.notice}</b>：教育部考试中心、考试院主管的官方门户；<b>{LEVEL_LABEL.report}</b>
-            ：第三方自考网转载，只作线索，课程表不收；<b>{LEVEL_LABEL.pending}</b>：还没查过。
+            ：第三方自考网转载（使用者已裁决可信，据此写课程表与结论，来源照实标注，官方原文到手后替换）；<b>{LEVEL_LABEL.pending}</b>：还没查过。
           </li>
           <li>查不到就标待查，绝不凭印象、邻省或往年推断；矩阵里的「待查」不等于「没有」。</li>
           <li>核对超过一年的数据标「可能过期」。每个考期换计划，数据会过时，以每条自己的核对日期为准。</li>
