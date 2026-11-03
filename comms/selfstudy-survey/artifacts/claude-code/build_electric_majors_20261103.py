@@ -108,3 +108,27 @@ for pid, fn in DATA.items():
     d["offerings"] = [o for o in d["offerings"] if not (o["status"] == "none" and o["major"] in {n["major"] for n in new})]
     provlib._save(p, d)
     print(pid, [(o["major"], o["status"]) for o in new])
+
+# ---- 第二批：广东、广西、山东（我早先采集的省份，同样只写读到的正面行） ----
+GD26 = "https://eea.gd.gov.cn/attachment/0/602/602026/4833531.pdf"
+EXTRA = {
+    "guangdong": [
+        rec("080202", "open", [], GD26, "粤考办〔2025〕20 号附件：2026 年 4、10 月课程表列有机械设计制造及其自动化（080202，专升本，两个课程组）"),
+        rec("080207", "open", ["广东工业大学", "华南农业大学"], GD26, "2026 年 4、10 月课程表列有车辆工程（080207，专升本，两个课程组）；主考院校取自粤考委〔2023〕4 号附件 1（https://eea.gd.gov.cn/attachment/0/532/532337/4260268.pdf）：广东工业大学、华南农业大学"),
+    ],
+    "guangxi": [
+        rec(m, "stopped", [h], "https://www.gxeea.cn/view/content_1013_30189.htm", f"广西壮族自治区高等教育自学考试委员会公告的 36 个专业停考方案名单：{MAJ[m]}（本科），主考{h}")
+        for m, h in (("080204", "广西大学"), ("080208", "广西科技大学"), ("080202", "广西科技大学"), ("080601", "广西科技大学"))
+    ],
+    "shandong": [
+        rec("080204", "open", ["山东建筑大学"], "https://www.sdzk.cn/Floadup/file/20260528/6391555806427097082286288.xlsx", "2026 年 10 月开考专业、课程及考试时间一览表列有机械电子工程（080204，专升本），主考学校山东建筑大学（自 2022-12-01 起新考生报考该专业主考学校为山东建筑大学，见山东省教育招生考试院「专业考试计划调整政策三十问」）"),
+        rec("080208", "stopped", ["山东交通学院"], "https://www.sdzk.cn/NewsInfo.aspx?NewsID=7094", "通知「专业停考安排」：汽车服务工程（专升本）2027 年 10 月组织最后一次笔试课程考试，2028 年 1 月 1 日起不再受理毕业申请；主考学校山东交通学院取自 2026 版课程设置表"),
+    ],
+}
+for pid, new in EXTRA.items():
+    p = CONTENT / "provinces" / f"{pid}.json"
+    d = provlib._load(p)
+    majors = {n["major"] for n in new}
+    d["offerings"] = [o for o in d["offerings"] if o["major"] not in majors] + new
+    provlib._save(p, d)
+    print(pid, [(o["major"], o["status"]) for o in new])
